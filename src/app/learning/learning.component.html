@@ -1,0 +1,128 @@
+<div class="content-learning">
+    <div class="menubar">
+
+        <p-card [style]="{'width': '100%','border-radius': '0' ,'padding': '0','height':'50px' }">
+            <div class="menubar-content" style="position: fixed; top: 5px; right: 5px;">
+
+                <div class="menubar-content-left">
+                    <p-button [style]="{'width': '30px','height':'30px' }" (click)="visible = !visible"
+                        icon="pi pi-bars" [rounded]="true" [outlined]="true" pStyleClass=".box2" enterFromClass="hidden"
+                        enterActiveClass="animate-slidedown" />
+                </div>
+                <div class="menubar-content-center">
+                    <img style="width: 60px;" src="img/logo/PNG/Logo-Vinvulación-solo buho-02.png" alt="">
+
+                </div>
+                <div class="menubar-content-right">
+                    <p-button [icon]="isDarkMode ? 'pi pi-moon' : 'pi pi-sun'" [outlined]="true" [rounded]="true"
+                        (onClick)="toggleDarkMode()" />
+                    <input style="height: 30px; margin-left: 10px;" type="text" pInputText placeholder="Search"
+                        class="w-36" />
+                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                        shape="circle" />
+
+                </div>
+            </div>
+
+        </p-card>
+
+    </div>
+    <div class="content-body">
+
+        <p-tieredmenu #menuTeacher [model]="teacherItems" [popup]="true" />
+        <p-tieredmenu #menuAdmin [model]="adminItems" [popup]="true" />
+
+        <!-- <div class="drawer" [ngStyle]="{'width.px': visible ? 200 : 50}" [class.drawer-open]="visible"
+            [class.drawer-closed]="!visible">
+
+            <div class="drawer-content">
+                <div class="drawer-navegation">
+
+                    <div class="drawer-content-icons" *ngIf="visible == false">
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-home" (click)="router.navigate([''])" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-map" (click)="router.navigate(['journey'])" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-graduation-cap" (click)="router.navigate(['certifications'])" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-verified" (click)="menuTeacher.toggle($event)" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-users" (click)="menuAdmin.toggle($event)" />
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="drawer-label" *ngIf="visible">                        
+                        <p-panelmenu [model]="items" [style]="{'width':'auto'}" [multiple]="true" />
+
+                    </div>
+
+
+                </div>
+
+
+
+
+                
+
+            </div>
+        </div> -->
+        <div class="drawer" [ngClass]="{'drawer-overlay': isMobile && visible}" [ngStyle]="{
+        'width.px': !isMobile ? (visible ? 200 : 50) : (visible ? 200 : 0),
+        'left': isMobile ? '0' : '',
+        'top': isMobile ? '0' : '',
+        'z-index': isMobile && visible ? 3000 : 100
+    }" [class.drawer-open]="visible && !isMobile" [class.drawer-closed]="!visible && !isMobile"
+            *ngIf="!isMobile || visible">
+
+            <div class="drawer-content">
+                <div class="drawer-navegation">
+                    <div class="drawer-content-icons" *ngIf="visible == false">
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-home" (click)="router.navigate([''])" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-map" (click)="router.navigate(['journey'])" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-graduation-cap" (click)="router.navigate(['certifications'])" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-verified" (click)="menuTeacher.toggle($event)" />
+
+                        </div>
+                        <div class="drawer-icon">
+                            <p-button [rounded]="true" icon="pi pi-users" (click)="menuAdmin.toggle($event)" />
+
+                        </div>
+                    </div>
+                    <div class="drawer-label" *ngIf="visible && !isMobile">
+                        <p-panelmenu [model]="items" [style]="{'width':'auto'}" [multiple]="true" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pages" [ngStyle]="{
+        'margin-left.px': !isMobile ? (visible ? 200 : 60) : 0,
+        'transition': 'margin-left 0.3s cubic-bezier(0.4,0,0.2,1)',
+        'width': isMobile ? '100%' : ''
+    }">
+            <router-outlet />
+        </div>
+    </div>
+</div>

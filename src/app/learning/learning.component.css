@@ -1,0 +1,168 @@
+
+
+.content-learning {
+    width: 100%;
+}
+
+.menubar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.menubar-content {
+    width: 100%;
+    display: flex;
+    margin: 0;
+    align-items: center;
+}
+
+.menubar-content-left {
+    display: flex;
+    width: var(--drawer-width);
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+}
+
+.menubar-content-center {
+    width: 40%;
+    
+}
+
+.menubar-content-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    
+    flex: 1;
+}
+
+.w-36 {
+    margin-right: 5px;
+}
+
+.content-body {
+    display: flex;
+
+}
+
+.drawer {
+    width: var(--drawer-width);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: var(--drawer-width);
+    z-index: 100;
+    display: flex;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden; 
+    padding: 0;
+}
+
+.pages {
+
+    width: calc(100% - var(--drawer-width));
+
+    margin-left: var(--drawer-width);
+    width: 100%;
+}
+
+.drawer-content{
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;   
+}
+.drawer-label {
+    opacity: 1;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.drawer:not(.drawer-open) .drawer-label {
+    opacity: 0;
+    pointer-events: none;    
+}
+
+.drawer-overlay{
+    width: 200px;
+    height: 100vh;
+    position: absolute;
+    background-color: #3e4f3b9b;
+    z-index: 2;
+}
+.drawer-img{
+    width: 200px;
+    height: 100vh;
+    
+   
+}
+.drawer-navegation{
+    padding: 0;
+    
+}
+.drawer-content-icons{
+    position: absolute;
+    z-index: 2000;
+    left: 5px;
+
+}
+.drawer-icon{
+    margin-top: 20px;
+    
+}
+.drawer-label{
+    margin-top: 20px;
+}
+@keyframes slideDownFade {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@media (max-width: 768px) {
+    .drawer {
+        position: fixed;
+        width: 0;
+        height: 100vh;
+        z-index: 100;
+        /* background: rgba(255,255,255,0.98); */
+        transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+        /* box-shadow: 2px 0 8px rgba(0,0,0,0.2); */
+    }
+    
+    .drawer-label {
+        display: none !important;
+    }
+    .pages {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    .drawer-content-icons{
+        position: relative;
+        z-index: 2000;
+        left: 5px;
+    }
+    .drawer-content-icons .drawer-icon {
+        opacity: 0;
+        animation: slideDownFade 0.4s forwards;
+    }
+    .drawer-content-icons .drawer-icon:nth-child(1) { animation-delay: 0.05s; }
+    .drawer-content-icons .drawer-icon:nth-child(2) { animation-delay: 0.10s; }
+    .drawer-content-icons .drawer-icon:nth-child(3) { animation-delay: 0.15s; }
+    .drawer-content-icons .drawer-icon:nth-child(4) { animation-delay: 0.20s; }
+    .drawer-content-icons .drawer-icon:nth-child(5) { animation-delay: 0.25s; }
+    /* Solo activa la animación cuando el drawer está visible */
+    .drawer-overlay .drawer-content-icons .drawer-icon {
+        opacity: 1;
+    }
+}
