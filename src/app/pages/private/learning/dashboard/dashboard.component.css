@@ -1,0 +1,21 @@
+/* dashboard.component.css */
+
+:host ::ng-deep .p-carousel {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+:host ::ng-deep .p-carousel-items-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    min-height: 300px;
+    /* puedes ajustar esta altura */
+}
+
+:host ::ng-deep .p-carousel-item {
+    display: flex;
+    justify-content: center;
+}
