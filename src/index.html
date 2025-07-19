@@ -2,12 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>TesisForntend</title>
+  <title>DigiMentor</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="img/logo/PNG/Logo-Vinvulación-solo buho-02.png">
+  <script>
+      (function () {
+        const theme = localStorage.getItem('theme') || 'system';
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const resolvedTheme = theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme;
+        document.documentElement.style.colorScheme = resolvedTheme;
+      })();
+    </script>
 </head>
-<body>
+<body class="content-body">
+  <!-- <div id="splash-screen" style="position: fixed; inset: 0; background: #000; z-index: 9999;"></div> -->
   <app-root></app-root>
 </body>
 </html>

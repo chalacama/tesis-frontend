@@ -1,1 +1,102 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Transición suave para todos los cambios de color */
+    /* transition: background-color 0.3s ease, color 3s ease, border-color 0.3s ease; */
+}
+
+:root {
+    /*------------------------------------*
+     * Paletas de Colores Base
+    \*------------------------------------*/
+
+    /* Paleta Primaria (Verdes)
+       Basada en el verde principal de tu logo: #038C33 */
+    --primary-50: #e6f4e9;
+    --primary-100: #cde9d5;
+    --primary-200: #9bd3ab;
+    --primary-300: #69bd81;
+    --primary-400: #37a757;
+    --primary-500: #038C33; /* Color principal */
+    --primary-600: #027a2d;
+    --primary-700: #026124;
+    --primary-800: #014d1d;
+    --primary-900: #013b16;
+    --primary-950: #00250d;
+
+    /* Paleta Secundaria (Verde Lima / Acento)
+       Basada en el color de acento de tu logo: #9EBF56 */
+    --secondary-50: #f5f8ed;
+    --secondary-100: #e9f1d9;
+    --secondary-200: #d3e3b3;
+    --secondary-300: #bdd68d;
+    --secondary-400: #a8c867;
+    --secondary-500: #9EBF56; /* Color principal */
+    --secondary-600: #83a046;
+    --secondary-700: #698138;
+    --secondary-800: #51642c;
+    --secondary-900: #3f4d22;
+    --secondary-950: #2a3317;
+
+    /* Paleta de Superficie (Grises / Neutros)
+       Basada en los colores neutros de tu logo: #F2F2F2 y #0D0D0D */
+    --surface-0: #FFFFFF;
+    --surface-50: #F8F7F6; /* Un blanco roto muy claro */
+    --surface-100: #EAE9E8;
+    --surface-200: #D6D5D4;
+    --surface-300: #B8B7B6;
+    --surface-400: #9A9998;
+    --surface-500: #7C7B7A;
+    --surface-600: #5E5D5C;
+    --surface-700: #403F3E;
+    --surface-800: #252424;
+    --surface-900: #1A1A1A;
+    --surface-950: #0D0D0D; /* El negro de tu logo */
+
+    /*------------------------------------*
+     * Variables Semánticas del Tema
+    \*------------------------------------*/
+
+    /* Configuración para que el navegador cambie de tema automáticamente */
+    color-scheme: light dark;
+
+    /* Tamaño responsivo */
+    --sidebar-width: 250px;
+    --nav-height: 60px;
+    --sidebar-width-small: 80px;
+
+    /* Usamos la función light-dark() para asignar colores de la paleta
+       al modo claro y oscuro respectivamente. */
+    --background-color: light-dark(var(--surface-50), var(--surface-950));
+    --text-color: light-dark(var(--surface-950), var(--surface-50));
+    --text-color-secondary: light-dark(var(--surface-500), var(--surface-400));
+
+    --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
+    --nav-bg: light-dark(var(--surface-0), var(--surface-800));
+    
+    --accent-color: light-dark(var(--primary-500), var(--secondary-500));
+    --border-color: light-dark(var(--surface-200), var(--surface-700));
+    --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
+
+    /* Estilos para el Theme Switcher */
+    --switcher-border: light-dark(var(--primary-600), var(--secondary-500));
+    --switcher-hover: light-dark(var(--primary-500), var(--surface-0));
+    --switcher-active-bg: light-dark(var(--primary-500), var(--secondary-500));
+    --switcher-active-icon: light-dark(var(--surface-0), var(--surface-950));
+
+    --bottom-primary: light-dark(var(--primary-600), var(--primary-400));
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Fallback para navegadores que no soportan light-dark()
+   Se mostrará el tema claro por defecto. */

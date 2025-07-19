@@ -1,0 +1,161 @@
+<div class="content">
+    <div class="sidebar" [class.collapsed]="isSidebarCollapsed">
+        <div class="content-logo">
+            <div class="logo-dark" *ngIf="currentTheme === 'dark' || (currentTheme === 'system' && prefersDarkMode)">
+                <img class="logo-digimentor" src="img/logo/PNG/Logo Vinvulación-B-T-04.png" alt="DigiMentor" />
+            </div>
+
+            <!-- Logo para tema claro -->
+            <div class="logo-light" *ngIf="currentTheme === 'light' || (currentTheme === 'system' && !prefersDarkMode)">
+                <img class="logo-digimentor" src="img\logo\PNG\Logo-Vinvulación-solo buho-02.png" alt="DigiMentor" />
+            </div>
+            <div class="content-swallow" *ngIf="!isSidebarCollapsed">
+                <button class="swallow__icon" (click)="toggleSidebar()">
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        <div class="content-search">
+            <button class="button-search">
+                <svg class="svgIcon" viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z">
+                    </path>
+                </svg>
+                <div class="label-navegation">
+                    <label for="">Explore</label>
+                </div>
+            </button>
+        </div>
+        <div class="content-navegation">
+            <label class="navegation-route" (click)="navigateTo('')">
+                <input name="page" type="radio" [checked]="currentRoute === ''" />
+                <div class="icon-navegation">
+                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" class="icon home">
+                        <path fill="inherit"
+                            d="M18.9999 6.01002L12.4499 0.770018C11.1699 -0.249982 9.16988 -0.259982 7.89988 0.760018L1.34988 6.01002C0.409885 6.76002 -0.160115 8.26002 0.0398848 9.44002L1.29988 16.98C1.58988 18.67 3.15988 20 4.86988 20H15.4699C17.1599 20 18.7599 18.64 19.0499 16.97L20.3099 9.43002C20.4899 8.26002 19.9199 6.76002 18.9999 6.01002ZM10.9199 16C10.9199 16.41 10.5799 16.75 10.1699 16.75C9.75988 16.75 9.41988 16.41 9.41988 16V13C9.41988 12.59 9.75988 12.25 10.1699 12.25C10.5799 12.25 10.9199 12.59 10.9199 13V16Z">
+                        </path>
+                    </svg>
+                    <span class="underline"></span> <!-- barra debajo del ícono -->
+                </div>
+                <div class="label-navegation">
+                    <span class="label-txt">Home</span>
+                </div>
+            </label>
+            <label class="navegation-route" (click)="navigateTo('path')">
+                <input name="page" type="radio" [checked]="currentRoute === 'path'" />
+                <div class="icon-navegation">
+                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path fill="inherit" d="m0 3l5-2v12l-5 2zM6 .5l5 3V15l-5-2.5zm6 3l4-3v12l-4 3z" />
+                    </svg>
+                    <span class="underline"></span>
+                </div>
+                <div class="label-navegation">
+                    <span class="label-txt">Trayectoria</span>
+                </div>
+            </label>
+            <label class="navegation-route" (click)="navigateTo('certification')">
+                <input name="page" type="radio" [checked]="currentRoute === 'certification'" />
+                <div class="icon-navegation">
+                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="inherit"
+                            d="M2.047 14.667a.992.992 0 0 0 .466.607l1.909 1.104v2.199a1 1 0 0 0 1 1h2.199l1.104 1.91a1.002 1.002 0 0 0 1.366.366L12 20.75l1.91 1.104a1.002 1.002 0 0 0 1.366-.366l1.103-1.909h2.199a1 1 0 0 0 1-1V16.38l1.909-1.104a.999.999 0 0 0 .366-1.366L20.75 12l1.104-1.909a1 1 0 0 0-.366-1.366l-1.909-1.104V5.422a1 1 0 0 0-1-1H16.38l-1.103-1.909a1.004 1.004 0 0 0-.607-.466a.994.994 0 0 0-.759.1L12 3.25l-1.909-1.104a.998.998 0 0 0-1.366.365l-1.104 1.91H5.422a1 1 0 0 0-1 1V7.62L2.513 8.725a1.001 1.001 0 0 0-.365 1.366L3.251 12l-1.104 1.909a1.003 1.003 0 0 0-.1.758z" />
+                    </svg>
+                    <span class="underline"></span>
+                </div>
+                <div class="label-navegation">
+                    <span class="label-txt">Certificaciones</span>
+                </div>
+            </label>
+            <label class="navegation-route" (click)="navigateTo('manage/courses')">
+                <input name="page" type="radio" [checked]="currentRoute === 'manage/courses'" />
+                <div class="icon-navegation">
+                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="1.5" color="currentColor">
+                            <path
+                                d="M2.459 9c1.277-4.057 5.077-7 9.566-7c5.198 0 9.472 3.947 9.975 9l-2-.407M21.541 15a10.03 10.03 0 0 1-9.566 7C6.777 22 2.503 18.053 2 13l2 .407" />
+                            <path
+                                d="M9.002 13.528v1.992a.95.95 0 0 0 .432.81c.844.528 1.485.683 2.571.716c1.001.027 1.629-.13 2.563-.714a.96.96 0 0 0 .44-.82v-1.984m2.003-2.513v3.015M7.05 10.844c.362-.764 2.605-2.094 4.652-2.751a.93.93 0 0 1 .604.014c1.81.662 3.824 1.665 4.555 2.478c.381.425.008.967-.453 1.302c-.937.681-1.97 1.21-4.058 2.013a.98.98 0 0 1-.688.005c-2.14-.795-4.142-1.82-4.595-2.723a.39.39 0 0 1-.017-.338" />
+                        </g>
+                    </svg>
+                    <span class="underline"></span>
+                </div>
+                <div class="label-navegation">
+                    <span class="label-txt">Cursos</span>
+                </div>
+            </label>
+
+            <label class="navegation-route" (click)="navigateTo('manage/users')">
+                <input name="page" type="radio" [checked]="currentRoute === 'manage/users'" />
+                <div class="icon-navegation">
+                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd"
+                            d="M12 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-1.5 8a4 4 0 0 0-4 4c0 1.1.9 2 2 2h7a2 2 0 0 0 2-2a4 4 0 0 0-4-4zm6.8-3.1a5.5 5.5 0 0 0-2.8-6.3c.6-.4 1.3-.6 2-.6a3.5 3.5 0 0 1 .8 6.9m2.2 7.1h.5a2 2 0 0 0 2-2a4 4 0 0 0-4-4h-1.1l-.5.8c1.9 1 3.1 3 3.1 5.2M4 7.5a3.5 3.5 0 0 1 5.5-2.9A5.5 5.5 0 0 0 6.7 11A3.5 3.5 0 0 1 4 7.5M7.1 12H6a4 4 0 0 0-4 4c0 1.1.9 2 2 2h.5a6 6 0 0 1 3-5.2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="underline"></span>
+                </div>
+                <div class="label-navegation">
+                    <span class="label-txt">Users</span>
+                </div>
+            </label>
+
+        </div>
+        <div class="content-swallow content-swallow-open" *ngIf="isSidebarCollapsed">
+            <button  class="swallow__icon swallow__icon-open" (click)="toggleSidebar()">
+                <span></span>
+            </button>
+        </div>
+    </div>
+    <div class="right-panel">
+
+        <div class="nav" [class.nav-collapsed]="isSidebarCollapsed">
+            <div role="radiogroup" class="theme-switcher">
+                <button type="button" role="radio" data-theme-switcher="true"
+                    [attr.data-active]="currentTheme === 'light'" [attr.aria-checked]="currentTheme === 'light'"
+                    class="theme-switcher_switch" aria-label="Switch to light theme" (click)="switchTheme('light')">
+                    <svg style="color: currentcolor; width: 16px; height: 16px;" width="24" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"
+                        shape-rendering="geometricPrecision" height="24" fill="none" data-testid="geist-icon"
+                        class="icon">
+                        <circle r="5" cy="12" cx="12"></circle>
+                        <path d="M12 1v2"></path>
+                        <path d="M12 21v2"></path>
+                        <path d="M4.22 4.22l1.42 1.42"></path>
+                        <path d="M18.36 18.36l1.42 1.42"></path>
+                        <path d="M1 12h2"></path>
+                        <path d="M21 12h2"></path>
+                        <path d="M4.22 19.78l1.42-1.42"></path>
+                        <path d="M18.36 5.64l1.42-1.42"></path>
+                    </svg>
+                </button>
+                <button type="button" role="radio" data-theme-switcher="true"
+                    [attr.data-active]="currentTheme === 'system'" [attr.aria-checked]="currentTheme === 'system'"
+                    class="theme-switcher_switch" aria-label="Switch to system theme" (click)="switchTheme('system')">
+                    <svg style="color: currentcolor; width: 16px; height: 16px;" width="24" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"
+                        shape-rendering="geometricPrecision" height="24" fill="none" data-testid="geist-icon"
+                        class="icon">
+                        <rect ry="2" rx="2" height="14" width="20" y="3" x="2"></rect>
+                        <path d="M8 21h8"></path>
+                        <path d="M12 17v4"></path>
+                    </svg>
+                </button>
+                <button type="button" role="radio" data-theme-switcher="true"
+                    [attr.data-active]="currentTheme === 'dark'" [attr.aria-checked]="currentTheme === 'dark'"
+                    class="theme-switcher_switch" aria-label="Switch to dark theme" (click)="switchTheme('dark')">
+                    <svg style="color: currentcolor; width: 16px; height: 16px;" width="24" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"
+                        shape-rendering="geometricPrecision" height="24" fill="none" data-testid="geist-icon"
+                        class="icon">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="main">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
