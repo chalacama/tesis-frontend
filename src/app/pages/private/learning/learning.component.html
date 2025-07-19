@@ -2,12 +2,12 @@
     <div class="sidebar" [class.collapsed]="isSidebarCollapsed">
         <div class="content-logo">
             <div class="logo-dark" *ngIf="currentTheme === 'dark' || (currentTheme === 'system' && prefersDarkMode)">
-                <img class="logo-digimentor" src="img/logo/PNG/Logo Vinvulación-B-T-04.png" alt="DigiMentor" />
+                <img class="logo-digimentor" src="img\logo\png\rigth\Logo Vinvulación-escala grises-03-right.png" alt="DigiMentor" />
             </div>
 
             <!-- Logo para tema claro -->
             <div class="logo-light" *ngIf="currentTheme === 'light' || (currentTheme === 'system' && !prefersDarkMode)">
-                <img class="logo-digimentor" src="img\logo\PNG\Logo-Vinvulación-solo buho-02.png" alt="DigiMentor" />
+                <img class="logo-digimentor" src="img\logo\png\rigth\Logo-Vinvulación-solo buho-02-right.png" alt="DigiMentor" />
             </div>
             <div class="content-swallow" *ngIf="!isSidebarCollapsed">
                 <button class="swallow__icon" (click)="toggleSidebar()">
