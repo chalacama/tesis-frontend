@@ -1,12 +1,12 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { User } from '../auth/interfaces/user';
+import { User } from './auth.interfaces';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environment/environment';
 import { isPlatformBrowser } from '@angular/common';
-import { AuthResponse } from './interfaces/auth-response';
-import { LoginRequest } from './interfaces/login-request';
+import { AuthResponse } from './auth.interfaces';
+import { LoginRequest } from './auth.interfaces';
 
 @Injectable({
   providedIn: 'root'

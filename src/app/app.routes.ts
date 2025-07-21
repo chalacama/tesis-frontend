@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   {
@@ -9,6 +11,7 @@ export const routes: Routes = [
   },
   {
     path: 'learning',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/private/learning/learning.component').then((c) => c.LearningComponent),
     children: [
@@ -42,6 +45,7 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./pages/public/auth/auth.component').then((c) => c.AuthComponent)
 

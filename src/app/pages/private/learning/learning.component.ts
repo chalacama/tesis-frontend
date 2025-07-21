@@ -4,7 +4,7 @@ import { ThemeService } from '../../../shared/UI/theme.service';
 import { CommonModule } from '@angular/common';
 import { filter, Observable, Subject, tap } from 'rxjs';
 import { AuthService } from '../../../core/api/auth/auth.service';
-import { User } from '../../../core/api/auth/interfaces/user';
+import { User } from '../../../core/api/auth/auth.interfaces';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntil, map } from 'rxjs/operators';
 // import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -51,7 +51,7 @@ export class LearningComponent {
       this.prefersDarkMode = isDark;
     });
 
-    
+
     this.breakpointObserver
       .observe([Breakpoints.Handset])
       .pipe(
@@ -74,11 +74,12 @@ export class LearningComponent {
       .subscribe(isTablet => {
         this.isTablet = isTablet;
         if (this.isTablet) {
-          this.isSidebarCollapsed = true; 
+          this.isSidebarCollapsed = true;
         }
       });
-      this.datosUsuario$ = this.authService.currentUser;
-
+    this.datosUsuario$ = this.authService.currentUser;
+    /* const splash = document.getElementById('splash-screen');
+    splash?.remove(); */
   }
   navigateTo(path: string) {
     this.router.navigate([path]);
@@ -89,23 +90,37 @@ export class LearningComponent {
     console.log('Theme switched to:', this.currentTheme);
   }
   toggleSidebar() {
-    if(this.isMobile === false && this.isTablet === false){      
+    if (this.isMobile === false && this.isTablet === false) {
       this.isSidebarCollapsed = !this.isSidebarCollapsed;
       console.log('pc');
-    }if(this.isMobile){      
-      this.isSidebarClose = ! this.isSidebarClose ;
+    } if (this.isMobile) {
+      this.isSidebarClose = !this.isSidebarClose;
       this.isdrawer = !this.isdrawer;
       console.log('Movil');
-    }else if(this.isTablet){
+    } else if (this.isTablet) {
       this.isSidebarCollapsed = !this.isSidebarCollapsed;
       this.isdrawer = !this.isdrawer;
       console.log('Tablet');
     }
-    
+
   }
   /* closeSidebar() {
     this.isSidebarClose = ! this.isSidebarClose ;
     console.log(this.isSidebarClose)
   } */
+  logoutAndRedirect(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        if (this.platformId && typeof window !== 'undefined') {
+          window.location.href = '/auth';
+        }
+      },
+      error: (err) => {
+        console.error('Error cerrando sesión:', err);
+      }
+    });
+  }
+
+
 
 }

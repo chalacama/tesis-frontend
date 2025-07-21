@@ -12,7 +12,7 @@ export class AppComponent {
   title = 'DigiMentor';
   
     ngOnInit() {
-      const splash = document.getElementById('splash-screen');
-  splash?.remove();
+      /* const splash = document.getElementById('splash-screen');
+  splash?.remove(); */
     }
 }

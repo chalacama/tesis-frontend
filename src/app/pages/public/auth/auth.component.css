@@ -603,3 +603,204 @@
     transform: scale(1.2);
   }
 }
+body,
+html {
+    /* margin: 0;
+    padding: 0; */
+    /* font-family: Arial, sans-serif; */
+    color: #000000;
+    background: linear-gradient(to bottom, #ffffff, #fff5e1);
+    /* height: 100%; */
+    background-color: #ffffff;
+}
+
+/* .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #2e7d32 0%, #60ad5e 100%);
+} */
+
+.login-card {
+    background-color: #ffffffaf;
+    padding: 2rem;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.logo {
+    width: 80px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 20px;
+    font-weight: bold;
+    /* <- Negrita */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    font-family: 'Poppins', sans-serif;
+    /* o 'Roboto' */
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #333;
+    font-weight: 400;
+}
+
+input::placeholder {
+    color: #999;
+    font-weight: 300;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.btn-signin {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-google {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.google-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.divider {
+    margin: 12px 0;
+    color: #999;
+    text-align: center;
+}
+
+
+/* Responsivo */
+
+@media screen and (max-width: 480px) {
+    .login-card {
+        padding: 1.5rem;
+        width: 100%;
+    }
+    .btn-google,
+    .btn-signin {
+        font-size: 13px;
+    }
+    input[type="text"],
+    input[type="password"] {
+        font-size: 13px;
+    }
+    h2 {
+        font-size: 18px;
+        color: #000;
+    }
+}
+
+
+/* ... lo que ya tienes arriba ... */
+
+
+/* Input con borde verde al enfocar */
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border: 2px solid #2e7d32;
+    outline: none;
+}
+
+
+/* Divider con líneas a los lados y la "o" centrada */
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #121212;
+    font-size: 14px;
+    margin: 16px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #131313;
+    margin: 0 10px;
+}
+input[type="text"],
+input[type="password"] {
+  background-color: white;
+  color: black; /* Para asegurar que el texto sea visible */
+}
+
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: white;     /* Fondo claro */
+  border: 2px solid #333;      /* Borde visible */
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;          /* Bordes redondeados (opcional) */
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "✔";                /* Icono check personalizado */
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  font-size: 12px;
+  color: #2e7d32;              /* Color del check (verde en este caso) */
+  font-weight: bold;
+}

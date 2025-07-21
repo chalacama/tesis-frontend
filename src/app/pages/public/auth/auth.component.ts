@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router'
 import { AuthService } from '../../../core/api/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { LoginRequest } from '../../../core/api/auth/interfaces/login-request';
+import { LoginRequest } from '../../../core/api/auth/auth.interfaces';
 @Component({
   selector: 'app-auth',
   imports: [ReactiveFormsModule,CommonModule],

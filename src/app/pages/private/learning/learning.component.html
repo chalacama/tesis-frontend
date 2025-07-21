@@ -130,6 +130,9 @@
 
         </div>
         <div class="nav-right">
+            <div>
+                <button (click)="logoutAndRedirect()">Salir</button>
+            </div>
             <div role="radiogroup" class="theme-switcher">
                 <button type="button" role="radio" data-theme-switcher="true"
                     [attr.data-active]="currentTheme === 'light'" [attr.aria-checked]="currentTheme === 'light'"
