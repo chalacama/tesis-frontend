@@ -2,11 +2,12 @@ import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from '../../../shared/UI/theme.service';
 import { CommonModule } from '@angular/common';
-import { isPlatformBrowser } from '@angular/common'
-/* import { Router } from 'express'; */
-import { filter } from 'rxjs';
-/* import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators'; */
+import { filter, Observable, Subject, tap } from 'rxjs';
+import { AuthService } from '../../../core/api/auth/auth.service';
+import { User } from '../../../core/api/auth/interfaces/user';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { takeUntil, map } from 'rxjs/operators';
+// import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'app-learning',
   imports: [RouterOutlet, CommonModule],
@@ -14,11 +15,25 @@ import { filter } from 'rxjs/operators'; */
   styleUrl: './learning.component.css'
 })
 export class LearningComponent {
+  datosUsuario$!: Observable<User | null>;
   currentTheme: 'light' | 'dark' | 'system' = 'system';
   currentRoute: string = '';
   isSidebarCollapsed = false;
+  isSidebarClose = true;
   prefersDarkMode: boolean = false;
-  constructor(private themeService: ThemeService, @Inject(PLATFORM_ID) private platformId: Object, private router: Router) {
+  isdrawer = false;
+  /* isTabletOrMobile = false; */
+  isMobile = false;
+  isTablet = false;
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private themeService: ThemeService,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private authService: AuthService,
+    private breakpointObserver: BreakpointObserver
+  ) {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -35,10 +50,34 @@ export class LearningComponent {
     this.themeService.onSystemThemeChange((isDark) => {
       this.prefersDarkMode = isDark;
     });
-    /* if (this.currentTheme, this.prefersDarkMode) {
-      const splash = document.getElementById('splash-screen');
-      splash?.remove();
-    } */
+
+    
+    this.breakpointObserver
+      .observe([Breakpoints.Handset])
+      .pipe(
+        map(result => result.matches),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(isMobile => {
+        this.isMobile = isMobile;
+        if (this.isMobile) {
+          /* this.isSidebarCollapsed = true */;
+        }
+      });
+
+    this.breakpointObserver
+      .observe([Breakpoints.Tablet])
+      .pipe(
+        map(result => result.matches),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(isTablet => {
+        this.isTablet = isTablet;
+        if (this.isTablet) {
+          this.isSidebarCollapsed = true; 
+        }
+      });
+      this.datosUsuario$ = this.authService.currentUser;
 
   }
   navigateTo(path: string) {
@@ -50,6 +89,23 @@ export class LearningComponent {
     console.log('Theme switched to:', this.currentTheme);
   }
   toggleSidebar() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    if(this.isMobile === false && this.isTablet === false){      
+      this.isSidebarCollapsed = !this.isSidebarCollapsed;
+      console.log('pc');
+    }if(this.isMobile){      
+      this.isSidebarClose = ! this.isSidebarClose ;
+      this.isdrawer = !this.isdrawer;
+      console.log('Movil');
+    }else if(this.isTablet){
+      this.isSidebarCollapsed = !this.isSidebarCollapsed;
+      this.isdrawer = !this.isdrawer;
+      console.log('Tablet');
+    }
+    
   }
+  /* closeSidebar() {
+    this.isSidebarClose = ! this.isSidebarClose ;
+    console.log(this.isSidebarClose)
+  } */
+
 }

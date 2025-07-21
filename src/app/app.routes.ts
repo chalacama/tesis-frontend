@@ -4,6 +4,12 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
+      import('./pages/public/landing/landing.component').then((c) => c.LandingComponent)
+
+  },
+  {
+    path: 'learning',
+    loadComponent: () =>
       import('./pages/private/learning/learning.component').then((c) => c.LearningComponent),
     children: [
       {

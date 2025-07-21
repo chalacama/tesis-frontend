@@ -1,18 +1,18 @@
 <div class="content">
-    <div class="sidebar" [class.collapsed]="isSidebarCollapsed">
-        <div class="content-logo">
+    <div (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
+
+    </div>
+    <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose" [class.collapsed]="isSidebarCollapsed">
+        <div class="content-logo" (click)="toggleSidebar()">
             <div class="logo-dark" *ngIf="currentTheme === 'dark' || (currentTheme === 'system' && prefersDarkMode)">
-                <img class="logo-digimentor" src="img\logo\png\rigth\Logo Vinvulación-escala grises-03-right.png" alt="DigiMentor" />
+                <img class="logo-digimentor" src="img\logo\png\rigth\Logo Vinvulación-escala grises-03-right.png"
+                    alt="DigiMentor" />
             </div>
 
             <!-- Logo para tema claro -->
             <div class="logo-light" *ngIf="currentTheme === 'light' || (currentTheme === 'system' && !prefersDarkMode)">
-                <img class="logo-digimentor" src="img\logo\png\rigth\Logo-Vinvulación-solo buho-02-right.png" alt="DigiMentor" />
-            </div>
-            <div class="content-swallow" *ngIf="!isSidebarCollapsed">
-                <button class="swallow__icon" (click)="toggleSidebar()">
-                    <span></span>
-                </button>
+                <img class="logo-digimentor" src="img\logo\png\rigth\Logo-Vinvulación-solo buho-02-right.png"
+                    alt="DigiMentor" />
             </div>
         </div>
         <div class="content-search">
@@ -28,7 +28,7 @@
             </button>
         </div>
         <div class="content-navegation">
-            <label class="navegation-route" (click)="navigateTo('')">
+            <label class="navegation-route" (click)="navigateTo('learning')">
                 <input name="page" type="radio" [checked]="currentRoute === ''" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" class="icon home">
@@ -42,7 +42,7 @@
                     <span class="label-txt">Home</span>
                 </div>
             </label>
-            <label class="navegation-route" (click)="navigateTo('path')">
+            <label class="navegation-route" (click)="navigateTo('learning/path')">
                 <input name="page" type="radio" [checked]="currentRoute === 'path'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -54,7 +54,7 @@
                     <span class="label-txt">Trayectoria</span>
                 </div>
             </label>
-            <label class="navegation-route" (click)="navigateTo('certification')">
+            <label class="navegation-route" (click)="navigateTo('learning/certification')">
                 <input name="page" type="radio" [checked]="currentRoute === 'certification'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@
                     <span class="label-txt">Certificaciones</span>
                 </div>
             </label>
-            <label class="navegation-route" (click)="navigateTo('manage/courses')">
+            <label class="navegation-route" (click)="navigateTo('learning/manage/courses')">
                 <input name="page" type="radio" [checked]="currentRoute === 'manage/courses'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@
                 </div>
             </label>
 
-            <label class="navegation-route" (click)="navigateTo('manage/users')">
+            <label class="navegation-route" (click)="navigateTo('learning/manage/users')">
                 <input name="page" type="radio" [checked]="currentRoute === 'manage/users'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -102,15 +102,34 @@
             </label>
 
         </div>
-        <div class="content-swallow content-swallow-open" *ngIf="isSidebarCollapsed">
-            <button  class="swallow__icon swallow__icon-open" (click)="toggleSidebar()">
-                <span></span>
-            </button>
+        <div *ngIf="isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                <path fill="currentColor" fill-rule="evenodd"
+                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm8.293 2.293a1 1 0 1 0 1.414 1.414l3-3a1 1 0 0 0 0-1.414l-3-3a1 1 0 1 0-1.414 1.414L12.586 12l-2.293 2.293Z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div *ngIf="!isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                <path fill="currentColor" fill-rule="evenodd"
+                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm11.707-2.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 0 0 1.414-1.414L11.414 12l2.293-2.293Z"
+                    clip-rule="evenodd" />
+            </svg>
         </div>
     </div>
-    <div class="right-panel">
 
-        <div class="nav" [class.nav-collapsed]="isSidebarCollapsed">
+
+    <div class="nav" [class.nav-collapsed]="isSidebarCollapsed">
+        <div class="nav-left">
+            <div (click)="toggleSidebar()" >
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M4 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m0 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2z"/></svg>
+
+            </div>
+
+
+        </div>
+        <div class="nav-right">
             <div role="radiogroup" class="theme-switcher">
                 <button type="button" role="radio" data-theme-switcher="true"
                     [attr.data-active]="currentTheme === 'light'" [attr.aria-checked]="currentTheme === 'light'"
@@ -153,9 +172,24 @@
                     </svg>
                 </button>
             </div>
+            <div class="profile-panel">
+                <div *ngIf="datosUsuario$ | async as usuario">
+                    <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
+                    <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
+                        <label>{{ usuario.name.charAt(0) | uppercase }}</label>
+                    </div>
+                </div>
+            </div>
+            <!-- <div *ngIf="datosUsuario$ | async as usuario">
+                <h2>Bienvenido, {{ usuario.name }}</h2>
+                <p>Usuario: {{ usuario.username }}</p>
+                
+            </div> -->
         </div>
+
+    </div>
+    <div [class.content-main-collapsed]="isSidebarCollapsed" class="content-main">
         <div class="main">
             <router-outlet></router-outlet>
         </div>
     </div>
-</div>

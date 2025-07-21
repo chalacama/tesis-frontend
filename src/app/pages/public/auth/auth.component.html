@@ -16,8 +16,8 @@
           </div>
         </button>
       </div>
-      <!-- <img style="width: 40px; height: 40px; object-fit: contain; margin: 0; z-index: 10;" src="img/logo/PNG/Logo-Vinvulación-solo buho-02.png" alt=""> -->
-      <form class="form">
+      
+      <form class="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
 
         <div class="e-card playing">
@@ -32,12 +32,15 @@
               </div>
 
               <div class="inputBox">
-                <input type="text" id="email" required aria-label="Email">
+                <input formControlName="email" type="text" id="email" required aria-label="Email">
                 <label for="email">Email</label>
+                <!-- <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+                  Por favor, introduce un email válido
+                </div> -->
               </div>
               <div class="inputBox">
                 
-                <input [type]="showPassword ? 'text' : 'password'" type="password" id="password" required aria-label="Password">
+                <input formControlName="password" [type]="showPassword ? 'text' : 'password'" type="password" id="password" required aria-label="Password">
                 <label for="password">Password</label>
                 
               </div>
@@ -55,7 +58,9 @@
                   </svg>
                 </label>
               <div class="inputBox">
-                <button class="enter">Sign in</button>
+                <button type="submit" [disabled]="isLoading" class="enter">
+                  {{ isLoading ? 'Cargando...' : 'Sign in' }}
+                </button>
               </div>
 
               <div class="inputBox">
