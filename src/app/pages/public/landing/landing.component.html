@@ -1,1 +1,50 @@
-<p>landing works!</p>
+<div class="landing-container">
+    <nav class="navbar" role="navigation" aria-label="Principal navegación">
+        <div class="logo-section">
+            <img src="img/logo/png/rigth/Logo-Vinvulación-solo buho-02-right.png" alt="Logo Digimentor" class="logo" />
+            <span class="slogan">Aprende a tu ritmo, conecta con el mundo</span>
+        </div>
+        <button class="login-button" (click)="goToAuth()" aria-label="Iniciar sesión en Digimentor">
+      Iniciar sesión
+    </button>
+    </nav>
+
+    <main>
+        <div class="landing-content">
+            <img src="img/espam/Logo Vinvulación-principal.png" alt="Logo principal Digimentor" class="landing-logo" loading="lazy" />
+            <a href="#sobre" class="scroll-button" aria-label="Explorar sección sobre Digimentor">Explora</a>
+        </div>
+
+        <section id="sobre" class="info-section" aria-labelledby="sobre-title">
+            <h2 id="sobre-title">¿Qué es Digimentor?</h2>
+            <p>
+                Digimentor es una plataforma que guía tu proceso de alfabetización tecnológica a tu ritmo, con recursos interactivos, mentoría personalizada y acceso desde cualquier dispositivo.
+            </p>
+
+            <div class="benefits" role="list">
+                <article class="benefit-card" role="listitem" tabindex="0">
+                    <div class="icon">✔️</div>
+                    <h3>Fácil de usar</h3>
+                    <p>Interfaz intuitiva para que comiences rápido sin complicaciones.</p>
+                </article>
+
+                <article class="benefit-card" role="listitem" tabindex="0">
+                    <div class="icon">📱</div>
+                    <h3>Accesible en cualquier dispositivo</h3>
+                    <p>Compatible con móviles, tablets y ordenadores para aprender en donde quieras.</p>
+                </article>
+
+                <article class="benefit-card" role="listitem" tabindex="0">
+                    <div class="icon">🧑‍🏫</div>
+                    <h3>Apoyo constante</h3>
+                    <p>Mentores disponibles para resolver tus dudas y acompañarte en el camino.</p>
+                </article>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <p>© 2025 Digimentor. Todos los derechos reservados.</p>
+    </footer>
+</div>
