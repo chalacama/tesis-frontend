@@ -77,3 +77,50 @@ body {
    background-color: var(--background-color);
    color: var(--text-color);
 }
+body.app-loading app-root {
+  opacity: 0;
+  pointer-events: none;
+}
+app-root {
+  transition: opacity 0.3s ease-in-out;
+}
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999; /* Asegura que esté por encima de todo */
+  
+  /* Usa flexbox para centrar el logo perfectamente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* El fondo debe coincidir con el de tu app para una transición limpia */
+  background-color: var(--background-color);
+}
+
+#splash-screen img {
+  width: 150px; /* Ajusta el tamaño de tu logo como prefieras */
+  /* Animación sutil opcional para el logo */
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Keyframes para la animación de pulso */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+body:not(.app-loading) #splash-screen {
+  opacity: 0;
+  pointer-events: none; /* Evita que se pueda interactuar con él mientras desaparece */
+  transition: opacity 0.5s ease-out;
+}

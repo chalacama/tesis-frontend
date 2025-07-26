@@ -1,19 +1,28 @@
-import { CanActivateFn } from '@angular/router';
+// src/app/core/guards/auth.guard.ts
+
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { AuthService } from '../api/auth/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (): Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const isAuthenticated = authService.isAuthenticated();
-
-  if (!isAuthenticated) {
-    router.navigate(['/auth'], {
-      queryParams: { returnUrl: state.url }  // opcional: para redirigir luego del login
-    });
-  }
-
-  return isAuthenticated;
+  // Usamos el observable currentUser que ya tienes en tu servicio
+  return authService.currentUser.pipe(
+    // take(1) asegura que la suscripción se complete después de la primera emisión
+    take(1),
+    map(user => {
+      // Si el usuario existe (no es null), está autenticado
+      if (user) {
+        return true; // Permitir acceso
+      }
+      
+      // Si no hay usuario, redirigir a la página de login
+      // Usar createUrlTree es la forma recomendada en guards funcionales
+      return router.createUrlTree(['/auth']);
+    })
+  );
 };

@@ -96,4 +96,23 @@ export class AuthService {
     }
     return throwError(() => new Error(errorMessage));
   }
+  // NUEVO MÉTODO DE INICIALIZACIÓN
+  init(): Promise<void> {
+    return new Promise(resolve => {
+      if (this.isBrowser) {
+        const storedUser = localStorage.getItem('currentUser');
+        const token = localStorage.getItem('token');
+        
+        if (storedUser && token) {
+          this.currentUserSubject.next(JSON.parse(storedUser));
+        } else {
+          this.currentUserSubject.next(null);
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('token');
+        }
+      }
+      // Resuelve la promesa para que Angular sepa que puede continuar
+      resolve(); 
+    });
+  }
 }

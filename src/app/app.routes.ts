@@ -5,7 +5,7 @@ import { guestGuard } from './core/guards/guest.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/learning',
+    redirectTo: '/landing',
     pathMatch: 'full'
   },
   {

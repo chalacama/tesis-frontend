@@ -43,7 +43,7 @@ export class LearningComponent {
   }
 
   ngOnInit() {
-
+    this.datosUsuario$ = this.authService.currentUser;
     this.currentTheme = this.themeService.getCurrentTheme();
     this.prefersDarkMode = this.themeService.getSystemPrefersDark();
 
@@ -77,7 +77,7 @@ export class LearningComponent {
           this.isSidebarCollapsed = true;
         }
       });
-    this.datosUsuario$ = this.authService.currentUser;
+    
     /* const splash = document.getElementById('splash-screen');
     splash?.remove(); */
   }
