@@ -3,21 +3,27 @@
 
     </div>
     <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose" [class.collapsed]="isSidebarCollapsed">
-        <div class="content-logo" (click)="toggleSidebar()">
-            <div class="logo-dark" *ngIf="currentTheme === 'dark' || (currentTheme === 'system' && prefersDarkMode)">
-                <img class="logo-digimentor" src="img\logo\png\rigth\Logo Vinvulación-escala grises-03-right.png"
+        <div  class="didebar-header" (click)="toggleSidebar()">
+            <div class="content-logo-label" [class.content-logo-label-collapsed]="isSidebarCollapsed">
+                <div>
+                    <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png"
                     alt="DigiMentor" />
+                </div>
+                
+                    <div class="content-digimentor-label">
+                        <img class="digimentor-label" src="img\logo\png\digi-mentor-label.png"
+                    alt="DigiMentor" />
+                    </div>
+                
             </div>
-
-            <!-- Logo para tema claro -->
-            <div class="logo-light" *ngIf="currentTheme === 'light' || (currentTheme === 'system' && !prefersDarkMode)">
-                <img class="logo-digimentor" src="img\logo\png\rigth\Logo-Vinvulación-solo buho-02-right.png"
+            <div class="content-logo" [class.content-logo-collapsed]="isSidebarCollapsed">
+                <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png"
                     alt="DigiMentor" />
             </div>
         </div>
         <div class="content-search">
             <button class="button-search">
-                <svg class="svgIcon" viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                <svg class="svgIcon icon-color" viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z">
                     </path>
@@ -29,7 +35,7 @@
         </div>
         <div class="content-navegation">
             <label class="navegation-route" (click)="navigateTo('learning')">
-                <input name="page" type="radio" [checked]="currentRoute === ''" />
+                <input name="page" type="radio" [checked]="currentRoute === 'learning'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" class="icon home">
                         <path fill="inherit"
@@ -43,7 +49,7 @@
                 </div>
             </label>
             <label class="navegation-route" (click)="navigateTo('learning/path')">
-                <input name="page" type="radio" [checked]="currentRoute === 'path'" />
+                <input name="page" type="radio" [checked]="currentRoute === 'learning/path'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                         <path fill="inherit" d="m0 3l5-2v12l-5 2zM6 .5l5 3V15l-5-2.5zm6 3l4-3v12l-4 3z" />
@@ -55,7 +61,7 @@
                 </div>
             </label>
             <label class="navegation-route" (click)="navigateTo('learning/certification')">
-                <input name="page" type="radio" [checked]="currentRoute === 'certification'" />
+                <input name="page" type="radio" [checked]="currentRoute === 'learning/certification'" />
                 <div class="icon-navegation">
                     <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path fill="inherit"

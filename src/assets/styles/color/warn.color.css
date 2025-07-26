@@ -1,0 +1,14 @@
+/* #FDBA74 */
+:root {
+   --warn-50: #FFF7ED;
+   --warn-100: #FFEDD5;
+   --warn-200: #FED7AA;
+   --warn-300: #FDBA74; /* hover */
+   --warn-400: #FB923C;
+   --warn-500: #F97316;
+   --warn-600: #EA580C;
+   --warn-700: #C2410C;
+   --warn-800: #9A3412;
+   --warn-900: #7C2D12;
+   --warn-950: #431407;
+}

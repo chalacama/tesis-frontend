@@ -1,138 +1,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+@import url(assets/styles/color/color.palette.css);
+@import url(assets/styles/color/green.color.css);
+@import url(assets/styles/color/danger.color.css);
+@import url(assets/styles/color/help.color.css);
+@import url(assets/styles/color/info.color.css);
+@import url(assets/styles/color/warn.color.css);
+
+@import url(assets/styles/responsive/component.css);
+
 * {
    margin: 0;
    padding: 0;
    box-sizing: border-box;
-   /* Transición suave para todos los cambios de color */
    /* transition: background-color 0.3s ease, color 3s ease, border-color 0.3s ease; */
 }
 
 :root {
-   /*------------------------------------*
-     * Paletas de Colores Base
-    \*------------------------------------*/
-
-   /* Paleta Primaria (Verdes)
-       Basada en el verde principal de tu logo: #038C33 */
-   --primary-50: #e6f4e9;
-   --primary-100: #cde9d5;
-   --primary-200: #9bd3ab;
-   --primary-300: #69bd81;
-   --primary-400: #37a757;
-   --primary-500: #038C33;
-   /* Color principal */
-   --primary-600: #027a2d;
-   --primary-700: #026124;
-   --primary-800: #014d1d;
-   --primary-900: #013b16;
-   --primary-950: #00250d;
-
-   /* Paleta Secundaria (Verde Lima / Acento)
-       Basada en el color de acento de tu logo: #9EBF56 */
-   --secondary-50: #f5f8ed;
-   --secondary-100: #e9f1d9;
-   --secondary-200: #d3e3b3;
-   --secondary-300: #bdd68d;
-   --secondary-400: #a8c867;
-   --secondary-500: #9EBF56;
-   /* Color principal */
-   --secondary-600: #83a046;
-   --secondary-700: #698138;
-   --secondary-800: #51642c;
-   --secondary-900: #3f4d22;
-   --secondary-950: #2a3317;
-
-   /* Paleta de Superficie (Grises / Neutros)
-       Basada en los colores neutros de tu logo: #F2F2F2 y #0D0D0D */
-   --surface-0: #FFFFFF;
-   --surface-50: #F8F7F6;
-   /* Un blanco roto muy claro */
-   --surface-100: #EAE9E8;
-   --surface-200: #D6D5D4;
-   --surface-300: #B8B7B6;
-   --surface-400: #9A9998;
-   --surface-500: #7C7B7A;
-   --surface-600: #5E5D5C;
-   --surface-700: #403F3E;
-   --surface-800: #252424;
-   --surface-900: #1A1A1A;
-   --surface-950: #0D0D0D;
-   /* El negro del  logo */
-
-   --info-200: #7DD3FC;
-   --info-400: #0EA5E9;
-   --info-600: #0369A1;
-   --info-800: #0C4A6E;
-
-   --warn-200: #FED7AA;
-   --warn-400: #F97316;
-   --warn-600: #C2410C;
-   --warn-800: #9A3412;
-
-   --help-200: #D8B4FE;
-   --help-400: #A855F7;
-   --help-600: #9333EA;
-   --help-800: #6B21A8;
-
-   --danger-200: #FECACA;
-   --danger-400: #EF4444;
-   --danger-600: #DC2626;
-   --danger-800: #991B1B;
-
-
-
-
-   /*------------------------------------*
-     * Variables Semánticas del Tema
-    \*------------------------------------*/
-
-   /* Configuración para que el navegador cambie de tema automáticamente */
    color-scheme: light dark;
 
-   /* Tamaño responsivo */
-   --sidebar-width: 250px;
-   --nav-height: 60px;
-   --sidebar-width-small: 80px;
-   --z-sidebar:100;
-   --z-nav:90;
-   --z-drawer:99;
    /* Usamos la función light-dark() para asignar colores de la paleta
        al modo claro y oscuro respectivamente. */
-   --background-color: light-dark(var(--surface-50), var(--surface-950));
+   --background-color: light-dark(var(--surface-0), var(--surface-950));
    --text-color: light-dark(var(--surface-950), var(--surface-50));
-   --text-color-secondary: light-dark(var(--surface-500), var(--surface-400));
+   --text-color-secondary: light-dark(var(--surface-700), var(--surface-300));
+   --text-color-contrast: light-dark(var(--surface-0), var(--surface-950));
 
-   --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
-   --nav-bg: light-dark(var(--surface-0), var(--surface-800));
-   --drawer-bg: light-dark(#00000079, #25252579);
-
-   --accent-color: light-dark(var(--primary-500), var(--secondary-500));
+   --accent-color: light-dark(var(--primary-500), var(--surface-500));
    --border-color: light-dark(var(--surface-200), var(--surface-700));
    --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
-   /* Estilos para el Theme Switcher */
-   --switcher-border: light-dark(var(--primary-600), var(--secondary-500));
-   --switcher-hover: light-dark(var(--primary-500), var(--surface-0));
-   --switcher-active-bg: light-dark(var(--primary-500), var(--secondary-500));
-   --switcher-active-icon: light-dark(var(--surface-0), var(--surface-950));
 
-   --bottom-primary: light-dark(var(--primary-800), var(--secondary-500));
-   --bottom-secondary: light-dark(var(--primary-400), var(--secondary-400));
+   --bottom-primary: light-dark(var(--primary-500), var(--primary-400));
+   --bottom-secondary: light-dark(var(--surface-200), var(--surface-700));
 
-   --bottom-info: light-dark(var(--info-400), var(--info-800));
-   --bottom-warn: light-dark(var(--warn-400), var(--warn-800));
-   --bottom-help: light-dark(var(--help-400), var(--help-800));
-   --bottom-danger: light-dark(var(--danger-400), var(--danger-800));
-   --bottom-surface: light-dark(var(--surface-400), var(--surface-200));
+   --bottom-info: light-dark(var(--info-500), var(--info-400));
+   --bottom-warn: light-dark(var(--warn-500), var(--warn-400));
+   --bottom-help: light-dark(var(--help-500), var(--help-400));
+   --bottom-danger: light-dark(var(--danger-500), var(--danger-400));
+   --bottom-contrast: light-dark(var(--surface-900), var(--surface-100));
 
-   --bottom-primary-hover: light-dark(var(--primary-200), var(--secondary-400));
-   --bottom-secondary-hover: light-dark(var(--secondary-300), var(--secondary-300));
+   --bottom-primary-hover: light-dark(var(--primary-600), var(--primary-300));
+   --bottom-secondary-hover: light-dark(var(--surface-300), var(--surface-800));
 
-   --bottom-info-hover: light-dark(var(--info-200), var(--info-600));
-   --bottom-warn-hover: light-dark(var(--warn-200), var(--warn-600));
-   --bottom-help-hover: light-dark(var(--help-200), var(--help-600));
-   --bottom-danger-hover: light-dark(var(--danger-200), var(--danger-600));
-   --bottom-surface-hover: light-dark(var(--surface-300), var(--surface-100));
+   --bottom-info-hover: light-dark(var(--info-600), var(--info-300));
+   --bottom-warn-hover: light-dark(var(--warn-600), var(--warn-300));
+   --bottom-help-hover: light-dark(var(--help-600), var(--help-300));
+   --bottom-danger-hover: light-dark(var(--danger-600), var(--danger-300));
+
+   --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
+   --nav-bg: light-dark(var(--surface-50), var(--surface-800));
+   --overlay-mask-bg: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+   
+   --card-bg: light-dark(var(--surface-200), var(--surface-700));
+   --card-bg-hover: light-dark(var(--surface-300), var(--surface-800));
+   --card-text-color: light-dark(var(--text-color), var(--text-color-secondary));
+   --card-border-color: light-dark(var(--border-color), var(--border-color));
+   --card-shadow-color: light-dark(var(--shadow-color), var(--shadow-color));
+   --card-before: light-dark(var(--surface-300), var(--surface-600));
+   
+
+
+   --switcher-border: light-dark(var(--primary-500), var(--primary-400));
+   --switcher-hover: light-dark(var(--primary-600), var(--primary-300));
+   --switcher-active-bg: light-dark(var(--primary-500), var(--primary-400));
+   --switcher-active-icon: light-dark(var(--surface-50), var(--surface-950));
+
+
 
 
 }
@@ -144,6 +77,3 @@ body {
    background-color: var(--background-color);
    color: var(--text-color);
 }
-
-/* Fallback para navegadores que no soportan light-dark()
-   Se mostrará el tema claro por defecto. */

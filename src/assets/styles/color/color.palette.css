@@ -1,0 +1,29 @@
+:root {
+   /* emerald */
+   --primary-50: #e6f4e9;
+   --primary-100: #D1FAE5;
+   --primary-200: #A7F3D0;
+   --primary-300: #6EE7B7; /* Hover Dark*/
+   --primary-400: #34D399; /* Principalcolor Dark*/
+   --primary-500: #10B981; /* Principalcolor light*/
+   --primary-600: #059669; /* Hover light*/
+   --primary-700: #047857;
+   --primary-800: #065F46;
+   --primary-900: #064E3B;
+   --primary-950: #022C22;
+/* #374151 #E5E7EB #F3F4F6 #111827 #F3F4F6*/
+   /* Gray */
+   --surface-0: #ffffff; /* body bg light*/
+   --surface-50: #F9FAFB;  
+   --surface-100: #F3F4F6; /* Secondary light*/
+   --surface-200: #E5E7EB; /* Secondary hover light*/
+   --surface-300: #D1D5DB;
+   --surface-400: #9CA3AF;
+   --surface-500: #6B7280;
+   --surface-600: #4B5563;
+   --surface-700: #374151; /* Secondary hover dark */
+   --surface-800: #1F2937; /* Secondary dark */
+   --surface-900: #111827; /* div bg dark */
+   --surface-950: #030712; /* body bg dark*/
+   --surface-1000: #000000;
+}

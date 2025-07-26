@@ -1,0 +1,14 @@
+:root{
+   /* Green */
+   --success-50: #F0FDF4;
+   --success-100: #DCFCE7;
+   --success-200: #BBF7D0;
+   --success-300: #86EFAC; /* Hover dark */
+   --success-400: #4ADE80; /* Hover Dark*/
+   --success-500: #22C55E; /* Principalcolor light*/
+   --success-600: #16A34A; /* Hover light*/
+   --success-700: #15803D;
+   --success-800: #166534;
+   --success-900: #14532D;
+   --success-950: #052E16;
+}

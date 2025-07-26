@@ -50,7 +50,7 @@ export class LearningComponent {
     this.themeService.onSystemThemeChange((isDark) => {
       this.prefersDarkMode = isDark;
     });
-
+    
 
     this.breakpointObserver
       .observe([Breakpoints.Handset])

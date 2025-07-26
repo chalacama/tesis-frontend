@@ -10,13 +10,24 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  courses: Course[] = [];
+  recommendedCourses: Course[] = [];
+  bestRatedCourses: Course[] = [];
+  popularCourses: Course[] = [];
 
   constructor(private startService: StartService) {}
 
   ngOnInit(): void {
+    
     this.startService.getRecommendedCourses().subscribe({
-      next: (courses) => this.courses = courses,
+      next: (courses) => this.recommendedCourses = courses,
+      error: (err) => console.error('Error al cargar cursos recomendados', err)
+    });
+    this.startService.getTopBestRatedCourses().subscribe({
+      next: (courses) => this.bestRatedCourses = courses,
+      error: (err) => console.error('Error al cargar cursos recomendados', err)
+    });
+    this.startService.getTopPopularCourses().subscribe({
+      next: (courses) => this.popularCourses = courses,
       error: (err) => console.error('Error al cargar cursos recomendados', err)
     });
   }
