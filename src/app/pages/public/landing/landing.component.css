@@ -39,7 +39,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #038c33;
+    background-color: #038c33d5;
     color: white;
     padding: 1rem 2rem;
     flex-wrap: wrap;
@@ -109,10 +109,7 @@ a:focus {
     z-index: 1;
     padding: 3rem 1rem;
     text-align: center;
-    color: var(--surface-0, #fff);
-    background: linear-gradient( -45deg, var(--primary-500, #038c33), var(--secondary-500, #026b28), var(--primary-300, #6fc96f), var(--secondary-300, #74b274));
-    background-size: 400% 400%;
-    animation: gradientAnimation 15s ease infinite;
+    background: linear-gradient(to left, #038c75, #0c7303);
 }
 
 @keyframes gradientAnimation {
@@ -127,8 +124,165 @@ a:focus {
     }
 }
 
+
+/* ⬇️ A partir de aquí, el nuevo código para los cuadros animados */
+
+.square {
+    position: absolute;
+    width: 100px;
+    /* Más grande */
+    height: 100px;
+    /* Más grande */
+    background: rgba(255, 255, 255, 0.12);
+    /* Ligera opacidad */
+    animation: floatSquare 25s linear infinite;
+    border-radius: 12px;
+    z-index: 0;
+}
+
+.square {
+    /* ...otros estilos... */
+    animation: floatSquare 12s linear infinite;
+    /* antes era 25s */
+}
+
+@keyframes floatSquare {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0;
+    }
+    25% {
+        opacity: 0.4;
+    }
+    50% {
+        transform: translate(200px, -200px) rotate(180deg);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translate(-400px, -600px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+
+/* Fondo animado de cuadros */
+
+.squares {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    list-style: none;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.squares li {
+    position: absolute;
+    display: block;
+    background: #ffffff2c;
+    bottom: -150px;
+    animation: animateSquare linear infinite;
+}
+
+
+/* Tamaños, posiciones y velocidades */
+
+.squares li:nth-child(1) {
+    left: 25%;
+    width: 100px;
+    height: 100px;
+    animation-duration: 12s;
+}
+
+.squares li:nth-child(2) {
+    left: 10%;
+    width: 30px;
+    height: 30px;
+    animation-duration: 8s;
+    animation-delay: 2s;
+}
+
+.squares li:nth-child(3) {
+    left: 70%;
+    width: 40px;
+    height: 40px;
+    animation-duration: 10s;
+    animation-delay: 1s;
+}
+
+.squares li:nth-child(4) {
+    left: 40%;
+    width: 80px;
+    height: 80px;
+    animation-duration: 14s;
+}
+
+.squares li:nth-child(5) {
+    left: 65%;
+    width: 25px;
+    height: 25px;
+    animation-duration: 9s;
+}
+
+.squares li:nth-child(6) {
+    left: 75%;
+    width: 120px;
+    height: 120px;
+    animation-duration: 11s;
+    animation-delay: 3s;
+}
+
+.squares li:nth-child(7) {
+    left: 35%;
+    width: 160px;
+    height: 160px;
+    animation-duration: 13s;
+    animation-delay: 1s;
+}
+
+.squares li:nth-child(8) {
+    left: 50%;
+    width: 45px;
+    height: 45px;
+    animation-duration: 10s;
+    animation-delay: 2s;
+}
+
+.squares li:nth-child(9) {
+    left: 20%;
+    width: 20px;
+    height: 20px;
+    animation-duration: 6s;
+}
+
+.squares li:nth-child(10) {
+    left: 85%;
+    width: 100px;
+    height: 100px;
+    animation-duration: 7s;
+}
+
+
+/* Animación del movimiento */
+
+@keyframes animateSquare {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 20%;
+    }
+}
+
 .landing-logo {
-    max-width: 540px;
+    max-width: 700px;
     width: 100%;
     height: auto;
     margin-bottom: 2rem;
@@ -247,7 +401,7 @@ a:focus {
 /* Fondo con textura sutil y color suave */
 
 .info-section {
-    background: linear-gradient(135deg, #f0faf1, #d9efd7);
+    background: linear-gradient(135deg, #f0faf13b, #d9efd7a8);
     padding: 4rem 2rem;
     text-align: center;
     border-radius: 12px;
