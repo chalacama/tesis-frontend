@@ -39,7 +39,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #038c33d5;
+    background-color: #038c33;
     color: white;
     padding: 1rem 2rem;
     flex-wrap: wrap;
@@ -506,5 +506,28 @@ a:focus {
     .benefit-card {
         width: 90%;
         max-width: 320px;
+    }
+}
+
+.login-button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    z-index: 2;
+    /* Asegura que esté por encima del fondo animado si es necesario */
+}
+
+.landing-button-top {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    .landing-button-top {
+        right: 1rem;
+        top: 1rem;
     }
 }
