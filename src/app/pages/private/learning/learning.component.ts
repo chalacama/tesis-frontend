@@ -1,12 +1,12 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { ApplicationRef, Component, inject, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from '../../../shared/UI/theme.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, Observable, Subject, tap } from 'rxjs';
 import { AuthService } from '../../../core/api/auth/auth.service';
 import { User } from '../../../core/api/auth/auth.interfaces';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, first } from 'rxjs/operators';
 // import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'app-learning',
@@ -22,17 +22,19 @@ export class LearningComponent {
   isSidebarClose = true;
   prefersDarkMode: boolean = false;
   isdrawer = false;
-  /* isTabletOrMobile = false; */
   isMobile = false;
   isTablet = false;
   private destroy$ = new Subject<void>();
+
 
   constructor(
     private themeService: ThemeService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
     private authService: AuthService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private renderer: Renderer2,
+    private appRef : ApplicationRef
   ) {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
@@ -43,6 +45,9 @@ export class LearningComponent {
   }
 
   ngOnInit() {
+    
+
+    
     this.datosUsuario$ = this.authService.currentUser;
     this.currentTheme = this.themeService.getCurrentTheme();
     this.prefersDarkMode = this.themeService.getSystemPrefersDark();
@@ -78,8 +83,11 @@ export class LearningComponent {
         }
       });
     
-    /* const splash = document.getElementById('splash-screen');
-    splash?.remove(); */
+    this.appRef.isStable
+  .pipe(first(isStable => isStable === true))
+  .subscribe(() => {
+    this.renderer.removeClass(document.body, 'app-loading');
+  });
   }
   navigateTo(path: string) {
     this.router.navigate([path]);

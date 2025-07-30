@@ -121,6 +121,8 @@ app-root {
 }
 body:not(.app-loading) #splash-screen {
   opacity: 0;
-  pointer-events: none; /* Evita que se pueda interactuar con él mientras desaparece */
+  pointer-events: none;
   transition: opacity 0.5s ease-out;
 }
+
+
