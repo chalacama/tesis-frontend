@@ -1,7 +1,13 @@
 export interface CourseResponse {
   courses: Course[];
+  has_more: boolean;
+  current_page: number;
 }
-
+export interface CourseRequest {
+  filter : string;
+  page: number;
+  per_page: number;
+}
 export interface Course {
   id:                         number;
   title:                      string;

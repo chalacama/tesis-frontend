@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environment/environment';
-import { Course } from './start.interfaces';
+import { Course, CourseRequest, CourseResponse } from './start.interfaces';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,4 +33,14 @@ export class StartService {
       .get<{ courses: Course[] }>(`${this.apiUrl}/top-created-courses`)
       .pipe(map(res => res.courses));
   }
+  getCoursesByFilter(request: CourseRequest): Observable<CourseResponse> {
+  return this.http.get<CourseResponse>(`${this.apiUrl}/courses-by-filter`, {
+    params: {
+      filter: request.filter,
+      page: request.page,
+      per_page: request.per_page
+    }
+  });
+}
+
 }
