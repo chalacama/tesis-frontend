@@ -3,22 +3,19 @@
 
     </div>
     <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose" [class.collapsed]="isSidebarCollapsed">
-        <div  class="didebar-header" (click)="toggleSidebar()">
+        <div class="didebar-header" (click)="toggleSidebar()">
             <div class="content-logo-label" [class.content-logo-label-collapsed]="isSidebarCollapsed">
                 <div>
-                    <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png"
-                    alt="DigiMentor" />
+                    <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
                 </div>
-                
-                    <div class="content-digimentor-label">
-                        <img class="digimentor-label" src="img\logo\png\digi-mentor-label.png"
-                    alt="DigiMentor" />
-                    </div>
-                
+
+                <div class="content-digimentor-label">
+                    <img class="digimentor-label" src="img\logo\png\digi-mentor-label.png" alt="DigiMentor" />
+                </div>
+
             </div>
             <div class="content-logo" [class.content-logo-collapsed]="isSidebarCollapsed">
-                <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png"
-                    alt="DigiMentor" />
+                <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
             </div>
         </div>
         <div class="content-search">
@@ -127,8 +124,8 @@
 
     <div class="nav" [class.nav-collapsed]="isSidebarCollapsed">
         <div class="nav-left">
-            <div (click)="toggleSidebar()" >
-                
+            <div (click)="toggleSidebar()">
+
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M4 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m0 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2z"/></svg>
 
             </div>
@@ -136,13 +133,11 @@
 
         </div>
         <div class="nav-right">
-            <div>
+            <!--  <div>
                 <button (click)="logoutAndRedirect()">Salir</button>
-            </div>
+            </div> -->
             <div role="radiogroup" class="theme-switcher">
-                <button type="button" role="radio" data-theme-switcher="true"
-                    [attr.data-active]="currentTheme === 'light'" [attr.aria-checked]="currentTheme === 'light'"
-                    class="theme-switcher_switch" aria-label="Switch to light theme" (click)="switchTheme('light')">
+                <button type="button" role="radio" data-theme-switcher="true" [attr.data-active]="currentTheme === 'light'" [attr.aria-checked]="currentTheme === 'light'" class="theme-switcher_switch" aria-label="Switch to light theme" (click)="switchTheme('light')">
                     <svg style="color: currentcolor; width: 16px; height: 16px;" width="24" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"
                         shape-rendering="geometricPrecision" height="24" fill="none" data-testid="geist-icon"
@@ -158,9 +153,7 @@
                         <path d="M18.36 5.64l1.42-1.42"></path>
                     </svg>
                 </button>
-                <button type="button" role="radio" data-theme-switcher="true"
-                    [attr.data-active]="currentTheme === 'system'" [attr.aria-checked]="currentTheme === 'system'"
-                    class="theme-switcher_switch" aria-label="Switch to system theme" (click)="switchTheme('system')">
+                <button type="button" role="radio" data-theme-switcher="true" [attr.data-active]="currentTheme === 'system'" [attr.aria-checked]="currentTheme === 'system'" class="theme-switcher_switch" aria-label="Switch to system theme" (click)="switchTheme('system')">
                     <svg style="color: currentcolor; width: 16px; height: 16px;" width="24" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"
                         shape-rendering="geometricPrecision" height="24" fill="none" data-testid="geist-icon"
@@ -170,9 +163,7 @@
                         <path d="M12 17v4"></path>
                     </svg>
                 </button>
-                <button type="button" role="radio" data-theme-switcher="true"
-                    [attr.data-active]="currentTheme === 'dark'" [attr.aria-checked]="currentTheme === 'dark'"
-                    class="theme-switcher_switch" aria-label="Switch to dark theme" (click)="switchTheme('dark')">
+                <button type="button" role="radio" data-theme-switcher="true" [attr.data-active]="currentTheme === 'dark'" [attr.aria-checked]="currentTheme === 'dark'" class="theme-switcher_switch" aria-label="Switch to dark theme" (click)="switchTheme('dark')">
                     <svg style="color: currentcolor; width: 16px; height: 16px;" width="24" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor"
                         shape-rendering="geometricPrecision" height="24" fill="none" data-testid="geist-icon"
@@ -181,12 +172,20 @@
                     </svg>
                 </button>
             </div>
-            <div class="profile-panel">
+            <div class="profile-panel" (click)="toggleProfileMenu()" style="position: relative;">
                 <div *ngIf="datosUsuario$ | async as usuario">
                     <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
                     <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
                         <label>{{ usuario.name.charAt(0) | uppercase }}</label>
                     </div>
+                </div>
+
+                <!-- Dropdown del perfil -->
+                <div *ngIf="isProfileMenuOpen" class="profile-dropdown">
+                    <ul>
+                        <li (click)="navigateTo('/perfil')">Editar perfil</li>
+                        <li (click)="logoutAndRedirect()">Cerrar sesión</li>
+                    </ul>
                 </div>
             </div>
             <!-- <div *ngIf="datosUsuario$ | async as usuario">

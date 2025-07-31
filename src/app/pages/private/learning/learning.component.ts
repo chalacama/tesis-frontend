@@ -6,7 +6,9 @@ import { filter, Observable, Subject, tap } from 'rxjs';
 import { AuthService } from '../../../core/api/auth/auth.service';
 import { User } from '../../../core/api/auth/auth.interfaces';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { takeUntil, map, first } from 'rxjs/operators';
+import { takeUntil, map, first} from 'rxjs/operators';
+import { HostListener } from '@angular/core';
+
 // import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'app-learning',
@@ -128,6 +130,24 @@ export class LearningComponent {
       }
     });
   }
+
+
+  isProfileMenuOpen = false;
+
+toggleProfileMenu() {
+  this.isProfileMenuOpen = !this.isProfileMenuOpen;
+}
+
+
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  if (!target.closest('.profile-panel')) {
+    this.isProfileMenuOpen = false;
+  }
+}
+
+
 
 
 
