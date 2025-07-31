@@ -1,26 +1,52 @@
-<div class="container-home">
+<div #scrollContainer  class="container-home" (scroll)="onContainerScroll()">
     <div class="container-header">
-        <button >Recomendados</button> 
-        <button >Recientes</button>
-        <button >Mejores valorados</button>
-        <button >Populares</button>
-    </div>
-    
-    <div class="head-body">
-        <div class="head-body-left">
 
-        </div>
-        <div class="head-body-center">
-            <h4>Recomendados</h4>   
-        </div>
-
-        <div class="head-body-right">           
-        </div>
         
+        <!-- <div class="header_input-filter">
+            <div class="input-filter_search">
+                <form class="form">
+                    <label for="search">
+                        <input (click)="activateBtnfilter()" class="input" type="text" required="" placeholder="Search twitter" id="search">
+                        <div class="fancy-bg"></div>
+                        <div class="search">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"
+                                class="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-4wgw6l r-f727ji r-bnwqim r-1plcrui r-lrvibr">
+                                <g>
+                                    <path
+                                        d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z">
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                        <button class="close-btn" type="reset">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </label>
+                </form>
+            </div>
+        </div> -->
+        <div class="header_btn-filter">
+            <button class="btn-filter" (click)="changeFilter('all')"
+                [class.btn-filter_active]="filter === 'all'">Todos</button>
+            <button class="btn-filter" (click)="changeFilter('recommended')"
+                [class.btn-filter_active]="filter === 'recommended'">Recomendados</button>
+            <button class="btn-filter" (click)="changeFilter('created')"
+                [class.btn-filter_active]="filter === 'created'">Recientes</button>
+            <button class="btn-filter" (click)="changeFilter('best_rated')"
+                [class.btn-filter_active]="filter === 'best_rated'">Mejores valorados</button>
+            <button class="btn-filter" (click)="changeFilter('popular')"
+                [class.btn-filter_active]="filter === 'popular'">Populares</button>
+    </div>
     </div>
     <div class="container-body">
+        
         <div class="container-card">
-            <div class="card" *ngFor="let course of recommendedCourses">
+            <div class="card" *ngFor="let course of courses">
                 <div class="card_view">
                     <div *ngIf="course.thumbnail_url" class="card_view_img">
                         <img [src]="course.thumbnail_url" src="" alt="">
@@ -39,15 +65,20 @@
                         <div *ngIf="course.tutor.profile_picture_url" class="card_content_profile_img">
                             <img [src]="course.tutor.profile_picture_url" alt="">
                         </div>
-                        <div *ngIf="course.tutor.profile_picture_url === null" class="card_content_profile_img">
+                        <div *ngIf="course.tutor.profile_picture_url === null  && course.tutor.name === null "
+                            class="card_content_profile_img">
                             <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
+                        </div>
+                        <div *ngIf="course.tutor.profile_picture_url === null && course.tutor.name"
+                            class="card_content_profile_img">
+                            <img src="img/avatar/default-profile-green.png" alt="">
                         </div>
                         <div class="card_content_profile-info">
                             <div class="card_content_profile_title">
                                 <p>{{ course.title }}</p>
                             </div>
                             <div class="card_content_profile_name">
-                                <p>{{ course.tutor.name }}</p>
+                                <p>{{ course.tutor.name || 'Digi Mentor' }}</p>
                             </div>
                             <div class="card_content_date display-none">
                                 <p>{{ course.created_at }}</p>
@@ -57,9 +88,9 @@
                                     <img [src]="career.logo_url" alt="">
                                 </div>
                             </div>
-                            
+
                         </div>
-                        
+
 
                     </div>
                     <div class="card_content_details display-none">
@@ -77,137 +108,9 @@
             </div>
         </div>
 
-        
+
     </div>
-    <div class="head-body">
-        <h4>Mejores valorados</h4>
-    </div>
-    <div class="container-body">
-        <div class="container-card">
-            <div class="card" *ngFor="let course of bestRatedCourses">
-                <div class="card_view">
-                    <div *ngIf="course.thumbnail_url" class="card_view_img">
-                        <img [src]="course.thumbnail_url" src="" alt="">
-                    </div>
-                    <div *ngIf="course.thumbnail_url === null" class="card_view_img">
 
-                        <img src="img\cover\portada-miniature.png" alt="">
-                        <div class="card_view_data_null">
-                            <p>CURSO</p>
-                            <p>{{ course.title}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card_content">
-                    <div class="card_content_profile">
-                        <div *ngIf="course.tutor.profile_picture_url" class="card_content_profile_img">
-                            <img [src]="course.tutor.profile_picture_url" alt="">
-                        </div>
-                        <div *ngIf="course.tutor.profile_picture_url === null" class="card_content_profile_img">
-                            <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
-                        </div>
-                        <div class="card_content_profile-info">
-                            <div class="card_content_profile_title">
-                                <p>{{ course.title }}</p>
-                            </div>
-                            <div class="card_content_profile_name">
-                                <p>{{ course.tutor.name }}</p>
-                            </div>
-                            <div class="card_content_date display-none">
-                                <p>{{ course.created_at }}</p>
-                            </div>
-                            <div class="card_view_data display-none">
-                                <div class="card_view_data_career" *ngFor="let career of course.careers">
-                                    <img [src]="career.logo_url" alt="">
-                                </div>
-                            </div>
-                            
-                        </div>
-                        
-
-                    </div>
-                    <div class="card_content_details display-none">
-                        <div class="card_content_details_description">
-                            <p>{{ course.description }}</p>
-                        </div>
-
-                    </div>
-                    <div class="card_content_actions display-none">
-                        <div class="card_content_actions_save">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-    </div>
-    <div class="head-body">
-        <h4>Mas populares</h4>
-        
-    </div>
-    <div class="container-body">
-        <div class="container-card">
-            <div class="card" *ngFor="let course of popularCourses">
-                <div class="card_view">
-                    <div *ngIf="course.thumbnail_url" class="card_view_img">
-                        <img [src]="course.thumbnail_url" src="" alt="">
-                    </div>
-                    <div *ngIf="course.thumbnail_url === null" class="card_view_img">
-
-                        <img src="img\cover\portada-miniature.png" alt="">
-                        <div class="card_view_data_null">
-                            <p>CURSO</p>
-                            <p>{{ course.title}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card_content">
-                    <div class="card_content_profile">
-                        <div *ngIf="course.tutor.profile_picture_url" class="card_content_profile_img">
-                            <img [src]="course.tutor.profile_picture_url" alt="">
-                        </div>
-                        <div *ngIf="course.tutor.profile_picture_url === null" class="card_content_profile_img">
-                            <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
-                        </div>
-                        <div class="card_content_profile-info">
-                            <div class="card_content_profile_title">
-                                <p>{{ course.title }}</p>
-                            </div>
-                            <div class="card_content_profile_name">
-                                <p>{{ course.tutor.name }}</p>
-                            </div>
-                            <div class="card_content_date display-none">
-                                <p>{{ course.created_at }}</p>
-                            </div>
-                            <div class="card_view_data display-none">
-                                <div class="card_view_data_career" *ngFor="let career of course.careers">
-                                    <img [src]="career.logo_url" alt="">
-                                </div>
-                            </div>
-                            
-                        </div>
-                        
-
-                    </div>
-                    <div class="card_content_details display-none">
-                        <div class="card_content_details_description">
-                            <p>{{ course.description }}</p>
-                        </div>
-
-                    </div>
-                    <div class="card_content_actions display-none">
-                        <div class="card_content_actions_save">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-    </div>
 
 
 
