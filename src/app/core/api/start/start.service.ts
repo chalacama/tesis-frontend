@@ -13,26 +13,6 @@ export class StartService {
 
   constructor(private http: HttpClient) {}
 
-  getRecommendedCourses(): Observable<Course[]> {
-    return this.http
-      .get<{ courses: Course[] }>(`${this.apiUrl}/recommend-courses`)
-      .pipe(map(res => res.courses));
-  }
-  getTopBestRatedCourses(): Observable<Course[]> {
-    return this.http
-      .get<{ courses: Course[] }>(`${this.apiUrl}/top-best-rated-courses`)
-      .pipe(map(res => res.courses));
-  }
-  getTopPopularCourses(): Observable<Course[]> {
-    return this.http
-      .get<{ courses: Course[] }>(`${this.apiUrl}/top-popular-courses`)
-      .pipe(map(res => res.courses));
-  }
-  getTopCreatedCourses(): Observable<Course[]> {
-    return this.http
-      .get<{ courses: Course[] }>(`${this.apiUrl}/top-created-courses`)
-      .pipe(map(res => res.courses));
-  }
   getCoursesByFilter(request: CourseRequest): Observable<CourseResponse> {
   return this.http.get<CourseResponse>(`${this.apiUrl}/courses-by-filter`, {
     params: {
