@@ -1,1 +1,176 @@
 <p>courses works!</p>
+<div class="container-courses">
+    <div class="container-table">
+        <div class="table_toolbar">
+            <div class="table_toolbar_start">
+                <button (click)="createCourse()" class="create-botton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2">
+                        <path d="M12 19v-7m0 0V5m0 7H5m7 0h7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="table_toolbar_end">
+
+            </div>
+        </div>
+        <div class="table_content">
+            <div class="table_content_caption">
+
+            </div>
+            <div class="table_content_header content-padding">
+                <div class="header_cell-checkbox cell-display">
+                    <th>
+                        <input type="checkbox" [checked]="allCoursesSelected()"
+                [indeterminate]="hasSelectedCourses() && !allCoursesSelected()"
+                (change)="toggleAllCoursesSelection()">
+                    </th>
+                </div>
+                <div class="header_cell-id cell-display">
+                    <th>Id</th>
+                </div>
+                <div class="header_cell-miniature cell-display">
+                    <th>Miniature</th>
+                </div>
+                <div class="header_cell-title cell-display cell-border">
+                    <th>Title</th>
+                </div>
+                <div class="header_cell-active cell-display">
+                    <th>Active</th>
+                </div>
+                <div class="header_cell-creator cell-display">
+                    <th>Creador</th>
+                </div>
+                <div class="header_cell-private cell-display">
+                    <th>Privado</th>
+                </div>
+                <div class="header_cell-code cell-display">
+                    <th>Code</th>
+                </div>
+            </div>
+            <div class="table_content_body-scroll">
+               <div *ngFor="let course of courses()" class="table_content_body content-padding">
+                <div class="body_cell-checkbox cell-display">
+                    <td>
+                        <input type="checkbox" type="checkbox" 
+                [checked]="isCourseSelected(course.id)"
+                (change)="toggleCourseSelection(course.id)">
+                    </td>
+                </div>
+                <div class="body_cell-id cell-display">
+                    <td>{{course.id}}</td>
+                </div>
+                <div class="body_cell-miniature cell-display">
+                    <td *ngIf="course.miniature?.url">
+                        <img class="cell_miniature" [src]="course.miniature.url" alt="miniature">
+                    </td>
+                    <td *ngIf="course.miniature?.url === null">
+                        <img class="cell_miniature" src="img\cover\no-thumbnail.jpg" alt="miniature">
+                    </td>
+                </div>
+                <div class="body_cell-title cell-border cell-display">
+                    <div class="cell_label-title">
+                        <td>{{course.title}}</td>   
+                    </div>
+                    <div class="cell_label-description">
+                        <td>{{course.description}}</td>   
+                    </div>
+                    <div class="cell-actions">
+                        <button class="btn-edit btn-action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 384 384"><path fill="currentColor" d="M0 304L236 68l80 80L80 384H0v-80zM378 86l-39 39l-80-80l39-39q6-6 15-6t15 6l50 50q6 6 6 15t-6 15z"/></svg>
+                        </button>
+                        <button class="btn-delete btn-action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 304 384"><path fill="currentColor" d="M21 341V85h256v256q0 18-12.5 30.5T235 384H64q-18 0-30.5-12.5T21 341zM299 21v43H0V21h75L96 0h107l21 21h75z"/></svg>
+                        </button>
+                        <button class="btn-analytics btn-action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6zm10 2a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0V8zm-4 3a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0v-5zm8 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2z" clip-rule="evenodd"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="body_cell-active cell-display">
+                    <td>{{course.enabled}}</td>
+                </div>
+                <div class="body_cell-creator cell-display">
+                    <td>{{course.creador}}</td>
+                </div>
+                <div class="body_cell-private cell-display">
+                    <td>{{course.private}}</td>
+                </div>
+                <div class="body_cell-code cell-display">
+                    <td>{{course.code}}</td>
+                </div>
+            </div> 
+            </div>
+            
+            <div class="table_content_footer" *ngIf="pagination() && courses().length > 0">
+                <div class="table_content_footer_left">
+                    <p>Filas por página:</p>
+                    <select class="footer_select" name="" id="" [value]="perPage()" (change)="onPerPageChange(+$any($event.target).value)">
+                        <option *ngFor="let option of perPageOptions" class="select_option" [value]="option">{{ option }}</option>
+                    </select>
+                </div>
+                <div class="table_content_footer_center">
+                    <p>{{ (pagination()!.current_page - 1) * pagination()!.per_page + 1 }}</p>
+                    <p>a</p>
+                    <p>{{ pagination()!.current_page * pagination()!.per_page }}</p>
+                    <p>de</p>
+                    <p>aproximadamente</p>
+                    <p>{{ pagination()!.total }}</p>
+                </div>
+                <div class="table_content_footer_right">
+                    <button (click)="onPageChange(1)" [disabled]="pagination()!.current_page === 1" class="btn-footer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24"><path fill="currentColor" d="M7 18q-.425 0-.713-.288T6 17V7q0-.425.288-.713T7 6q.425 0 .713.288T8 7v10q0 .425-.288.713T7 18Zm6.8-6l3.9 3.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-4.6-4.6q-.15-.15-.212-.325T11.425 12q0-.2.063-.375t.212-.325l4.6-4.6q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.8 12Z"/></svg>
+                    </button>
+                    <button (click)="onPageChange(pagination()!.current_page - 1)" 
+                        [disabled]="pagination()!.current_page === 1" class="btn-footer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M17 2L7 12l10 10"/></svg>
+                    </button>
+                    <button 
+                    (click)="onPageChange(pagination()!.current_page + 1)" 
+                    [disabled]="pagination()!.current_page === pagination()!.last_page"
+                    class="btn-footer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 42 42"><path fill="currentColor" fill-rule="evenodd" d="M11 38.32L28.609 21L11 3.68L13.72 1L34 21.01L13.72 41z"/></svg>
+                    </button>
+                    <button
+                        (click)="onPageChange(pagination()!.last_page)" 
+                        [disabled]="pagination()!.current_page === pagination()!.last_page"
+                        class="btn-footer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24"><path fill="currentColor" d="M10.2 12L6.3 8.1q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375q0 .2-.062.375t-.213.325l-4.6 4.6q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l3.9-3.9ZM17 6q.425 0 .713.288T18 7v10q0 .425-.288.713T17 18q-.425 0-.713-.288T16 17V7q0-.425.288-.713T17 6Z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="overlay-mask" *ngIf="showModalCreate" (click)="closeModalCreate()">
+    
+</div>
+<div class="modal-create" *ngIf="showModalCreate">
+    <div class="modal-create-content">
+        <div class="modal-create-header">
+            <h1>Crear curso</h1>
+        </div>
+        <div class="modal-create-body">
+            <!-- <form [formGroup]="formCreate" (ngSubmit)="createCourse()">
+                <div class="input-container">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" formControlName="name">
+                </div>
+                <div class="input-container">
+                    <label for="description">Descripción</label>
+                    <input type="text" id="description" formControlName="description">
+                </div>
+                <div class="input-container">
+                    <label for="image">Miniatura</label>
+                    <input type="file" id="image" (change)="onFileSelected($event)">
+                </div>
+                <button type="submit" [disabled]="formCreate.invalid">Crear</button>
+            </form> -->
+        </div>
+        <div class="modal-create-footer">
+            <button (click)="closeModalCreate()">Cerrar</button>
+        </div>
+    </div>
+</div>

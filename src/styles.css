@@ -25,6 +25,8 @@
    --text-color: light-dark(var(--surface-950), var(--surface-50));
    --text-color-secondary: light-dark(var(--surface-700), var(--surface-300));
    --text-color-contrast: light-dark(var(--surface-0), var(--surface-950));
+   --modal-bg: light-dark(var(--surface-200), var(--surface-900));
+   --background-hover: light-dark(var(--surface-200), var(--surface-900));
 
    --accent-color: light-dark(var(--primary-500), var(--surface-500));
    --border-color: light-dark(var(--surface-200), var(--surface-700));
