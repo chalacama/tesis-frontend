@@ -1,1 +1,31 @@
 <p>profile works!</p>
+<label>Provincia</label>
+<select [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()">
+  <option *ngFor="let p of provincias" [value]="p.id">{{ p.nombre }}</option>
+</select>
+
+<label>Cantón</label>
+<select [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length">
+  <option *ngFor="let c of cantones" [value]="c.id">{{ c.nombre }}</option>
+</select>
+
+<label>Parroquia</label>
+<select [disabled]="!parroquias.length">
+  <option *ngFor="let parr of parroquias" [value]="parr.id">{{ parr.nombre }}</option>
+</select>
+<label for="country">Código de país</label>
+
+<p>{{countries.name }}</p>
+<p>{{countries.code }}</p>
+<p>{{countries.phoneCode }}</p>
+<p>{{countries.flagEmoji }}</p>
+
+<label for="sede">Selecciona una sede</label>
+<select [(ngModel)]="selectedSedeId" name="sede" required>
+  <option *ngFor="let sede of sedes" [value]="sede.id">
+    {{ sede.educational_unit.name }} - {{ sede.province }}, {{ sede.canton }}
+  </option>
+</select>
+
+
+
