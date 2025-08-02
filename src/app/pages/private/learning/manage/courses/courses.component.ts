@@ -1,11 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Course, CourseFilters, CourseQueryParams, Pagination } from '../../../../../core/api/manage/course/course.interfaces';
+import { Course, CourseFilters, CourseForm, CourseQueryParams, CourseRequest, Pagination } from '../../../../../core/api/manage/course/course.interfaces';
 import { catchError, debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { CourseService } from '../../../../../core/api/manage/course/course.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule,FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
+
 
 @Component({
   selector: 'app-courses',
@@ -15,7 +16,9 @@ import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interf
 })
 export class CoursesComponent {
   /* private readonly fb = inject(FormBuilder); */
-  formCreate : FormGroup
+  formCreate : FormGroup;
+  highlightedCourseId = signal<number | null>(null);
+
   difficulties = signal<Difficulty[]>([]);
   privacyOptions = [
     { value: true, label: 'Privado' },
@@ -281,21 +284,28 @@ export class CoursesComponent {
   submitCourse(): void {
   if (this.formCreate.invalid) return;
 
-  this.courseService.createCourse(this.formCreate.value)
+  const courseData: CourseRequest = this.formCreate.value;
+
+  this.courseService.createCourse(courseData)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (response) => {
-        console.log('Curso creado:', response);
+      next: (newCourse) => {
+        console.log('Curso creado:', newCourse);
+        // Insertar al inicio de la lista actual
+        this.courses.set([newCourse, ...this.courses()]);
+        // Aumentar el total en la paginación
+        this.pagination.update(p => p ? { ...p, total: p.total + 1 } : null);
+        this.highlightedCourseId.set(newCourse.id);
         this.closeModalCreate();
-          this.refresh(); // Recarga los cursos
-        
-        
+        setTimeout(() => this.highlightedCourseId.set(null), 9000);
       },
       error: (err) => {
         this.error.set(err.message);
       }
     });
 }
+
+
 
 
 }

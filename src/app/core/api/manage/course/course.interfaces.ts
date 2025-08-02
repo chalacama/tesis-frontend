@@ -50,17 +50,17 @@ export interface CourseQueryParams {
   search?: string;
   filters?: CourseFilters;
 }
-export interface CourseMessageRequest {
-    message: string;
-    course:  CourseMessage;
-}
 
-export interface CourseMessage {
-    id:            number;
+export interface CourseRequest {
     title:         string;
     description:   string;
-    private:       boolean;
-    code:          string;
-    enabled:       boolean;
     difficulty_id: number;
+    private:       boolean;
+}
+// src/app/pages/private/learning/manage/courses/course-form.interface.ts
+export interface CourseForm {
+  title: string;
+  description: string;
+  difficulty_id: number;
+  private: boolean;
 }

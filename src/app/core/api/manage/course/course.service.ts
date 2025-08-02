@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, finalize, Observable, tap, throwError } from 'rxjs';
-import { CourseFilters, CourseMessageRequest, CourseQueryParams, CourseResponse } from './course.interfaces';
+import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse } from './course.interfaces';
 import { environment } from '../../../environment/environment';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class CourseService {
   getCourses(params: CourseQueryParams = {}): Observable<CourseResponse> {
     const cacheKey = this.generateCacheKey(params);
     const cachedData = this.getCachedData(cacheKey);
-    
+
     if (cachedData) {
       return new Observable(observer => {
         observer.next(cachedData);
@@ -35,7 +35,7 @@ export class CourseService {
     }
 
     this.loadingSubject.next(true);
-    
+
     const httpParams = this.buildHttpParams(params);
 
     return this.http.get<CourseResponse>(`${this.apiUrl}/index`, { params: httpParams })
@@ -142,7 +142,7 @@ export class CourseService {
    */
   private handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'Ha ocurrido un error inesperado';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
       errorMessage = `Error de red: ${error.error.message}`;
@@ -184,19 +184,16 @@ export class CourseService {
 
     return throwError(() => new Error(errorMessage));
   };
-  createCourse(courseData: {
-  title: string;
-  description: string;
-  difficulty_id: number;
-  private?: boolean;
-}): Observable<CourseMessageRequest> {
-  this.loadingSubject.next(true);
-  return this.http.post<CourseMessageRequest>(`${this.apiUrl}/store`, courseData)
-    .pipe(
-      tap(() => this.clearCache()),
-      catchError(this.handleError),
-      finalize(() => this.loadingSubject.next(false))
-    );
-}
+  createCourse(courseData: CourseRequest
+  ): Observable<Course> {
+    this.loadingSubject.next(true);
+    return this.http.post<{ course: Course }>(`${this.apiUrl}/store`, courseData)
+      .pipe(
+        finalize(() => this.loadingSubject.next(false)),
+        catchError(this.handleError),
+        // extrae solo el objeto 'course'
+        switchMap(response => of(response.course))
+      );
+  }
 
 }

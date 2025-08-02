@@ -337,4 +337,16 @@
 .select-button button:hover:not(.active) {
   background-color: #e2e6ea;
 }
+.highlighted-row {
+  background-color: var(--background-active); /* verde suave */
+  transition: background-color 0.9s ease-in-out;
+}
+@keyframes fadeHighlight {
+  from { background-color: var(--background-transition)}
+  to { background-color: transparent; }
+}
+
+.highlighted-row {
+  animation: fadeHighlight 3s ease-in-out forwards;
+}
 

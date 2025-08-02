@@ -27,7 +27,8 @@
    --text-color-contrast: light-dark(var(--surface-0), var(--surface-950));
    --modal-bg: light-dark(var(--surface-200), var(--surface-900));
    --background-hover: light-dark(var(--surface-200), var(--surface-900));
-
+   --background-active: light-dark(var(--primary-200), var(--primary-800));
+   --background-transition: light-dark(var(--primary-50), var(--primary-950));
    --accent-color: light-dark(var(--primary-500), var(--surface-500));
    --border-color: light-dark(var(--surface-200), var(--surface-700));
    --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
