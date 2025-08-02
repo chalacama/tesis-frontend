@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, Observable, tap, throwError } from 'rxjs';
-import { CourseFilters, CourseQueryParams, CourseResponse } from './course.interfaces';
+import { CourseFilters, CourseMessageRequest, CourseQueryParams, CourseResponse } from './course.interfaces';
 import { environment } from '../../../environment/environment';
 
 @Injectable({
@@ -184,4 +184,19 @@ export class CourseService {
 
     return throwError(() => new Error(errorMessage));
   };
+  createCourse(courseData: {
+  title: string;
+  description: string;
+  difficulty_id: number;
+  private?: boolean;
+}): Observable<CourseMessageRequest> {
+  this.loadingSubject.next(true);
+  return this.http.post<CourseMessageRequest>(`${this.apiUrl}/store`, courseData)
+    .pipe(
+      tap(() => this.clearCache()),
+      catchError(this.handleError),
+      finalize(() => this.loadingSubject.next(false))
+    );
+}
+
 }

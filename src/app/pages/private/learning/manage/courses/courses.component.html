@@ -147,30 +147,70 @@
 <div class="overlay-mask" *ngIf="showModalCreate" (click)="closeModalCreate()">
     
 </div>
-<div class="modal-create" *ngIf="showModalCreate">
+<!-- <div class="modal-create" *ngIf="showModalCreate">
     <div class="modal-create-content">
         <div class="modal-create-header">
             <h1>Crear curso</h1>
         </div>
         <div class="modal-create-body">
-            <!-- <form [formGroup]="formCreate" (ngSubmit)="createCourse()">
-                <div class="input-container">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" formControlName="name">
-                </div>
-                <div class="input-container">
-                    <label for="description">Descripción</label>
-                    <input type="text" id="description" formControlName="description">
-                </div>
-                <div class="input-container">
-                    <label for="image">Miniatura</label>
-                    <input type="file" id="image" (change)="onFileSelected($event)">
-                </div>
-                <button type="submit" [disabled]="formCreate.invalid">Crear</button>
-            </form> -->
+            
         </div>
         <div class="modal-create-footer">
             <button (click)="closeModalCreate()">Cerrar</button>
         </div>
     </div>
+</div> -->
+<div class="modal-create" *ngIf="showModalCreate">
+  <div class="modal-create-content">
+    <div class="modal-create-header">
+      <h2>📚 Crear nuevo curso</h2>
+    </div>
+
+    <form [formGroup]="formCreate" (ngSubmit)="submitCourse()" class="modal-create-body">
+      
+      
+      <div class="input-group">
+        <label for="title">Título del curso</label>
+        <input id="title" formControlName="title" placeholder="Ej: Introducción a Valorant" />
+      </div>
+
+      
+      <div class="input-group">
+        <label for="description">Descripción</label>
+        <textarea id="description" formControlName="description" placeholder="Describe el curso..."></textarea>
+      </div>
+
+      
+      <div class="input-group">
+  <label for="difficulty_id">Dificultad</label>
+  <select id="difficulty_id" formControlName="difficulty_id">
+    <option value="" disabled selected>Seleccione una dificultad</option>
+    <option *ngFor="let d of difficulties()" [value]="d.id">{{ d.name }}</option>
+  </select>
+</div>
+<div *ngIf="formCreate.get('difficulty_id')?.invalid && formCreate.get('difficulty_id')?.touched" class="error">
+  Selecciona una dificultad válida.
+</div>
+
+
+     
+      <div class="input-group">
+        <label>Visibilidad del curso</label>
+        <div class="select-button">
+          <button
+            type="button"
+            *ngFor="let option of privacyOptions"
+            [class.active]="formCreate.get('private')?.value === option.value"
+            (click)="formCreate.get('private')?.setValue(option.value)">
+            {{ option.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-create-footer">
+        <button type="submit" [disabled]="formCreate.invalid">✅ Crear curso</button>
+        <button type="button" (click)="closeModalCreate()">❌ Cancelar</button>
+      </div>
+    </form>
+  </div>
 </div>

@@ -314,3 +314,27 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+.select-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.select-button button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.select-button button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.select-button button:hover:not(.active) {
+  background-color: #e2e6ea;
+}
+

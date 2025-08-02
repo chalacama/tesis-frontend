@@ -3,7 +3,9 @@ import { Course, CourseFilters, CourseQueryParams, Pagination } from '../../../.
 import { catchError, debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { CourseService } from '../../../../../core/api/manage/course/course.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule,FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
+import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 
 @Component({
   selector: 'app-courses',
@@ -12,7 +14,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './courses.component.css'
 })
 export class CoursesComponent {
-
+  /* private readonly fb = inject(FormBuilder); */
+  formCreate : FormGroup
+  difficulties = signal<Difficulty[]>([]);
+  privacyOptions = [
+    { value: true, label: 'Privado' },
+    { value: false, label: 'Publico' }
+  ]
   private readonly courseService = inject(CourseService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
@@ -40,17 +48,40 @@ export class CoursesComponent {
   allCoursesSelected = computed(() => 
     this.courses().length > 0 && this.selectedCourses().size === this.courses().length
   );
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly difficultyService: DifficultyService
+  ) { 
+    this.formCreate = this.fb.group({
+  title: ['', [Validators.required, Validators.maxLength(255)]],
+  description: ['', [Validators.required]],
+  difficulty_id: [null, [Validators.required]],
+  private: [false]
+});
+  /* this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    }); */
+  }
 
   ngOnInit(): void {
     this.initializeSearchHandler();
     this.loadCourses();
+    this.loadDifficulties();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
+  private loadDifficulties(): void {
+  this.difficultyService.getAll()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (difficulties) => this.difficulties.set(difficulties),
+      error: (err) => this.error.set(err.message)
+    });
+}
   /**
    * Inicializa el manejador de búsqueda con debounce
    */
@@ -203,6 +234,7 @@ export class CoursesComponent {
    */
   refresh(): void {
     this.courseService.clearCache();
+    /* this.currentPage.set(1); */
     this.loadCourses();
   }
 
@@ -246,5 +278,25 @@ export class CoursesComponent {
   closeModalCreate() {
     this.showModalCreate = false;
   }
+  submitCourse(): void {
+  if (this.formCreate.invalid) return;
+
+  this.courseService.createCourse(this.formCreate.value)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response) => {
+        console.log('Curso creado:', response);
+        this.closeModalCreate();
+          this.refresh(); // Recarga los cursos
+        
+        
+      },
+      error: (err) => {
+        this.error.set(err.message);
+      }
+    });
+}
+
+
 }
 

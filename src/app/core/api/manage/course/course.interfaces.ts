@@ -50,3 +50,17 @@ export interface CourseQueryParams {
   search?: string;
   filters?: CourseFilters;
 }
+export interface CourseMessageRequest {
+    message: string;
+    course:  CourseMessage;
+}
+
+export interface CourseMessage {
+    id:            number;
+    title:         string;
+    description:   string;
+    private:       boolean;
+    code:          string;
+    enabled:       boolean;
+    difficulty_id: number;
+}
