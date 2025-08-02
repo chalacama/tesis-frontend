@@ -13,10 +13,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/public/landing/landing.component').then((c) => c.LandingComponent)
   },
   {
-    path: 'learning',
+    path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/private/learning/learning.component').then((c) => c.LearningComponent),
-    children: [
+    children:[
+      {
+      path: 'learning',
+      /* canActivate: [authGuard], */
+      loadComponent: () => import('./pages/private/learning/learning.component').then((c) => c.LearningComponent),
+      children: [
       {
         path: '',
         loadComponent: () => import('./pages/private/learning/home/home.component').then((c) => c.HomeComponent)
@@ -30,24 +34,33 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/private/learning/certification/certification.component').then((c) => c.CertificationComponent)
       },
       {
-        path: 'manage',
-        children: [
-          {
-            path: 'courses',
-            loadComponent: () => import('./pages/private/learning/manage/courses/courses.component').then((c) => c.CoursesComponent)
-          },
-          {
-            path: 'users',
-            loadComponent: () => import('./pages/private/learning/manage/users/users.component').then((c) => c.UsersComponent)
-          },
-        ]
-      },
-      {
         path: 'profile',
         loadComponent: () => import('./pages/private/learning/profile/profile.component').then((c) => c.ProfileComponent)
       },
+      ]
+      },
+      {
+      path: 'studio',
+      children: [
+      {
+        path: 'courses',
+        loadComponent: () => import('./pages/private/studio/courses/courses.component').then((c) => c.CoursesComponent)
+      },
+      ]
+  },
+  {
+    path: 'manage',
+    children: [
+      {
+        path: 'users',
+        loadComponent: () => import('./pages/private/manage/users/users.component').then((c) => c.UsersComponent)
+      },
     ]
   },
+    ]
+
+  },
+  
   {
     path: 'auth',
     canActivate: [guestGuard],

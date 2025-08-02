@@ -2,7 +2,8 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse } from './course.interfaces';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../environment/environment';
+
 
 @Injectable({
   providedIn: 'root'
