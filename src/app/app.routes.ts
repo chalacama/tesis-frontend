@@ -57,6 +57,16 @@ export const routes: Routes = [
         ]
       },
       {
+        path: ':id',
+        loadComponent: () => import('./pages/private/studio/panel.course/panel.course.component').then((c) => c.PanelCourseComponent),
+        children: [
+        {
+          path: 'details',
+        loadComponent: () => import('./pages/private/studio/panel.course/details/details.component').then((c) => c.DetailsComponent),
+        }
+        ]
+      },
+      {
         path: '',
         loadComponent: () => import('./pages/private/studio/panel.courses/panel.courses.component').then((c) => c.PanelCoursesComponent),
         children: [

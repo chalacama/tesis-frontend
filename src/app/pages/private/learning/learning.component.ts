@@ -145,7 +145,7 @@ onDocumentClick(event: MouseEvent) {
   }
 }
 viewPortfolio(username: string) {
-    this.router.navigate(['/learning/portfolio', username]);
+    this.router.navigate(['/learning/portfolio/@'+username]);
 }
 
 

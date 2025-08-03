@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule,FormBuilder, Validators, FormGroup } f
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
 import { CourseService } from '../../../../../core/api/course/course.service';
+import { Router } from '@angular/router';
 
 
 
@@ -55,6 +56,7 @@ export class CoursesComponent {
     this.courses().length > 0 && this.selectedCourses().size === this.courses().length
   );
   constructor(
+    private router: Router,
     private readonly fb: FormBuilder,
     private readonly difficultyService: DifficultyService
   ) { 
@@ -309,6 +311,9 @@ export class CoursesComponent {
       }
     });
 }
+goToEditCourse(id: number) {
+    this.router.navigate([`/studio/${id}/details`]);
+  }
 
 
 

@@ -1,0 +1,725 @@
+/* ==========================================================================
+   LAYOUT PRINCIPAL
+   ========================================================================== */
+
+.content {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.content-main {
+    display: flex;
+    justify-content: right;
+    width: 100%;
+    padding-left: var(--sidebar-width);
+    margin-top: var(--nav-height);
+    overflow-y: hidden;
+    transition: padding-left 0.5s ease;
+}
+
+.content-main-collapsed {
+    padding-left: var(--sidebar-width-small);
+}
+
+.main {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+/* ==========================================================================
+   SIDEBAR
+   ========================================================================== */
+
+.sidebar {
+    position: fixed;
+    z-index: var(--z-sidebar);
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--nav-height));
+    margin: 0;
+    padding: 0 10px 10px 10px;
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
+    transition: width 0.5s ease;
+    top: var(--nav-height);
+    border-right: 1px solid var(--border-color);
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-width-small);
+    padding: 0 10px 10px 10px;
+    transition: width 0.5s ease;
+}
+
+
+/* Sidebar Header */
+
+.didebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    height: 60px;
+}
+
+
+/* Logo y Labels */
+
+.logo-digimentor {
+    width: 40px;
+    object-fit: contain;
+}
+
+.digimentor-label {
+    width: 100px;
+    object-fit: contain;
+}
+
+.label-digimentor {
+    width: 150px;
+    object-fit: contain;
+}
+
+.content-logo-label {
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+}
+
+.content-logo-label-collapsed {
+    display: none;
+}
+
+.content-logo {
+    display: none;
+}
+
+.content-logo-collapsed {
+    display: block;
+}
+
+.sidebar:not(.collapsed) .content-digimentor-label {
+    position: absolute;
+    z-index: 101;
+    left: 50px;
+}
+
+
+/* Estados colapsados del sidebar */
+
+.sidebar.collapsed .label-navegation,
+.sidebar.collapsed .label-digimentor {
+    display: none;
+}
+
+.sidebar.collapsed .label-navegation {
+    display: none !important;
+}
+
+.label-digimentor-sidebar {
+    display: block;
+    transition: 0.5s ease;
+}
+
+
+/* ==========================================================================
+   NAVEGACIÓN SUPERIOR
+   ========================================================================== */
+
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    z-index: calc(var(--z-nav) + 11);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 9px 15px var(--shadow-color);
+    transition: left 0.5s ease, width 0.5s ease;
+    justify-content: space-between;
+    gap: 10px;
+
+}
+
+.nav-collapsed {
+    width: calc(100% - var(--sidebar-width-small));
+    left: var(--sidebar-width-small);
+}
+
+.nav-left {
+    display: flex;
+}
+
+.nav-right {
+    width: max-content;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    height: 100%;
+}
+.nav-center{
+    /* width: 40%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* background-color: blue; */
+    flex: content;
+    
+}
+/* From Uiverse.io by vnuny */ 
+.container {
+  position: relative;
+  /* box-sizing: border-box; */
+  width: 70%;
+  
+  height: 50px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+
+}
+
+.mainbox {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  border-radius: 160px;
+  background-color: rgba(0, 0, 0, 0.13);
+  transition: all 0.3s ease;
+}
+
+.checkbox:focus {
+  border: none;
+  outline: none;
+}
+
+.checkbox:checked {
+  right: 10px;
+}
+
+.checkbox:checked ~ .mainbox {
+  width: 50px;
+}
+
+.checkbox:checked ~ .mainbox .search_input {
+  width: 0;
+  height: 0px;
+}
+
+.checkbox:checked ~ .mainbox .iconContainer {
+  padding-right: 8px;
+}
+
+.checkbox {
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 17px;
+  top: 10px;
+  z-index: 9;
+  cursor: pointer;
+  appearance: none;
+}
+
+.search_input {
+  box-sizing: border-box;
+  height: 100%;
+  width: calc(100% - 50px);
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding-bottom: 4px;
+  padding-left: 10px;
+  font-size: 1em;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.search_input::placeholder {
+  color: var(--text-color);
+}
+
+.iconContainer {
+  box-sizing: border-box;
+  padding-top: 5px;
+  width: fit-content;
+  transition: all 0.3s ease;
+}
+
+.search_icon {
+  box-sizing: border-box;
+  fill: var(--text-color);
+  font-size: 1.3em;
+}
+
+/* ==========================================================================
+   BOTÓN DE BÚSQUEDA
+   ========================================================================== */
+
+.content-search {
+    display: flex;
+    align-items: center;
+    justify-content: center; ;
+    width: 100%;
+    height: 100px;
+    margin-top: 20px;
+}
+
+.button-search {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding-left: 8px;
+    background-color: var(--bottom-secondary);
+    border: none;
+    border-radius: 30px;
+    color: var(--text-color);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.116);
+    transition: all 0.5s ease;
+}
+
+.button-search:hover {
+    background-color: var(--bottom-secondary-hover);
+    transition-duration: 0.5s;
+}
+
+.button-search:active {
+    transform: scale(0.97);
+    transition-duration: 0.2s;
+}
+
+.svgIcon {
+    height: 25px;
+    color: var(--text-color);
+    transition-duration: 1.5s;
+}
+
+.button-search:hover .svgIcon {
+    transform: rotate(250deg);
+    transition-duration: 1.5s;
+}
+
+
+/* ==========================================================================
+   NAVEGACIÓN LATERAL
+   ========================================================================== */
+
+.content-navegation {
+    width: 100%;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.label-navegation {
+    margin-left: 20px;
+}
+
+.navegation-route {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 200ms;
+}
+.navegation-route:hover {
+    background-color: var(--bottom-secondary-hover);
+}
+.navegation-route input[type="radio"] {
+    display: none;
+}
+
+
+/* Iconos de navegación */
+
+.icon-navegation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.icon-navegation svg {
+    width: 20px;
+    fill: var(--text-color);
+    transition: all 300ms;
+}
+
+.sng-icon {
+    height: 20px;
+    width: 20px;
+}
+
+
+/* Texto de navegación */
+
+.label-txt {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-color);
+    transition: all 200ms;
+}
+
+
+/* Línea indicadora */
+
+.underline {
+    display: block;
+    width: 0%;
+    height: 2px;
+    margin-top: 4px;
+    background-color: var(--bottom-primary);
+    border-radius: 5px;
+    transition: width 200ms ease;
+}
+
+
+/* Estados hover y activo */
+
+.navegation-route:hover:not(:has(input:checked)) .icon-navegation svg,
+.navegation-route:hover:not(:has(input:checked)) .label-txt {
+    color: var(--bottom-primary);
+    fill: var(--bottom-primary);
+    opacity: 0.6;
+}
+
+.navegation-route:has(input:checked) .icon-navegation svg {
+    color: var(--bottom-primary);
+    fill: var(--bottom-primary);
+    transform: scale(1.2) translateY(-3px);
+}
+
+.navegation-route:has(input:checked) .label-txt {
+    color: var(--bottom-primary);
+    font-weight: bold;
+}
+
+.navegation-route:has(input:checked) .underline {
+    width: 100%;
+}
+
+
+/* ==========================================================================
+   BOTÓN DE COLAPSAR
+   ========================================================================== */
+
+.content-arrow {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    padding: 0 15px 0 0;
+}
+
+.Btn {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(var(--bottom-surface), var(--bottom-surface-hover));
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transform: rotateZ(-90deg);
+}
+
+.arrow path {
+    fill: white;
+}
+
+.Btn:hover .text {
+    opacity: 1;
+    transition-duration: 0.7s;
+}
+
+.Btn:hover .arrow {
+    animation: slide-in-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@keyframes slide-in-bottom {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+/* ==========================================================================
+   THEME SWITCHER
+   ========================================================================== */
+
+.theme-switcher {
+    display: flex;
+    width: fit-content;
+    padding: 3px;
+    border: 1px solid var(--switcher-border);
+    border-radius: 50px;
+}
+
+.theme-switcher_switch {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: inherit;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, stroke 0.2s ease;
+}
+
+.theme-switcher_switch>.icon {
+    stroke: var(--text-color);
+    transition: stroke 0.2s ease;
+}
+
+.theme-switcher_switch:hover>.icon {
+    stroke: var(--switcher-hover);
+}
+
+.theme-switcher_switch[data-active="true"] {
+    background-color: var(--switcher-active-bg);
+}
+
+.theme-switcher_switch[data-active="true"]>.icon {
+    stroke: var(--switcher-active-icon);
+}
+
+
+/* ==========================================================================
+   PERFIL DE USUARIO
+   ========================================================================== */
+
+.profile-panel {
+    margin-left: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-panel-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    object-fit: contain;
+}
+
+.profile-photo-name {
+    width: 40px;
+    height: 40px;
+    background-color: var(--bottom-surface);
+    border-radius: 40px;
+}
+
+
+/* ==========================================================================
+   UTILIDADES
+   ========================================================================== */
+
+.drawer-bg {
+    display: none;
+}
+
+.bell path {
+    fill: rgb(255, 255, 255);
+}
+
+.icon-color path {
+    fill: var(--text-color);
+}
+
+
+/* ==========================================================================
+   MEDIA QUERIES
+   ========================================================================== */
+
+
+/* Mobile: hasta 599px */
+
+@media (max-width: 599px) {
+    .sidebar {
+        display: none;
+    }
+    .sidebar-mobile {
+        display: block;
+        z-index: var(--z-sidebar);
+    }
+    .nav {
+        width: 100%;
+        left: 0;
+        padding: 0 5px;
+        z-index: 90;
+    }
+    .nav-left {
+        display: flex;
+        flex: 1;
+        height: 100%;
+        align-items: center;
+        justify-content: left;
+        padding: 0 0 0 5px;
+    }
+    .nav-right {
+        flex: 1;
+    }
+    .content-main {
+        width: 100%;
+        padding-left: 0;
+    }
+    .drawer-bg {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: var(--overlay-mask-bg);
+        z-index: var(--z-drawer);
+    }
+}
+
+
+/* Tablets: 600px - 959px */
+
+@media (min-width: 600px) and (max-width: 959px) {
+    .nav {
+        width: calc(100% - var(--sidebar-width-small));
+        left: var(--sidebar-width-small);
+        z-index: 10;
+    }
+    .content-main {
+        padding-left: var(--sidebar-width-small);
+    }
+    .drawer-bg {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: var(--overlay-mask-bg);
+        z-index: var(--z-drawer);
+    }
+}
+
+
+/* Desktop: 960px+ */
+
+@media (min-width: 960px) {
+    .drawer-bg {
+        display: none;
+    }
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0;
+    z-index: 103;
+    width: 150px;
+    height: 200px;
+}
+
+.profile-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-dropdown li {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.profile-dropdown li:hover {
+    background-color: var(--card-bg-hover);
+}
+.content-burger{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: contain;
+}
+.content-avatar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100px;
+}
+.profile-avatar-collapsed{
+    
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: contain;
+}
+.label-user-name{
+   
+    width: 100%;
+    height: 100%;
+}
+.label-user-name p{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.content-username{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+}
+.navegation-learning{
+    width: 100%;
+    height: 100px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-top: 10px;
+}

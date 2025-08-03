@@ -1,2 +1,28 @@
 <p>portfolio works!</p>
 <button (click)="goToCourses()">Gestionar cursos</button>
+<section *ngIf="!loading() && portfolio() as p; else loadingTpl">
+  <h1>{{ p.name }} {{ p.lastname }}</h1>
+  <p>Usuario: {{ p.username }} ({{ p.email }})</p>
+  <p>Fecha de ingreso: {{ p.joined_at }}</p>
+
+  <div *ngIf="p.career">
+    <h2>Carrera</h2>
+    <p>{{ p.career.name }}</p>
+  </div>
+
+  <div *ngIf="p.sede">
+    <h2>Sede</h2>
+    <p>{{ p.sede.canton }}, {{ p.sede.province }}</p>
+    <p>Unidad educativa: {{ p.sede.educational_unit.name }}</p>
+  </div>
+
+  <p><strong>Cursos activos:</strong> {{ p.active_courses_count }}</p>
+
+  <button (click)="goToCourses()">Ver Cursos</button>
+</section>
+
+<ng-template #loadingTpl>
+  <p>Cargando portafolio...</p>
+</ng-template>
+
+<p *ngIf="error()">{{ error() }}</p>
