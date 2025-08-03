@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" *ngIf="datosUsuario$ | async as usuario">
     <div (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
 
     </div>
@@ -71,10 +71,18 @@
                     <span class="label-txt">Certificaciones</span>
                 </div>
             </label>
-            <label class="navegation-route" (click)="navigateTo('learning/manage/courses')">
-                <input name="page" type="radio" [checked]="currentRoute === 'manage/courses'" />
+            <!-- <div *ngIf="datosUsuario$ | async as usuario">
+                    <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
+                    <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
+                        <label>{{ usuario.name.charAt(0) | uppercase }}</label>
+                    </div>
+                </div> -->
+
+            <label class="navegation-route" (click)="viewPortfolio(usuario.username)">
+
+                <input name="page" type="radio" [checked]="currentRoute === 'learning/portfolio/' + usuario.username" />
                 <div class="icon-navegation">
-                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <!-- <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="1.5" color="currentColor">
                             <path
@@ -82,11 +90,15 @@
                             <path
                                 d="M9.002 13.528v1.992a.95.95 0 0 0 .432.81c.844.528 1.485.683 2.571.716c1.001.027 1.629-.13 2.563-.714a.96.96 0 0 0 .44-.82v-1.984m2.003-2.513v3.015M7.05 10.844c.362-.764 2.605-2.094 4.652-2.751a.93.93 0 0 1 .604.014c1.81.662 3.824 1.665 4.555 2.478c.381.425.008.967-.453 1.302c-.937.681-1.97 1.21-4.058 2.013a.98.98 0 0 1-.688.005c-2.14-.795-4.142-1.82-4.595-2.723a.39.39 0 0 1-.017-.338" />
                         </g>
+                    </svg> -->
+                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path fill="currentColor"
+                            d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
                     </svg>
                     <span class="underline"></span>
                 </div>
                 <div class="label-navegation">
-                    <span class="label-txt">Cursos</span>
+                    <span class="label-txt">Portafolio</span>
                 </div>
             </label>
 
@@ -198,7 +210,7 @@
                 </button>
             </div>
             <div class="profile-panel" (click)="toggleProfileMenu()" style="position: relative;">
-                <div *ngIf="datosUsuario$ | async as usuario">
+                <div>
                     <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
                     <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
                         <label>{{ usuario.name.charAt(0) | uppercase }}</label>

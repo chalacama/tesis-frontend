@@ -1,12 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Course, CourseFilters, CourseQueryParams, CourseRequest, Pagination } from '../../../../core/api/course/course.interfaces';
+import { Course, CourseFilters, CourseQueryParams, CourseRequest, Pagination } from '../../../../../core/api/course/course.interfaces';
 import { catchError, debounceTime, distinctUntilChanged, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule,FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Difficulty } from '../../../../core/api/difficulty/difficulty.interface';
-import { DifficultyService } from '../../../../core/api/difficulty/difficulty.service';
-import { CourseService } from '../../../../core/api/course/course.service';
+import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
+import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
+import { CourseService } from '../../../../../core/api/course/course.service';
 
 
 
@@ -71,9 +71,11 @@ export class CoursesComponent {
   }
 
   ngOnInit(): void {
+    
     this.initializeSearchHandler();
     this.loadCourses();
     this.loadDifficulties();
+
   }
 
   ngOnDestroy(): void {

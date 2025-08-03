@@ -47,9 +47,7 @@ export class LearningComponent {
   }
 
   ngOnInit() {
-    
 
-    
     this.datosUsuario$ = this.authService.currentUser;
     this.currentTheme = this.themeService.getCurrentTheme();
     this.prefersDarkMode = this.themeService.getSystemPrefersDark();
@@ -146,7 +144,9 @@ onDocumentClick(event: MouseEvent) {
     this.isProfileMenuOpen = false;
   }
 }
-
+viewPortfolio(username: string) {
+    this.router.navigate(['/learning/portfolio', username]);
+}
 
 
 
