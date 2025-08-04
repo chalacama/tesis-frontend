@@ -38,8 +38,11 @@ export interface Category {
 }
 
 export interface Tutor {
+  id:                  number;
   name:                string;
+  username:            string;
   profile_picture_url: null;
+  
 }
 
 

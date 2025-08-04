@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule,FormBuilder, Validators, FormGroup } f
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
 import { CourseService } from '../../../../../core/api/course/course.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 
@@ -22,6 +22,7 @@ export class CoursesComponent {
   /* private readonly fb = inject(FormBuilder); */
   formCreate : FormGroup;
   highlightedCourseId = signal<number | null>(null);
+  usernameParam?: string;
 
   difficulties = signal<Difficulty[]>([]);
   privacyOptions = [
@@ -58,7 +59,8 @@ export class CoursesComponent {
   constructor(
     private router: Router,
     private readonly fb: FormBuilder,
-    private readonly difficultyService: DifficultyService
+    private readonly difficultyService: DifficultyService,
+    private readonly route: ActivatedRoute
   ) { 
     this.formCreate = this.fb.group({
   title: ['', [Validators.required, Validators.maxLength(255)]],
@@ -73,7 +75,12 @@ export class CoursesComponent {
   }
 
   ngOnInit(): void {
-    
+    /* this.route.parent?.paramMap.subscribe(params => {
+    const username = params.get('username');
+    this.usernameParam = username;
+    this.loadCourses(); // importante: cargar cursos solo después de saber si hay username
+  }); */
+  this.usernameParam = this.route.snapshot.parent?.paramMap.get('username')?.replace(/^@/, '') ?? undefined;
     this.initializeSearchHandler();
     this.loadCourses();
     this.loadDifficulties();
@@ -116,15 +123,18 @@ export class CoursesComponent {
   loadCourses(): void {
     this.loading.set(true);
     this.error.set(null);
-
+    
     const params: CourseQueryParams = {
       page: this.currentPage(),
       per_page: this.perPage(),
       search: this.searchTerm() || undefined,
-      filters: Object.keys(this.filters()).length > 0 ? this.filters() : undefined
+      filters: Object.keys(this.filters()).length > 0 ? this.filters() : undefined,
     };
+    console.log(params);
+const routeParams = this.usernameParam ? { username: this.usernameParam } : undefined;
+console.log(routeParams);
 
-    this.courseService.getCourses(params)
+    this.courseService.getCourses(params,routeParams)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -139,6 +149,7 @@ export class CoursesComponent {
         this.selectedCourses.set(new Set()); // Limpiar selección al cargar nuevos datos
       });
   }
+
 
   /**
    * Realiza la búsqueda con los parámetros actuales

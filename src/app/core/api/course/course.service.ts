@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse } from './course.interfaces';
+import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
 import { environment } from '../../environment/environment';
 import { PortfolioResponse } from '../portfolio/portfolio.interface';
 
@@ -25,7 +25,9 @@ export class CourseService {
   /**
    * Obtiene la lista de cursos con paginación, búsqueda y filtros
    */
-  getCourses(params: CourseQueryParams = {}): Observable<CourseResponse> {
+
+
+  /* getCourses(params: CourseQueryParams = {}): Observable<CourseResponse> {
     const cacheKey = this.generateCacheKey(params);
     const cachedData = this.getCachedData(cacheKey);
 
@@ -46,7 +48,39 @@ export class CourseService {
         catchError(this.handleError),
         finalize(() => this.loadingSubject.next(false))
       );
+  } */
+
+getCourses(params: CourseQueryParams = {}, routeParams?: CourseRouteParams): Observable<CourseResponse> {
+  const cacheKey = this.generateCacheKey({ ...params, ...routeParams });
+  const cachedData = this.getCachedData(cacheKey);
+
+  if (cachedData) {
+    return new Observable(observer => {
+      observer.next(cachedData);
+      observer.complete();
+    });
   }
+
+  this.loadingSubject.next(true);
+
+  let httpParams = this.buildHttpParams(params);
+
+  if (routeParams?.username) {
+    httpParams = httpParams.set('username', routeParams.username);
+  }
+
+  if (routeParams?.id) {
+    httpParams = httpParams.set('id', routeParams.id.toString());
+  }
+
+  return this.http.get<CourseResponse>(`${this.apiUrl}/index`, { params: httpParams }).pipe(
+    tap(response => this.setCachedData(cacheKey, response)),
+    catchError(this.handleError),
+    finalize(() => this.loadingSubject.next(false))
+  );
+}
+
+  
 
   /**
    * Busca cursos por término de búsqueda

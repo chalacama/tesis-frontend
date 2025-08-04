@@ -40,6 +40,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/private/learning/profile/profile.component').then((c) => c.ProfileComponent)
       },
       {
+        path: 'course/:id',
+        loadComponent: () => import('./pages/private/learning/course/course.component').then((c) => c.CourseComponent)
+      },
+      {
         path: 'portfolio/:username',
         loadComponent: () => import('./pages/private/learning/portfolio/portfolio.component').then((c) => c.PortfolioComponent)
       },
@@ -78,16 +82,6 @@ export const routes: Routes = [
         {
           path: 'details',
         loadComponent: () => import('./pages/private/studio/panel.course/details/details.component').then((c) => c.DetailsComponent),
-        }
-        ]
-      },
-      {
-        path: '',
-        loadComponent: () => import('./pages/private/studio/panel.courses/panel.courses.component').then((c) => c.PanelCoursesComponent),
-        children: [
-        {
-          path: 'course/:id',
-        loadComponent: () => import('./pages/private/studio/panel.courses/courses/courses.component').then((c) => c.CoursesComponent),
         }
         ]
       },

@@ -49,8 +49,12 @@ export interface CourseQueryParams {
   page?: number;
   search?: string;
   filters?: CourseFilters;
+  
 }
-
+export interface CourseRouteParams {
+  username?: string;
+  id?: number;
+}
 export interface CourseRequest {
     title:         string;
     description:   string;

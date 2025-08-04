@@ -2,6 +2,7 @@ import { Component, OnInit,HostListener, ElementRef, ViewChild } from '@angular/
 import { Course } from '../../../../core/api/start/start.interfaces';
 import { StartService } from '../../../../core/api/start/start.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   perPage: number = 9;
   hasMore: boolean = true;
   loading: boolean = false;
-  constructor(private startService: StartService) {}
+  constructor(private startService: StartService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadCourses();
@@ -66,5 +67,10 @@ onContainerScroll(): void {
     this.loadCourses();
   }
 }
-
+viewPortfolio(username: string) {
+    this.router.navigate(['/learning/portfolio/@'+username]);
+}
+viewCourse(id: number) {
+    this.router.navigate(['/learning/course/'+id]);
+}
 }

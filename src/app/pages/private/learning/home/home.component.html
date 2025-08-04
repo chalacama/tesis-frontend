@@ -47,7 +47,7 @@
         
         <div class="container-card">
             <div class="card" *ngFor="let course of courses">
-                <div class="card_view">
+                <div (click)="viewCourse(course.id)"  class="card_view">
                     <div *ngIf="course.thumbnail_url" class="card_view_img">
                         <img [src]="course.thumbnail_url" src="" alt="">
                     </div>
@@ -62,14 +62,14 @@
                 </div>
                 <div class="card_content">
                     <div class="card_content_profile">
-                        <div *ngIf="course.tutor.profile_picture_url" class="card_content_profile_img">
+                        <div (click)="viewPortfolio(course.tutor.username)"  *ngIf="course.tutor.profile_picture_url" class="card_content_profile_img">
                             <img [src]="course.tutor.profile_picture_url" alt="">
                         </div>
                         <div *ngIf="course.tutor.profile_picture_url === null  && course.tutor.name === null "
                             class="card_content_profile_img">
                             <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
                         </div>
-                        <div *ngIf="course.tutor.profile_picture_url === null && course.tutor.name"
+                        <div (click)="viewPortfolio(course.tutor.username)" *ngIf="course.tutor.profile_picture_url === null && course.tutor.name"
                             class="card_content_profile_img">
                             <img src="img/avatar/default-profile-green.png" alt="">
                         </div>
