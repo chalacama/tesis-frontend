@@ -8,10 +8,12 @@ export interface Portfolio {
     lastname:             string;
     username:             string;
     email:                string;
+    profile_picture_url?: string;
     joined_at:            string;
     career:               Career;
     sede:                 Sede;
     active_courses_count: number;
+    role:                 string;
 }
 
 export interface Career {

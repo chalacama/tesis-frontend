@@ -1,5 +1,5 @@
 <p>portfolio works!</p>
-<button (click)="goToCourses()">Gestionar cursos</button>
+<button *ngIf="canManage()" (click)="goToCourses()">Gestionar cursos</button>
 <section *ngIf="!loading() && portfolio() as p; else loadingTpl">
   <h1>{{ p.name }} {{ p.lastname }}</h1>
   <p>Usuario: {{ p.username }} ({{ p.email }})</p>
@@ -18,7 +18,6 @@
 
   <p><strong>Cursos activos:</strong> {{ p.active_courses_count }}</p>
 
-  <button (click)="goToCourses()">Ver Cursos</button>
 </section>
 
 <ng-template #loadingTpl>

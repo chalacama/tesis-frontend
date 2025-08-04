@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Portfolio } from '../../../../core/api/portfolio/portfolio.interface';
 import { PortfolioService } from '../../../../core/api/portfolio/portfolio.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/api/auth/auth.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -17,6 +18,7 @@ export class PortfolioComponent implements OnInit {
  constructor( private router: Router,
   private portfolioService: PortfolioService,
     private route: ActivatedRoute,
+    private authService: AuthService
  ){
 
  }
@@ -40,9 +42,34 @@ ngOnInit(): void {
   });
   
 }
-  goToCourses(){
-    const username = this.route.snapshot.paramMap.get('username');
-    this.router.navigate([`/studio/${username}/courses`]);
+  goToCourses() {
+  const currentUser = this.authService.getCurrentUser();
+  const viewedUser = this.portfolio();
+
+  if (!currentUser || !viewedUser) return;
+
+  const isOwner = currentUser.username === viewedUser.username;
+  const isAdmin = currentUser.roles?.some(r => r.name === 'admin');
+
+  if (isOwner) {
+    this.router.navigate(['/studio/courses']);
+  } else if (isAdmin) {
+    this.router.navigate([`/studio/@${viewedUser.username}/courses`]);
+  } else {
+    alert('No tienes permisos para gestionar estos cursos.');
   }
+}
+
+canManage(): boolean {
+  const user = this.authService.getCurrentUser();
+  const viewed = this.portfolio();
+
+  if (!user || !viewed) return false;
+
+  const isOwner = user.username === viewed.username;
+  const isAdmin = user.roles?.some(r => r.name === 'admin');
+  return isOwner || isAdmin;
+}
+
   
 }

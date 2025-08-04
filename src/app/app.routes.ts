@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { studioGuard } from './core/guards/studio.guard';
 
 export const routes: Routes = [
   {
@@ -42,22 +44,35 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/private/learning/portfolio/portfolio.component').then((c) => c.PortfolioComponent)
       },
       ]
-      },
+      },      
       {
-      path: 'studio',
-      children: [
-      {
-        path: ':username',
+        path: 'studio',
+        canActivate: [studioGuard],
         loadComponent: () => import('./pages/private/studio/panel.courses/panel.courses.component').then((c) => c.PanelCoursesComponent),
         children: [
-        {
-          path: 'courses',
-        loadComponent: () => import('./pages/private/studio/panel.courses/courses/courses.component').then((c) => c.CoursesComponent),
-        }
+          {
+            path: 'courses',
+            loadComponent: () => import('./pages/private/studio/panel.courses/courses/courses.component').then((c) => c.CoursesComponent),
+            title: 'Mis Cursos'
+          },
         ]
       },
       {
-        path: ':id',
+        path: 'studio/:username',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/private/studio/panel.courses/panel.courses.component').then(c => c.PanelCoursesComponent),
+        children: [
+          {
+            path: 'courses',
+            loadComponent: () => import('./pages/private/studio/panel.courses/courses/courses.component').then((c) => c.CoursesComponent),
+            title: 'Cursos del Tutor'
+          },
+        ]
+        
+      },
+      {
+        path: 'studio/:id',
+        canActivate: [studioGuard],
         loadComponent: () => import('./pages/private/studio/panel.course/panel.course.component').then((c) => c.PanelCourseComponent),
         children: [
         {
@@ -76,9 +91,9 @@ export const routes: Routes = [
         }
         ]
       },
-      ]
-  },
-  {
+      
+  
+    {
     path: 'manage',
     children: [
       {
@@ -86,7 +101,7 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/private/manage/users/users.component').then((c) => c.UsersComponent)
       },
     ]
-  },
+    },
     ]
 
   },

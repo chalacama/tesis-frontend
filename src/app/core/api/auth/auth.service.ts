@@ -115,4 +115,14 @@ export class AuthService {
       resolve(); 
     });
   }
+  hasRole(roleName: string): boolean {
+  const user = this.currentUserSubject.value;
+  return user?.roles?.some(r => r.name === roleName) ?? false;
+}
+getCurrentUser(): User | null {
+  return this.currentUserSubject.value;
+}
+
+
+
 }

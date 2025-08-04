@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse } from './course.interfaces';
 import { environment } from '../../environment/environment';
+import { PortfolioResponse } from '../portfolio/portfolio.interface';
 
 
 @Injectable({
@@ -195,6 +196,9 @@ export class CourseService {
         // extrae solo el objeto 'course'
         switchMap(response => of(response.course))
       );
+  }
+  getPortfolioByUsername(username: string): Observable<PortfolioResponse> {
+    return this.http.get<PortfolioResponse>(`${this.apiUrl}/${username}`);
   }
 
 }
