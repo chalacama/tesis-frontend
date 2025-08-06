@@ -15,8 +15,17 @@ export interface EducationalUser {
     educational_level:    EducationalLevel;
     sede:                 Sede;
     career:               Career;
+    educational_unit:     EducationalUnit;
 }
-
+interface EducationalUnit {
+  id: number;
+  name: string;
+  organization_domain: string;
+  url_logo: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
 export interface Career {
     id:            number;
     name:          string;
