@@ -1,6 +1,6 @@
 import { ApplicationRef, Component, inject, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { filter, Observable, Subject, tap } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntil, map, first} from 'rxjs/operators';
@@ -26,8 +26,9 @@ datosUsuario$!: Observable<User | null>;
     isMobile = false;
     isTablet = false;
     private destroy$ = new Subject<void>();
-  
-  
+  private previousUrl: string = '/';
+private currentUrl: string = '/';
+    location = inject(Location);
     constructor(
       private themeService: ThemeService,
       @Inject(PLATFORM_ID) private platformId: Object,
@@ -35,7 +36,8 @@ datosUsuario$!: Observable<User | null>;
       private authService: AuthService,
       private breakpointObserver: BreakpointObserver,
       private renderer: Renderer2,
-      private appRef : ApplicationRef
+      private appRef : ApplicationRef,
+      private route: ActivatedRoute
     ) {
       this.router.events
         .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
@@ -43,6 +45,13 @@ datosUsuario$!: Observable<User | null>;
           // Remove leading slash
           this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
         });
+        this.currentUrl = this.router.url;
+  this.router.events
+    .pipe(filter(e => e instanceof NavigationEnd))
+    .subscribe((e: NavigationEnd) => {
+      this.previousUrl = this.currentUrl;
+      this.currentUrl = e.url;
+    });
     }
   
     ngOnInit() {
@@ -153,4 +162,7 @@ datosUsuario$!: Observable<User | null>;
       }
     });
   }
+navigateToBack() {
+  this.location.back();
+}
 }
