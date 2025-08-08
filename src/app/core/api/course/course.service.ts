@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
+import { Course, CourseDetailResponse, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
 import { environment } from '../../environment/environment';
 import { PortfolioResponse } from '../portfolio/portfolio.interface';
 
@@ -234,5 +234,24 @@ getCourses(params: CourseQueryParams = {}, routeParams?: CourseRouteParams): Obs
   getPortfolioByUsername(username: string): Observable<PortfolioResponse> {
     return this.http.get<PortfolioResponse>(`${this.apiUrl}/${username}`);
   }
+  getCourseDetail(courseParam: string | number): Observable<CourseDetailResponse> {
+  this.loadingSubject.next(true);
+  return this.http.get<CourseDetailResponse>(`${this.apiUrl}/${courseParam}/show`).pipe(
+    finalize(() => this.loadingSubject.next(false)),
+    catchError(this.handleError)
+  );
+}
+updateCourse(courseId: number, payload: Partial<CourseRequest> & {
+  private?: boolean;
+  enabled?: boolean;
+  difficulty_id?: number;
+}): Observable<CourseDetailResponse> {
+  this.loadingSubject.next(true);
+  // Ajusta la URL si tu Laravel expone otra ruta para update
+  return this.http.put<CourseDetailResponse>(`${this.apiUrl}/${courseId}/update`, payload).pipe(
+    finalize(() => this.loadingSubject.next(false)),
+    catchError(this.handleError)
+  );
+}
 
 }

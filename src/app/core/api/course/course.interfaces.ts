@@ -61,10 +61,32 @@ export interface CourseRequest {
     difficulty_id: number;
     private:       boolean;
 }
-// src/app/pages/private/learning/manage/courses/course-form.interface.ts
 export interface CourseForm {
   title: string;
   description: string;
   difficulty_id: number;
   private: boolean;
 }
+
+export interface CourseDetailResponse {
+  message: string;
+  course:  CourseDetail;
+}
+
+export interface CourseDetail {
+  id:            number;
+  title:         string;
+  description:   string;
+  private:       boolean;
+  code:          null;
+  enabled:       boolean;
+  difficulty_id: number;
+  created_at:    Date;
+  updated_at:    Date;
+  deleted_at:    Date;
+  difficulty:    Difficulty;
+}
+
+
+
+
