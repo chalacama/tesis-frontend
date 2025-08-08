@@ -1,7 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from 'express';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from '../../../../../core/api/course/course.service';
 import { CourseDetail, CourseDetailResponse, Difficulty } from '../../../../../core/api/course/course.interfaces';
 import { CommonModule } from '@angular/common';
@@ -46,12 +45,14 @@ private readonly route = inject(ActivatedRoute);
   canSave = computed(() => this.form.valid && this.form.dirty);
 
   ngOnInit(): void {
-    /* const param = this.route.snapshot.paramMap.get('course');
+    const param = this.route.snapshot.parent?.paramMap.get('id')
+    console.log(param);
     if (!param) {
       this.errorMsg.set('Parámetro de curso no encontrado en la ruta.');
       return;
     }
-    this.loadCourse(param); */
+    
+    this.loadCourse(param);
   }
 
   private loadCourse(courseParam: string): void {
@@ -68,6 +69,7 @@ private readonly route = inject(ActivatedRoute);
           private: c.private,
           enabled: c.enabled
         }, { emitEvent: false });
+        console.log(this.form.value);
       },
       error: (err: Error) => {
         this.errorMsg.set(err.message || 'No se pudo cargar el curso.');
