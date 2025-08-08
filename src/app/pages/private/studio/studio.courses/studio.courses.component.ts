@@ -12,12 +12,12 @@ import { Portfolio } from '../../../../core/api/portfolio/portfolio.interface';
 import { CourseService } from '../../../../core/api/course/course.service';
 
 @Component({
-  selector: 'app-panel.courses',
+  selector: 'app-studio.courses',
   imports: [RouterOutlet, CommonModule],
-  templateUrl: './panel.courses.component.html',
-  styleUrl: './panel.courses.component.css'
+  templateUrl: './studio.courses.component.html',
+  styleUrl: './studio.courses.component.css'
 })
-export class PanelCoursesComponent {
+export class StudioCoursesComponent {
   datosUsuario$!: Observable<User | null>;
     currentTheme: 'light' | 'dark' | 'system' = 'system';
     currentRoute: string = '';
@@ -218,7 +218,25 @@ export class PanelCoursesComponent {
       this.isProfileMenuOpen = false;
     }
   }
-  viewPortfolio(username: string) {
-      this.router.navigate(['/learning/portfolio', username]);
+  viewPortfolio() {
+
+    if(this.hasExternalUser){
+      this.router.navigate(['/learning/portfolio', '@'+ this.portfolioData?.username]);
+    }else{
+
+      this.datosUsuario$.subscribe((user) => {
+      if (user) {
+        this.router.navigate(['/learning/portfolio','@'+ user.username]);
+      }
+    });
+    }
+      
+  }
+  myPortfolio() {
+    this.datosUsuario$.subscribe((user) => {
+      if (user) {
+        this.router.navigate(['/learning/portfolio','@'+ user.username]);
+      }
+    });
   }
 }

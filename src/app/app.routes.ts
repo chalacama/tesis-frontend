@@ -52,24 +52,34 @@ export const routes: Routes = [
       {
         path: 'studio',
         canActivate: [studioGuard],
-        loadComponent: () => import('./pages/private/studio/panel.courses/panel.courses.component').then((c) => c.PanelCoursesComponent),
+        loadComponent: () => import('./pages/private/studio/studio.courses/studio.courses.component').then((c) => c.StudioCoursesComponent),
         children: [
           {
             path: 'courses',
-            loadComponent: () => import('./pages/private/studio/panel.courses/courses/courses.component').then((c) => c.CoursesComponent),
+            loadComponent: () => import('./pages/private/studio/studio.courses/courses/courses.component').then((c) => c.CoursesComponent),
             title: 'Mis Cursos'
+          },
+          {
+            path: 'panel',
+            loadComponent: () => import('./pages/private/studio/studio.courses/panel/panel.component').then((c) => c.PanelComponent),
+            title: 'Mi panel'
           },
         ]
       },
       {
         path: 'studio/:username',
         canActivate: [adminGuard],
-        loadComponent: () => import('./pages/private/studio/panel.courses/panel.courses.component').then(c => c.PanelCoursesComponent),
+        loadComponent: () => import('./pages/private/studio/studio.courses/studio.courses.component').then(c => c.StudioCoursesComponent),
         children: [
           {
             path: 'courses',
-            loadComponent: () => import('./pages/private/studio/panel.courses/courses/courses.component').then((c) => c.CoursesComponent),
+            loadComponent: () => import('./pages/private/studio/studio.courses/courses/courses.component').then((c) => c.CoursesComponent),
             title: 'Cursos del Tutor'
+          },
+          {
+            path: 'panel',
+            loadComponent: () => import('./pages/private/studio/studio.courses/panel/panel.component').then((c) => c.PanelComponent),
+            title: 'Panel del Tutor'
           },
         ]
         
@@ -77,11 +87,11 @@ export const routes: Routes = [
       {
         path: 'studio/:id',
         canActivate: [studioGuard],
-        loadComponent: () => import('./pages/private/studio/panel.course/panel.course.component').then((c) => c.PanelCourseComponent),
+        loadComponent: () => import('./pages/private/studio/studio.course/studio.course.component').then((c) => c.StudioCourseComponent),
         children: [
         {
           path: 'details',
-        loadComponent: () => import('./pages/private/studio/panel.course/details/details.component').then((c) => c.DetailsComponent),
+        loadComponent: () => import('./pages/private/studio/studio.course/details/details.component').then((c) => c.DetailsComponent),
         }
         ]
       },

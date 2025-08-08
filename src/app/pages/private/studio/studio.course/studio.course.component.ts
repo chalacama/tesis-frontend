@@ -12,10 +12,10 @@ import { User } from '../../../../core/api/auth/auth.interfaces';
 @Component({
   selector: 'app-panel.course',
   imports: [RouterOutlet, CommonModule],
-  templateUrl: './panel.course.component.html',
-  styleUrl: './panel.course.component.css'
+  templateUrl: './studio.course.component.html',
+  styleUrl: './studio.course.component.css'
 })
-export class PanelCourseComponent {
+export class StudioCourseComponent {
 datosUsuario$!: Observable<User | null>;
     currentTheme: 'light' | 'dark' | 'system' = 'system';
     currentRoute: string = '';
@@ -145,5 +145,12 @@ datosUsuario$!: Observable<User | null>;
   }
   viewPortfolio(username: string) {
       this.router.navigate(['/learning/portfolio', username]);
+  }
+  myPortfolio() {
+    this.datosUsuario$.subscribe((user) => {
+      if (user) {
+        this.router.navigate(['/learning/portfolio','@'+ user.username]);
+      }
+    });
   }
 }

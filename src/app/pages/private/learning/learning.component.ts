@@ -8,8 +8,8 @@ import { User } from '../../../core/api/auth/auth.interfaces';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntil, map, first} from 'rxjs/operators';
 import { HostListener } from '@angular/core';
-
-// import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ViewChild, ElementRef } from '@angular/core';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-learning',
   imports: [RouterOutlet, CommonModule],
@@ -88,6 +88,8 @@ export class LearningComponent {
   .subscribe(() => {
     this.renderer.removeClass(document.body, 'app-loading');
   });
+  
+
   }
   navigateTo(path: string) {
     this.router.navigate([path]);
@@ -148,6 +150,13 @@ viewPortfolio(username: string) {
     this.router.navigate(['/learning/portfolio/@'+username]);
 }
 
+myPortfolio() {
+    this.datosUsuario$.subscribe((user) => {
+      if (user) {
+        this.router.navigate(['/learning/portfolio','@'+ user.username]);
+      }
+    });
+  }
 
 
 
