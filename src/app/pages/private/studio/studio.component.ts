@@ -10,6 +10,8 @@ import { AuthService } from '../../../core/api/auth/auth.service';
 import { User } from '../../../core/api/auth/auth.interfaces';
 import { Portfolio } from '../../../core/api/portfolio/portfolio.interface';
 import { CourseService } from '../../../core/api/course/course.service';
+import { MiniatureService } from '../../../core/api/miniature/miniature.service';
+import { MiniatureResponse } from '../../../core/api/miniature/miniature.interface';
 
 @Component({
   selector: 'app-studio',
@@ -32,6 +34,7 @@ export class StudioComponent implements OnInit {
     portfolioData?: Portfolio;
     hasExternalUser = false;
     hasExternalCourse = false;
+    miniatureData?: MiniatureResponse;
 
     private destroy$ = new Subject<void>();
   
@@ -45,7 +48,8 @@ export class StudioComponent implements OnInit {
       private renderer: Renderer2,
       private appRef : ApplicationRef,
       private route: ActivatedRoute,
-      private courseService: CourseService
+      private courseService: CourseService,
+      private miniatureService: MiniatureService,
     ) {
       this.setupRouterSubscription();
     }
@@ -59,6 +63,9 @@ export class StudioComponent implements OnInit {
       this.checkIfExternalUser();
       this.checkIfExternalCourse();
     }
+    isAdmin(): boolean {
+      return this.authService.hasRole('admin');
+    }
     private checkIfExternalCourse(): void {
   this.route.paramMap.subscribe((params: ParamMap) => {
     const courseId = params.get('id');
@@ -66,14 +73,14 @@ export class StudioComponent implements OnInit {
     if (courseId ) {
       this.hasExternalCourse = true;
 
-      /* this.courseService.getPortfolioByUsername(username).subscribe({
-        next: (res) => {
-          this.portfolioData = res.portfolio;
-        },
-        error: (err) => {
-          console.error('Error al obtener datos del portfolio externo', err);
-        }
-      }); */
+      this.miniatureService.getMiniature(+courseId).subscribe({
+          next: (res) => {
+            this.miniatureData = res;
+          },
+          error: (err) => {
+            console.error('Error al obtener la miniatura del curso', err);
+          }
+        });
     } else {
       this.hasExternalCourse = false;
     }
@@ -186,7 +193,18 @@ export class StudioComponent implements OnInit {
       });
   }
     navigateTo(path: string) {
-      this.router.navigate([path]);
+      if(!this.hasExternalUser){
+        this.router.navigate(['studio/'+path]);
+      }else{
+        this.router.navigate(['studio/@'+ this.portfolioData?.username+'/'+path]);
+      }
+      
+    }
+    navigateToEditor(path: string) {
+      if(this.hasExternalCourse){
+        this.router.navigate(['studio/'+this.miniatureData?.course?.id+'/' + path]);
+      }
+      
     }
     switchTheme(theme: 'light' | 'dark' | 'system') {
       this.themeService.setTheme(theme);

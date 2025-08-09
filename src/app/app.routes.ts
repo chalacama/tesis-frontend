@@ -97,6 +97,14 @@ export const routes: Routes = [
         {
           path: 'details',
         loadComponent: () => import('./pages/private/studio/manage.course/details/details.component').then((c) => c.DetailsComponent),
+        },
+        {
+          path: 'modules',
+        loadComponent: () => import('./pages/private/studio/manage.course/module/module.component').then((c) => c.ModuleComponent),
+        },
+        {
+          path: 'analytic',
+        loadComponent: () => import('./pages/private/studio/manage.course/analytic/analytic.component').then((c) => c.AnalyticComponent),
         }
         ]
       },

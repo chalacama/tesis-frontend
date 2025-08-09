@@ -28,9 +28,9 @@
                 (change)="toggleAllCoursesSelection()">
                     </th>
                 </div>
-                <div class="header_cell-id cell-display">
+                <!-- <div class="header_cell-id cell-display">
                     <th>Id</th>
-                </div>
+                </div> -->
                 <div class="header_cell-miniature cell-display">
                     <th>Miniature</th>
                 </div>
@@ -54,14 +54,14 @@
                <div *ngFor="let course of courses()" class="table_content_body content-padding" [ngClass]="{ 'highlighted-row': highlightedCourseId() === course.id }">
                 <div class="body_cell-checkbox cell-display">
                     <td>
-                        <input type="checkbox" type="checkbox" 
+                        <input [class.checked-archived] = "course.deleted_at" type="checkbox" type="checkbox" 
                 [checked]="isCourseSelected(course.id)"
                 (change)="toggleCourseSelection(course.id)">
                     </td>
                 </div>
-                <div class="body_cell-id cell-display">
+                <!-- <div class="body_cell-id cell-display">
                     <td>{{course.id}}</td>
-                </div>
+                </div> -->
                 <div class="body_cell-miniature cell-display">
                     <td *ngIf="course.miniature?.url">
                         <img class="cell_miniature" [src]="course.miniature.url" alt="miniature">
@@ -77,7 +77,7 @@
                     <div class="cell_label-description">
                         <td>{{course.description}}</td>   
                     </div>
-                    <div class="cell-actions">
+                    <div *ngIf="!course.deleted_at" class="cell-actions">
                         <button (click)="goToEditCourse(course.id)" class="btn-edit btn-action">
                             <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 384 384"><path fill="currentColor" d="M0 304L236 68l80 80L80 384H0v-80zM378 86l-39 39l-80-80l39-39q6-6 15-6t15 6l50 50q6 6 6 15t-6 15z"/></svg>
                         </button>

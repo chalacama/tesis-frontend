@@ -35,7 +35,8 @@
             <label class="navegation-route" (click)="navigateTo('learning')">
                 <input name="page" type="radio" [checked]="currentRoute === 'learning'" />
                 <div class="icon-navegation">
-                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" class="icon home">
+                    <svg *ngIf="currentRoute !== 'learning'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12.204c0-2.289 0-3.433.52-4.381c.518-.949 1.467-1.537 3.364-2.715l2-1.241C9.889 2.622 10.892 2 12 2c1.108 0 2.11.622 4.116 1.867l2 1.241c1.897 1.178 2.846 1.766 3.365 2.715c.519.948.519 2.092.519 4.38v1.522c0 3.9 0 5.851-1.172 7.063C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.212C2 19.576 2 17.626 2 13.725v-1.521Z"/><path stroke-linecap="round" d="M12 15v3"/></g></svg>
+                    <svg *ngIf="currentRoute === 'learning'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" class="icon home">
                         <path fill="inherit"
                             d="M18.9999 6.01002L12.4499 0.770018C11.1699 -0.249982 9.16988 -0.259982 7.89988 0.760018L1.34988 6.01002C0.409885 6.76002 -0.160115 8.26002 0.0398848 9.44002L1.29988 16.98C1.58988 18.67 3.15988 20 4.86988 20H15.4699C17.1599 20 18.7599 18.64 19.0499 16.97L20.3099 9.43002C20.4899 8.26002 19.9199 6.76002 18.9999 6.01002ZM10.9199 16C10.9199 16.41 10.5799 16.75 10.1699 16.75C9.75988 16.75 9.41988 16.41 9.41988 16V13C9.41988 12.59 9.75988 12.25 10.1699 12.25C10.5799 12.25 10.9199 12.59 10.9199 13V16Z">
                         </path>
@@ -49,7 +50,8 @@
             <label class="navegation-route" (click)="navigateTo('learning/path')">
                 <input name="page" type="radio" [checked]="currentRoute === 'learning/path'" />
                 <div class="icon-navegation">
-                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <svg *ngIf="currentRoute !== 'learning/path'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 19l-5.21 1.737a.6.6 0 0 1-.79-.57V5.433a.6.6 0 0 1 .41-.569L9 3m0 16l6 2m-6-2V3m6 18l5.59-1.863a.6.6 0 0 0 .41-.57V3.832a.6.6 0 0 0-.79-.569L15 5m0 16V5m0 0L9 3"/></svg>
+                    <svg *ngIf="currentRoute === 'learning/path'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                         <path fill="inherit" d="m0 3l5-2v12l-5 2zM6 .5l5 3V15l-5-2.5zm6 3l4-3v12l-4 3z" />
                     </svg>
                     <span class="underline"></span>
@@ -61,7 +63,12 @@
             <label class="navegation-route" (click)="navigateTo('learning/certification')">
                 <input name="page" type="radio" [checked]="currentRoute === 'learning/certification'" />
                 <div class="icon-navegation">
-                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <svg *ngIf="currentRoute !== 'learning/certification'" class="sng-icon" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M2.06 14.68a1 1 0 0 0 .46.6l1.91 1.11v2.2a1 1 0 0 0 1 1h2.2l1.11 1.91a1 1 0 0 0 .86.5a1 1 0 0 0 .51-.14l1.9-1.1l1.91 1.1a1 1 0 0 0 1.37-.36l1.1-1.91h2.2a1 1 0 0 0 1-1v-2.2l1.91-1.11a1 1 0 0 0 .37-1.36L20.76 12l1.11-1.91a1 1 0 0 0-.37-1.36l-1.91-1.1v-2.2a1 1 0 0 0-1-1h-2.2l-1.1-1.91a1 1 0 0 0-.61-.46a1 1 0 0 0-.76.1L12 3.26l-1.9-1.1a1 1 0 0 0-1.36.36L7.63 4.43h-2.2a1 1 0 0 0-1 1v2.2l-1.9 1.1a1 1 0 0 0-.37 1.37l1.1 1.9l-1.1 1.91a1 1 0 0 0-.1.77zm3.22-3.17L4.39 10l1.55-.9a1 1 0 0 0 .49-.86V6.43h1.78a1 1 0 0 0 .87-.5L10 4.39l1.54.89a1 1 0 0 0 1 0l1.55-.89l.91 1.54a1 1 0 0 0 .87.5h1.77v1.78a1 1 0 0 0 .5.86l1.54.9l-.89 1.54a1 1 0 0 0 0 1l.89 1.54l-1.54.9a1 1 0 0 0-.5.86v1.78h-1.83a1 1 0 0 0-.86.5l-.89 1.54l-1.55-.89a1 1 0 0 0-1 0l-1.51.89l-.89-1.54a1 1 0 0 0-.87-.5H6.43v-1.78a1 1 0 0 0-.49-.81l-1.55-.9l.89-1.54a1 1 0 0 0 0-1.05z" />
+                    </svg>
+                    <svg *ngIf="currentRoute === 'learning/certification'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path fill="inherit"
                             d="M2.047 14.667a.992.992 0 0 0 .466.607l1.909 1.104v2.199a1 1 0 0 0 1 1h2.199l1.104 1.91a1.002 1.002 0 0 0 1.366.366L12 20.75l1.91 1.104a1.002 1.002 0 0 0 1.366-.366l1.103-1.909h2.199a1 1 0 0 0 1-1V16.38l1.909-1.104a.999.999 0 0 0 .366-1.366L20.75 12l1.104-1.909a1 1 0 0 0-.366-1.366l-1.909-1.104V5.422a1 1 0 0 0-1-1H16.38l-1.103-1.909a1.004 1.004 0 0 0-.607-.466a.994.994 0 0 0-.759.1L12 3.25l-1.909-1.104a.998.998 0 0 0-1.366.365l-1.104 1.91H5.422a1 1 0 0 0-1 1V7.62L2.513 8.725a1.001 1.001 0 0 0-.365 1.366L3.251 12l-1.104 1.909a1.003 1.003 0 0 0-.1.758z" />
                     </svg>
@@ -83,18 +90,23 @@
                 <input name="page" type="radio"
                     [checked]="currentRoute === 'learning/portfolio/@' + usuario.username" />
                 <div class="icon-navegation">
-                    <!-- <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="1.5" color="currentColor">
+                    <svg *ngIf="currentRoute !== 'learning/portfolio/@' + usuario.username" class="sng-icon"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g fill="none" fill-rule="evenodd">
                             <path
-                                d="M2.459 9c1.277-4.057 5.077-7 9.566-7c5.198 0 9.472 3.947 9.975 9l-2-.407M21.541 15a10.03 10.03 0 0 1-9.566 7C6.777 22 2.503 18.053 2 13l2 .407" />
-                            <path
-                                d="M9.002 13.528v1.992a.95.95 0 0 0 .432.81c.844.528 1.485.683 2.571.716c1.001.027 1.629-.13 2.563-.714a.96.96 0 0 0 .44-.82v-1.984m2.003-2.513v3.015M7.05 10.844c.362-.764 2.605-2.094 4.652-2.751a.93.93 0 0 1 .604.014c1.81.662 3.824 1.665 4.555 2.478c.381.425.008.967-.453 1.302c-.937.681-1.97 1.21-4.058 2.013a.98.98 0 0 1-.688.005c-2.14-.795-4.142-1.82-4.595-2.723a.39.39 0 0 1-.017-.338" />
+                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />
+                            <path fill="currentColor"
+                                d="M12 2c5.523 0 10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33l.02.022l-.132.112A9.978 9.978 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.958 9.958 0 0 1 2 12C2 6.477 6.477 2 12 2Zm0 15c-1.86 0-3.541.592-4.793 1.405A7.965 7.965 0 0 0 12 20a7.965 7.965 0 0 0 4.793-1.595A8.897 8.897 0 0 0 12 17Zm0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4Zm0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z" />
                         </g>
-                    </svg> -->
-                    <svg class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path fill="currentColor"
-                            d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
+                    </svg>
+                    <svg *ngIf="currentRoute === 'learning/portfolio/@' + usuario.username" class="sng-icon"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g fill="none" fill-rule="evenodd">
+                            <path
+                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />
+                            <path fill="currentColor"
+                                d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2ZM8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0Zm9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984Z" />
+                        </g>
                     </svg>
                     <span class="underline"></span>
                 </div>
@@ -135,11 +147,12 @@
 
         </div>
         <div class="nav-center">
-            
+
 
         </div>
         <div class="nav-right">
-            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" (click)="toggleProfileMenu()" style="position: relative;">
+            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" (click)="toggleProfileMenu()"
+                style="position: relative;">
                 <div class="profile-panel-avatar">
                     <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
                     <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
@@ -165,31 +178,44 @@
                         </div>
                         <div class="dropdown_body">
                             <div (click)="navigateTo('learning/profile')" class="dropdown_item">
-                            <div class="dropdown_item_icon">
-                            <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 5c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m-8-5a3 3 0 1 1 6 0a3 3 0 0 1-6 0m2 4a3 3 0 0 0-3 2v.2c0 .1-.1.2 0 .2v.2c.3.2.6.4.9.4h6c.3 0 .6-.2.8-.4l.2-.2v-.2l-.1-.1A3 3 0 0 0 10 14H7.9Z" clip-rule="evenodd"/></svg>
-                            </div>
-                            <div  class="dropdown_item_label">
-                                <p class="dropdown_label">Ver perfil</p>
-                            </div> 
+                                <div class="dropdown_item_icon">
+                                    <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill="currentColor" fill-rule="evenodd"
+                                            d="M4 4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 5c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m-8-5a3 3 0 1 1 6 0a3 3 0 0 1-6 0m2 4a3 3 0 0 0-3 2v.2c0 .1-.1.2 0 .2v.2c.3.2.6.4.9.4h6c.3 0 .6-.2.8-.4l.2-.2v-.2l-.1-.1A3 3 0 0 0 10 14H7.9Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="dropdown_item_label">
+                                    <p class="dropdown_label">Ver perfil</p>
+                                </div>
                             </div>
                             <div (click)="myPortfolio()" class="dropdown_item">
-                            <div class="dropdown_item_icon">
-                                <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path fill="currentColor"
-                            d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
-                            </svg>
-                            </div>
-                            <div class="dropdown_item_label">
-                                <p class="dropdown_label">Mi portafolio</p>
-                            </div> 
+                                <div class="dropdown_item_icon">
+                                    <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"
+                                        height="200" viewBox="0 0 24 24">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path
+                                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />
+                                            <path fill="currentColor"
+                                                d="M12 2c5.523 0 10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33l.02.022l-.132.112A9.978 9.978 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.958 9.958 0 0 1 2 12C2 6.477 6.477 2 12 2Zm0 15c-1.86 0-3.541.592-4.793 1.405A7.965 7.965 0 0 0 12 20a7.965 7.965 0 0 0 4.793-1.595A8.897 8.897 0 0 0 12 17Zm0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4Zm0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z" />
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="dropdown_item_label">
+                                    <p class="dropdown_label">Mi portafolio</p>
+                                </div>
                             </div>
                             <div (click)="logoutAndRedirect()" class="dropdown_item dropdown_item-border">
-                            <div class="dropdown_item_icon">
-                                <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1025 1024"><path fill="currentColor" d="m1006.428 555l-163 200q-11 12-29.5 12.5t-32-7.5t-13.5-19V640h-128q-26 0-45-18.5t-19-45.5V448q0-27 19-45.5t45-18.5h128V284q0-12 13.5-20t32-7.5t29.5 12.5l163 199q18 18 18 43.5t-18 43.5zm-365.5-299q-26.5 0-45.5-19t-19-45.5t-18.5-45t-45.5-18.5h-320q-26 0-45 18.5t-19 45.5v640q0 26 19 45t45 19h320q27 0 45.5-19t18.5-45.5t19-45t45.5-18.5t45 18.5t18.5 45.5v64q0 53-37.5 90.5t-90.5 37.5h-448q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5h448q53 0 90.5 37.5t37.5 90.5v64q0 26-18.5 45t-45 19z"/></svg>
-                            </div>
-                            <div class="dropdown_item_label">
-                                <p class="dropdown_label">Cerrar sesión</p>
-                            </div> 
+                                <div class="dropdown_item_icon">
+                                    <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"
+                                        height="200" viewBox="0 0 1025 1024">
+                                        <path fill="currentColor"
+                                            d="m1006.428 555l-163 200q-11 12-29.5 12.5t-32-7.5t-13.5-19V640h-128q-26 0-45-18.5t-19-45.5V448q0-27 19-45.5t45-18.5h128V284q0-12 13.5-20t32-7.5t29.5 12.5l163 199q18 18 18 43.5t-18 43.5zm-365.5-299q-26.5 0-45.5-19t-19-45.5t-18.5-45t-45.5-18.5h-320q-26 0-45 18.5t-19 45.5v640q0 26 19 45t45 19h320q27 0 45.5-19t18.5-45.5t19-45t45.5-18.5t45 18.5t18.5 45.5v64q0 53-37.5 90.5t-90.5 37.5h-448q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5h448q53 0 90.5 37.5t37.5 90.5v64q0 26-18.5 45t-45 19z" />
+                                    </svg>
+                                </div>
+                                <div class="dropdown_item_label">
+                                    <p class="dropdown_label">Cerrar sesión</p>
+                                </div>
                             </div>
                             <!-- <div class="dropdown_item">
                             <div class="dropdown_item_icon">
@@ -199,7 +225,7 @@
                                 <p class="dropdown_label">Aspecto</p>
                             </div> 
                             </div> -->
-                            
+
                         </div>
                     </div>
                     <div class="dropdown-footer">

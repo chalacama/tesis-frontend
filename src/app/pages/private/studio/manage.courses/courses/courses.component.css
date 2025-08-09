@@ -89,6 +89,9 @@
    
     
 }
+/* .checked-archived{
+    display: none;
+} */
 /* Celdas medidas */
 .header_cell-checkbox ,.body_cell-checkbox{
     width: 40px;
