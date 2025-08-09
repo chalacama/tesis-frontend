@@ -52,33 +52,38 @@ export const routes: Routes = [
       {
         path: 'studio',
         canActivate: [studioGuard],
-        loadComponent: () => import('./pages/private/studio/studio.courses/studio.courses.component').then((c) => c.StudioCoursesComponent),
+        loadComponent: () => import('./pages/private/studio/studio.component').then((c) => c.StudioComponent),
         children: [
           {
             path: 'courses',
-            loadComponent: () => import('./pages/private/studio/studio.courses/courses/courses.component').then((c) => c.CoursesComponent),
+            loadComponent: () => import('./pages/private/studio/manage.courses/courses/courses.component').then((c) => c.CoursesComponent),
             title: 'Mis Cursos'
           },
           {
             path: 'panel',
-            loadComponent: () => import('./pages/private/studio/studio.courses/panel/panel.component').then((c) => c.PanelComponent),
+            loadComponent: () => import('./pages/private/studio/manage.courses/panel/panel.component').then((c) => c.PanelComponent),
             title: 'Mi panel'
+          },
+          {
+            path: 'users',
+            canActivate: [adminGuard],
+            loadComponent: () => import('./pages/private/studio/manage.users/users/users.component').then((c) => c.UsersComponent)
           },
         ]
       },
       {
         path: 'studio/:username',
         canActivate: [adminGuard],
-        loadComponent: () => import('./pages/private/studio/studio.courses/studio.courses.component').then(c => c.StudioCoursesComponent),
+        loadComponent: () => import('./pages/private/studio/studio.component').then(c => c.StudioComponent),
         children: [
           {
             path: 'courses',
-            loadComponent: () => import('./pages/private/studio/studio.courses/courses/courses.component').then((c) => c.CoursesComponent),
+            loadComponent: () => import('./pages/private/studio/manage.courses/courses/courses.component').then((c) => c.CoursesComponent),
             title: 'Cursos del Tutor'
           },
           {
             path: 'panel',
-            loadComponent: () => import('./pages/private/studio/studio.courses/panel/panel.component').then((c) => c.PanelComponent),
+            loadComponent: () => import('./pages/private/studio/manage.courses/panel/panel.component').then((c) => c.PanelComponent),
             title: 'Panel del Tutor'
           },
         ]
@@ -87,25 +92,14 @@ export const routes: Routes = [
       {
         path: 'studio/:id',
         canActivate: [studioGuard],
-        loadComponent: () => import('./pages/private/studio/studio.course/studio.course.component').then((c) => c.StudioCourseComponent),
+        loadComponent: () => import('./pages/private/studio/studio.component').then((c) => c.StudioComponent),
         children: [
         {
           path: 'details',
-        loadComponent: () => import('./pages/private/studio/studio.course/details/details.component').then((c) => c.DetailsComponent),
+        loadComponent: () => import('./pages/private/studio/manage.course/details/details.component').then((c) => c.DetailsComponent),
         }
         ]
       },
-      
-  
-    {
-    path: 'manage',
-    children: [
-      {
-        path: 'users',
-        loadComponent: () => import('./pages/private/manage/users/users.component').then((c) => c.UsersComponent)
-      },
-    ]
-    },
     ]
 
   },

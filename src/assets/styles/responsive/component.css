@@ -1,7 +1,7 @@
 :root{
    --sidebar-width: 250px;
-   --nav-height: 60px;
-   --sidebar-width-small: 80px;
+   --nav-height: 58px;
+   --sidebar-width-small: 72px;
    --z-sidebar:100;
    --z-nav:90;
    --z-drawer:99;
