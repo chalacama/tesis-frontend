@@ -108,6 +108,25 @@ export const routes: Routes = [
         }
         ]
       },
+      {
+        path: 'studio/:username/:id',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/private/studio/studio.component').then((c) => c.StudioComponent),
+        children: [
+        {
+          path: 'details',
+        loadComponent: () => import('./pages/private/studio/manage.course/details/details.component').then((c) => c.DetailsComponent),
+        },
+        {
+          path: 'modules',
+        loadComponent: () => import('./pages/private/studio/manage.course/module/module.component').then((c) => c.ModuleComponent),
+        },
+        {
+          path: 'analytic',
+        loadComponent: () => import('./pages/private/studio/manage.course/analytic/analytic.component').then((c) => c.AnalyticComponent),
+        }
+        ]
+      },
     ]
 
   },

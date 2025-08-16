@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { Course, CourseDetailResponse, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
+import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
 import { environment } from '../../environment/environment';
 import { PortfolioResponse } from '../portfolio/portfolio.interface';
+import { CourseDetailResponse } from './course.details.interfaces';
 
 
 @Injectable({
@@ -22,33 +23,7 @@ export class CourseService {
   private cache = new Map<string, { data: CourseResponse; timestamp: number }>();
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
-  /**
-   * Obtiene la lista de cursos con paginación, búsqueda y filtros
-   */
-
-
-  /* getCourses(params: CourseQueryParams = {}): Observable<CourseResponse> {
-    const cacheKey = this.generateCacheKey(params);
-    const cachedData = this.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return new Observable(observer => {
-        observer.next(cachedData);
-        observer.complete();
-      });
-    }
-
-    this.loadingSubject.next(true);
-
-    const httpParams = this.buildHttpParams(params);
-
-    return this.http.get<CourseResponse>(`${this.apiUrl}/index`, { params: httpParams })
-      .pipe(
-        tap(response => this.setCachedData(cacheKey, response)),
-        catchError(this.handleError),
-        finalize(() => this.loadingSubject.next(false))
-      );
-  } */
+  
 
 getCourses(params: CourseQueryParams = {}, routeParams?: CourseRouteParams): Observable<CourseResponse> {
   const cacheKey = this.generateCacheKey({ ...params, ...routeParams });

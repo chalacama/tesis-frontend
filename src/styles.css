@@ -31,8 +31,9 @@
    --background-transition: light-dark(var(--primary-50), var(--primary-950));
    --accent-color: light-dark(var(--primary-500), var(--surface-500));
    --border-color: light-dark(var(--surface-200), var(--surface-700));
+   --active-color: light-dark(var(--primary-600), var(--primary-500));
    --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
-
+  
    --bottom-primary: light-dark(var(--primary-500), var(--primary-400));
    --bottom-secondary: light-dark(var(--surface-200), var(--surface-700));
 

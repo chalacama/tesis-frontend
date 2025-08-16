@@ -1,1 +1,129 @@
-<p>Details</p>
+<div class="content-details">
+    <div class="content-section-start">
+        <div class="section-start-left">
+            <div class="section-name">
+                <div class="section-name-left">
+                    <h4>Detalles del curso</h4>
+                </div>
+                <div class="section-name-right">
+                    <button class="btn-details btn-restore">Restaurar</button>
+                    <button class="btn-details btn-save">Save</button>
+                </div>
+
+            </div>
+            <div class="section-card">
+                <div class="section-card-item">
+
+                    <div class="section-card-content">
+                        <div class="section-card-label">
+                            <label class="card-label" for="">Título</label>
+                            <span>(obligatorio)</span>
+                        </div>
+                        <textarea autosize id="title" class="card-input" rows="1"
+                            placeholder="Escribe un título claro y único"></textarea>
+                        <div class="card-counter">
+                            <span>1/100</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="section-card-item">
+
+                    <div class="section-card-content">
+                        <div class="section-card-label">
+                            <label class="card-label" for="">Descripción</label>
+                            <span></span>
+                        </div>
+                        <textarea autosize id="title" class="card-input card-textarea" rows="1"
+                            placeholder="Describe el curso"></textarea>
+                        <div class="card-counter">
+                            <span>1/500</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="section-card-item">
+
+                    <div class="section-card-content">
+                        <div class="field">
+                            <label for="difficulty" class="label">Dificultad</label>
+
+                            <div class="select">
+                                <select id="difficulty" name="difficulty" required>
+                                    <option value="" disabled selected hidden>Selecciona una dificultad</option>
+                                    <option value="1">Básico</option>
+                                    <option value="2">Intermedio</option>
+                                    <option value="3">Avanzado</option>
+                                </select>
+
+                                <!-- ícono chevron -->
+                                <span class="select-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                        <path d="M7 10l5 5 5-5H7z" />
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <small class="help">Elige un nivel claro para tus estudiantes.</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="section-start-right">
+            <div class="section-card-miniature">
+                <div class="card-miniature-view">
+                    <div class="card-miniature-overlay">
+                        <div class="card-miniature-button">
+                            <button (click)="openModalMiniature()" class="button-overlay">
+                                <svg class="svg-icon svg-icon-eye-stuffed" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 472 384">
+                                    <path fill="currentColor"
+                                        d="M235 32q79 0 142.5 44.5T469 192q-28 71-91.5 115.5T235 352T92 307.5T0 192q28-71 92-115.5T235 32zm0 267q44 0 75-31.5t31-75.5t-31-75.5T235 85t-75.5 31.5T128 192t31.5 75.5T235 299zm-.5-171q26.5 0 45.5 18.5t19 45.5t-19 45.5t-45.5 18.5t-45-18.5T171 192t18.5-45.5t45-18.5z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <img class="miniature-view" src="img\cover\no-thumbnail.jpg" alt="">
+                </div>
+                <div class="card-miniature-content">
+                    <div class="card-miniature-label">
+                        <div>
+                            <h4>Miniatura</h4>
+                        </div>
+                    </div>
+                    <div class="card-miniature-button">
+                        <button class="btn-details btn-upload">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5">
+                                    <path stroke-linejoin="round"
+                                        d="M21.25 13V8.5a5 5 0 0 0-5-5h-8.5a5 5 0 0 0-5 5v7a5 5 0 0 0 5 5h6.26" />
+                                    <path stroke-linejoin="round"
+                                        d="m3.01 17l2.74-3.2a2.2 2.2 0 0 1 2.77-.27a2.2 2.2 0 0 0 2.77-.27l2.33-2.33a4 4 0 0 1 5.16-.43l2.47 1.91M8.01 10.17a1.66 1.66 0 1 0-.02-3.32a1.66 1.66 0 0 0 .02 3.32" />
+                                    <path stroke-miterlimit="10" d="M18.707 15v5" />
+                                    <path stroke-linejoin="round"
+                                        d="m21 17.105l-1.967-1.967a.458.458 0 0 0-.652 0l-1.967 1.967" />
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="content-section-end">
+
+    </div>
+    <div (click)="openModalMiniature()" *ngIf="modalOpenMiniature" class="modal-miniature-overlay">
+
+    </div>
+    <div *ngIf="modalOpenMiniature" class="modal-miniature">
+
+        <img class="miniature-preview" src="img\cover\no-thumbnail.jpg" alt="">
+
+    </div>
+</div>

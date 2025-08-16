@@ -683,7 +683,7 @@
   width: 224px;
   height: 127px;
   border-radius: 5px;
-  background-color: rgba(15, 52, 24, 0.331);
+  background-color: var(--overlay-mask-bg);
   transition: opacity 0.3s ease;
   opacity: 0;
   z-index: 1;

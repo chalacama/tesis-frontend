@@ -36,6 +36,8 @@ export class StudioComponent implements OnInit {
     hasExternalCourse = false;
     miniatureData?: MiniatureResponse;
 
+    usernameEdit?: string;
+
     private destroy$ = new Subject<void>();
   
   
@@ -62,6 +64,7 @@ export class StudioComponent implements OnInit {
       this.setupAppStabilitySubscription();
       this.checkIfExternalUser();
       this.checkIfExternalCourse();
+      this.usernameEdit =this.portfolioData?.username
     }
     isAdmin(): boolean {
       return this.authService.hasRole('admin');
@@ -200,12 +203,24 @@ export class StudioComponent implements OnInit {
       }
       
     }
+    navigatelearning(path: string) {
+    this.router.navigate([path]);
+  }
     navigateToEditor(path: string) {
       if(this.hasExternalCourse){
         this.router.navigate(['studio/'+this.miniatureData?.course?.id+'/' + path]);
       }
       
     }
+    goBack(): void {
+      
+    if (!this.portfolioData) {
+      this.router.navigate(['/studio/courses']);
+      
+    } else {
+      this.router.navigate(['/studio/@'+ this.portfolioData?.username, 'courses']);
+    }
+  }
     switchTheme(theme: 'light' | 'dark' | 'system') {
       this.themeService.setTheme(theme);
       this.currentTheme = theme;
@@ -279,4 +294,5 @@ export class StudioComponent implements OnInit {
       }
     });
   }
+  
 }

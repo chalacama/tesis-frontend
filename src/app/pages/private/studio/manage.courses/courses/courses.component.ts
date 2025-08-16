@@ -323,8 +323,12 @@ console.log(routeParams);
     });
 }
 goToEditCourse(id: number) {
-  console.log('ID del curso a editar:', id);
+  if (!this.usernameParam){
     this.router.navigate([`/studio/${id}/details`]);
+  }else{
+    this.router.navigate([`/studio/@${this.usernameParam}/${id}/details`]);
+  }
+    
   }
 
 
