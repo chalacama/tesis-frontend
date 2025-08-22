@@ -285,10 +285,10 @@
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
-    padding-left: 8px;
+    padding-left: 13px;
     background-color: var(--bottom-secondary);
     border: none;
-    border-radius: 30px;
+    border-radius: 10px;
     color: var(--text-color);
     font-weight: 600;
     cursor: pointer;
@@ -337,13 +337,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 18px;
-    border-radius: 20px;
+    padding: 8px 0 8px 15px;
+    border-radius: 5px;
     cursor: pointer;
     position: relative;
     transition: background-color 200ms;
 }
-
+.navegation-route:focus  {
+    color: var(--bottom-primary-hover);
+}
 .navegation-route input[type="radio"] {
     display: none;
 }
@@ -375,7 +377,6 @@
 .label-txt {
     font-size: 13px;
     font-weight: bold;
-    color: var(--text-color);
     transition: all 200ms;
 }
 
@@ -397,8 +398,8 @@
 
 .navegation-route:hover:not(:has(input:checked)) .icon-navegation svg,
 .navegation-route:hover:not(:has(input:checked)) .label-txt {
-    color: var(--bottom-primary);
-    fill: var(--bottom-primary);
+    color: var(--bottom-primary-hover);
+    fill: var(--bottom-primary-hover);
     opacity: 0.6;
 }
 
@@ -416,7 +417,9 @@
 .navegation-route:has(input:checked) .underline {
     width: 100%;
 }
-
+.navegation-route:hover {
+    background-color: var(--bottom-secondary-hover);
+}
 
 /* ==========================================================================
    BOTÓN DE COLAPSAR
@@ -427,34 +430,16 @@
     display: flex;
     justify-content: right;
     padding: 0 15px 0 0;
+    cursor: pointer;
 }
 
-.Btn {
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(var(--bottom-surface), var(--bottom-surface-hover));
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    transform: rotateZ(-90deg);
-}
+
 
 .arrow path {
     fill: white;
 }
 
-.Btn:hover .text {
-    opacity: 1;
-    transition-duration: 0.7s;
-}
 
-.Btn:hover .arrow {
-    animation: slide-in-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
 
 @keyframes slide-in-bottom {
     0% {
@@ -482,8 +467,8 @@
 }
 
 .theme-switcher_switch {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -642,7 +627,7 @@
     position: absolute;
     top: 0px;
     right: calc(100% + 5px);
-    background-color: var(--nav-bg);
+    background-color: var(--modal-bg);
     color: var(--text-color);
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.171);

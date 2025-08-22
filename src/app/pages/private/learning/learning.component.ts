@@ -1,6 +1,6 @@
 import { ApplicationRef, Component, inject, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { ThemeService } from '../../../shared/UI/theme.service';
+import { ThemeService } from '../../../shared/UI/services/theme.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, Observable, Subject, tap } from 'rxjs';
 import { AuthService } from '../../../core/api/auth/auth.service';

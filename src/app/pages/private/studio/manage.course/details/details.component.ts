@@ -1,7 +1,7 @@
-import { Component, OnInit, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CourseService } from '../../../../../core/api/course/course.service';
@@ -11,7 +11,7 @@ import { CourseDetail, CourseDetailResponse } from '../../../../../core/api/cour
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 import { CourseRequest } from '../../../../../core/api/course/course.interfaces';
 import { Directive, ElementRef, HostListener, AfterViewInit } from '@angular/core';
-import { AutosizeDirective } from '../../../../../shared/UI/autosize.directive';
+import { AutosizeDirective } from '../../../../../shared/UI/directive/autosize.directive';
 
 @Component({
   selector: 'app-details',
@@ -30,13 +30,17 @@ export class DetailsComponent implements OnInit {
   private readonly difficultyService = inject(DifficultyService);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly host = inject(ElementRef<HTMLElement>);
+
+  @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
   constructor(
     
 
   ) {
 
     }
-
+  
   // Estado de UI
   loadingCourse = signal<boolean>(true);
   loadingDifficulties = signal<boolean>(true);
@@ -223,4 +227,6 @@ openModalMiniature() {
 }
 
 
+
 }
+

@@ -93,6 +93,7 @@
     /* min-height: 70px; */
     font-size: 14px;
     font-weight: 500;
+    
 }
 .card-textarea{
     min-height: 200px;
@@ -281,119 +282,8 @@
     aspect-ratio: 16 / 9;
     object-fit: contain
 }
-:root{
-  /* Tokens (mapean bien con tus variables si las tienes) */
-  --select-bg: var(--surface-0, #ffffff);
-  --select-text: var(--surface-950, #0b0b0c);
-  --select-border: var(--border-color, #d1d5db);
-  --select-hover: #bfc6cf;
-  --select-ring: var(--active-color, #3b82f6);
-  --select-muted: #9ca3af;
-  --select-error: #ef4444;
-  --select-success: #10b981;
-  --select-radius: 12px;
-  --select-padY: 10px;
-  --select-padX: 14px;
-  --select-icon-gap: 36px; /* espacio para la flecha */
-}
 
-/* Dark mode */
-@media (prefers-color-scheme: dark){
-  :root{
-    --select-bg: var(--surface-900, #0b0b0c);
-    --select-text: var(--surface-50, #e8e8e8);
-    --select-border: #3a3a3a;
-    --select-hover: #5a5a5a;
-  }
-}
 
-/* Layout básico */
-.field{ width:100%; max-width:480px; }
-.label{
-  display:block;
-  margin-bottom:8px;
-  font-weight:600;
-  font-size:0.95rem;
-}
-.help{
-  display:block;
-  margin-top:6px;
-  font-size:0.85rem;
-  color:var(--select-muted);
-}
 
-/* Contenedor del select + flecha */
-.select{
-  position:relative;
-}
-.select select{
-  appearance:none;
-  -webkit-appearance:none;
-  width:100%;
-  background:var(--select-bg);
-  color:var(--select-text);
-  border:1.5px solid var(--select-border);
-  border-radius:var(--select-radius);
-  padding: var(--select-padY) calc(var(--select-padX) + var(--select-icon-gap)) var(--select-padY) var(--select-padX);
-  font: inherit;
-  line-height:1.4;
-  outline:none;
-  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
-}
 
-/* Placeholder gris usando required + value="" */
-.select select:required:invalid{
-  color: var(--select-muted);
-}
 
-.select select:hover{
-  border-color: var(--select-hover);
-}
-.select select:focus-visible{
-  border-color: var(--select-ring);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--select-ring) 20%, transparent);
-}
-
-/* Deshabilitado */
-.select select:disabled{
-  opacity:.7;
-  cursor:not-allowed;
-}
-
-/* Flecha */
-.select-icon{
-  position:absolute;
-  top:50%;
-  right:12px;
-  transform: translateY(-50%);
-  pointer-events:none;
-  color: var(--select-muted);
-}
-
-/* Estados de validación (opcional) */
-.field.is-error .select select{
-  border-color: var(--select-error);
-}
-.field.is-error .help{
-  color: var(--select-error);
-}
-.field.is-success .select select{
-  border-color: var(--select-success);
-}
-.field.is-success .help{
-  color: var(--select-success);
-}
-
-/* Tamaños (opcional) */
-.field.select--sm .select select{
-  --select-radius: 10px;
-  --select-padY: 8px;
-  --select-padX: 12px;
-  font-size: .92rem;
-}
-.field.select--lg .select select{
-  --select-radius: 14px;
-  --select-padY: 12px;
-  --select-padX: 16px;
-  font-size: 1.05rem;
-}

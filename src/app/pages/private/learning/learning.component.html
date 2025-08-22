@@ -1,10 +1,10 @@
 <div class="content" *ngIf="datosUsuario$ | async as usuario">
-    <div (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
+    <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
 
     </div>
     <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose"
         [class.collapsed]="isSidebarCollapsed">
-        <div class="didebar-header" (click)="toggleSidebar()">
+        <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="didebar-header" (click)="toggleSidebar()">
             <div class="content-logo-label" [class.content-logo-label-collapsed]="isSidebarCollapsed">
                 <div>
                     <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
@@ -32,7 +32,7 @@
             </button>
         </div>
         <div class="content-navegation">
-            <label class="navegation-route" (click)="navigateTo('learning')">
+            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo('learning')">
                 <input name="page" type="radio" [checked]="currentRoute === 'learning'" />
                 <div class="icon-navegation">
                     <svg *ngIf="currentRoute !== 'learning'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12.204c0-2.289 0-3.433.52-4.381c.518-.949 1.467-1.537 3.364-2.715l2-1.241C9.889 2.622 10.892 2 12 2c1.108 0 2.11.622 4.116 1.867l2 1.241c1.897 1.178 2.846 1.766 3.365 2.715c.519.948.519 2.092.519 4.38v1.522c0 3.9 0 5.851-1.172 7.063C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.212C2 19.576 2 17.626 2 13.725v-1.521Z"/><path stroke-linecap="round" d="M12 15v3"/></g></svg>
@@ -47,7 +47,7 @@
                     <span class="label-txt">Home</span>
                 </div>
             </label>
-            <label class="navegation-route" (click)="navigateTo('learning/path')">
+            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo('learning/path')">
                 <input name="page" type="radio" [checked]="currentRoute === 'learning/path'" />
                 <div class="icon-navegation">
                     <svg *ngIf="currentRoute !== 'learning/path'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 19l-5.21 1.737a.6.6 0 0 1-.79-.57V5.433a.6.6 0 0 1 .41-.569L9 3m0 16l6 2m-6-2V3m6 18l5.59-1.863a.6.6 0 0 0 .41-.57V3.832a.6.6 0 0 0-.79-.569L15 5m0 16V5m0 0L9 3"/></svg>
@@ -60,7 +60,7 @@
                     <span class="label-txt">Trayectoria</span>
                 </div>
             </label>
-            <label class="navegation-route" (click)="navigateTo('learning/certification')">
+            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo('learning/certification')">
                 <input name="page" type="radio" [checked]="currentRoute === 'learning/certification'" />
                 <div class="icon-navegation">
                     <svg *ngIf="currentRoute !== 'learning/certification'" class="sng-icon" xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@
                     </div>
                 </div> -->
 
-            <label class="navegation-route" (click)="viewPortfolio(usuario.username)">
+            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="viewPortfolio(usuario.username)">
 
                 <input name="page" type="radio"
                     [checked]="currentRoute === 'learning/portfolio/@' + usuario.username" />
@@ -116,14 +116,14 @@
             </label>
 
         </div>
-        <div *ngIf="isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">
+        <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"  *ngIf="isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
                 <path fill="currentColor" fill-rule="evenodd"
                     d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm8.293 2.293a1 1 0 1 0 1.414 1.414l3-3a1 1 0 0 0 0-1.414l-3-3a1 1 0 1 0-1.414 1.414L12.586 12l-2.293 2.293Z"
                     clip-rule="evenodd" />
             </svg>
         </div>
-        <div *ngIf="!isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">
+        <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" *ngIf="!isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
                 <path fill="currentColor" fill-rule="evenodd"
                     d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm11.707-2.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 0 0 1.414-1.414L11.414 12l2.293-2.293Z"
@@ -151,9 +151,9 @@
 
         </div>
         <div class="nav-right">
-            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" (click)="toggleProfileMenu()"
+            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" 
                 style="position: relative;">
-                <div class="profile-panel-avatar">
+                <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="toggleProfileMenu()" class="profile-panel-avatar">
                     <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
                     <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
                         <label>{{ usuario.name.charAt(0) | uppercase }}</label>
@@ -163,8 +163,8 @@
                 <div *ngIf="isProfileMenuOpen" class="profile-dropdown">
                     <div>
                         <div class="dropdown_header">
-                            <div class="dropdown_header_left">
-                                <img class="dropdown-avatar" [src]="usuario.profile_picture_url" alt="profile">
+                            <div  class="dropdown_header_left">
+                                <img onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="navigateTo('learning/profile')" class="dropdown-avatar" [src]="usuario.profile_picture_url" alt="profile">
                             </div>
                             <div class="dropdown_header_right">
                                 <div class="dropdown_header_right_name">
@@ -177,7 +177,7 @@
                             </div>
                         </div>
                         <div class="dropdown_body">
-                            <div (click)="navigateTo('learning/profile')" class="dropdown_item">
+                            <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="navigateTo('learning/profile')" class="dropdown_item">
                                 <div class="dropdown_item_icon">
                                     <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path fill="currentColor" fill-rule="evenodd"
@@ -189,7 +189,7 @@
                                     <p class="dropdown_label">Ver perfil</p>
                                 </div>
                             </div>
-                            <div (click)="myPortfolio()" class="dropdown_item">
+                            <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="myPortfolio()" class="dropdown_item">
                                 <div class="dropdown_item_icon">
                                     <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"
                                         height="200" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@
                                     <p class="dropdown_label">Mi portafolio</p>
                                 </div>
                             </div>
-                            <div (click)="logoutAndRedirect()" class="dropdown_item dropdown_item-border">
+                            <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="logoutAndRedirect()" class="dropdown_item dropdown_item-border">
                                 <div class="dropdown_item_icon">
                                     <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"
                                         height="200" viewBox="0 0 1025 1024">

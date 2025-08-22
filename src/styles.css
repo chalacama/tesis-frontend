@@ -19,21 +19,33 @@
 :root {
    color-scheme: light dark;
 
-   /* Usamos la función light-dark() para asignar colores de la paleta
-       al modo claro y oscuro respectivamente. */
+   /* background */
+       
    --background-color: light-dark(var(--surface-0), var(--surface-950));
+   --background-hover: light-dark(var(--surface-200), var(--surface-900));
+   --background-active: light-dark(var(--surface-100), var(--surface-800));
+   --background-disabled: light-dark(var(--primary-400), var(--primary-950));
+
+   
+   --modal-bg: light-dark(var(--surface-200), var(--surface-800));
+   --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
+   --card-bg: light-dark(var(--surface-50), var(--surface-900));
+
+   --overlay-mask-bg: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+   --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
+
+   --border-color: light-dark(var(--surface-200), var(--surface-700));
+   --active-color: light-dark(var(--primary-600), var(--primary-500));
+   
+    /* txt */
    --text-color: light-dark(var(--surface-950), var(--surface-50));
    --text-color-secondary: light-dark(var(--surface-700), var(--surface-300));
    --text-color-contrast: light-dark(var(--surface-0), var(--surface-950));
-   --modal-bg: light-dark(var(--surface-200), var(--surface-900));
-   --background-hover: light-dark(var(--surface-200), var(--surface-900));
-   --background-active: light-dark(var(--primary-200), var(--primary-800));
-   --background-transition: light-dark(var(--primary-50), var(--primary-950));
-   --accent-color: light-dark(var(--primary-500), var(--surface-500));
-   --border-color: light-dark(var(--surface-200), var(--surface-700));
-   --active-color: light-dark(var(--primary-600), var(--primary-500));
-   --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
   
+
+   
+
+   /* Btn */
    --bottom-primary: light-dark(var(--primary-500), var(--primary-400));
    --bottom-secondary: light-dark(var(--surface-200), var(--surface-700));
 
@@ -51,16 +63,6 @@
    --bottom-help-hover: light-dark(var(--help-600), var(--help-300));
    --bottom-danger-hover: light-dark(var(--danger-600), var(--danger-300));
 
-   --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
-   --nav-bg: light-dark(var(--surface-50), var(--surface-800));
-   --overlay-mask-bg: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
-   
-   --card-bg: light-dark(var(--surface-200), var(--surface-700));
-   --card-bg-hover: light-dark(var(--surface-300), var(--surface-800));
-   --card-text-color: light-dark(var(--text-color), var(--text-color-secondary));
-   --card-border-color: light-dark(var(--border-color), var(--border-color));
-   --card-shadow-color: light-dark(var(--shadow-color), var(--shadow-color));
-   --card-before: light-dark(var(--surface-300), var(--surface-600));
    
 
 

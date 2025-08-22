@@ -5,7 +5,7 @@ import { filter, Observable, Subject, tap } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntil, map, first} from 'rxjs/operators';
 import { HostListener } from '@angular/core';
-import { ThemeService } from '../../../shared/UI/theme.service';
+import { ThemeService } from '../../../shared/UI/services/theme.service';
 import { AuthService } from '../../../core/api/auth/auth.service';
 import { User } from '../../../core/api/auth/auth.interfaces';
 import { Portfolio } from '../../../core/api/portfolio/portfolio.interface';
@@ -203,6 +203,7 @@ export class StudioComponent implements OnInit {
       }
       
     }
+    
     navigatelearning(path: string) {
     this.router.navigate([path]);
   }
@@ -287,12 +288,17 @@ export class StudioComponent implements OnInit {
     }
       
   }
-  myPortfolio() {
+  learningNavigateTo(path: string) {
     this.datosUsuario$.subscribe((user) => {
       if (user) {
-        this.router.navigate(['/learning/portfolio','@'+ user.username]);
+        if(path === 'portfolio'){
+          this.router.navigate(['/learning',path,'@'+ user.username]);
+        }else if(path === 'profile'){
+          this.router.navigate(['/learning',path]);
+        }
+        
       }
     });
   }
-  
+   
 }
