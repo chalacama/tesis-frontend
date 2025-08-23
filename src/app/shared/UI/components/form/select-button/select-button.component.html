@@ -1,0 +1,36 @@
+<div class="sbb-field" [class.error]="!!error" [class.disabled]="disabled">
+  <label *ngIf="label" class="sbb-label">{{ label }}</label>
+
+  <div
+    class="sbb-group"
+    role="radiogroup"
+    [attr.aria-disabled]="disabled || null"
+    [class.horizontal]="orientation==='horizontal'"
+    [class.vertical]="orientation==='vertical'"
+    [class.nowrap]="!wrap"
+    [class.size-sm]="size==='sm'"
+    [class.size-lg]="size==='lg'"
+    [class.shape-pill]="shape==='pill'"
+  >
+    <button
+      type="button"
+      class="sbb-span"
+      *ngFor="let opt of options"
+      role="radio"
+      [attr.aria-checked]="isChecked(opt)"
+      [disabled]="disabled || opt.disabled"
+      [class.checked]="isChecked(opt)"
+      [class.opt-disabled]="opt.disabled"
+      (click)="selectOption(opt)"
+      [style.--opt-color]="opt.color || null"
+      [style.--opt-bg]="opt.bg || null"
+      [style.--opt-border]="opt.borderColor || null"
+      [style.--sbb-radius]="radiusValue"
+    >
+      <img *ngIf="opt.iconUrl" class="sbb-icon" [src]="opt.iconUrl" alt="" />
+      <span class="sbb-text">{{ opt.label }}</span>
+    </button>
+  </div>
+
+  <div class="sbb-error" *ngIf="error">{{ error }}</div>
+</div>

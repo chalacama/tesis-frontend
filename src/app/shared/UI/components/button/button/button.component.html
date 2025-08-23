@@ -1,0 +1,24 @@
+<button
+  class="app-btn"
+  [ngClass]="[
+    'v-' + variant,
+    'c-' + color,
+    's-' + size,
+    disabled ? 'is-disabled' : ''
+  ]"
+  [disabled]="disabled"
+  [ngStyle]="cssVars()"
+  type="button"
+>
+  <!-- Icono SVG -->
+  <span class="btn-icon" *ngIf="safeSvg">
+    <span class="svg" [innerHTML]="safeSvg"></span>
+  </span>
+
+  <!-- Texto -->
+  <span class="btn-label" *ngIf="!iconOnly">{{ label }}</span>
+
+  <!-- Badge -->
+  <span class="btn-badge" *ngIf="badge">{{ badge }}</span>
+</button>
+

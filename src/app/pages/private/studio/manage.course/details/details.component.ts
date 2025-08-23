@@ -12,11 +12,13 @@ import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interf
 import { CourseRequest } from '../../../../../core/api/course/course.interfaces';
 import { Directive, ElementRef, HostListener, AfterViewInit } from '@angular/core';
 import { AutosizeDirective } from '../../../../../shared/UI/directive/autosize.directive';
+import {  SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
+import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,AutosizeDirective],
+  imports: [CommonModule, ReactiveFormsModule,AutosizeDirective,SelectButtonComponent, ButtonComponent],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
@@ -224,6 +226,23 @@ modalOpenMiniature = false;
 openModalMiniature() {
   this.modalOpenMiniature = !this.modalOpenMiniature;
 
+}
+// in your component's TypeScript code
+mapDifficulties() {
+  // usa tus vars o hex
+  return this.difficulties().map(d => {
+    if (d.id === 1) {
+      return { value: d.id, label: d.name, color: 'var(--help-500)', bg: 'color-mix(in oklab, var(--help-500) 10%, transparent)' };
+    }
+    if (d.id === 2) {
+      return { value: d.id, label: d.name, color: 'var(--warn-500)', bg: 'color-mix(in oklab, var(--warn-500) 10%, transparent)' };
+    }
+    if (d.id === 3) {
+      return { value: d.id, label: d.name, color: 'var(--danger-500)', bg: 'color-mix(in oklab, var(--danger-500) 10%, transparent)' };
+    }
+    // por defecto usa el color activo de tu DS
+    return { value: d.id, label: d.name, color: 'var(--active-color)' };
+  });
 }
 
 

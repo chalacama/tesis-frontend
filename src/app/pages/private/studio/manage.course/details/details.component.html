@@ -7,7 +7,9 @@
                 </div>
                 <div class="section-name-right">
                     <button class="btn-details btn-restore">Restaurar</button>
-                    <button class="btn-details btn-save">Save</button>
+                    <app-button iconSize="15px" svgPath="svg\save-outline.svg"  badge="7" [fontSize]="'12px'" color="primary"
+                        [borderRadius]="'20px'" [width]="'100px'" [height]="'30px'" label="Guardar">
+                    </app-button>
                 </div>
 
             </div>
@@ -44,9 +46,11 @@
                     </div>
                 </div>
                 <div class="section-card-item">
-
-                    
-
+                    <select-button label="Dificultad" [options]="mapDifficulties()" formControlName="difficulty_id"
+                        orientation="horizontal" [wrap]="true" size="md" shape="pill" [disabled]="loadingDifficulties()"
+                        borderRadius="5px"
+                        [error]="f.difficulty_id.touched && f.difficulty_id.invalid ? 'Selecciona una dificultad' : null">
+                    </select-button>
 
                 </div>
 
