@@ -1,33 +1,29 @@
+/* Defaults (overrideables por ngStyle) */
 .app-btn {
-  /* Vars por defecto (pueden ser sobrescritas por ngStyle) */
-  --btn-bg: var(--bottom-primary);
-  --btn-bg-hover: var(--bottom-primary-hover);
-  --btn-fg: var(--text-color-contrast);
-  --btn-border: var(--bottom-primary);
-  --btn-icon-size: 10px;
-  --btn-radius: 10px;
   --btn-width: auto;
   --btn-height: 40px;
+  --btn-radius: 10px;
   --btn-gap: 8px;
-  --btn-font-size: 10px;
+  --btn-font-size: .95rem;
+  --btn-icon-size: 20px;
+  --btn-border-width: 2px;
+  --btn-pad-x: 16px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--btn-gap);
-  font-family: "Open Sans", sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0 16px;
-  transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .04s ease;
-  position: relative;
-
   width: var(--btn-width);
   height: var(--btn-height);
+  padding: 0 var(--btn-pad-x);
   border-radius: var(--btn-radius);
   border: none;
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  
+  cursor: pointer;
+  position: relative;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: var(--btn-font-size);
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .04s ease;
 }
 
 /* Estados */
@@ -36,50 +32,44 @@
 .app-btn.is-disabled { opacity: .5; pointer-events: none; }
 
 /* Variantes */
-.app-btn.v-raised {
-  box-shadow: 0 2px 6px var(--shadow-color);
+.app-btn.v-filled {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: none;
 }
 
 .app-btn.v-outlined {
   background: transparent;
   color: var(--btn-border);
-  border: 2px solid var(--btn-border);
+  border: var(--btn-border-width) solid var(--btn-border);
 }
 .app-btn.v-outlined:hover {
-  background: color-mix(in oklab, var(--btn-border) 12%, transparent);
+  background: color-mix(in oklab, var(--btn-border) 10%, transparent);
 }
 
 .app-btn.v-text {
   background: transparent;
-  color: var(--btn-bg);
+  color: var(--btn-bg); /* usamos bg como color principal en text */
   border: none;
 }
 .app-btn.v-text:hover {
-  background: var(--background-hover);
-  color: var(--btn-bg-hover);
+  background: color-mix(in oklab, var(--btn-bg) 8%, transparent);
 }
 
 .app-btn.v-flat {
-  background: var(--bottom-secondary);
+  background: var(--sev-secondary);
   color: var(--text-color);
 }
-.app-btn.v-flat:hover {
-  background: var(--bottom-secondary-hover);
+
+/* Elevación */
+.app-btn.is-raised {
+  box-shadow: 0 2px 6px var(--shadow-color);
 }
 
-/* Colores (map a tus tokens del tema) */
-.app-btn.c-primary   { --btn-bg: var(--bottom-primary);   --btn-bg-hover: var(--bottom-primary-hover);   --btn-border: var(--bottom-primary);   --btn-fg: var(--text-color-contrast); }
-.app-btn.c-secondary { --btn-bg: var(--bottom-secondary); --btn-bg-hover: var(--bottom-secondary-hover); --btn-border: var(--bottom-secondary); --btn-fg: var(--text-color); }
-.app-btn.c-info      { --btn-bg: var(--bottom-info);      --btn-bg-hover: var(--bottom-info-hover);      --btn-border: var(--bottom-info);      --btn-fg: var(--text-color-contrast); }
-.app-btn.c-warn      { --btn-bg: var(--bottom-warn);      --btn-bg-hover: var(--bottom-warn-hover);      --btn-border: var(--bottom-warn);      --btn-fg: var(--text-color-contrast); }
-.app-btn.c-help      { --btn-bg: var(--bottom-help);      --btn-bg-hover: var(--bottom-help-hover);      --btn-border: var(--bottom-help);      --btn-fg: var(--text-color-contrast); }
-.app-btn.c-danger    { --btn-bg: var(--bottom-danger);    --btn-bg-hover: var(--bottom-danger-hover);    --btn-border: var(--bottom-danger);    --btn-fg: var(--text-color-contrast); }
-.app-btn.c-contrast  { --btn-bg: var(--bottom-contrast);  --btn-bg-hover: var(--bottom-secondary-hover); --btn-border: var(--bottom-contrast);  --btn-fg: var(--text-color-contrast); }
-
-/* Tamaños */
-.app-btn.s-sm { --btn-gap: 6px; font-size: .85rem; padding: 0 12px; --btn-height: 34px; --btn-icon-size: 16px; }
-.app-btn.s-md { --btn-gap: 8px; font-size: .95rem; padding: 0 16px; --btn-height: 40px; --btn-icon-size: 20px; }
-.app-btn.s-lg { --btn-gap: 10px; font-size: 1.05rem; padding: 0 20px; --btn-height: 48px; --btn-icon-size: 24px; }
+/* Tamaños → la tipografía se ajusta también por var(--btn-font-size) */
+/* .app-btn.s-sm {  }
+.app-btn.s-md {  }
+.app-btn.s-lg {  } */
 
 /* Icono / Imagen */
 .btn-icon {
@@ -90,22 +80,19 @@
   height: var(--btn-icon-size);
   line-height: 1;
 }
-.btn-icon i { font-size: var(--btn-icon-size); }
 .btn-icon .svg :where(svg) {
   width: var(--btn-icon-size);
   height: var(--btn-icon-size);
   display: block;
 }
-
-.btn-img img {
+.svg{
   width: var(--btn-icon-size);
   height: var(--btn-icon-size);
-  object-fit: cover;
-  border-radius: 4px;
+  /* color: aliceblue; */
 }
 
 /* Texto */
-.btn-label { white-space: nowrap; font-size: var(--btn-font-size); }
+.btn-label { white-space: nowrap; }
 
 /* Badge */
 .btn-badge {
@@ -116,17 +103,12 @@
   padding: 0 5px;
   border-radius: 999px;
   background: var(--btn-badge-bg);
-  color: var(--btn-badge-text);
+  color: var(--btn-badge-fg);
   font-size: 0.70rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 1px 2px var(--shadow-color);
+  
 }
-.svg {
-  width: var(--btn-icon-size);
-  height: var(--btn-icon-size);
-  /* color: var(--text-color); */
-}
-

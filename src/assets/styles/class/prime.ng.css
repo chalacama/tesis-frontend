@@ -1,14 +1,14 @@
-video .video-stream html5-main-video {
+p-togglebutton .p-ripple p-component p-togglebutton ng-valid ng-star-inserted ng-touched ng-dirty p-togglebutton-checked {
 	/* Font & Text */
-	font-family: "YouTube Noto", Roboto, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-family: "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 14px;
 	font-style: normal;
 	font-variant: normal;
-	font-weight: 400;
+	font-weight: 500;
 	letter-spacing: normal;
-	line-height: 14.3px;
-	text-decoration: none solid rgb(221, 218, 214);
-	text-align: left;
+	line-height: normal;
+	text-decoration: none solid rgb(255, 255, 255);
+	text-align: start;
 	text-indent: 0px;
 	text-transform: none;
 	vertical-align: baseline;
@@ -17,35 +17,31 @@ video .video-stream html5-main-video {
 
 	/* Color & Background */
 	background-attachment: scroll;
-	background-color: rgba(0, 0, 0, 0);
+	background-color: rgb(3, 7, 18);
 	background-image: none;
 	background-position: 0% 0%;
 	background-repeat: repeat;
-	color: rgb(221, 218, 214);
+	color: rgb(255, 255, 255);
 
 	/* Box */
-	height: 209px;
-	width: 371px;
-	border: 0px none rgb(221, 218, 214);
-	border-top: 0px none rgb(221, 218, 214);
-	border-right: 0px none rgb(221, 218, 214);
-	border-bottom: 0px none rgb(221, 218, 214);
-	border-left: 0px none rgb(221, 218, 214);
-	margin: 0px;
-	padding: 0px;
+	height: 32.6667px;
+	width: 93.0972px;
+	border: 0.888889px solid rgb(3, 7, 18);
+	border-top: 0.888889px solid rgb(3, 7, 18);
+	padding: 3.5px;
 	max-height: none;
-	min-height: 0px;
+	min-height: auto;
 	max-width: none;
-	min-width: 0px;
+	min-width: auto;
 
 	/* Positioning */
-	position: absolute;
+	position: relative;
 	top: 0px;
-	bottom: -209px;
+	bottom: 0px;
 	right: 0px;
 	left: 0px;
 	float: none;
-	display: block;
+	display: flex;
 	clear: none;
 	z-index: auto;
 
@@ -62,23 +58,23 @@ video .video-stream html5-main-video {
 	table-layout: auto;
 
 	/* Miscellaneous */
-	overflow: clip;
+	overflow: hidden;
 	cursor: pointer;
 	visibility: visible;
 
 	/* Effects */
 	transform: none;
-	transition: all;
-	outline: rgb(255, 0, 0) dashed 0.666667px;
+	transition: background 0.2s, color 0.2s, border-color 0.2s, outline-color 0.2s, box-shadow 0.2s;
+	outline: rgba(0, 0, 0, 0) dashed 0.888889px;
 	outline-offset: 0px;
-	box-sizing: content-box;
+	box-sizing: border-box;
 	resize: none;
 	text-shadow: none;
 	text-overflow: clip;
 	word-wrap: normal;
 	box-shadow: none;
-	border-top-left-radius: 0px;
+	border-top-left-radius: 6px;
 	border-top-right-radius: 0px;
-	border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 6px;
 	border-bottom-right-radius: 0px;
 }

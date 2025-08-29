@@ -1,14 +1,11 @@
 <button
   class="app-btn"
-  [ngClass]="[
-    'v-' + variant,
-    'c-' + color,
-    's-' + size,
-    disabled ? 'is-disabled' : ''
-  ]"
-  [disabled]="disabled"
+  [class]="hostClasses().join(' ')"
+  [disabled]="presets.disabled"
   [ngStyle]="cssVars()"
-  type="button"
+  [attr.aria-label]="presets.ariaLabel || (btn.iconOnly ? btn.label : null)"
+  [attr.type]="btn.type"
+  
 >
   <!-- Icono SVG -->
   <span class="btn-icon" *ngIf="safeSvg">
@@ -16,9 +13,8 @@
   </span>
 
   <!-- Texto -->
-  <span class="btn-label" *ngIf="!iconOnly">{{ label }}</span>
+  <span class="btn-label" *ngIf="!btn.iconOnly">{{ btn.label }}</span>
 
   <!-- Badge -->
-  <span class="btn-badge" *ngIf="badge">{{ badge }}</span>
+  <span class="btn-badge" *ngIf="btn.badge">{{ btn.badge }}</span>
 </button>
-

@@ -138,7 +138,7 @@
   line-height: 1.5rem;
   padding: 10px;
   color: var(--background-color);
-  background-color: var(--bottom-primary);
+  background-color: var(--sev-primary);
   font-weight: 600;
   border-radius: 50%;
   border-style: none;
@@ -150,7 +150,7 @@
 }
 
 .create-botton:hover {
-  background-color: var(--bottom-primary-hover);
+  background-color: var(--sev-primary-hover);
 }
 .btn-action{
   cursor: pointer;
@@ -170,7 +170,7 @@
   margin-right: 10px;
 }
 .btn-action:hover {
-  background-color: var(--bottom-secondary-hover);
+  background-color: var(--sev-secondary-hover);
   transition: all 0.35s linear;
 }
 .body_cell-title{
@@ -205,27 +205,27 @@
     display: none;
 }
 .btn-edit{
-    border: 1px solid var(--bottom-info);
-    color: var(--bottom-info);
+    border: 1px solid var(--sev-info);
+    color: var(--sev-info);
 }
 .btn-edit:hover{
-    background-color: var(--bottom-info-hover);
+    background-color: var(--sev-info-hover);
     color: var(--background-color);
 }
 .btn-delete{
-    border: 1px solid var(--bottom-danger);
-    color: var(--bottom-danger);
+    border: 1px solid var(--sev-danger);
+    color: var(--sev-danger);
 }
 .btn-delete:hover{
-    background-color: var(--bottom-danger-hover);
+    background-color: var(--sev-danger-hover);
     color: var(--background-color);
 }
 .btn-analytics{
-    border: 1px solid var(--bottom-help);
-    color: var(--bottom-help);
+    border: 1px solid var(--sev-help);
+    color: var(--sev-help);
 }
 .btn-analytics:hover{
-    background-color: var(--bottom-help-hover);
+    background-color: var(--sev-help-hover);
     color: var(--background-color);
 }
 .table_content_footer_left{
@@ -261,7 +261,7 @@
 
 }
 .btn-footer:hover{
-    background-color: var(--bottom-secondary-hover);
+    background-color: var(--sev-secondary-hover);
 }
 .footer_select{
     width: 50px;
@@ -273,7 +273,7 @@
     background-color: #00000000;
 }
 .footer_select:hover{
-    background-color: var(--bottom-secondary-hover);
+    background-color: var(--sev-secondary-hover);
 }
 
 .select_option{
@@ -298,7 +298,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--overlay-mask-bg);
+    background-color: var(--overlay-color);
     z-index: 200;
 }
 .modal-create{

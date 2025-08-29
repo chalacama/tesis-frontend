@@ -1,75 +1,118 @@
+// button.component.ts
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { UiPresetsDirective } from '../../../directive/ui-presets.directive';
+import { UiSeverity } from '../../../interfaces/ui-types';
+import { UiBottonDirective } from '../../../directive/ui-botton.directive';
 
-type BtnVariant = 'raised' | 'outlined' | 'text' | 'flat';
-type BtnColor =
-  | 'primary' | 'secondary' | 'info' | 'warn' | 'help' | 'danger' | 'contrast';
-
-type BtnSize = 'sm' | 'md' | 'lg';
 @Component({
-  selector: 'app-button',
+  selector: 'ui-button',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './button.component.html',
-  styleUrl: './button.component.css'
+  styleUrls: ['./button.component.css'],
+  hostDirectives: [{
+    directive: UiPresetsDirective,
+    // re-exporta inputs para usarlos directamente en <app-button ...>
+    inputs: [
+      'severity','size','disabled','raised',
+      'width','height','radius','fontSize','gap',
+      'bg','fg','hoverBg','borderColor','borderWidth','iconSize',
+      'ariaLabel'
+    ],
+    
+  },
+  {directive: UiBottonDirective
+    // re-exporta inputs para usarlos directamente en <app-button ...>
+    ,inputs: [
+      'label','badge','badgeSeverity','type','svgPath','iconOnly','variant'
+    ]
+  }
+  
+],
 })
-export class ButtonComponent {
-constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
-
-  @Input() label = '';
-  @Input() variant: BtnVariant = 'raised';
-  @Input() color: BtnColor = 'primary';
-  @Input() size: BtnSize = 'md';
-  @Input() disabled = false;
-  @Input() iconOnly = false;
-
-  /** Tamaños y estilos dinámicos */
-  @Input() width: string = '40px';
-  @Input() height: string = '40px';
-  @Input() borderRadius: string = '10px';
-  @Input() fontSize: string = '';
-  @Input() iconSize: string = '10px';
-
-  /** SVG */
-  @Input() svgPath?: string;
+export class ButtonComponent implements OnChanges {
+  private http = inject(HttpClient);
+  private sanitizer = inject(DomSanitizer);
+  // inyecta instancia del directive para leer valores actuales si necesitas lógica interna
+  readonly presets = inject(UiPresetsDirective);
+  /* readonly btn = inject(UiBottonDirective); */
+  constructor(public readonly btn: UiBottonDirective) {
+    this.ngOnChanges();
+   }
+  
+  
   safeSvg?: SafeHtml;
 
-  /** Badge */
-  @Input() badge?: string | number;
-  @Input() badgeColor: string = '#e53935';
-  @Input() badgeTextColor: string = '#fff';
-
-  ngOnChanges() {
-  if (this.svgPath) {
-    this.http.get(this.svgPath, { responseType: 'text' }).subscribe(raw => {
-      // elimina width/height hardcodeados
-      let svg = raw
-        .replace(/\swidth="[^"]*"/i, '')
-        .replace(/\sheight="[^"]*"/i, '');
-
-      // asegura fill heredado (si no lo trae)
-      if (!/fill="/i.test(svg)) {
-        svg = svg.replace('<svg', '<svg fill="currentColor"');
-      }
-
-      this.safeSvg = this.sanitizer.bypassSecurityTrustHtml(svg);
-    });
+  ngOnChanges(): void {
+    
+    if (this.btn.svgPath) {
+      this.http.get(this.btn.svgPath, { responseType: 'text' }).subscribe(raw => {
+        let svg = raw.replace(/\swidth="[^"]*"/i, '').replace(/\sheight="[^"]*"/i, '');
+        if (!/fill="/i.test(svg)) svg = svg.replace('<svg', '<svg fill="currentColor"');
+        this.safeSvg = this.sanitizer.bypassSecurityTrustHtml(svg);
+      });
+    }
   }
-}
 
+  /** CSS variables unificadas: severidad → tokens, más overrides específicos */
+  cssVars(): Record<string, string> {
+    const p = this.presets;
 
-  cssVars() {
+    // Map de severidad → tokens globales definidos en :root (tu style.css)
+    // Usamos --sev-<name> y --sev-<name>-hover que ya tienes.
+    const sev = p.severity;
+    const sevBg       = `var(--sev-${sev})`;
+    const sevBgHover  = `var(--sev-${sev}-hover)`;
+    const sevBorder   = `var(--sev-${sev})`;
+    // Color de texto: por defecto contrast; puedes ajustar reglas si quieres casos especiales
+    const defaultFg   = (sev === 'secondary') ? 'var(--text-color)' : 'var(--text-color-contrast)';
+
+    // Badge severity
+    const badgeBg = `var(--sev-${this.btn.badgeSeverity})`;
+    const badgeFg = 'var(--text-color-contrast)';
+
+    // Tamaños por size (si no hay overrides)
+    const height =
+      p.height ?? (p.size === 'sm' ? '34px' : p.size === 'lg' ? '48px' : '40px');
+    const iconSize =
+      p.iconSize ?? (p.size === 'sm' ? '16px' : p.size === 'lg' ? '24px' : '20px');
+    const padX =
+      p.size === 'sm' ? '12px' : p.size === 'lg' ? '20px' : '16px';
+    const gap =
+      p.gap ?? (p.size === 'sm' ? '6px' : p.size === 'lg' ? '10px' : '8px');
+
     const vars: Record<string, string> = {
-      '--btn-width': this.width,
-      '--btn-height': this.height,
-      '--btn-radius': this.borderRadius,
-      '--btn-icon-size': this.iconSize,
-      '--btn-badge-bg': this.badgeColor,
-      '--btn-badge-text': this.badgeTextColor,
-      '--btn-font-size': this.fontSize,
+      '--btn-width': p.width ?? 'auto',
+      '--btn-height': height,
+      '--btn-radius': p.radius ?? '10px',
+      '--btn-gap': gap,
+      '--btn-font-size': p.fontSize ?? (p.size === 'sm' ? '.85rem' : p.size === 'lg' ? '1.05rem' : '.95rem'),
+      '--btn-icon-size': iconSize,
+      '--btn-pad-x': padX,
+
+      '--btn-bg': p.bg ?? sevBg,
+      '--btn-bg-hover': p.hoverBg ?? sevBgHover,
+      '--btn-fg': p.fg ?? defaultFg,
+      '--btn-border': p.borderColor ?? sevBorder,
+      '--btn-border-width': p.borderWidth ?? '2px',
+
+      '--btn-badge-bg': badgeBg,
+      '--btn-badge-fg': badgeFg,
     };
-    /* if (this.fontSize) vars['--btn-font-size'] = this.fontSize; */
+
     return vars;
+  }
+
+  hostClasses(): string[] {
+    const p = this.presets;
+    return [
+      `v-${this.btn.variant}`,
+      `s-${p.size}`,
+      p.raised ? 'is-raised' : '',
+      p.disabled ? 'is-disabled' : ''
+    ];
   }
 }

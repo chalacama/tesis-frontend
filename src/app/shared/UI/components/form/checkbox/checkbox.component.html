@@ -1,0 +1,16 @@
+<label
+  class="cb-wrapper"
+  [class.disabled]="presets.disabled"
+  [ngStyle]="groupVars()"
+  [attr.aria-label]="presets.ariaLabel || null"
+  [attr.aria-disabled]="presets.disabled || null"
+>
+  <input
+    type="checkbox"
+    class="cyberpunk-checkbox"
+    [checked]="value()"
+    [disabled]="presets.disabled"
+    (change)="toggleFromInput(($any($event.target)).checked)"
+  />
+  <span class="cb-label" *ngIf="cb.label">{{ cb.label }}</span>
+</label>

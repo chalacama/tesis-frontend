@@ -1,36 +1,35 @@
-<div class="sbb-field" [class.error]="!!error" [class.disabled]="disabled">
-  <label *ngIf="label" class="sbb-label">{{ label }}</label>
+<div class="sbb-field" [class.error]="!!sb.error" [class.disabled]="presets.disabled">
+  <label *ngIf="sb.label" class="sbb-label">{{ sb.label }}</label>
 
   <div
     class="sbb-group"
+    [class]="hostClasses().join(' ')"
     role="radiogroup"
-    [attr.aria-disabled]="disabled || null"
-    [class.horizontal]="orientation==='horizontal'"
-    [class.vertical]="orientation==='vertical'"
-    [class.nowrap]="!wrap"
-    [class.size-sm]="size==='sm'"
-    [class.size-lg]="size==='lg'"
-    [class.shape-pill]="shape==='pill'"
+    [attr.aria-label]="presets.ariaLabel || null"
+    [attr.aria-disabled]="presets.disabled || null"
+    [ngStyle]="groupVars()"
   >
     <button
       type="button"
       class="sbb-span"
-      *ngFor="let opt of options"
+      *ngFor="let opt of sb.options; let i = index; let last = last;"
       role="radio"
       [attr.aria-checked]="isChecked(opt)"
-      [disabled]="disabled || opt.disabled"
+      [disabled]="presets.disabled || opt.disabled"
       [class.checked]="isChecked(opt)"
       [class.opt-disabled]="opt.disabled"
       (click)="selectOption(opt)"
+
       [style.--opt-color]="opt.color || null"
       [style.--opt-bg]="opt.bg || null"
       [style.--opt-border]="opt.borderColor || null"
-      [style.--sbb-radius]="radiusValue"
+
+      [class.is-first]="i === 0"
+      [class.is-last]="last"
     >
-      <img *ngIf="opt.iconUrl" class="sbb-icon" [src]="opt.iconUrl" alt="" />
       <span class="sbb-text">{{ opt.label }}</span>
     </button>
   </div>
 
-  <div class="sbb-error" *ngIf="error">{{ error }}</div>
+  <div class="sbb-error" *ngIf="sb.error">{{ sb.error }}</div>
 </div>

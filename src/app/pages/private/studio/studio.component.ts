@@ -5,7 +5,7 @@ import { filter, Observable, Subject, tap } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntil, map, first} from 'rxjs/operators';
 import { HostListener } from '@angular/core';
-import { ThemeService } from '../../../shared/UI/services/theme.service';
+import { ThemeService } from '../../../shared/services/theme.service';
 import { AuthService } from '../../../core/api/auth/auth.service';
 import { User } from '../../../core/api/auth/auth.interfaces';
 import { Portfolio } from '../../../core/api/portfolio/portfolio.interface';

@@ -1,0 +1,51 @@
+/* Wrapper */
+.cb-wrapper{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--cb-gap,10px);
+  user-select:none;
+  cursor:pointer;
+  color: var(--cb-text, var(--text-color));
+}
+.cb-wrapper.disabled{ opacity:.6; cursor:not-allowed; }
+
+/* Checkbox base (vars) */
+.cyberpunk-checkbox{
+  appearance:none; margin:0; cursor:inherit; position:relative; display:inline-block;
+  width:var(--cb-size,20px); height:var(--cb-size,20px);
+  border:var(--cb-border-width,2px) solid var(--cb-border-color, var(--cb-color, #30cfd0));
+  border-radius:var(--cb-radius,5px); background:transparent;
+  transition: box-shadow .2s ease, border-color .2s ease, transform .05s ease, background-color .2s ease;
+}
+
+/* “Check” interior animado */
+.cyberpunk-checkbox::before{
+  content:""; position:absolute; display:block; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:calc(var(--cb-size,20px)*.5); height:calc(var(--cb-size,20px)*.5);
+  border-radius:calc(var(--cb-radius,5px)*.6); background:var(--cb-color,#30cfd0);
+  transition: transform .18s ease-in-out;
+}
+
+/* Fondo al estar marcado */
+.cyberpunk-checkbox:checked{
+  background: var(--cb-bg-checked, color-mix(in oklab, var(--cb-color) 18%, transparent));
+}
+
+/* Mostrar “check” */
+.cyberpunk-checkbox:checked::before{
+  transform:translate(-50%,-50%) scale(1);
+}
+
+/* Hover/Focus */
+.cyberpunk-checkbox:hover{ border-color: var(--cb-color-hover, var(--cb-color)); }
+.cyberpunk-checkbox:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 3px color-mix(in oklab, var(--cb-color) 35%, transparent);
+}
+
+/* Active */
+.cyberpunk-checkbox:active{ transform:scale(.98); }
+
+/* Label */
+.cb-label{ line-height:1; }

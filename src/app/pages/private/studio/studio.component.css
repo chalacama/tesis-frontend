@@ -331,7 +331,7 @@
     
 }
 .navegation-route:hover {
-    background-color: var(--bottom-secondary-hover);
+    background-color: var(--sev-secondary-hover);
 }
 .navegation-route input[type="radio"] {
     display: none;
@@ -376,7 +376,7 @@
     width: 0%;
     height: 2px;
     margin-top: 4px;
-    background-color: var(--bottom-primary);
+    background-color: var(--sev-primary);
     border-radius: 5px;
     transition: width 200ms ease;
 }
@@ -386,19 +386,19 @@
 
 .navegation-route:hover:not(:has(input:checked)) .icon-navegation svg,
 .navegation-route:hover:not(:has(input:checked)) .label-txt {
-    color: var(--bottom-primary);
-    fill: var(--bottom-primary);
+    color: var(--sev-primary);
+    fill: var(--sev-primary);
     opacity: 0.6;
 }
 
 .navegation-route:has(input:checked) .icon-navegation svg {
-    color: var(--bottom-primary);
-    fill: var(--bottom-primary);
+    color: var(--sev-primary);
+    fill: var(--sev-primary);
     transform: scale(1.2) translateY(-3px);
 }
 
 .navegation-route:has(input:checked) .label-txt {
-    color: var(--bottom-primary);
+    color: var(--sev-primary);
     font-weight: bold;
 }
 
@@ -424,7 +424,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(var(--bottom-surface), var(--bottom-surface-hover));
+    background: linear-gradient(var(--sev-secundary), var(--sev-secundary-hover));
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -529,7 +529,7 @@
 .profile-photo-name {
     width: 40px;
     height: 40px;
-    background-color: var(--bottom-surface);
+    background-color: var(--sev-secondary);
     border-radius: 40px;
 }
 
@@ -592,7 +592,7 @@
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: var(--overlay-mask-bg);
+        background-color: var(--overlay-color);
         z-index: var(--z-drawer);
     }
 }
@@ -609,7 +609,7 @@
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: var(--overlay-mask-bg);
+        background-color: var(--overlay-color);
         z-index: var(--z-drawer);
     }
 }

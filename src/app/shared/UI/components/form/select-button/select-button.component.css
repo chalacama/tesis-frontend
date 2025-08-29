@@ -1,58 +1,71 @@
 :host { display:block; }
 
-/* Vars base del grupo (heredan de tu DS) */
+/* Field */
+.sbb-field { display:grid; gap:.375rem; }
+.sbb-field.disabled { opacity:.6; pointer-events:none; }
+.sbb-field.error .sbb-group { --sbb-border: var(--danger-500); }
+.sbb-label { font-size:.85rem; color: var(--sbb-text-secondary, var(--text-color-secondary)); }
+
+/* Grupo base */
 .sbb-group {
   --sbb-border: var(--border-color);
   --sbb-active: var(--active-color);
   --sbb-bg: var(--card-bg);
   --sbb-hover: var(--background-hover);
   --sbb-shadow: var(--shadow-color);
-  --sbb-radius: .5px;
+  --sbb-radius: 8px;
+  --sbb-font: .95rem;
+  --sbb-gap: .5rem;
+  --sbb-pad-block: .5rem;
+  --sbb-pad-inline: .8rem;
+
+  display:flex;
+  gap: var(--sbb-gap);
+  flex-wrap: wrap;
+  align-items:center;
+  background:transparent;
 }
 
-/* Field */
-.sbb-field { display:grid; gap:.375rem; }
-.sbb-field.disabled { opacity:.6; pointer-events:none; }
-.sbb-field.error .sbb-group { --sbb-border: var(--danger-500); }
-.sbb-label { font-size:.85rem; color: var(--text-color-secondary); }
+/* Panel / boxed */
+.sbb-group.has-panel {
+  background: var(--sbb-panel-bg);
+  border: 1px solid var(--sbb-panel-border);
+  border-radius: 5px;
+  padding: var(--sbb-panel-pad);
+}
+/* Cuando boxed=true, los botones usan el fondo global */
+.sbb-group.has-panel .sbb-span {
+  background: var(--background-color);
+}
+.sbb-group.has-panel .sbb-span {
+  background: var(--background-color);
+}
+.sbb-group.has-panel .sbb-span:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--background-color) 90%, var(--sbb-hover));
+}
+.sbb-group.has-panel .sbb-span.checked {
+  background: color-mix(in oklab, var(--sbb-variant-color) 12%, var(--background-color));
+}
 
-/* Layout */
-.sbb-group { display:flex; gap:.125rem; flex-wrap:wrap; align-items:center; background:transparent; }
-.sbb-group.vertical { flex-direction:column; }
-.sbb-group.horizontal.nowrap { flex-wrap:nowrap; }
+/* Dirección */
+.sbb-group.horizontal { flex-direction:row; }
+.sbb-group.vertical   { flex-direction:column; }
 
-/* Tamaño */
-.sbb-group.size-sm > .sbb-span { padding:.3rem .55rem; font-size:.85rem; }
-.sbb-group.size-lg > .sbb-span { padding:.7rem 1rem; font-size:1rem; }
-
-/* Bordes de grupo (horizontal) */
-/* Bordes de grupo (horizontal) */
-.sbb-group.horizontal > .sbb-span:first-child { border-radius: var(--sbb-radius) 0 0 var(--sbb-radius); }
-.sbb-group.horizontal > .sbb-span:last-child  { border-radius: 0 var(--sbb-radius) var(--sbb-radius) 0; }
-.sbb-group.horizontal > .sbb-span:not(:first-child) { margin-left:.0625rem; }
-
-/* Vertical */
-.sbb-group.vertical > .sbb-span { border-radius: var(--sbb-radius); }
-.sbb-group.vertical > .sbb-span + .sbb-span { margin-top:.125rem; }
-
-/* Forma pill */
-/* .sbb-group.shape-pill > .sbb-span { border-radius:0px !important; } */
-
-/* Botón */
+/* Segmento base */
 .sbb-span {
   display:flex; align-items:center; gap:.5rem;
-  padding:.5rem .8rem;
+  padding: var(--sbb-pad-block) var(--sbb-pad-inline);
   border:1px solid var(--opt-border, var(--sbb-border));
   background: var(--sbb-bg);
-  color: var(--text-color);
+  color: var(--sbb-text, var(--text-color));
   box-shadow: 0 1px 2px var(--sbb-shadow);
   cursor:pointer;
   letter-spacing:.02em;
-  transition: background .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+  font-size: var(--sbb-font);
+  border-radius: var(--sbb-radius);
+  transition: background .2s, color .2s, box-shadow .2s, border-color .2s;
 }
-.sbb-span:hover:not(:disabled) {
-  background: var(--opt-bg, var(--sbb-hover));
-}
+.sbb-span:hover:not(:disabled) { background: var(--opt-bg, var(--sbb-hover)); }
 .sbb-span:focus-visible {
   outline: none;
   border-color: var(--opt-color, var(--sbb-active));
@@ -66,8 +79,34 @@
 }
 .sbb-span:disabled { opacity:.5; cursor:not-allowed; }
 
-/* Icono */
-.sbb-icon { width:18px; height:18px; border-radius:999px; object-fit:cover; }
+/* =========================
+   VARIANTES
+   ========================= */
 
-/* Error */
-.sbb-error { color: var(--danger-500); font-size:.8rem; }
+/* segmented: 1px gap y radio sólo en extremos */
+.sbb-group.v-segmented { gap: 1px; } /* ⬅️ antes era 0 */
+.sbb-group.v-segmented .sbb-span {
+  border-radius: 0;   /* cada botón “cuadrado” */
+  margin: 0;          /* separación la controla gap */
+}
+.sbb-group.v-segmented.horizontal .sbb-span.is-first {
+  border-top-left-radius: var(--sbb-radius);
+  border-bottom-left-radius: var(--sbb-radius);
+}
+.sbb-group.v-segmented.horizontal .sbb-span.is-last {
+  border-top-right-radius: var(--sbb-radius);
+  border-bottom-right-radius: var(--sbb-radius);
+}
+.sbb-group.v-segmented.vertical .sbb-span.is-first {
+  border-top-left-radius: var(--sbb-radius);
+  border-top-right-radius: var(--sbb-radius);
+}
+.sbb-group.v-segmented.vertical .sbb-span.is-last {
+  border-bottom-left-radius: var(--sbb-radius);
+  border-bottom-right-radius: var(--sbb-radius);
+}
+
+/* loose: default con sus radios */
+.sbb-group.v-loose .sbb-span { border-radius: var(--sbb-radius); }
+
+

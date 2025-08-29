@@ -14,8 +14,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: var(--bottom-secondary);
-    border-radius: 5px; */
+    
 }
 .head-body{
     display: none;
@@ -47,14 +46,14 @@
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: var(--bottom-contrast);
+    background-color: var(--sev-contrast);
     color: var(--text-color-contrast);
     cursor: pointer;
 
     
 }
 .btn-filter_active{
-    background-color: var(--bottom-primary);
+    background-color: var(--sev-primary);
     color: var(--text-color);
 }
 /* From Uiverse.io by satyamchaudharydev */ 

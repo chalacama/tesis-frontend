@@ -1,114 +1,181 @@
-<div class="content-details">
-    <div class="content-section-start">
-        <div class="section-start-left">
-            <div class="section-name">
-                <div class="section-name-left">
-                    <h4>Detalles del curso</h4>
-                </div>
-                <div class="section-name-right">
-                    <button class="btn-details btn-restore">Restaurar</button>
-                    <app-button iconSize="15px" svgPath="svg\save-outline.svg"  badge="7" [fontSize]="'12px'" color="primary"
-                        [borderRadius]="'20px'" [width]="'100px'" [height]="'30px'" label="Guardar">
-                    </app-button>
-                </div>
+<form class="content-details" [formGroup]="form">
+    <div class="content-details">
+        <div class="content-section-start">
+            <div class="section-start-left">
+                <div class="section-name">
+                    <div class="section-name-left">
+                        <h4>Detalles del curso</h4>
+                    </div>
+                    <div class="section-name-right">
+                        <ui-button radius="50px" label="Restablecer" severity="secondary" variant="filled" size="sm"
+                            [raised]="true" svgPath="svg\clear-all.svg" type="submit">
+                        </ui-button>
+                        <ui-button radius="50px" label="Guardar" severity="primary" variant="filled" size="sm"
+                            [raised]="true" svgPath="svg\save-outline.svg" type="submit">
+                        </ui-button>
+                    </div>
 
+                </div>
+                <div class="section-card">
+                    <div class="section-card-item">
+
+                        <div class="section-card-content">
+                            <div class="section-card-label">
+                                <label class="card-label" for="">Título</label>
+                                <span>(obligatorio)</span>
+                            </div>
+                            <textarea autosize id="title" class="card-input" rows="1"
+                                placeholder="Escribe un título claro y único"></textarea>
+                            <div class="card-counter">
+                                <span>1/100</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="section-card-item">
+
+                        <div class="section-card-content">
+                            <div class="section-card-label">
+                                <label class="card-label" for="">Descripción</label>
+                                <span></span>
+                            </div>
+                            <textarea autosize id="title" class="card-input card-textarea" rows="1"
+                                placeholder="Describe el curso"></textarea>
+                            <div class="card-counter">
+                                <span>1/500</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="section-card-item">
+                        <div class="content-cb-sb">
+
+                            <div class="card-select">
+                                <label class="card-select-label" for="difficulty">Dificultad</label>
+                                <ui-select-button variant="segmented" [options]="mapDifficulties()"
+                                    formControlName="difficulty_id" orientation="horizontal" size="sm"
+                                    [disabled]="loadingDifficulties()"
+                                    [error]="f.difficulty_id.touched && f.difficulty_id.invalid ? 'Selecciona una dificultad' : null">
+                                </ui-select-button>
+
+                            </div>
+                            <div class="card-settings">
+                                <div class="course-settings">
+                                    <div>
+                                        <h4>Configuración de Privacidad y Estado</h4>
+                                    </div>
+
+                                    <!-- Toggle para Curso Privado -->
+                                    <div class="toggle-container">
+                                        <label class="toggle-label" for="private-toggle">
+                                            Curso Privado
+                                            <span class="toggle-description">(Esto genera un código de acceso al
+                                                guardar)</span>
+                                        </label>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="private-toggle" class="toggle-input">
+                                            <span class="toggle-slider"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Campo para mostrar código (opcional, visible solo si privado está activado) -->
+                                    <div class="access-code">
+                                        <div class="access-code-letf">
+                                            <div class="access-code-content">
+                                                <label class="access-code-label" for="">Restablecer Código de
+                                                    Acceso</label>
+                                                <div class="access-code-show">
+                                                    <span>khJJJ</span>
+                                                    
+                                                </div>
+                                            </div>
+
+
+                                            <div class="access-code-note">
+                                                <span class="toggle-description">Activa para restablecer un nuevo codigo cuando se
+                                                    guarda</span>
+                                            </div>
+                                        </div>
+                                        <div class="access-code-right">
+                                            <div class="toggle-switch">
+                                            <input type="checkbox" id="private-toggle" class="toggle-input">
+                                            <span class="toggle-slider"></span>
+                                        </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <!-- Toggle para Curso Activo -->
+                                    <div class="toggle-container">
+                                        <label class="toggle-label" for="active-toggle">
+                                            Curso Activo
+                                            <span class="toggle-description">(El curso está publicado y disponible; off
+                                                lo desactiva)</span>
+                                        </label>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="active-toggle" class="toggle-input" checked>
+                                            <span class="toggle-slider"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
             </div>
-            <div class="section-card">
-                <div class="section-card-item">
+            <div class="section-start-right">
+                <div>
+                    <div class="section-name section-name-right">
+                        <h3>Miniatura</h3>
+                    </div>
 
-                    <div class="section-card-content">
-                        <div class="section-card-label">
-                            <label class="card-label" for="">Título</label>
-                            <span>(obligatorio)</span>
+                    <div class="section-card-miniature">
+                        <div class="card-miniature-content">
+                            <label for="file-input" class="drop-container">
+                                <span class="drop-title">Suelta imagen aquí</span>
+                                <input type="file" accept="image/*" class="drop-input">
+                            </label>
                         </div>
-                        <textarea autosize id="title" class="card-input" rows="1"
-                            placeholder="Escribe un título claro y único"></textarea>
-                        <div class="card-counter">
-                            <span>1/100</span>
+                        <div class="card-miniature-view">
+                            <div class="card-miniature-overlay">
+                                <div class="card-miniature-button">
+                                    <button (click)="openModalMiniature()" class="button-overlay">
+                                        <svg class="svg-icon svg-icon-eye-stuffed" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 472 384">
+                                            <path fill="currentColor"
+                                                d="M235 32q79 0 142.5 44.5T469 192q-28 71-91.5 115.5T235 352T92 307.5T0 192q28-71 92-115.5T235 32zm0 267q44 0 75-31.5t31-75.5t-31-75.5T235 85t-75.5 31.5T128 192t31.5 75.5T235 299zm-.5-171q26.5 0 45.5 18.5t19 45.5t-19 45.5t-45.5 18.5t-45-18.5T171 192t18.5-45.5t45-18.5z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <img class="miniature-view" src="img\cover\no-thumbnail.jpg" alt="">
                         </div>
+
 
                     </div>
                 </div>
-
-                <div class="section-card-item">
-
-                    <div class="section-card-content">
-                        <div class="section-card-label">
-                            <label class="card-label" for="">Descripción</label>
-                            <span></span>
-                        </div>
-                        <textarea autosize id="title" class="card-input card-textarea" rows="1"
-                            placeholder="Describe el curso"></textarea>
-                        <div class="card-counter">
-                            <span>1/500</span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="section-card-item">
-                    <select-button label="Dificultad" [options]="mapDifficulties()" formControlName="difficulty_id"
-                        orientation="horizontal" [wrap]="true" size="md" shape="pill" [disabled]="loadingDifficulties()"
-                        borderRadius="5px"
-                        [error]="f.difficulty_id.touched && f.difficulty_id.invalid ? 'Selecciona una dificultad' : null">
-                    </select-button>
-
-                </div>
-
 
             </div>
         </div>
-        <div class="section-start-right">
-            <div class="section-card-miniature">
-                <div class="card-miniature-view">
-                    <div class="card-miniature-overlay">
-                        <div class="card-miniature-button">
-                            <button (click)="openModalMiniature()" class="button-overlay">
-                                <svg class="svg-icon svg-icon-eye-stuffed" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 472 384">
-                                    <path fill="currentColor"
-                                        d="M235 32q79 0 142.5 44.5T469 192q-28 71-91.5 115.5T235 352T92 307.5T0 192q28-71 92-115.5T235 32zm0 267q44 0 75-31.5t31-75.5t-31-75.5T235 85t-75.5 31.5T128 192t31.5 75.5T235 299zm-.5-171q26.5 0 45.5 18.5t19 45.5t-19 45.5t-45.5 18.5t-45-18.5T171 192t18.5-45.5t45-18.5z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <img class="miniature-view" src="img\cover\no-thumbnail.jpg" alt="">
-                </div>
-                <div class="card-miniature-content">
-                    <div class="card-miniature-label">
-                        <div>
-                            <h4>Miniatura</h4>
-                        </div>
-                    </div>
-                    <div class="card-miniature-button">
-                        <button class="btn-details btn-upload">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
-                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5">
-                                    <path stroke-linejoin="round"
-                                        d="M21.25 13V8.5a5 5 0 0 0-5-5h-8.5a5 5 0 0 0-5 5v7a5 5 0 0 0 5 5h6.26" />
-                                    <path stroke-linejoin="round"
-                                        d="m3.01 17l2.74-3.2a2.2 2.2 0 0 1 2.77-.27a2.2 2.2 0 0 0 2.77-.27l2.33-2.33a4 4 0 0 1 5.16-.43l2.47 1.91M8.01 10.17a1.66 1.66 0 1 0-.02-3.32a1.66 1.66 0 0 0 .02 3.32" />
-                                    <path stroke-miterlimit="10" d="M18.707 15v5" />
-                                    <path stroke-linejoin="round"
-                                        d="m21 17.105l-1.967-1.967a.458.458 0 0 0-.652 0l-1.967 1.967" />
-                                </g>
-                            </svg>
-                        </button>
-                    </div>
+        <div class="content-section-end">
 
-                </div>
+        </div>
+        <div (click)="openModalMiniature()" *ngIf="modalOpenMiniature" class="modal-miniature-overlay">
 
-            </div>
+        </div>
+        <div *ngIf="modalOpenMiniature" class="modal-miniature">
+
+            <img class="miniature-preview" src="img\cover\no-thumbnail.jpg" alt="">
+
         </div>
     </div>
-    <div class="content-section-end">
-
-    </div>
-    <div (click)="openModalMiniature()" *ngIf="modalOpenMiniature" class="modal-miniature-overlay">
-
-    </div>
-    <div *ngIf="modalOpenMiniature" class="modal-miniature">
-
-        <img class="miniature-preview" src="img\cover\no-thumbnail.jpg" alt="">
-
-    </div>
-</div>
+</form>

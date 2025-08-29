@@ -14,6 +14,7 @@ import { Directive, ElementRef, HostListener, AfterViewInit } from '@angular/cor
 import { AutosizeDirective } from '../../../../../shared/UI/directive/autosize.directive';
 import {  SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
+import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
 
 @Component({
   selector: 'app-details',
