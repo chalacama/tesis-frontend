@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, Validators, FormBuilder, FormControl } from '@angular/forms';
@@ -10,16 +10,24 @@ import { DifficultyService } from '../../../../../core/api/difficulty/difficulty
 import { CourseDetail, CourseDetailResponse } from '../../../../../core/api/course/course.details.interfaces';
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 import { CourseRequest } from '../../../../../core/api/course/course.interfaces';
-import { Directive, ElementRef, HostListener, AfterViewInit } from '@angular/core';
-import { AutosizeDirective } from '../../../../../shared/UI/directive/autosize.directive';
-import {  SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
+import { ElementRef } from '@angular/core';
+// import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
-import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
+import { InputLabelComponent } from '../../../../../shared/UI/components/form/input-label/input-label.component';
+import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
+// import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
+// import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,AutosizeDirective,SelectButtonComponent, ButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule,
+    // SelectButtonComponent,
+    ButtonComponent,
+    InputLabelComponent,
+    FileUploadComponent,
+    // ToggleWitchComponent,
+  ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
 })
@@ -38,12 +46,12 @@ export class DetailsComponent implements OnInit {
 
   @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
   constructor(
-    
+
 
   ) {
 
-    }
-  
+  }
+
   // Estado de UI
   loadingCourse = signal<boolean>(true);
   loadingDifficulties = signal<boolean>(true);
@@ -82,7 +90,7 @@ export class DetailsComponent implements OnInit {
     this.loadDifficulties();
     this.loadCourse(courseParam);
   }
-  
+
 
   // ----- Carga de datos -----
   private loadDifficulties(): void {
@@ -220,31 +228,31 @@ export class DetailsComponent implements OnInit {
     }
   }
   // Dentro de DetailsComponent
-get f() {
-  return this.form.controls;
-}
-modalOpenMiniature = false;
-openModalMiniature() {
-  this.modalOpenMiniature = !this.modalOpenMiniature;
+  get f() {
+    return this.form.controls;
+  }
+  modalOpenMiniature = false;
+  openModalMiniature() {
+    this.modalOpenMiniature = !this.modalOpenMiniature;
 
-}
-// in your component's TypeScript code
-mapDifficulties() {
-  // usa tus vars o hex
-  return this.difficulties().map(d => {
-    if (d.id === 1) {
-      return { value: d.id, label: d.name, color: 'var(--help-500)', bg: 'color-mix(in oklab, var(--help-500) 10%, transparent)' };
-    }
-    if (d.id === 2) {
-      return { value: d.id, label: d.name, color: 'var(--warn-500)', bg: 'color-mix(in oklab, var(--warn-500) 10%, transparent)' };
-    }
-    if (d.id === 3) {
-      return { value: d.id, label: d.name, color: 'var(--danger-500)', bg: 'color-mix(in oklab, var(--danger-500) 10%, transparent)' };
-    }
-    // por defecto usa el color activo de tu DS
-    return { value: d.id, label: d.name, color: 'var(--active-color)' };
-  });
-}
+  }
+  // in your component's TypeScript code
+  mapDifficulties() {
+    // usa tus vars o hex
+    return this.difficulties().map(d => {
+      if (d.id === 1) {
+        return { value: d.id, label: d.name, color: 'var(--help-500)', bg: 'color-mix(in oklab, var(--help-500) 10%, transparent)' };
+      }
+      if (d.id === 2) {
+        return { value: d.id, label: d.name, color: 'var(--warn-500)', bg: 'color-mix(in oklab, var(--warn-500) 10%, transparent)' };
+      }
+      if (d.id === 3) {
+        return { value: d.id, label: d.name, color: 'var(--danger-500)', bg: 'color-mix(in oklab, var(--danger-500) 10%, transparent)' };
+      }
+      // por defecto usa el color activo de tu DS
+      return { value: d.id, label: d.name, color: 'var(--active-color)' };
+    });
+  }
 
 
 

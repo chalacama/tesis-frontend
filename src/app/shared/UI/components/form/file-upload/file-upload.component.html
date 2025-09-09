@@ -1,0 +1,102 @@
+<!-- file-upload.component.html -->
+<div
+  [ngClass]="hostClasses()"
+  [ngStyle]="styleMap()"
+  [attr.aria-label]="fud.ariaLabel || fud.label"
+  [attr.role]="fud.role || 'button'"
+  [attr.tabindex]="(fud.tabIndex ?? 0)"
+  [attr.aria-pressed]="fud.ariaPressed"
+  [attr.title]="fud.title"
+>
+  
+
+  <!-- Área de carga (click + drag) -->
+  <div class="fu-dropzone" [class.is-hover]="isDropHover" (click)="triggerBrowse($event)">
+    <div class="fu-drop-inner">
+      <div class="fu-drop-text">
+        <div class="fu-drop-title"><label class="fu-label" [attr.for]="inputId" *ngIf="fud.label">
+    {{ fud.label }}
+  </label></div>
+        <div class="fu-drop-sub">
+          <span *ngIf="(fud.type ?? 'image') === 'image'">Formatos: PNG/JPG/SVG</span>
+          <span *ngIf="(fud.type ?? 'image') === 'video'">Formatos: MP4/WEBM</span>
+          <span *ngIf="(fud.type ?? 'image') === 'document'">Formato: PDF</span>
+        </div>
+      </div>
+
+      <button class="fu-browse-btn" type="button">Explorar…</button>
+    </div>
+
+    <input
+      class="fu-input"
+      [id]="inputId"
+      type="file"
+      [accept]="acceptAttr()"
+      [disabled]="fud.disabled || null"
+      (change)="onInputChange($event)"
+    />
+  </div>
+
+  <!-- Vista previa -->
+  <div class="fu-preview" *ngIf="(fud.type ?? 'image') === 'image'">
+    <div class="fu-preview-frame">
+      <img
+        class="fu-preview-img"
+        [src]="previewUrl || fud.urlMiniature"
+        [alt]="fud.alt || 'Vista previa'"
+        (click)="openModal()"
+        *ngIf="previewUrl || fud.urlMiniature"
+      />
+      <div class="fu-preview-empty" *ngIf="!previewUrl && !fud.urlMiniature">
+        Sin miniatura
+      </div>
+
+      <div class="fu-overlay" (click)="openModal()" *ngIf="previewUrl || fud.urlMiniature">
+        <button class="fu-overlay-btn" type="button" aria-label="Ver">
+          <!-- ojo simple -->
+          <svg class="fu-icon" viewBox="0 0 472 384"><path fill="currentColor" d="M235 32q79 0 142.5 44.5T469 192q-28 71-91.5 115.5T235 352T92 307.5T0 192q28-71 92-115.5T235 32zm0 267q44 0 75-31.5t31-75.5t-31-75.5T235 85t-75.5 31.5T128 192t31.5 75.5T235 299zm-.5-171q26.5 0 45.5 18.5t19 45.5t-19 45.5t-45.5 18.5t-45-18.5T171 192t18.5-45.5t45-18.5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fu-preview" *ngIf="(fud.type ?? 'image') === 'video'">
+    <div class="fu-preview-frame">
+      <video
+        class="fu-preview-video"
+        *ngIf="previewUrl; else fuVideoEmpty"
+        [src]="previewUrl"
+        controls
+      ></video>
+      <ng-template #fuVideoEmpty>
+        <div class="fu-preview-empty">Sin video</div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="fu-preview" *ngIf="(fud.type ?? 'image') === 'document'">
+    <div class="fu-preview-frame fu-pdf">
+      <div class="fu-pdf-box" *ngIf="value; else fuPdfEmpty">
+        <span class="fu-file-name">{{ value.name }}</span>
+        <button class="fu-open-btn" type="button" (click)="openModal()">Ver</button>
+      </div>
+      <ng-template #fuPdfEmpty>
+        <div class="fu-preview-empty">Sin PDF</div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Acciones -->
+  <div class="fu-actions">
+    <button class="fu-action-btn fu-clear" type="button" (click)="clearFile($event)" [disabled]="fud.disabled">Quitar</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="fu-modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()"></div>
+<div class="fu-modal" *ngIf="isModalOpen">
+  <img *ngIf="(fud.type ?? 'image') === 'image' && (previewUrl || fud.urlMiniature)" class="fu-modal-img" [src]="previewUrl || fud.urlMiniature" [alt]="fud.alt || 'Vista ampliada'"/>
+  <video *ngIf="(fud.type ?? 'image') === 'video' && previewUrl" class="fu-modal-video" [src]="previewUrl" controls></video>
+  <iframe *ngIf="(fud.type ?? 'image') === 'document' && value" class="fu-modal-pdf" [src]="previewUrl"></iframe>
+</div>
+

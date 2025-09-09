@@ -1,4 +1,5 @@
-/* Defaults (overrideables por ngStyle) */
+/* Defaults (overrideables por [ngStyle]) */
+@import url(../../../../../../assets/styles/class/ui.button.css);
 .app-btn {
   --btn-width: auto;
   --btn-height: 40px;
@@ -20,7 +21,7 @@
   border: none;
   cursor: pointer;
   position: relative;
-  font-family: "Open Sans", sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Open Sans", sans-serif;
   font-weight: 600;
   font-size: var(--btn-font-size);
   transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .04s ease;
@@ -32,46 +33,22 @@
 .app-btn.is-disabled { opacity: .5; pointer-events: none; }
 
 /* Variantes */
-.app-btn.v-filled {
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  border: none;
-}
-
-.app-btn.v-outlined {
-  background: transparent;
-  color: var(--btn-border);
-  border: var(--btn-border-width) solid var(--btn-border);
-}
-.app-btn.v-outlined:hover {
-  background: color-mix(in oklab, var(--btn-border) 10%, transparent);
-}
-
-.app-btn.v-text {
-  background: transparent;
-  color: var(--btn-bg); /* usamos bg como color principal en text */
-  border: none;
-}
-.app-btn.v-text:hover {
-  background: color-mix(in oklab, var(--btn-bg) 8%, transparent);
-}
-
-.app-btn.v-flat {
-  background: var(--sev-secondary);
-  color: var(--text-color);
-}
+.app-btn.v-filled { background: var(--btn-bg); color: var(--btn-fg); border: none; }
+.app-btn.v-outlined { background: transparent; color: var(--btn-border); border: var(--btn-border-width) solid var(--btn-border); }
+.app-btn.v-outlined:hover { background: color-mix(in oklab, var(--btn-border) 10%, transparent); }
+.app-btn.v-flat { background: transparent; color: var(--btn-bg); border: none; }
+.app-btn.v-flat:hover { background: color-mix(in oklab, var(--btn-bg) 8%, transparent); }
+/* .app-btn.v-flat { background: var(--sev-secondary, #eee); color: var(--text-color, #111); } */
 
 /* Elevación */
-.app-btn.is-raised {
-  box-shadow: 0 2px 6px var(--shadow-color);
-}
+.app-btn.is-raised { box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.2)); }
 
-/* Tamaños → la tipografía se ajusta también por var(--btn-font-size) */
-/* .app-btn.s-sm {  }
-.app-btn.s-md {  }
-.app-btn.s-lg {  } */
+/* Tamaños (la tipografía se ajusta por var(--btn-font-size)) */
+/* .app-btn.s-sm {}
+.app-btn.s-md {}
+.app-btn.s-lg {} */
 
-/* Icono / Imagen */
+/* Icono */
 .btn-icon {
   display: inline-flex;
   align-items: center;
@@ -84,11 +61,17 @@
   width: var(--btn-icon-size);
   height: var(--btn-icon-size);
   display: block;
+  
 }
-.svg{
+.svg {
+  width:var(--btn-icon-size);;
+  height: var(--btn-icon-size);;
+  display: block;
+}
+.btn-icon img {
   width: var(--btn-icon-size);
   height: var(--btn-icon-size);
-  /* color: aliceblue; */
+  display: block;
 }
 
 /* Texto */
@@ -97,18 +80,23 @@
 /* Badge */
 .btn-badge {
   position: absolute;
-  top: -6px; right: -6px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
+  top: var(--btn-badge-top-right);
+  right: var(--btn-badge-top-right);
+  min-width: var(--btn-badge-size);
+  max-width: var(--btn-badge-size);
+  min-height: var(--btn-badge-size);
+  max-height: var(--btn-badge-size);
+  /* padding: 5px 5px; */
+  padding: 0px;
   border-radius: 999px;
   background: var(--btn-badge-bg);
   color: var(--btn-badge-fg);
-  font-size: 0.70rem;
+  font-size: var(--btn-badge-font);
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 2px var(--shadow-color);
+  box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,.2));
   
 }
+

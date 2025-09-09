@@ -1,0 +1,224 @@
+/* file-upload.component.css */
+
+/* ============ ROOT ============ */
+.fu-root {
+  display: grid;
+  grid-template-areas:
+    "label"
+    "drop"
+    "preview"
+    "actions";
+  grid-template-rows: auto auto auto auto;
+  gap: var(--fu-gap, 8px);
+  font-size: var(--fu-font, 13px);
+  color: var(--text-color);
+}
+
+/* Posición de la etiqueta */
+.fu-root.label-top .fu-label { grid-area: label; }
+.fu-root.label-bottom .fu-label { grid-area: actions; order: 2; }
+.fu-root.label-left,
+.fu-root.label-right {
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "label drop"
+    ". preview"
+    ". actions";
+}
+.fu-root.label-left .fu-label { align-self: start; margin-right: 8px; }
+.fu-root.label-right { grid-template-areas:
+  "drop label"
+  "preview ."
+  "actions .";
+}
+.fu-root.label-right .fu-label { justify-self: end; margin-left: 8px; }
+
+/* invalid / disabled */
+.fu-root.is-disabled { opacity: .6; pointer-events: none; }
+.fu-root.is-invalid .fu-dropzone { border-color: var(--sev-danger); }
+
+/* ============ LABEL ============ */
+.fu-label {
+  grid-area: label;
+  font-size: 12px;
+  font-weight: 600;
+  padding-left: 2px;
+}
+
+/* ============ DROPZONE ============ */
+.fu-dropzone {
+  grid-area: drop;
+  position: relative;
+  border: 1.5px dashed var(--fu-border, var(--border-color));
+  border-radius: var(--fu-radius, 8px);
+  min-height: var(--fu-drop-h, 110px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--fu-pad, 10px);
+  background: var(--background-color);
+  transition: border-color .2s, background .2s;
+  cursor: pointer;
+}
+.fu-dropzone:hover { border-color: var(--active-color); }
+.fu-dropzone.is-hover {
+  border-color: var(--fu-accent, var(--sev-primary));
+  background: var(--background-hover);
+}
+.fu-drop-inner {
+  display: flex;
+  gap: var(--fu-gap, 8px);
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.fu-drop-title { font-weight: 700; }
+.fu-drop-sub { font-size: 11px; color: var(--text-color-secondary); }
+
+/* input nativo oculto */
+.fu-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Botón explorar */
+.fu-browse-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  background: var(--fu-accent);
+  color: var(--text-color-contrast);
+}
+.fu-browse-btn:hover { background: var(--fu-accent-hover); }
+
+/* ============ PREVIEW ============ */
+.fu-preview { grid-area: preview; }
+.fu-preview-frame {
+  position: relative;
+  width: var(--fu-preview-w, 300px);
+  max-width: 100%;
+  margin-top: 6px;
+}
+.fu-preview-img, .fu-preview-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--fu-border, var(--border-color));
+  display: block;
+}
+.fu-preview-video { background: #000; }
+
+.fu-preview-empty {
+  width: var(--fu-preview-w, 300px);
+  height: calc(var(--fu-preview-w, 300px) * 9 / 16);
+  display: grid;
+  place-items: center;
+  color: var(--text-color-secondary);
+  border: 1px dashed var(--fu-border, var(--border-color));
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* overlay ver */
+.fu-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--fu-overlay);
+  opacity: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  transition: opacity .2s ease;
+  cursor: zoom-in;
+}
+.fu-preview-frame:hover .fu-overlay { opacity: 1; }
+
+.fu-overlay-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--fu-accent);
+  color: var(--text-color-contrast);
+  display: grid; place-items: center;
+  cursor: zoom-in;
+}
+.fu-overlay-btn:hover { background: var(--fu-accent-hover); }
+.fu-icon { width: 18px; height: 18px; }
+
+/* PDF mini */
+.fu-pdf .fu-pdf-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--fu-border, var(--border-color));
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.fu-file-name { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fu-open-btn {
+  border: none; border-radius: 6px; padding: 6px 10px; font-size: 12px;
+  background: var(--sev-secondary);
+  color: var(--text-color);
+}
+.fu-open-btn:hover { background: var(--sev-secondary-hover); }
+
+/* ============ ACTIONS ============ */
+.fu-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.fu-action-btn {
+  border: 1px solid var(--fu-border, var(--border-color));
+  background: transparent;
+  color: var(--text-color);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 100%;
+
+}
+.fu-action-btn:hover { border-color: var(--active-color); }
+/* .fu-clear {} */
+
+/* ============ VARIANTS ============ */
+.v-filled .fu-dropzone { background: var(--card-bg); }
+.v-outlined .fu-dropzone { background: transparent; }
+
+/* ============ MODAL ============ */
+.fu-modal-backdrop {
+  cursor: pointer;
+  width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--overlay-color);
+    z-index: 200;
+}
+.fu-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 300;
+  
+    
+}
+.fu-modal-img, .fu-modal-video, .fu-modal-pdf {
+  width: min(90vw, 900px);
+  aspect-ratio: 16/9;
+  object-fit: contain;
+  /* background-color: #000000; */
+  border-radius: 5px;
+  box-shadow: 0 10px 30px var(--fu-shadow);
+}
+.fu-modal-pdf { height: min(90vh, 70vw); }

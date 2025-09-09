@@ -1,20 +1,26 @@
 <button
-  class="app-btn"
   [class]="hostClasses().join(' ')"
-  [disabled]="presets.disabled"
-  [ngStyle]="cssVars()"
-  [attr.aria-label]="presets.ariaLabel || (btn.iconOnly ? btn.label : null)"
+  [disabled]="btn.disabled"
+  [ngStyle]="styleMap()"
+  [attr.aria-label]="btn.ariaLabel || btn.label || null"
+  [attr.role]="btn.role || 'button'"
+  [attr.tabindex]="btn.tabIndex ?? 0"
+  [attr.aria-pressed]="btn.ariaPressed"
+  [attr.title]="btn.title || null"
   [attr.type]="btn.type"
-  
 >
-  <!-- Icono SVG -->
-  <span class="btn-icon" *ngIf="safeSvg">
+  <!-- Icono -->
+  <span class="btn-icon" *ngIf="safeSvg" [ngClass]="btn.iconClass" [ngStyle]="btn.iconStyle">
     <span class="svg" [innerHTML]="safeSvg"></span>
   </span>
 
   <!-- Texto -->
-  <span class="btn-label" *ngIf="!btn.iconOnly">{{ btn.label }}</span>
+  <span class="btn-label" *ngIf="btn.label">{{ btn.label }}</span>
 
   <!-- Badge -->
-  <span class="btn-badge" *ngIf="btn.badge">{{ btn.badge }}</span>
+  <span class="btn-badge" *ngIf="btn.badge"
+        [ngClass]="btn.badgeClass"
+        [ngStyle]="btn.badgeStyle">
+    {{ btn.badgeValue }}
+  </span>
 </button>

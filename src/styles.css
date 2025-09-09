@@ -6,7 +6,6 @@
 @import url(assets/styles/color/help.color.css);
 @import url(assets/styles/color/info.color.css);
 @import url(assets/styles/color/warn.color.css);
-
 @import url(assets/styles/measures/component.css);
 
 * {
@@ -85,6 +84,7 @@ body {
 body.app-loading app-root {
   opacity: 0;
   pointer-events: none;
+  
 }
 app-root {
   transition: opacity 0.3s ease-in-out;
@@ -129,5 +129,6 @@ body:not(.app-loading) #splash-screen {
   pointer-events: none;
   transition: opacity 0.5s ease-out;
 }
+
 
 

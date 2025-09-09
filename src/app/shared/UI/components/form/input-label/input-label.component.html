@@ -1,0 +1,59 @@
+<div
+  [class]="rootClasses().join(' ')"
+  [ngStyle]="cssVars()"
+  
+>
+  <div class="uil-input__wrapper">
+    <!-- Label -->
+    <div class="uil-input__label" [ngClass]="il.labelClass" [ngStyle]="labelStyle()">
+      <label>{{ il.label }}</label>
+    </div>
+
+    <!-- Field -->
+    <ng-container [ngSwitch]="isTextarea() ? 'textarea' : il.type">
+      <!-- text -->
+      <input
+        *ngSwitchCase="'text'"
+        #inp
+        size="md"
+        class="uil-input__field {{ il.inputClass || '' }}"
+        [ngStyle]="fieldStyle()"
+        [placeholder]="il.placeholder || ''"
+        [attr.aria-label]="il.ariaLabel || il.label || null"
+        [attr.role]="il.role || null"
+        [attr.tabindex]="il.tabIndex ?? 0"
+        [attr.title]="il.title || null"
+        [disabled]="il.disabled"
+        [class.is-invalid]="il.invalid"
+        [value]="value"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+      />
+
+      <!-- textarea -->
+      <textarea
+        *ngSwitchDefault
+        #ta
+        rows="1"
+        class="uil-input__field uil-input__field--textarea {{ il.inputClass || '' }}"
+        [ngStyle]="fieldStyle()"
+        [placeholder]="il.placeholder || ''"
+        [attr.aria-label]="il.ariaLabel || il.label || null"
+        [attr.role]="il.role || null"
+        [attr.tabindex]="il.tabIndex ?? 0"
+        [attr.title]="il.title || null"
+        [disabled]="il.disabled"
+        [class.is-invalid]="il.invalid"
+        [value]="value"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+      ></textarea>
+    </ng-container>
+
+    <!-- Counter -->
+    <div *ngIf="il.counter" class="uil-input__counter {{ il.counterClass || '' }}" [ngStyle]="counterStyle()">
+      <span>{{ counterText() }}</span>
+    </div>
+  </div>
+</div>
+

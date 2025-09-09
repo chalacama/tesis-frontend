@@ -7,12 +7,14 @@
                         <h4>Detalles del curso</h4>
                     </div>
                     <div class="section-name-right">
-                        <ui-button radius="50px" label="Restablecer" severity="secondary" variant="filled" size="sm"
-                            [raised]="true" svgPath="svg\clear-all.svg" type="submit">
+
+                        <ui-button [btnStyle]="{borderRadius: '30px'}" label="Restablecer"
+                            severity="secondary" svgPath="svg/clear-all.svg">
                         </ui-button>
-                        <ui-button radius="50px" label="Guardar" severity="primary" variant="filled" size="sm"
-                            [raised]="true" svgPath="svg\save-outline.svg" type="submit">
+                        <ui-button [btnStyle]="{borderRadius: '30px'}" label="Guardar" severity="primary"
+                             radius="50px" svgPath="svg/save-outline.svg">
                         </ui-button>
+
                     </div>
 
                 </div>
@@ -20,22 +22,26 @@
                     <div class="section-card-item">
 
                         <div class="section-card-content">
-                            <div class="section-card-label">
+                            <!-- <div class="section-card-label">
                                 <label class="card-label" for="">Título</label>
                                 <span>(obligatorio)</span>
                             </div>
-                            <textarea autosize id="title" class="card-input" rows="1"
+                            <textarea formControlName="title" autosize id="title" class="card-input" rows="1"
                                 placeholder="Escribe un título claro y único"></textarea>
                             <div class="card-counter">
                                 <span>1/100</span>
-                            </div>
+                            </div> -->
+                            <ui-input-label formControlName="title" label="Título (obligatorio)" severity="primary"
+                                placeholder="Escribe un título claro y único" type="text" variant="outlined"
+                                [counter]="true" [max]="500" [autoSize]="true"
+                                [invalid]="f.description.invalid && (f.description.touched || f.description.dirty)"></ui-input-label>
 
                         </div>
                     </div>
 
                     <div class="section-card-item">
 
-                        <div class="section-card-content">
+                        <!-- <div class="section-card-content">
                             <div class="section-card-label">
                                 <label class="card-label" for="">Descripción</label>
                                 <span></span>
@@ -46,18 +52,27 @@
                                 <span>1/500</span>
                             </div>
 
+                        </div> -->
+                        <div class="section-card-content">
+
+                            <ui-input-label formControlName="description" label="Descripción" severity="primary"
+                                placeholder="Describe el curso" type="textarea" variant="outlined" [counter]="true"
+                                [max]="100" [autoSize]="true"
+                                [invalid]="f.description.invalid && (f.description.touched || f.description.dirty)"></ui-input-label>
                         </div>
                     </div>
+
+
                     <div class="section-card-item">
                         <div class="content-cb-sb">
 
                             <div class="card-select">
                                 <label class="card-select-label" for="difficulty">Dificultad</label>
-                                <ui-select-button variant="segmented" [options]="mapDifficulties()"
+                                <!-- <ui-select-button variant="segmented" [options]="mapDifficulties()"
                                     formControlName="difficulty_id" orientation="horizontal" size="sm"
                                     [disabled]="loadingDifficulties()"
                                     [error]="f.difficulty_id.touched && f.difficulty_id.invalid ? 'Selecciona una dificultad' : null">
-                                </ui-select-button>
+                                </ui-select-button> -->
 
                             </div>
                             <div class="card-settings">
@@ -74,8 +89,9 @@
                                                 guardar)</span>
                                         </label>
                                         <div class="toggle-switch">
-                                            <input type="checkbox" id="private-toggle" class="toggle-input">
-                                            <span class="toggle-slider"></span>
+                                            <!-- <ui-toggle-witch  label="Notificaciones" onLabel="ON" offLabel="OFF"
+                                                variant="soft" [severity]="'primary'" [size]="'md'" [raised]="true">
+                                            </ui-toggle-witch> -->
                                         </div>
                                     </div>
 
@@ -87,21 +103,22 @@
                                                     Acceso</label>
                                                 <div class="access-code-show">
                                                     <span>khJJJ</span>
-                                                    
+
                                                 </div>
                                             </div>
 
 
                                             <div class="access-code-note">
-                                                <span class="toggle-description">Activa para restablecer un nuevo codigo cuando se
+                                                <span class="toggle-description">Activa para restablecer un nuevo codigo
+                                                    cuando se
                                                     guarda</span>
                                             </div>
                                         </div>
                                         <div class="access-code-right">
                                             <div class="toggle-switch">
-                                            <input type="checkbox" id="private-toggle" class="toggle-input">
-                                            <span class="toggle-slider"></span>
-                                        </div>
+                                                <!-- <ui-toggle-witch>
+                                                </ui-toggle-witch> -->
+                                            </div>
                                         </div>
 
 
@@ -115,8 +132,8 @@
                                                 lo desactiva)</span>
                                         </label>
                                         <div class="toggle-switch">
-                                            <input type="checkbox" id="active-toggle" class="toggle-input" checked>
-                                            <span class="toggle-slider"></span>
+                                            <!--  <ui-toggle-witch>
+                                            </ui-toggle-witch> -->
                                         </div>
                                     </div>
                                 </div>
@@ -134,11 +151,11 @@
             </div>
             <div class="section-start-right">
                 <div>
-                    <div class="section-name section-name-right">
-                        <h3>Miniatura</h3>
+                    <div class="section-name section-name-start-right">
+                        <h4>Miniatura</h4>
                     </div>
 
-                    <div class="section-card-miniature">
+                    <!-- <div class="section-card-miniature">
                         <div class="card-miniature-content">
                             <label for="file-input" class="drop-container">
                                 <span class="drop-title">Suelta imagen aquí</span>
@@ -161,7 +178,15 @@
                         </div>
 
 
+                    </div> -->
+                    <div>
+                        <ui-file-upload svgPath="svg/upload.svg" label="Suelta una imagen o selecciona" type="image"
+                         variant="outlined" severity="primary" size="md"
+                        position="top"></ui-file-upload>
                     </div>
+                    
+
+
                 </div>
 
             </div>
