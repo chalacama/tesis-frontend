@@ -1,0 +1,38 @@
+/* Clase base del icono (reutilizable por la directiva en otros hosts) */
+.ui-icon {
+  --icon-size: 20px;
+  --icon-gap: 6px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  line-height: 1;
+}
+
+/* El SVG interno hereda las dimensiones y el color */
+.ui-icon .svg :where(svg) {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  display: block;
+  /* fill ya viene “currentColor” desde ts si no existía */
+}
+.svg{
+  width: var(--icon-size);
+  height: var(--icon-size);
+  display: block;
+}
+/* Tamaños (si quieres forzar clases además de variables) */
+.ui-icon.s-sm { --icon-size: 16px; }
+.ui-icon.s-md { --icon-size: 20px; }
+.ui-icon.s-lg { --icon-size: 24px; }
+
+/* Ejemplo de severidad (usa tu sistema de tokens) */
+.ui-icon.sev-primary   { --icon-color: var(--sev-primary); }
+.ui-icon.sev-secondary { --icon-color: var(--sev-secondary); }
+.ui-icon.sev-info      { --icon-color: var(--sev-info); }
+.ui-icon.sev-warn      { --icon-color: var(--sev-warn); }
+.ui-icon.sev-help      { --icon-color: var(--sev-help); }
+.ui-icon.sev-danger    { --icon-color: var(--sev-danger); }
+.ui-icon.sev-contrast  { --icon-color: var(--sev-contrast); }

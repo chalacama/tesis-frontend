@@ -627,7 +627,7 @@
     position: absolute;
     top: 0px;
     right: calc(100% + 5px);
-    background-color: var(--modal-bg);
+    background-color: var(--dialog-bg);
     color: var(--text-color);
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.171);
@@ -664,21 +664,11 @@
 
 /* Imagen base */
 .miniature-course {
-  width: 224px;
-  /* height: 127px; */
-  border-radius: 5px;
-  object-fit: contain;
-  background-color: #000;
-  display: block;
-  /* Establece la relación de aspecto 16:9 */
-  aspect-ratio: 16 / 9;
-
-  /* La imagen llenará el espacio del contenedor, manteniendo su relación. */
-  object-fit: cover; 
   
-  /* Asegura que ocupe todo el ancho disponible del contenedor */
-  width: 224px;
-  cursor: pointer;
+  width: 220px;
+  /* aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block; */
 }
 
 /* Overlay oculto por defecto */

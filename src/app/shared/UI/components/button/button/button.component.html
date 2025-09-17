@@ -10,9 +10,17 @@
   [attr.type]="btn.type"
 >
   <!-- Icono -->
-  <span class="btn-icon" *ngIf="safeSvg" [ngClass]="btn.iconClass" [ngStyle]="btn.iconStyle">
-    <span class="svg" [innerHTML]="safeSvg"></span>
-  </span>
+<!-- button.component.html -->
+<span class="btn-icon" *ngIf="btn.icon?.svgPath">
+  <ui-icon
+    [size]="btn.size || 'sm'"
+    [severity]="btn.severity || 'primary'"
+    [svgPath]="btn.icon?.svgPath"
+    [iconStyle]="btn.icon?.iconStyle"
+    [iconClass]="btn.icon?.iconClass">
+  </ui-icon>
+</span>
+
 
   <!-- Texto -->
   <span class="btn-label" *ngIf="btn.label">{{ btn.label }}</span>

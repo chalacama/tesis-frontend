@@ -1,35 +1,25 @@
 // ui-file-upload.interface.ts
-import { UibtnProps } from "./ui-button.interface";
-import { IconProps } from "./ui-icon.interface";
-import { UiA11Props, UiFormProps, UiPosition, UiStyleProps } from "./ui-presets.interface";
+import { UiButtonProps } from "./ui-button.interface";
+import { UiIconProps } from "./ui-icon.interface";
+import { UiA11Props, UiFileFormat, UiFileType, UiFormProps, UiOrientation, UiStyleProps, UiVariant } from "./ui-presets.interface";
+import { UiPreviewProps } from "./ui-preview.interface";
 
-export type UiFileUploadVariant = 'filled' | 'outlined';
-export type UiFileTypes   = 'document' | 'video' |'image';
-export const UiFileFormats: { [key in UiFileTypes]: string[] } = {
-  document: ['pdf'],
-  video: ['mp4'],
-  image: ['jpg', 'png', 'gif']
-};
-export interface UiFileClear {
-    btnClearLabel?: string;
-    btnClearSvgPath?: string;
-    btnClearClass?: string;
-    btnClearStyle?: UiStyleProps
-}
-export interface UiFileOverlay {
-    btnOverlaySvgPath?: string;
-    btnOverlayClass?: string;
-    btnOverlayStyle?: UiStyleProps
-}
-export interface UifileUploadProps extends UiFormProps , UiA11Props , UibtnProps , IconProps {
-    alt?: string;
-    type?: UiFileTypes;
-    variant?: UiFileUploadVariant;
-    position?: UiPosition;
+export interface UifileUploadProps extends UiFormProps , Omit<UiA11Props, 'onKeyDown'> {
+    id?: string;
+    types?: UiFileType [];
+    formats?: UiFileFormat[];
+    variant?: UiVariant;
+    orientation?: UiOrientation;
     label?: string;
     fudClass?: string;
     fudStyle?: UiStyleProps
-    urlMiniature?: string;
-    // Nuevos atributos
-    formats?: typeof UiFileFormats;
+    clearbtn: UiButtonProps;
+    icon: UiIconProps;
+    max?: number | string;
+    min?: number | string;
+    maxMb ?: number | string;
+    minSecond ?: number | string;
+    maxSecond ?: number | string;
+    preview ?: UiPreviewProps;
+
 }

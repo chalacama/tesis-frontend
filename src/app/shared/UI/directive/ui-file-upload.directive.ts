@@ -1,44 +1,47 @@
-// ui-file-upload.directive.ts
+// directive/ui-file-upload.directive.ts
 import { Directive, Input } from '@angular/core';
 import { UifileUploadProps } from '../interfaces/ui-file-upload.interface';
 
 @Directive({
   selector: '[uiFileUpload]',
-  standalone: true,
-  exportAs: 'uiFileUpload'
+  standalone: true
 })
 export class UiFileUploadDirective {
-  // ===== Base (UifileUploadProps) =====
-  @Input() alt?: UifileUploadProps['alt'] = '';
-  @Input() type?: UifileUploadProps['type'] = 'image';           // 'pdf' | 'video' | 'image'
-  @Input() variant?: UifileUploadProps['variant'] = 'filled';     // 'filled' | 'outlined'
-  @Input() position?: UifileUploadProps['position'] = 'top'; // 'top' | 'bottom' | 'left' | 'right'
-  @Input() label?: UifileUploadProps['label'] = '';
-  @Input() urlMiniature?: UifileUploadProps['urlMiniature'];
 
-  // ===== Tokens base (UiFormProps) =====
-  @Input() severity?: UifileUploadProps['severity'] = 'primary';
-  @Input() size?: UifileUploadProps['size'] = 'sm';               // 'sm' | 'md' | 'lg'
+  // ====== UiFormProps / UiA11Props (sin onKeyDown) ======
+  @Input() severity?: UifileUploadProps['severity'];
+  @Input() size?: UifileUploadProps['size'] = 'sm';
   @Input() disabled?: UifileUploadProps['disabled'] = false;
-  @Input() invalid?: UifileUploadProps['invalid'] = false;
+  @Input() neumorphism: UifileUploadProps['neumorphism'] = 'flat';
+  @Input() variant: UifileUploadProps['variant'] = 'filled';
+  @Input() invalid: UifileUploadProps['invalid'];
 
-  // ===== Botón contenedor (UibtnProps) =====
-  @Input() btnClass?: UifileUploadProps['btnClass'];
-  @Input() btnStyle?: UifileUploadProps['btnStyle'];
-
-  // ===== Accesibilidad (UiA11Props) =====
   @Input() ariaLabel?: UifileUploadProps['ariaLabel'];
-  @Input() role?: UifileUploadProps['role'] = 'button';
-  @Input() tabIndex?: UifileUploadProps['tabIndex'] = 0;
+  @Input() role?: UifileUploadProps['role'];
+  @Input() tabIndex?: UifileUploadProps['tabIndex'];
   @Input() ariaPressed?: UifileUploadProps['ariaPressed'];
   @Input() title?: UifileUploadProps['title'];
 
-  // ===== Icono (IconProps) =====
-  @Input() svgPath?: UifileUploadProps['svgPath'];
-  @Input() iconClass?: UifileUploadProps['iconClass'];
-  @Input() iconStyle?: UifileUploadProps['iconStyle'];
+  // ====== Propios del FileUpload ======
+  @Input() id?: UifileUploadProps['id'];
+  @Input() types?: UifileUploadProps['types'];
+  @Input() formats?: UifileUploadProps['formats'];
+  @Input() orientation?: UifileUploadProps['orientation'] = 'vertical';
 
-  // ===== Estilos/Clases del File Upload (propias del componente) =====
+  @Input() label?: UifileUploadProps['label'];
   @Input() fudClass?: UifileUploadProps['fudClass'];
   @Input() fudStyle?: UifileUploadProps['fudStyle'];
+
+  @Input() clearbtn?: UifileUploadProps['clearbtn'];
+
+  @Input() icon?: UifileUploadProps['icon'];
+
+  @Input() max?: UifileUploadProps['max'] = 1;
+  @Input() min?: UifileUploadProps['min'] = 1;
+  @Input() maxMb?: UifileUploadProps['maxMb'];
+  @Input() minSecond?: UifileUploadProps['minSecond'];
+  @Input() maxSecond?: UifileUploadProps['maxSecond'];
+
+  @Input() preview?: UifileUploadProps['preview'];
 }
+

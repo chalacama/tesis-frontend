@@ -1,18 +1,22 @@
-// file-upload.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, forwardRef, HostListener, inject } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Component, forwardRef, Input, OnDestroy, OnInit, signal, computed, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-
 import { UiFileUploadDirective } from '../../../directive/ui-file-upload.directive';
-import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
+import { UiFileFormat, UiFileType, UiFileFormats, UiNeumorphism, UiSeverity, UiSize, UiVariant } from '../../../interfaces/ui-presets.interface';
+import { UiButtonProps } from '../../../interfaces/ui-button.interface';
+import { UiIconProps } from '../../../interfaces/ui-icon.interface';
+import { ButtonComponent } from '../../button/button/button.component';
+import { IconComponent } from '../../button/icon/icon.component';
+// Asumiendo selector 'ui-preview' ya existe en tu lib
+import { Component as NgComponent } from '@angular/core'; // para evitar conflicto de nombre local
+import { DomSanitizer } from '@angular/platform-browser';
+import { PreviewComponent } from '../../media/preview/preview.component';
 import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
 
 @Component({
   selector: 'ui-file-upload',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, ButtonComponent, IconComponent , PreviewComponent],
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.css'],
   providers: [
@@ -29,197 +33,575 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
   ],
   hostDirectives: [{
     directive: UiFileUploadDirective,
-    // Re-exportamos TODOS los inputs para usarlos como <ui-file-upload ...>
     inputs: [
-      'alt','type','variant','position','label','urlMiniature',
-      'severity','size','disabled','invalid',
-      'btnClass','btnStyle',
+      // === UiFormProps / UiA11Props
+      'severity','size','disabled','neumorphism','variant','invalid',
       'ariaLabel','role','tabIndex','ariaPressed','title',
-      'svgPath','iconClass','iconStyle',
-      'fudClass','fudStyle'
-    ],
-    
+      // === Propios del FileUpload
+      'id','types','formats','orientation','label','fudClass','fudStyle',
+      'clearbtn','icon','max','min','maxMb','minSecond','maxSecond','preview'
+    ]
   }]
 })
-export class FileUploadComponent implements ControlValueAccessor, Validator, OnChanges {
+export class FileUploadComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
 
-  private sanitizer = inject(DomSanitizer);
-  private http = inject(HttpClient);
+  constructor(public readonly fud: UiFileUploadDirective) {}
 
-  // La instancia de la directiva para leer inputs actuales
-  constructor(public readonly fud: UiFileUploadDirective) {
-    // mantener comportamiento coherente con tu ButtonComponent
-    /* this.ngOnChanges(); */
+  // ======= STATE =======
+  /** Archivos seleccionados (controlado internamente, pero refleja el valor del form) */
+  files: File[] = [];
+  /** Previews para imágenes */
+  /* previews: {file: File; url?: string; type: UiFileType; duration?: number}[] = []; */
+  previews: { file?: File; url: string; type: UiFileType; duration?: number; from: 'file'|'url'; name: string }[] = [];
+  /** Errores de validación acumulados */
+  errors: string[] = [];
+
+   isDragOver = false;
+
+  private onChange: (value: File[] | null) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  // ======= LIFECYCLE =======
+  ngOnInit(): void {}
+  ngOnDestroy(): void {
+    this.revokeAll();
   }
 
-  /** ======= ControlValueAccessor ======= */
-  private _onChange: (value: File | null) => void = () => {};
-  private _onTouched: () => void = () => {};
+  // ======= VALUE ACCESSOR =======
+  /* writeValue(value: File[] | null): void {
+    this.clearInternal(false);
+    if (Array.isArray(value) && value.length) {
+      // No podemos recrear File desde serializado, así que sólo aceptamos instancias reales
+      this.files = value.filter(v => v instanceof File);
+      // construir previews
+      void this.syncPreviews();
+    }
+  } */
+  registerOnChange(fn: (value: File[] | null) => void): void { this.onChange = fn; }
+  registerOnTouched(fn: () => void): void { this.onTouched = fn; }
+  setDisabledState(isDisabled: boolean): void { this.fud.disabled = isDisabled; }
 
-  value: File | null = null ;
-  previewUrl?: SafeUrl;          // para imagen/video
-  isDropHover = false;           // estado drag-over
-  isModalOpen = false;           // modal de previsualización grande
-  inputId = `fu_${Math.random().toString(36).slice(2)}`;
-
-  writeValue(file: File | null): void {
-    this.value = file ?? null;
-    this.updatePreview();
-  }
-  registerOnChange(fn: (value: File | null) => void): void { this._onChange = fn; }
-  registerOnTouched(fn: () => void): void { this._onTouched = fn; }
-  setDisabledState?(isDisabled: boolean): void { this.fud.disabled = isDisabled; }
-
-  /** ======= Validator ======= */
+  // ======= VALIDATOR =======
   validate(_: AbstractControl): ValidationErrors | null {
-    if (this.fud.invalid) return { invalid: true };
-    return null;
+    // reglas sincrónicas (conteo, tipos/formats, tamaño)
+    const syncErrs = this.validateSync(this.files);
+    // si hay errores async (duración de video) ya se agregaron a this.errors en el flujo async
+    const errs = [...syncErrs, ...this.errors.filter(e => e.startsWith('Duración'))];
+    return errs.length ? { fileUpload: errs } : null;
   }
 
-  /** ======= Ciclo ======= */
-  ngOnChanges(): void {
-    // nada obligatorio aquí por ahora; se deja para futuro (p.ej. precarga de ícono)
-    this.updatePreview();
-  }
-
-  /** ======= Manejo de archivos ======= */
+  // ======= UI COMPUTEDS =======
   acceptAttr(): string {
-    const t = this.fud.type ?? 'image';
-    if (t === 'image') return 'image/*';
-    if (t === 'document')   return 'application/pdf';
-    if (t === 'video') return 'video/*';
-    return '*/*';
-  }
+    const { types, formats } = this.fud;
+    // 1) Si formats explícitos => usar esos (e.g., ['jpg','png'])
+    // 2) Si solo types => mapear via UiFileFormats
+    // 3) Si nada => aceptar todo
+    const final: string[] = [];
 
-  onInputChange(ev: Event) {
-    const input = ev.target as HTMLInputElement;
-    const file = input.files?.[0] ?? null;
-    this.setFile(file);
-  }
-
-  setFile(file: File | null) {
-    this.value = file;
-    this._onChange(this.value);
-    this.updatePreview();
-  }
-
-  clearFile(ev?: MouseEvent) {
-    ev?.preventDefault();
-    if (this.fud.disabled) return;
-    this.value = null;
-    this._onChange(null);
-    this.updatePreview();
-  }
-
-  private updatePreview() {
-    // liberar URL anterior si existe (buena práctica)
-    this.previewUrl = undefined;
-    const t = (this.fud.type ?? 'image');
-
-    if (!this.value) {
-      // Fallback a urlMiniature (solo tiene sentido para image/video)
-      if (this.fud.urlMiniature && (t === 'image' || t === 'video')) {
-        this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(this.fud.urlMiniature);
-      }
-      return;
+    if (formats?.length) {
+      formats.forEach(f => final.push('.' + f));
+    } else if (types?.length) {
+      types.forEach(t => {
+        (UiFileFormats[t] || []).forEach(ext => final.push('.' + ext));
+      });
     }
 
-    const url = URL.createObjectURL(this.value);
-    this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(url);
+    // Para video/pdf también agregamos MIME amplios si sólo hay tipo
+    if (!formats?.length && types?.includes('video')) final.push('video/*');
+    if (!formats?.length && types?.includes('image')) final.push('image/*');
+    if (!formats?.length && types?.includes('document')) final.push('application/pdf');
+
+    return final.length ? Array.from(new Set(final)).join(',') : '';
   }
 
-  openModal() {
+  /* hostClasses(): string[] {
+    const v = `v-${this.fud.variant ?? 'filled'}`;
+    const s = `s-${this.fud.size ?? 'md'}`;
+    const neu = `neu-${this.fud.neumorphism ?? 'flat'}`;
+    const dis = this.fud.disabled ? 'is-disabled' : '';
+    const ori = `o-${this.fud.orientation ?? 'vertical'}`;
+    const extra = this.fud.fudClass ?? '';
+    return ['ui-file-upload', v, s, neu, ori, dis, extra].filter(Boolean);
+  } */
+
+  // ======= HANDLERS =======
+  /* async onFileInputChange(ev: Event) {
     if (this.fud.disabled) return;
-    this.isModalOpen = true;
-  }
-  closeModal() { this.isModalOpen = !this.isModalOpen; }
+    const input = ev.target as HTMLInputElement;
+    const list = input.files ? Array.from(input.files) : [];
 
-  /** ======= Drag & Drop ======= */
-  @HostListener('dragover', ['$event'])
-  onDragOver(ev: DragEvent) {
+    // Si hay max -> respetar
+    const max = this.num(this.fud.max, 1);
+    const combined = [...this.files, ...list].slice(0, max);
+
+    const { valid, errors } = await this.validateAll(combined);
+    this.errors = errors;
+
+    if (valid) {
+      this.files = combined;
+      await this.syncPreviews();
+      this.propagate();
+    }
+
+    // limpiar el input para permitir volver a seleccionar el mismo archivo si se desea
+    input.value = '';
+    this.onTouched();
+  } */
+
+  /* async removeAt(idx: number) {
     if (this.fud.disabled) return;
-    ev.preventDefault();
-    this.isDropHover = true;
-  }
+    this.files.splice(idx, 1);
+    await this.syncPreviews();
+    this.propagate();
+  } */
 
-  @HostListener('dragleave', ['$event'])
-  onDragLeave(ev: DragEvent) {
+  async clearAll() {
     if (this.fud.disabled) return;
-    ev.preventDefault();
-    this.isDropHover = false;
+    this.clearInternal();
+    this.propagate();
   }
 
-  @HostListener('drop', ['$event'])
-  onDrop(ev: DragEvent) {
-    if (this.fud.disabled) return;
-    ev.preventDefault();
-    this.isDropHover = false;
+  // ======= CORE VALIDATION =======
+  private async validateAll(files: File[]) {
+    const errors: string[] = [];
 
-    const file = ev.dataTransfer?.files?.[0] ?? null;
-    if (!file) return;
+    // Conteo
+    const min = this.num(this.fud.min, 1);
+    const max = this.num(this.fud.max, 1);
+    if (files.length < min) errors.push(`Debes seleccionar al menos ${min} archivo(s).`);
+    if (files.length > max) errors.push(`Solo se permiten ${max} archivo(s).`);
 
-    // filtra por tipo
-    const t = this.fud.type ?? 'image';
-    if (t === 'image' && !file.type.startsWith('image/')) return;
-    if (t === 'video' && !file.type.startsWith('video/')) return;
-    if (t === 'document'   && file.type !== 'application/pdf') return;
+    // Por archivo: extensión/tipo y tamaño
+    const types = this.fud.types || [];
+    const formats = this.fud.formats || [];
+    const allowed = formats.length
+      ? new Set(formats.map(f => f.toLowerCase()))
+      : new Set(types.flatMap(t => UiFileFormats[t] || []).map(f => f.toLowerCase()));
 
-    this.setFile(file);
-    this._onTouched();
+    const maxMb = this.num(this.fud.maxMb);
+    const minSec = this.num(this.fud.minSecond);
+    const maxSec = this.num(this.fud.maxSecond);
+
+    for (const f of files) {
+      const ext = this.ext(f.name);
+      if (allowed.size && !allowed.has(ext)) {
+        errors.push(`El archivo "${f.name}" no cumple el formato permitido (${Array.from(allowed).join(', ')}).`);
+      }
+
+      if (maxMb && f.size > maxMb * 1024 * 1024) {
+        errors.push(`"${f.name}" excede el tamaño máximo de ${maxMb} MB.`);
+      }
+    }
+
+    // Validación de duración (solo si está configurado y hay videos)
+    const needsDuration = (minSec || maxSec) && this.inferTypeFromAllowed(allowed) === 'video';
+    if (needsDuration) {
+      for (const f of files) {
+        // Consideramos videos por extensión permitida 'mp4'
+        if (/\.(mp4)$/i.test(f.name)) {
+          const dur = await this.getVideoDuration(f).catch(() => -1);
+          if (dur < 0) {
+            errors.push(`No fue posible leer la duración de "${f.name}".`);
+          } else {
+            if (minSec && dur < minSec) errors.push(`Duración de "${f.name}" menor a ${minSec}s.`);
+            if (maxSec && dur > maxSec) errors.push(`Duración de "${f.name}" mayor a ${maxSec}s.`);
+          }
+        }
+      }
+    }
+
+    return { valid: errors.length === 0, errors };
   }
 
-  /** ======= A11y: Enter / Space ======= */
-  
-  triggerBrowse(ev?: Event) {
-    ev?.preventDefault();
-    document.getElementById(this.inputId)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  private validateSync(files: File[]): string[] {
+    const errs: string[] = [];
+    const min = this.num(this.fud.min, 1);
+    const max = this.num(this.fud.max, 1);
+    if (files.length < min) errs.push(`Debes seleccionar al menos ${min} archivo(s).`);
+    if (files.length > max) errs.push(`Solo se permiten ${max} archivo(s).`);
+    return errs;
   }
 
-  /** ======= Estilos (tokens CSS) ======= */
+  // ======= PREVIEWS =======
+  private async syncPreviews() {
+    // limpiar URLs viejas
+    this.revokeAll();
+    this.previews = [];
+
+    const allowedTypes = this.fud.types || [];
+    for (const f of this.files) {
+      const type = this.inferTypeByNameOrMime(f, allowedTypes);
+      if (type === 'image') {
+        const url = URL.createObjectURL(f);
+        // this.previews.push({ file: f, url, type, });
+        this.previews.push({ file: f, url, type, from: 'file', name: f.name });
+      } else if (type === 'video') {
+        const duration = await this.getVideoDuration(f).catch(() => undefined);
+        // this.previews.push({ file: f, type, duration });
+        this.previews.push({ file: f, url: URL.createObjectURL(f), type, duration, from: 'file', name: f.name });
+      } else {
+        // this.previews.push({ file: f, type: 'document' });
+        this.previews.push({ file: f, url: '', type: 'document', from: 'file', name: f.name });
+      }
+    }
+  }
+
+  private revokeAll() {
+    this.previews.forEach(p => p.url && URL.revokeObjectURL(p.url));
+  }
+
+  // ======= HELPERS =======
+  private ext(name: string): UiFileFormat | string {
+    const m = name.toLowerCase().match(/\.([a-z0-9]+)$/);
+    return (m ? m[1] : '').toLowerCase();
+  }
+  public num(v: number | string | undefined, _default?: number): number {
+    if (v === '' || v == null) return _default ?? 0;
+    const n = typeof v === 'string' ? Number(v) : v;
+    return Number.isFinite(n) ? (n as number) : (_default ?? 0);
+  }
+
+  private inferTypeByNameOrMime(f: File, fallback: UiFileType[]): UiFileType {
+    const name = f.name.toLowerCase();
+    if (/\.(jpg|jpeg|png|gif)$/i.test(name) || f.type.startsWith('image/')) return 'image';
+    if (/\.(mp4)$/i.test(name) || f.type.startsWith('video/')) return 'video';
+    return fallback[0] || 'document';
+  }
+
+  private inferTypeFromAllowed(allowed: Set<string>): UiFileType | undefined {
+    if (allowed.has('jpg') || allowed.has('png') || allowed.has('gif')) return 'image';
+    if (allowed.has('mp4')) return 'video';
+    if (allowed.has('pdf')) return 'document';
+    return undefined;
+    }
+
+  private getVideoDuration(file: File): Promise<number> {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const video = document.createElement('video');
+      const cleanup = () => { URL.revokeObjectURL(url); video.src = ''; };
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        const dur = video.duration;
+        cleanup();
+        if (isFinite(dur)) resolve(dur);
+        else reject(new Error('invalid-duration'));
+      };
+      video.onerror = () => { cleanup(); reject(new Error('load-error')); };
+      video.src = url;
+    });
+  }
+
+  private clearInternal(revoke = true) {
+    this.files = [];
+    if (revoke) this.revokeAll();
+    this.previews = [];
+    this.errors = [];
+  }
+
+  /* private propagate() {
+    this.onChange(this.files.length ? this.files : null);
+  } */
+
+  // Para fallback rápido si no pasan label
+  defaultLabel(): string {
+    if (this.fud.label && this.fud.label.trim().length) return this.fud.label!;
+    const sev: UiSeverity = (this.fud.severity as UiSeverity) ?? 'primary';
+    // Texto por defecto contextual
+    return 'Suelta o selecciona archivos';
+  }
+
+  clearBtnProps(): UiButtonProps {
+    const cfg = this.fud.clearbtn as UiButtonProps | undefined;
+    return {
+      label: cfg?.label ?? 'Limpiar',
+      severity: cfg?.severity ?? 'danger',
+      size: cfg?.size ?? (this.fud.size ?? 'sm'),
+      variant: cfg?.variant ?? 'outlined',
+      neumorphism: cfg?.neumorphism ?? 'raised',
+      icon: cfg?.icon ?? { svgPath: 'svg/close-outline.svg', size: this.fud.size ?? 'sm' }
+    };
+  }
+
+  uploadIcon(): UiIconProps {
+    return this.fud.icon ?? { svgPath: 'svg/upload-outline.svg', size: this.fud.size ?? 'sm', severity: this.fud.severity ?? 'primary' };
+  }
+
+  // ======= DINÁMICO: clases host (ya lo tenías) + estilos con CSS vars =======
+  hostClasses(): string[] {
+    const v = `v-${this.fud.variant ?? 'filled'}`;
+    const s = `s-${this.fud.size ?? 'md'}`;
+    const neu = `neu-${this.fud.neumorphism ?? 'flat'}`;
+    const dis = this.fud.disabled ? 'is-disabled' : '';
+    const ori = `o-${this.fud.orientation ?? 'vertical'}`;
+    const invalid = (this.errors.length > 0 || this.fud.invalid) ? 'is-invalid' : '';
+    const drag = this.isDragOver ? 'is-dragover' : '';
+    const extra = this.fud.fudClass ?? '';
+    return ['ui-file-upload', v, s, neu, ori, dis, invalid, drag, extra].filter(Boolean);
+  }
+
+  /** === NUEVO ===: tokens por tamaño (para paddings/gaps/ícono) */
   private sizeTokens(size: UiSize | undefined) {
     const s = size ?? 'md';
     return {
-      dropH:  s === 'sm' ? '88px'  : s === 'lg' ? '140px' : '110px',
-      pad:    s === 'sm' ? '8px'   : s === 'lg' ? '14px'  : '10px',
-      gap:    s === 'sm' ? '6px'   : s === 'lg' ? '12px'  : '8px',
-      font:   s === 'sm' ? '12px'  : s === 'lg' ? '14px'  : '13px',
-      radius: s === 'sm' ? '6px'   : s === 'lg' ? '10px'  : '8px',
-      previewWidth: '300px'
+      pad:  s === 'sm' ? '8px'  : s === 'lg' ? '16px' : '12px',
+      gap:  s === 'sm' ? '8px'  : s === 'lg' ? '14px' : '12px',
+      icon: s === 'sm' ? '40px' : s === 'lg' ? '72px' : '60px',
+      radius: s === 'sm' ? '8px' : s === 'lg' ? '12px' : '10px',
+      font: s === 'sm' ? '.85rem' : s === 'lg' ? '1rem' : '.95rem'
     };
   }
+
+  /** === NUEVO ===: variables CSS en función de severity/variant/neumorphism */
   private cssVars(): Record<string, string> {
     const sev: UiSeverity = (this.fud.severity as UiSeverity) ?? 'primary';
-    const st = this.sizeTokens(this.fud.size as UiSize);
-    const sevBg = `var(--sev-${sev})`;
-    const sevBgHover = `var(--sev-${sev}-hover, ${sevBg})`;
+    const v: UiVariant    = (this.fud.variant   as UiVariant)   ?? 'filled';
+    const sizeTok         = this.sizeTokens(this.fud.size as UiSize);
+
+    // tokens de color severidad
+    const sevBg       = `var(--sev-${sev})`;
+    const sevHover    = `var(--sev-${sev}-hover, ${sevBg})`;
+    const borderColor = `var(--sev-${sev})`;
+    const fg          = (sev === 'secondary') ? 'var(--text-color, #111)' : 'var(--text-color-contrast, #fff)';
+
+    // danger para estado inválido
+    const dangerBorder = `var(--sev-danger)`;
+    const dangerHover  = `var(--sev-danger-hover, ${dangerBorder})`;
+
+    // neumorphism (sombras)
+    const shadow      = '2px 4px 8px';
+    const shadowC     = 'rgba(0,0,0,.25)';
+    const shadowL     = 'rgba(255,255,255,.25)';
+
+    // variantes para el área drop
+    let areaBg   = `color-mix(in oklab, var(--card-bg) 92%, transparent)`;
+    let areaBd   = borderColor;
+    let areaFg   = `var(--text-color)`;
+
+    if (v === 'filled') {
+      areaBg = `color-mix(in oklab, ${sevBg} 14%, var(--card-bg))`;
+      areaFg = `var(--text-color)`;
+    } else if (v === 'outlined') {
+      areaBg = `color-mix(in oklab, var(--card-bg) 96%, transparent)`;
+    } else if (v === 'flat') {
+      areaBg = `transparent`;
+    }
 
     return {
-      '--fu-pad': st.pad,
-      '--fu-gap': st.gap,
-      '--fu-font': st.font,
-      '--fu-radius': st.radius,
-      '--fu-drop-h': st.dropH,
-      '--fu-accent': sevBg,
-      '--fu-accent-hover': sevBgHover,
-      '--fu-border': 'var(--border-color)',
-      '--fu-overlay': 'var(--overlay-color)',
-      '--fu-shadow': 'var(--shadow-color)',
-      '--fu-preview-w': st.previewWidth
+      '--ufu-radius': sizeTok.radius,
+      '--ufu-gap': sizeTok.gap,
+      '--ufu-pad': sizeTok.pad,
+      '--ufu-font': sizeTok.font,
+      '--ufu-icon-size': sizeTok.icon,
+
+      '--ufu-area-bg': areaBg,
+      '--ufu-area-bd': areaBd,
+      '--ufu-area-fg': areaFg,
+
+      '--ufu-area-hover-bd': sevHover,
+
+      '--ufu-danger-bd': dangerBorder,
+      '--ufu-danger-hover-bd': dangerHover,
+
+      '--ufu-shadow': shadow,
+      '--ufu-shadow-c': shadowC,
+      '--ufu-shadow-l': shadowL,
+
+      // color de ícono por defecto en el área
+      '--ufu-border-color': borderColor
     };
   }
+
+  /** === NUEVO ===: mezcla de cssVars con fudStyle del usuario */
   styleMap(): Record<string, string> {
     const base = this.cssVars();
     const overrides = styleToNgStyle(this.fud.fudStyle);
     return mergeStyles(base, overrides);
   }
-  hostClasses(): string[] {
-    const v = `v-${this.fud.variant ?? 'filled'}`;
-    const s = `s-${this.fud.size ?? 'md'}`;
-    const pos = `label-${this.fud.position ?? 'top'}`;
-    const dis = this.fud.disabled ? 'is-disabled' : '';
-    const inv = this.fud.invalid ? 'is-invalid' : '';
-    const extra = this.fud.fudClass ?? '';
-    return ['fu-root', v, s, pos, dis, inv, extra].filter(Boolean);
+
+  // ======= DnD HANDLERS =======
+  onDragOver(ev: DragEvent) {
+    if (this.fud.disabled) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.isDragOver = true;
+  }
+  onDragLeave(ev: DragEvent) {
+    if (this.fud.disabled) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.isDragOver = false;
+  }
+  async onDrop(ev: DragEvent) {
+    if (this.fud.disabled) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.isDragOver = false;
+
+    const dt = ev.dataTransfer;
+    if (!dt) return;
+
+    const dropped = Array.from(dt.files || []);
+    if (!dropped.length) return;
+
+    // aplicar max
+    const max = this.num(this.fud.max, 1);
+    const combined = [...this.files, ...dropped].slice(0, max);
+
+    const { valid, errors } = await this.validateAll(combined);
+    this.errors = errors;
+
+    if (valid) {
+      this.files = combined;
+      await this.syncPreviews();
+      this.propagate();
+    }
+    this.onTouched();
+  }
+// =======Nuevo Mantenimiento======
+
+// ======= VALUE ACCESSOR =======
+writeValue(value: string | string[] | File | File[] | null): void {
+  this.clearInternal(false);
+
+  if (!value) {
+    this.previews = [];
+    return;
+  }
+
+  // Normaliza a lista
+  const list = Array.isArray(value) ? value : [value];
+
+  // Si viene File / File[]
+  if (list[0] instanceof File) {
+    this.files = (list as File[]);
+    void this.syncPreviewsFromFiles();
+    return;
+  }
+
+  // Si viene string / string[]
+  const urls = list as string[];
+  this.previews = urls
+    .filter(u => typeof u === 'string' && u.trim().length)
+    .map(u => {
+      const type = this.inferTypeFromUrl(u) ?? (this.fud.types?.[0] ?? 'image');
+      const name = this.nameFromUrl(u);
+      return { url: u, type, from: 'url', name };
+    });
+}
+
+// ======= HANDLERS =======
+async onFileInputChange(ev: Event) {
+  if (this.fud.disabled) return;
+  const input = ev.target as HTMLInputElement;
+  const list = input.files ? Array.from(input.files) : [];
+
+  const max = this.num(this.fud.max, 1);
+
+  // Si cargas nuevos archivos y max=1, lo usual es reemplazar URLs previas
+  // (ajústalo a tus reglas si quieres acumular)
+  if (max === 1) {
+    this.previews = this.previews.filter(p => p.from === 'file'); // quita urls
+  }
+
+  const combined = [...this.files, ...list].slice(0, max);
+  const { valid, errors } = await this.validateAll(combined);
+  this.errors = errors;
+
+  if (valid) {
+    this.files = combined;
+    await this.syncPreviewsFromFiles(true); // true => limpia previews URL si hay files nuevos
+    this.propagate();
+  }
+
+  input.value = '';
+  this.onTouched();
+}
+
+async removeAt(idx: number) {
+  if (this.fud.disabled) return;
+  const item = this.previews[idx];
+  if (!item) return;
+
+  // Si vino de archivos, quítalo de files
+  if (item.from === 'file') {
+    const fIndex = this.files.findIndex(f => f.name === item.name && item.file === f);
+    if (fIndex > -1) this.files.splice(fIndex, 1);
+  }
+
+  // Quita del preview
+  const [removed] = this.previews.splice(idx, 1);
+  if (removed?.url && removed.file) URL.revokeObjectURL(removed.url);
+
+  // Reconstruye previews desde files (para recalcular duraciones)
+  await this.syncPreviewsFromFiles(false);
+
+  this.propagate();
+}
+
+// ======= PREVIEWS =======
+private async syncPreviewsFromFiles(clearUrlPreviews = false) {
+  // Limpia objectURL previos de file
+  this.previews
+    .filter(p => p.from === 'file' && p.url)
+    .forEach(p => URL.revokeObjectURL(p.url));
+
+  if (clearUrlPreviews) {
+    // Borra entradas from=url si llegó un file nuevo (caso max=1 típico)
+    this.previews = this.previews.filter(p => p.from === 'file') ;
+  } else {
+    // Conserva las URL existentes, pero sin duplicar
+    this.previews = this.previews.filter(p => p.from === 'url');
+  }
+
+  const allowedTypes = this.fud.types || [];
+  for (const f of this.files) {
+    const type = this.inferTypeByNameOrMime(f, allowedTypes);
+    const name = f.name;
+    if (type === 'image' || type === 'video' || type === 'document') {
+      const url = URL.createObjectURL(f);
+      const item: { file?: File; url: string; type: UiFileType; duration?: number; from: 'file'|'url'; name: string } = {
+        file: f, url, type, from: 'file', name
+      };
+      if (type === 'video') {
+        item.duration = await this.getVideoDuration(f).catch(() => undefined);
+      }
+      this.previews.push(item);
+    }
   }
 }
 
+// ======= OUTPUT =======
+private propagate() {
+  // Si hay archivos, emitimos File[]
+  if (this.files.length) {
+    this.onChange(this.files);
+    return;
+  }
+
+  // Si no hay archivos pero hay URLs en preview, emitimos string|string[]
+  const urlValues = this.previews.filter(p => p.from === 'url').map(p => p.url);
+  if (urlValues.length === 0) {
+    this.onChange(null);
+  } else if (this.num(this.fud.max, 1) === 1) {
+    this.onChange(urlValues[0] as any);  // string
+  } else {
+    this.onChange(urlValues as any);     // string[]
+  }
+}
+
+// ======= HELPERS =======
+private inferTypeFromUrl(u: string): UiFileType | undefined {
+  const ext = (u.split('?')[0] || '').toLowerCase().match(/\.([a-z0-9]+)$/)?.[1] || '';
+  if (/(jpg|jpeg|png|gif)$/.test(ext)) return 'image';
+  if (/(mp4)$/.test(ext)) return 'video';
+  if (/(pdf)$/.test(ext)) return 'document';
+  return undefined;
+}
+private nameFromUrl(u: string): string {
+  try {
+    const path = (u.split('?')[0] || '').split('/').pop() || 'archivo';
+    return decodeURIComponent(path);
+  } catch { return 'archivo'; }
+}
+}

@@ -1,12 +1,17 @@
-import { UiProps, UiStyleProps } from "./ui-presets.interface";
-
 // ui-preview.interface.ts
-export type UiPreviewVariant = 'filled' | 'outlined' | 'none';
-export type UiPreviewType = 'video' | 'image' | 'document';
-export type UiPreviewFormat = 'video' | 'image' | 'document';
-export interface UiPreviewProps  extends UiProps {
+import { UiButtonProps } from "./ui-button.interface";
+import { MaskingProps, UiDialogProps } from "./ui-dialog.interface";
+import { UiIconProps } from "./ui-icon.interface";
+import { UiFileType, UiMediaProps, UiStyleProps } from "./ui-presets.interface";
+
+export interface UiPreviewProps  extends UiMediaProps   {
+    id?: string;
     previewClass?: string;
     previewStyle?: UiStyleProps;
-    previewUrl?: string;
-    btnStyles?: UiStyleProps[];
+    overlay?: boolean;   
+    icon?: UiIconProps;
+    mask?: boolean;
+    masking?: MaskingProps;
+    dialog?: UiDialogProps;
 }
+

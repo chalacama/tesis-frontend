@@ -1,0 +1,63 @@
+<!-- Máscara (incluye controles flotantes en modo 'image') -->
+<div
+  *ngIf="dlg.mask && dlg.visible"
+  class="{{ maskClasses().join(' ') }}"
+  [ngStyle]="dlg.maskStyle"
+  (click)="onMaskClick()"
+>
+  <!-- Controles en máscara (no cierran el modal) -->
+  <div
+    class="ui-dialog__mask-controls"
+    *ngIf="dlg.visibleBnt"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="ui-dialog__mask-rotate" *ngIf="showMaskButtons">
+      <ui-button
+
+    [btnStyle]="{borderRadius: '50%', width: '40px', height: '40px'}"
+      [variant]="dlg.variant"
+      [severity]="dlg.severity"
+      ariaLabel="Rotar a la izquierda"
+      
+      [icon]="{svgPath: 'svg/rotate-left.svg'}"
+      (click)="rotate(-90)"
+    ></ui-button>
+    <ui-button
+
+      [btnStyle]="{borderRadius: '50%' , width: '40px', height: '40px'}"
+      [variant]="dlg.variant"
+      [severity]="dlg.severity"
+      ariaLabel="Rotar a la derecha"
+      [icon]="{svgPath: 'svg/rotate-right.svg'}"
+      (click)="rotate(90)"
+    ></ui-button>
+    </div>
+    
+      <ui-button
+      [btnStyle]="{borderRadius: '50%' , width: '40px', height: '40px'}"
+      
+      [variant]="dlg.variant"
+      [severity]="dlg.severity"
+      ariaLabel="cerrar"
+      [icon]="{svgPath: 'svg/x.svg'}"
+      (click)="requestClose()"
+    ></ui-button>
+  </div>
+</div>
+
+
+<div
+  *ngIf="dlg.visible"
+  #panel
+  class="{{ hostClasses().join(' ') }}"
+  [ngStyle]="styleMap()"
+  [attr.role]="dlg.role || 'dialog'"
+  [attr.aria-modal]="true"
+  [attr.aria-label]="dlg.ariaLabel || dlg.title || 'Dialog'"
+  tabindex="{{ dlg.tabIndex ?? -1 }}"
+  (wheel)="onWheel($event)"
+>
+  <div class="ui-dialog__content" [ngStyle]="contentStyle()">
+    <ng-content></ng-content>
+  </div>
+</div>

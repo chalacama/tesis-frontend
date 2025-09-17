@@ -9,105 +9,114 @@
 @import url(assets/styles/measures/component.css);
 
 * {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-   /* transition: background-color 0.3s ease, color 3s ease, border-color 0.3s ease; */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* transition: background-color 0.3s ease, color 3s ease, border-color 0.3s ease; */
 }
 
 :root {
-   color-scheme: light dark;
+  color-scheme: light dark;
 
-   /* background */
-       
-   --background-color: light-dark(var(--surface-0), var(--surface-950));
-   --background-hover: light-dark(var(--surface-200), var(--surface-900));
-   --background-active: light-dark(var(--surface-100), var(--surface-800));
-   --background-disabled: light-dark(var(--surface-400), var(--surface-600));
+  /* background */
 
-   /* Elements */
-   --modal-bg: light-dark(var(--surface-200), var(--surface-800));
-   --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
-   --card-bg: light-dark(var(--surface-50), var(--surface-900));
+  --background-color: light-dark(var(--surface-0), var(--surface-950));
+  --background-hover: light-dark(var(--surface-200), var(--surface-900));
+  --background-skeleton: light-dark(var(--surface-300), var(--surface-800));
 
-   
-   /* Trasparent */
-   --overlay-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
-   --shadow-color: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
 
-    /* Reactive */
-   --border-color: light-dark(var(--surface-200), var(--surface-700));
-   --active-color: light-dark(var(--primary-600), var(--primary-500));
-   
-    /* txt */
-   --text-color: light-dark(var(--surface-950), var(--surface-50));
-   --text-color-secondary: light-dark(var(--surface-700), var(--surface-300));
-   --text-color-contrast: light-dark(var(--surface-0), var(--surface-950));
+  /* Elements */
+  /* --modal-bg: light-dark(var(--surface-200), var(--surface-800)); */
+  --dialog-bg: light-dark(var(--surface-200), var(--surface-800));
+  --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
+  --card-bg: light-dark(var(--surface-50), var(--surface-900));
 
-   
 
-   /* Btn */
 
-   --sev-primary: light-dark(var(--primary-500), var(--primary-400));
-   --sev-secondary: light-dark(var(--surface-200), var(--surface-700));
+  /* Trasparent */
+  --overlay-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  --overlay-color-contrast: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.2));
+  --shadow-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
+  --shadow-color-contrast: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+  /* Reactive */
+  --border-color: light-dark(var(--surface-200), var(--surface-700));
+  --border-color-contrast: light-dark(var(--surface-700), var(--surface-200));
+  --active-color: light-dark(var(--primary-600), var(--primary-500));
 
-   --sev-info: light-dark(var(--info-500), var(--info-400));
-   --sev-warn: light-dark(var(--warn-500), var(--warn-400));
-   --sev-help: light-dark(var(--help-500), var(--help-400));
-   --sev-danger: light-dark(var(--danger-500), var(--danger-400));
-   --sev-contrast: light-dark(var(--surface-900), var(--surface-100));
+  /* txt */
+  --text-color: light-dark(var(--surface-950), var(--surface-50));
+  --text-color-secondary: light-dark(var(--surface-700), var(--surface-300));
+  --text-color-contrast: light-dark(var(--surface-0), var(--surface-950));
 
-   /* btn hover */
 
-   --sev-primary-hover: light-dark(var(--primary-600), var(--primary-300));
-   --sev-secondary-hover: light-dark(var(--surface-300), var(--surface-800));
 
-   --sev-info-hover: light-dark(var(--info-600), var(--info-300));
-   --sev-warn-hover: light-dark(var(--warn-600), var(--warn-300));
-   --sev-help-hover: light-dark(var(--help-600), var(--help-300));
-   --sev-danger-hover: light-dark(var(--danger-600), var(--danger-300));
-   
-   --switcher-border: light-dark(var(--primary-500), var(--primary-400));
-   --switcher-hover: light-dark(var(--primary-600), var(--primary-300));
-   --switcher-active-bg: light-dark(var(--primary-500), var(--primary-400));
-   --switcher-active-icon: light-dark(var(--surface-50), var(--surface-950));
+  /* Btn */
+
+  --sev-primary: light-dark(var(--primary-500), var(--primary-400));
+  --sev-secondary: light-dark(var(--surface-200), var(--surface-700));
+
+  --sev-info: light-dark(var(--info-500), var(--info-400));
+  --sev-warn: light-dark(var(--warn-500), var(--warn-400));
+  --sev-help: light-dark(var(--help-500), var(--help-400));
+  --sev-danger: light-dark(var(--danger-500), var(--danger-400));
+  --sev-contrast: light-dark(var(--surface-900), var(--surface-100));
+
+  /* btn hover */
+
+  --sev-primary-hover: light-dark(var(--primary-600), var(--primary-300));
+  --sev-secondary-hover: light-dark(var(--surface-300), var(--surface-800));
+
+  --sev-info-hover: light-dark(var(--info-600), var(--info-300));
+  --sev-warn-hover: light-dark(var(--warn-600), var(--warn-300));
+  --sev-help-hover: light-dark(var(--help-600), var(--help-300));
+  --sev-danger-hover: light-dark(var(--danger-600), var(--danger-300));
+
+  --switcher-border: light-dark(var(--primary-500), var(--primary-400));
+  --switcher-hover: light-dark(var(--primary-600), var(--primary-300));
+  --switcher-active-bg: light-dark(var(--primary-500), var(--primary-400));
+  --switcher-active-icon: light-dark(var(--surface-50), var(--surface-950));
 
 }
 
 body {
-   font-family: "Open Sans", sans-serif;
-   font-optical-sizing: auto;
-   min-height: 100vh;
-   background-color: var(--background-color);
-   color: var(--text-color);
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
+
 body.app-loading app-root {
   opacity: 0;
   pointer-events: none;
-  
+
 }
+
 app-root {
   transition: opacity 0.3s ease-in-out;
 }
+
 #splash-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999; /* Asegura que esté por encima de todo */
-  
+  z-index: 9999;
+  /* Asegura que esté por encima de todo */
+
   /* Usa flexbox para centrar el logo perfectamente */
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   /* El fondo debe coincidir con el de tu app para una transición limpia */
   background-color: var(--background-color);
 }
 
 #splash-screen img {
-  width: 150px; /* Ajusta el tamaño de tu logo como prefieras */
+  width: 150px;
+  /* Ajusta el tamaño de tu logo como prefieras */
   /* Animación sutil opcional para el logo */
   animation: pulse 2s infinite ease-in-out;
 }
@@ -117,18 +126,18 @@ app-root {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
+
   100% {
     transform: scale(1);
   }
 }
+
 body:not(.app-loading) #splash-screen {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease-out;
 }
-
-
-

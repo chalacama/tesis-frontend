@@ -14,7 +14,12 @@ import { ElementRef } from '@angular/core';
 // import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
 import { InputLabelComponent } from '../../../../../shared/UI/components/form/input-label/input-label.component';
+// import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
+import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
+import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component';
 import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
+import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
+/* import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component'; */
 // import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
 // import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
 
@@ -22,10 +27,13 @@ import { FileUploadComponent } from '../../../../../shared/UI/components/form/fi
   selector: 'app-details',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    // SelectButtonComponent,
+    SelectButtonComponent,
     ButtonComponent,
     InputLabelComponent,
     FileUploadComponent,
+    // DialogComponent,
+    // PreviewComponent,
+
     // ToggleWitchComponent,
   ],
   templateUrl: './details.component.html',
@@ -34,6 +42,7 @@ import { FileUploadComponent } from '../../../../../shared/UI/components/form/fi
 
 
 export class DetailsComponent implements OnInit {
+
 
   // Inyección
   private readonly route = inject(ActivatedRoute);
@@ -59,6 +68,9 @@ export class DetailsComponent implements OnInit {
   errorMsg = signal<string | null>(null);
   successMsg = signal<string | null>(null);
 
+  isDialogOpen = true; // o false según el caso
+
+
   // Datos
   course = signal<CourseDetail | null>(null);
   difficulties = signal<Difficulty[]>([]);
@@ -67,12 +79,17 @@ export class DetailsComponent implements OnInit {
   private originalCourse: CourseDetail | null = null;
 
   // Form reactivo tipado (sin nullables)
-  form = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(3)]],
-    description: ['', [Validators.required, Validators.minLength(10)]],
-    difficulty_id: [2, [Validators.required]],
-    private: [false, [Validators.required]],
-    enabled: [true, [Validators.required]]
+    form = this.fb.group({
+    title:        ['', [Validators.required, Validators.minLength(3)]],
+    description:  ['', [Validators.required, Validators.minLength(10)]],
+    difficulty_id:[2,  [Validators.required]],
+    private:      [false, [Validators.required]],
+    enabled:      [true,  [Validators.required]],
+    code:         [''], // nullable en backend; aquí lo tratamos como string ('' -> null al guardar si quieres)
+    careers:      this.fb.control<number[]>([], { nonNullable: true }),    // ids
+    categories:   this.fb.control<number[]>([], { nonNullable: true }),    // ids
+    // Solo UI (no se envía): previsualización de la miniatura actual o del archivo cargado
+    miniatureUrl: [''],
   });
 
   // Computados útiles
@@ -123,8 +140,9 @@ export class DetailsComponent implements OnInit {
         next: (res: CourseDetailResponse) => {
           const c = res.course;
           this.course.set(c);
+          console.log(c);
           this.originalCourse = c;
-          this.patchFormFromCourse(c);
+          this.patchFromCourse(c);
           this.loadingCourse.set(false);
         },
         error: (err: Error) => {
@@ -135,14 +153,19 @@ export class DetailsComponent implements OnInit {
   }
 
   // ----- Helpers -----
-  private patchFormFromCourse(c: CourseDetail): void {
+  private patchFromCourse(c: CourseDetail): void {
     this.form.reset(
       {
         title: c.title,
         description: c.description,
         difficulty_id: c.difficulty_id,
         private: c.private,
-        enabled: c.enabled
+        enabled: c.enabled,
+        code: c.code || '',
+        careers: c.careers.map(c => c.id),
+        categories: c.categories.map(c => c.id),
+        miniatureUrl: c.miniature.url
+
       },
       { emitEvent: false }
     );
@@ -204,7 +227,7 @@ export class DetailsComponent implements OnInit {
           const updated = res.course;
           this.course.set(updated);
           this.originalCourse = updated;
-          this.patchFormFromCourse(updated);
+          this.patchFromCourse(updated);
           this.saving.set(false);
           this.successMsg.set('Cambios guardados correctamente.');
           setTimeout(() => this.successMsg.set(null), 2500);
@@ -218,7 +241,7 @@ export class DetailsComponent implements OnInit {
 
   resetForm(): void {
     if (!this.originalCourse) return;
-    this.patchFormFromCourse(this.originalCourse);
+    this.patchFromCourse(this.originalCourse);
   }
 
   retryLoad(): void {
@@ -241,18 +264,21 @@ export class DetailsComponent implements OnInit {
     // usa tus vars o hex
     return this.difficulties().map(d => {
       if (d.id === 1) {
-        return { value: d.id, label: d.name, color: 'var(--help-500)', bg: 'color-mix(in oklab, var(--help-500) 10%, transparent)' };
+        return { id: d.id, name: d.name, color: 'var(--help-500)' };
       }
       if (d.id === 2) {
-        return { value: d.id, label: d.name, color: 'var(--warn-500)', bg: 'color-mix(in oklab, var(--warn-500) 10%, transparent)' };
+        return { id: d.id, name: d.name, color: 'var(--warn-500)' };
       }
       if (d.id === 3) {
-        return { value: d.id, label: d.name, color: 'var(--danger-500)', bg: 'color-mix(in oklab, var(--danger-500) 10%, transparent)' };
+        return { id: d.id, name: d.name, color: 'var(--danger-500)'};
       }
       // por defecto usa el color activo de tu DS
-      return { value: d.id, label: d.name, color: 'var(--active-color)' };
+      return { id: d.id, name: d.name, color: 'var(--active-color)' };
     });
   }
+  onSelectDifficulty(val: any) {
+  console.log('difficulty_id =>', val); // debería ser 1 | 2 | 3...
+}
 
 
 

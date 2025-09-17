@@ -4,9 +4,16 @@ export type UiSize =
   | 'sm'  //  Small: compacto, ideal para espacios reducidos o móvil
   | 'md'  //  Medium: tamaño estándar por defecto
   | 'lg'; //  Large: más grande, para botones destacados o pantallas amplias
-export type UiPosition   = 'top' | 'right' |'buttom' | 'left';
+export type UiPosition    = 'top' | 'right' |'buttom' | 'left' | 'center' | UiCorner;
 export type UiOrientation   = 'horizontal' | 'vertical';
+export type UiFileType = 'document' | 'video' | 'image';
+export type UiFileFormat = 'pdf' | 'mp4' | 'jpg' | 'png' | 'gif';
 
+export const UiFileFormats: Record<UiFileType, UiFileFormat[]> = {
+  document: ['pdf'],
+  video: ['mp4'],
+  image: ['jpg', 'png', 'gif'],
+}
 
 
 export type UiVariant =
@@ -19,9 +26,10 @@ export type UiNeumorphism =
   | 'raised'      // Componente "elevado" con sombra externa
   | 'convex'      // Apariencia de botón abultado (saliendo hacia afuera)
   | 'concave'     // Apariencia de botón hundido (hacia adentro)
-  | 'inset'       // Sombra interna más fuerte (útil en inputs o cards)
-  | 'soft'        // Sombra difusa, efecto más sutil
-  | 'strong';     // Sombras más duras y marcadas
+
+export type UiCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+export type UiTypeBg = 'solid' | 'transparent' | 'gradient' | 'none';
+
 export interface UiProps {
   severity?: UiSeverity;
   size?: UiSize;          
@@ -40,7 +48,8 @@ export interface UiFormProps extends UiProps {
 }
 export interface UiMediaProps extends UiProps {
   src?: string;
-  alt?: string;
+  alt?: string ;
+  types?: UiFileType;
   
 }
 export interface UiA11Props {

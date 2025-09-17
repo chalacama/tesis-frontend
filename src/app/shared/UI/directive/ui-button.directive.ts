@@ -11,6 +11,8 @@ export class UiButtonDirective {
   @Input() label: UiButtonProps['label'] = '';
   @Input() type: UiButtonProps['type'] = 'button';
   @Input() variant: UiButtonProps['variant'] = 'filled';
+  @Input() link?: UiButtonProps['link'];
+  @Input() neumorphism?: UiButtonProps['neumorphism'] = 'flat';
 
   // ===== Tokens base ( UibtnProps) =====
   @Input() severity?: UiButtonProps['severity'];
@@ -28,12 +30,7 @@ export class UiButtonDirective {
   @Input() title?: UiButtonProps['title'];
   @Input() onKeyDown?: UiButtonProps['onKeyDown'];
 
-  // ===== Icono (IconProps) =====
-  @Input() svgPath?: UiButtonProps['svgPath'];
-  @Input() iconSeverity?: UiButtonProps['iconSeverity'] = 'secondary';
-  @Input() iconSize?: UiButtonProps['iconSize'] = 'sm'; // sm | md | lg
-  @Input() iconClass?: UiButtonProps['iconClass'];
-  @Input() iconStyle?: UiButtonProps['iconStyle'];
+  @Input() icon?: UiButtonProps['icon'];
 
   // ===== Badge (BadgeProps) =====
   @Input() badge?: UiButtonProps['badge'] = false;

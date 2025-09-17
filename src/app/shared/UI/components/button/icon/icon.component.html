@@ -1,0 +1,7 @@
+<span
+  class="{{ iconDir.hostClasses().join(' ') }}"  
+  [attr.role]="hostAttrs().role"
+  [attr.aria-label]="hostAttrs().ariaLabel" [ngStyle]="cssMap()" class="svg" *ngIf="safeSvg" [innerHTML]="safeSvg">
+  <!-- <span [ngStyle]="cssMap()" class="svg" *ngIf="safeSvg" [innerHTML]="safeSvg"></span> -->
+</span>
+

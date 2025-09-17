@@ -63,12 +63,21 @@
                     <td>{{course.id}}</td>
                 </div> -->
                 <div class="body_cell-miniature cell-display">
-                    <td *ngIf="course.miniature?.url">
-                        <img class="cell_miniature" [src]="course.miniature.url" alt="miniature">
-                    </td>
-                    <td *ngIf="course.miniature?.url === null">
-                        <img class="cell_miniature" src="img\cover\no-thumbnail.jpg" alt="miniature">
-                    </td>
+
+                    <div class="cell_miniature">
+                        <td>
+                            <ui-preview style="width: 100%;" [previewStyle]="{borderRadius: '5px'}"
+                                [src]="course.miniature.url" [types]="'image'" [overlay]="false" [mask]="true"
+                                [severity]="'primary'" [size]="'sm'" [variant]="'outlined'"
+                                [masking]="{ maskType: 'blur' }">
+
+                                <ui-button variant="flat" [btnStyle]="{borderRadius: '15px', width: '30px', height: '30px'}"
+                            severity="primary" [icon]="{svgPath: 'svg/search.svg'}">
+                        </ui-button>
+                            </ui-preview>
+                        </td>
+                            
+                        </div>
                 </div>
                 <div class="body_cell-title cell-border cell-display">
                     <div class="cell_label-title">

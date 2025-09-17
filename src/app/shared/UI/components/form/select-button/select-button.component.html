@@ -1,35 +1,28 @@
-<!-- <div class="sbb-field" [class.error]="!!sb.error" [class.disabled]="presets.disabled">
-  <label *ngIf="sb.label" class="sbb-label">{{ sb.label }}</label>
+<div class="sbb-field" [class.error]="!!sb.invalid" [class.disabled]="sb.disabled">
 
   <div
     class="sbb-group"
     [class]="hostClasses().join(' ')"
-    role="radiogroup"
-    [attr.aria-label]="presets.ariaLabel || null"
-    [attr.aria-disabled]="presets.disabled || null"
+    [attr.role]="sb.multiple ? 'group' : 'radiogroup'"
+    [attr.aria-label]="sb.ariaLabel || null"
+    [attr.aria-disabled]="sb.disabled || null"
     [ngStyle]="groupVars()"
   >
-    <button
-      type="button"
-      class="sbb-span"
-      *ngFor="let opt of sb.options; let i = index; let last = last;"
-      role="radio"
-      [attr.aria-checked]="isChecked(opt)"
-      [disabled]="presets.disabled || opt.disabled"
-      [class.checked]="isChecked(opt)"
-      [class.opt-disabled]="opt.disabled"
-      (click)="selectOption(opt)"
-
-      [style.--opt-color]="opt.color || null"
-      [style.--opt-bg]="opt.bg || null"
-      [style.--opt-border]="opt.borderColor || null"
-
-      [class.is-first]="i === 0"
-      [class.is-last]="last"
-    >
-      <span class="sbb-text">{{ opt.label }}</span>
-    </button>
+    <ui-button
+      
+      *ngFor="let it of items"
+      
+      [label]="it.label"
+      [severity]="sb.severity"
+      [size]="sb.size"
+      [variant]="sb.variant"
+      [disabled]="sb.disabled || it.disabled"
+      [attr.role]="sb.multiple ? 'checkbox' : 'radio'"
+      [attr.aria-checked]="isCheckedAndClass(it)"
+      [btnClass]="isCheckedAndClass(it)"
+     
+      (click)="selectOption(it)"
+    ></ui-button>
   </div>
 
-  <div class="sbb-error" *ngIf="sb.error">{{ sb.error }}</div>
-</div> -->
+</div>

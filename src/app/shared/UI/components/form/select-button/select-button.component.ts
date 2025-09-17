@@ -1,142 +1,179 @@
-// import {
-//   Component, Output, EventEmitter, forwardRef,
-//   ChangeDetectionStrategy, inject
-// } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import {
+  Component, Output, EventEmitter, forwardRef,
+  ChangeDetectionStrategy, inject, Input
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
-// import { UiPresetsDirective } from '../../../directive/ui-presets.directive';
-// import { UiSelectBottonDirective } from '../../../directive/ui-select-botton.directive';
 
-// import { SBBasicOption, SBBasicValue, UiSBVariant } from '../../../interfaces/ui-select-button';
-// import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
+import { ButtonComponent } from '../../button/button/button.component'; // tu <ui-button>
+import { UiSbtnProps } from '../../../interfaces/ui-select-button';
+import { UiSize } from '../../../interfaces/ui-presets.interface';
+import { UiButtonProps } from '../../../interfaces/ui-button.interface';
+import { UiSelectBottonDirective } from '../../../directive/ui-select-botton.directive';
 
-// // ...imports iguales...
-// @Component({
-//   selector: 'ui-select-button',
-//   standalone: true,
-//   imports: [CommonModule],
-//   templateUrl: './select-button.component.html',
-//   styleUrls: ['./select-button.component.css'],
-//   changeDetection: ChangeDetectionStrategy.OnPush,
-//   providers: [{
-//     provide: NG_VALUE_ACCESSOR,
-//     useExisting: forwardRef(() => SelectButtonComponent),
-//     multi: true
-//   }],
-//   hostDirectives: [
-//     {
-//       directive: UiPresetsDirective,
-//       inputs: [
-//         'severity','size','disabled','raised',
-//         'width','height','radius','fontSize','gap',
-//         'bg','fg','hoverBg','borderColor','borderWidth','iconSize',
-//         'ariaLabel'
-//       ],
-//     },
-//     {
-//       directive: UiSelectBottonDirective,
-//       inputs: ['label','options','orientation','error','variant','boxed'],
-//     }
-//   ],
-// })
-// export class SelectButtonComponent implements ControlValueAccessor {
-//   readonly presets = inject(UiPresetsDirective);
-//   readonly sb = inject(UiSelectBottonDirective);
+@Component({
+  selector: 'ui-select-button',
+  standalone: true,
+  imports: [CommonModule, ButtonComponent],
+  templateUrl: './select-button.component.html',
+  styleUrls: ['./select-button.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => SelectButtonComponent),
+    multi: true
+  }],
+  hostDirectives: [
+    {
+      directive: UiSelectBottonDirective,
+      // SOLO inputs reales de la directiva
+      inputs: [
+        'id','btns','orientation','options','optionLabel','multiple','optionValue',
+        'invalid','severity','size','disabled','neumorphism','variant',
+        'ariaLabel','role','tabIndex','ariaPressed','title'
+      ],
+    }
+  ],
+})
+export class SelectButtonComponent implements ControlValueAccessor {
+  // Directiva única (todas las props vienen de aquí)
+  readonly sb = inject(UiSelectBottonDirective);
 
-//   @Output() selectionChange = new EventEmitter<SBBasicValue>();
+  // Inputs PROPIOS del componente (para el field)
+  /* @Input() label?: string; */
+  /* @Input() error?: string; */
+/*   @Input() boxed: boolean = false; */
 
-//   value!: SBBasicValue | null;
-//   onChange: (val: SBBasicValue | null) => void = () => {};
-//   onTouched: () => void = () => {};
-//   writeValue(val: SBBasicValue | null): void { this.value = val; }
-//   registerOnChange(fn: any): void { this.onChange = fn; }
-//   registerOnTouched(fn: any): void { this.onTouched = fn; }
-//   setDisabledState(isDisabled: boolean): void { this.presets.disabled = isDisabled; }
+  @Output() selectionChange = new EventEmitter<any | any[]>();
+    brBtnCenter ='0px';
+    brBtnLeft ='5px 0px 0px 5px';
+    brBtnRight ='0px 5px 5px 0px';
+  value: any | any[] | null = null;
+  onChange: (val: any | any[] | null) => void = () => {};
+  onTouched: () => void = () => {};
 
-//   selectOption(opt: SBBasicOption) {
-//     if (this.presets.disabled || opt.disabled) return;
-//     this.value = opt.value;
-//     this.onChange(this.value);
-//     this.selectionChange.emit(this.value);
-//     this.onTouched();
-//   }
-//   isChecked(opt: SBBasicOption) { return this.value === opt.value; }
+  // ---- CVA ----
+  writeValue(val: any | any[] | null): void { this.value = val; }
+  registerOnChange(fn: any): void { this.onChange = fn; }
+  registerOnTouched(fn: any): void { this.onTouched = fn; }
+  setDisabledState(isDisabled: boolean): void { this.sb.disabled = isDisabled; }
 
-//   private normalizeRadius(rad?: string | number): string {
-//     if (rad === undefined || rad === null) return '';
-//     return typeof rad === 'number'
-//       ? `${rad}px`
-//       : (/^\d+$/.test(rad) ? `${rad}px` : rad);
-//   }
+  // ===== Helpers de datos (sin tipos inventados) =====
+  private getOptLabel(opt: any): string {
+    if (!opt) return '';
+    const key = this.sb.optionLabel || 'label';
+    return (opt?.[key] ?? opt?.label ?? String(opt)) as string;
+  }
+  private getOptValue(opt: any, index: number): any {
+    // options: usa optionValue si es string (clave); si no, usa el objeto entero
+    if (this.sb.options && typeof this.sb.optionValue === 'string') {
+      return opt?.[this.sb.optionValue];
+    }
+    // btns: no tienen "value" -> usamos el índice por defecto
+    if (this.sb.btns) return index;
+    return opt;
+  }
 
-//   groupVars(): Record<string,string> {
-//     const p = this.presets;
+  /** Lista unificada para iterar en el template (desde options y/o btns) */
+  get items(): Array<{ label: string; value: any; disabled?: boolean }> {
+    const list: Array<{ label: string; value: any; disabled?: boolean }> = [];
 
-//     const sevColor = `var(--sev-${p.severity as UiSeverity})`;
-//     const sevHover = `var(--sev-${p.severity as UiSeverity}-hover)`;
+    if (Array.isArray(this.sb.options) && this.sb.options.length) {
+      this.sb.options.forEach((opt: any, i: number) => {
+        list.push({
+          label: this.getOptLabel(opt),
+          value: this.getOptValue(opt, i),
+          disabled: !!opt?.disabled,
+        });
+      });
+    } else if (Array.isArray(this.sb.btns) && this.sb.btns.length) {
+      this.sb.btns.forEach((btn: UiButtonProps, i: number) => {
+        list.push({
+          label: btn?.label ?? `Opción ${i + 1}`,
+          value: this.getOptValue(btn, i), // índice por defecto
+          disabled: !!btn?.disabled,
+        });
+      });
+    }
+    return list;
+  }
 
-//     const font =
-//       p.fontSize ?? (p.size === 'sm' ? '.85rem' : p.size === 'lg' ? '1rem' : '.95rem');
-//     const padBlock =
-//       p.size === 'sm' ? '.3rem' : p.size === 'lg' ? '.7rem' : '.5rem';
-//     const padInline =
-//       p.size === 'sm' ? '.55rem' : p.size === 'lg' ? '1rem' : '.8rem';
+  // ===== Selección =====
+  selectOption(item: { value: any; disabled?: boolean }) {
+    if (this.sb.disabled || item.disabled) return;
 
-//     // ⬇️ segmented ahora usa un gap fijo de 1px
-//     const isSegmented = (this.sb.variant as UiSBVariant) === 'segmented';
-//     const gap = isSegmented
-//       ? '1px'
-//       : (p.gap ?? (p.size === 'sm' ? '.375rem' : p.size === 'lg' ? '.625rem' : '.5rem'));
+    if (this.sb.multiple) {
+      const current = Array.isArray(this.value) ? [...this.value] : [];
+      const idx = current.findIndex(v => this.equals(v, item.value));
+      if (idx >= 0) current.splice(idx, 1); else current.push(item.value);
+      this.value = current;
+    } else {
+      this.value = this.equals(this.value, item.value) ? null : item.value;
+    }
 
-//     const normalized = this.normalizeRadius(p.radius);
-//     const computedRadius = normalized || '8px';
+    this.onChange(this.value);
+    this.selectionChange.emit(this.value as any | any[]);
+    this.onTouched();
+  }
 
-//     const baseBg = p.bg ?? 'var(--card-bg)';
-//     const hovBg  = p.hoverBg ?? 'var(--background-hover)';
+  /* isChecked(item: { value: any }) {
+    return this.sb.multiple
+      ? Array.isArray(this.value) && this.value.some(v => this.equals(v, item.value))
+      : this.equals(this.value, item.value);
+  } */
+// in UiSelectBottonDirective class
+isCheckedAndClass(item: { value: any }) {
+  const isChecked = this.sb.multiple
+    ? Array.isArray(this.value) && this.value.some(v => this.equals(v, item.value))
+    : this.equals(this.value, item.value);
 
-//     const panelRadius = computedRadius || '12px';
+  const btnClass = isChecked ? 'sbb-span checked' : 'sbb-span';
+  const spanClass = item.value === 1 ? 'sbb-span-right' : item.value === this.items.length - 1 ? '' : 'sbb-span-left';
 
-//     return {
-//       '--sbb-font': font,
-//       '--sbb-pad-block': padBlock,
-//       '--sbb-pad-inline': padInline,
-//       '--sbb-gap': gap,
-//       '--sbb-radius': computedRadius,
+  return `${btnClass} ${spanClass}`;
+}
+  // ===== Estilos y clases =====
+  groupVars(): Record<string,string> {
+    const size = (this.sb.size as UiSize) ?? 'md';
+    const font =
+      size === 'sm' ? '.85rem' : size === 'lg' ? '1rem' : '.95rem';
+    const padBlock =
+      size === 'sm' ? '.3rem' : size === 'lg' ? '.7rem' : '.5rem';
+    const padInline =
+      size === 'sm' ? '.55rem' : size === 'lg' ? '1rem' : '.8rem';
 
-//       '--sbb-border': p.borderColor ?? 'var(--border-color)',
-//       '--sbb-active': sevColor,
-//       '--sbb-hover': hovBg,
-//       '--sbb-bg': baseBg,
+    return {
+      '--sbb-font': font,
+      '--sbb-pad-block': padBlock,
+      '--sbb-pad-inline': padInline,
+      '--sbb-gap': size === 'sm' ? '.375rem' : size === 'lg' ? '.625rem' : '.5rem',
+      '--sbb-radius': '8px',
+      '--sbb-border': 'var(--border-color)',
+      '--sbb-active': `var(--sev-${this.sb.severity ?? 'primary'})`,
+      '--sbb-hover': 'var(--background-hover)',
+      '--sbb-bg': 'var(--card-bg)',
+      '--sbb-shadow': 'var(--shadow-color)',
+      '--sbb-text': 'var(--text-color)',
+      '--sbb-panel-bg': 'color-mix(in oklab, var(--background-hover) 65%, transparent)',
+      '--sbb-panel-border': 'var(--border-color)',
+      '--sbb-panel-radius': '10px',
+      '--sbb-panel-pad': '.375rem',
+    };
+  }
 
-//       '--sbb-shadow': 'var(--shadow-color)',
-//       '--sbb-text': p.fg ?? 'var(--text-color)',
-//       '--sbb-text-secondary': 'var(--text-color-secondary)',
+  hostClasses(): string[] {
+    const size = (this.sb.size as UiSize) ?? 'md';
+    const variant = this.sb.variant ?? 'filled';
+    return [
+      `v-${variant}`,
+      `s-${size}`,
+      this.sb.disabled ? 'is-disabled' : '',
+      this.sb.orientation === 'vertical' ? 'vertical' : 'horizontal',
+    ];
+  }
 
-//       '--sbb-variant-color': sevColor,
-//       '--sbb-variant-hover': sevHover,
+  private equals(a: any, b: any): boolean { return a === b; }
 
-//       '--sbb-panel-bg': 'color-mix(in oklab, var(--background-hover) 65%, transparent)',
-//       '--sbb-panel-border': 'var(--border-color)',
-//       '--sbb-panel-radius': panelRadius,
-//       '--sbb-panel-pad': '.375rem',
-//     };
-//   }
-
-//   hostClasses(): string[] {
-//     const p = this.presets;
-//     const s = this.sb;
-
-//     // ⬇️ Sanitiza 'tabs' → 'loose' para no generar la clase v-tabs
-//     const safeVariant = (s.variant as UiSBVariant) === 'tabs' ? 'loose' : (s.variant as UiSBVariant);
-
-//     return [
-//       `v-${safeVariant}`,
-//       `s-${p.size as UiSize}`,
-//       p.disabled ? 'is-disabled' : '',
-//       s.orientation === 'vertical' ? 'vertical' : 'horizontal',
-//       s.boxed ? 'has-panel' : ''
-//     ];
-//   }
-// }
-
+  
+}

@@ -12,10 +12,12 @@ import { Portfolio } from '../../../core/api/portfolio/portfolio.interface';
 import { CourseService } from '../../../core/api/course/course.service';
 import { MiniatureService } from '../../../core/api/miniature/miniature.service';
 import { MiniatureResponse } from '../../../core/api/miniature/miniature.interface';
+import { PreviewComponent } from '../../../shared/UI/components/media/preview/preview.component';
+import { ButtonComponent } from '../../../shared/UI/components/button/button/button.component';
 
 @Component({
   selector: 'app-studio',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent],
   templateUrl: './studio.component.html',
   styleUrl: './studio.component.css'
 })

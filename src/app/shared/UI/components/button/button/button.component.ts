@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { UiButtonDirective } from '../../../directive/ui-button.directive';
 import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
 import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
+import { UiIconProps } from '../../../interfaces/ui-icon.interface';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'ui-button',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, IconComponent],
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.css'],
   hostDirectives: [{
@@ -18,26 +20,31 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
     inputs: [
       'label','type','variant',
       'severity','size','disabled','btnClass','btnStyle',
-      'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown',
-      'svgPath','iconSeverity','iconSize','iconClass','iconStyle',
-      'badge','badgeSeverity','badgeSize','badgeClass','badgeStyle','badgeValue'
+      'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown', 'icon',
+      // 'svgPath','iconSeverity','iconSize','iconClass','iconStyle',
+      'badge','badgeSeverity','badgeSize','badgeClass','badgeStyle','badgeValue',
+      'link','neumorphism'
     ]
   }]
 })
 export class ButtonComponent implements OnChanges {
 
+  
   private http = inject(HttpClient);
   private sanitizer = inject(DomSanitizer);
 
   // instancia de la directiva para leer los valores actuales
   constructor(public readonly btn: UiButtonDirective) {
-    this.ngOnChanges();
+   /*  this.ngOnChanges(); */
   }
 
+  @Input() set icon(val: UiIconProps | undefined) {
+    this.btn.icon = val;
+  }
   safeSvg?: SafeHtml;
   ngOnChanges(): void {
-    if (this.btn.svgPath) {
-      this.http.get(this.btn.svgPath, { responseType: 'text' }).subscribe(raw => {
+    if (this.btn.icon?.svgPath) {
+      this.http.get(this.btn.icon?.svgPath, { responseType: 'text' }).subscribe(raw => {
         let svg = raw.replace(/\swidth="[^"]*"/i, '').replace(/\sheight="[^"]*"/i, '');
         if (!/fill="/i.test(svg)) svg = svg.replace('<svg', '<svg fill="currentColor"');
         this.safeSvg = this.sanitizer.bypassSecurityTrustHtml(svg);
@@ -56,8 +63,11 @@ export class ButtonComponent implements OnChanges {
       padX:  s === 'sm' ? '12px' : s === 'lg' ? '20px' : '16px',
       gap:   s === 'sm' ? '6px'  : s === 'lg' ? '10px' : '8px',
       font:  s === 'sm' ? '.85rem' : s === 'lg' ? '1.05rem' : '.95rem',
+      shadow : s === 'sm' ? '1px 2px 6px' : s === 'lg' ? '4px 6px 10px' : '2px 4px 8px',
+      shadowContrast : s === 'sm' ? '0px -1px 3px' : s === 'lg' ? '3px -4px 5px' : '2px -2px 4px',
       iconPx:s === 'sm' ? '16px' : s === 'lg' ? '24px' : '20px',
       badgefontSize: s === 'sm' ? '0.70rem' : s === 'lg' ? '.80rem' : '0.75rem',
+
       badgePx: this.btn.badgeValue ? (s === 'sm' ? '18px' : s === 'lg' ? '23px' : '29px') : (s === 'sm' ? '5px' : s === 'lg' ? '10px' : '15px')
     };
   }
@@ -76,7 +86,7 @@ export class ButtonComponent implements OnChanges {
     const badgeSev: UiSeverity = (this.btn.badgeSeverity as UiSeverity) ?? sev;
     const badgeBg = `var(--sev-${badgeSev})`;
 
-    const iconSizeByUiSize = this.btn.iconSize ? this.sizeTokens(this.btn.iconSize as   UiSize).iconPx : sizeTok.iconPx;
+    const iconSizeByUiSize = this.btn.icon?.size ? this.sizeTokens(this.btn.icon?.size as   UiSize).iconPx : sizeTok.iconPx;
 
     return {
       '--btn-width': 'auto',
@@ -84,6 +94,8 @@ export class ButtonComponent implements OnChanges {
       '--btn-radius': '10px',
       '--btn-gap': sizeTok.gap,
       '--btn-font-size': sizeTok.font,
+      '--btn-shadow': sizeTok.shadow,
+      '--btn-shadow-contrast': sizeTok.shadowContrast,
       '--btn-icon-size': iconSizeByUiSize,
       '--btn-pad-x': sizeTok.padX,
       '--btn-bg': sevBg,
@@ -107,10 +119,10 @@ styleMap(): Record<string, string> {
   hostClasses(): string[] {
     const v = `v-${this.btn.variant ?? 'filled'}`;
     const s = `s-${this.btn.size ?? 'md'}`;
-    /* const raised = this.btn.raised ? 'is-raised' : ''; */
+    const neu = `neu-${this.btn.neumorphism ?? 'flat'}`;
     const dis = this.btn.disabled ? 'is-disabled' : '';
     const extra = this.btn.btnClass ?? '';
-    return ['app-btn', v, s, dis, extra].filter(Boolean);
+    return ['app-btn', v, s,neu, dis, extra].filter(Boolean);
   }
 
   /** Soporte para Enter/Espacio si onKeyDown incluye esos valores */

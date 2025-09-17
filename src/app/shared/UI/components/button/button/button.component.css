@@ -9,7 +9,7 @@
   --btn-icon-size: 20px;
   --btn-border-width: 2px;
   --btn-pad-x: 16px;
-
+  
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -25,8 +25,24 @@
   font-weight: 600;
   font-size: var(--btn-font-size);
   transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .04s ease;
+  /* box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.2)); */
 }
-
+.sbb-span{
+  border-radius: 1px !important;
+  border-width: 1px !important;
+}
+.sbb-span-right{
+  border-top-left-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+}
+.sbb-span-left{
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+.checked{
+  background: color-mix(in oklab, var(--btn-bg) 30%, transparent) !important;
+  border-width: 1.5px !important;
+}
 /* Estados */
 .app-btn:hover { background: var(--btn-bg-hover); }
 .app-btn:active { transform: translateY(1px); }
@@ -38,7 +54,9 @@
 .app-btn.v-outlined:hover { background: color-mix(in oklab, var(--btn-border) 10%, transparent); }
 .app-btn.v-flat { background: transparent; color: var(--btn-bg); border: none; }
 .app-btn.v-flat:hover { background: color-mix(in oklab, var(--btn-bg) 8%, transparent); }
-/* .app-btn.v-flat { background: var(--sev-secondary, #eee); color: var(--text-color, #111); } */
+.ui-btn-a {  border: 1px solid var(--btn-border) !important; }
+.ui-btn-a:hover { background: color-mix(in oklab, var(--btn-bg) 100%, transparent) !important;color: var(--btn-fg); }
+
 
 /* Elevación */
 .app-btn.is-raised { box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.2)); }
@@ -64,7 +82,7 @@
   
 }
 .svg {
-  width:var(--btn-icon-size);;
+  width:var(--btn-icon-size);
   height: var(--btn-icon-size);;
   display: block;
 }
@@ -99,4 +117,42 @@
   box-shadow: 0 1px 2px var(--shadow-color, rgba(0,0,0,.2));
   
 }
+/* === Neumorphism tokens === */
+.app-btn.neu-flat {
+  box-shadow: none;
+}
+
+.app-btn.neu-raised {
+  /* box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.2)); */
+   box-shadow:
+    var(--btn-shadow) color-mix(in oklab, var(--shadow-color, #0000004d) 60%, transparent),
+    var(--btn-shadow-contrast) color-mix(in oklab, var(--shadow-color-contrast, #ffffff4d) 30%, transparent);
+}
+
+.app-btn.neu-pressed {
+  /* box-shadow: 6px 6px 12px var(--shadow-color, rgba(0,0,0,.2)); */
+  box-shadow:
+    inset var(--btn-shadow) color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    inset var(--btn-shadow-contrast) color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 30%, transparent);
+    
+}
+
+.app-btn.neu-convex {
+  background: radial-gradient(120% 120% at 30% 30%,
+              color-mix(in oklab, var(--btn-bg) 88%, #fff 12%) 0%,
+              var(--btn-bg) 60%);
+  box-shadow:
+    var(--btn-shadow) color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    var(--btn-shadow-contrast) color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 60%, transparent);
+}
+
+.app-btn.neu-concave {
+  background: radial-gradient(120% 120% at 70% 70%,
+              color-mix(in oklab, var(--btn-bg) 88%, #000 12%) 0%,
+              var(--btn-bg) 60%);
+  box-shadow:
+    inset 8px 8px 16px color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    inset -8px -8px 16px color-mix(in oklab, #fff 60%, transparent);
+}
+
 

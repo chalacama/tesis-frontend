@@ -1,0 +1,237 @@
+/* ui/components/dialog/dialog.component.css */
+
+/* Accesibilidad */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ======== Mask (antes: .modal-miniature-overlay) ======== */
+.ui-dialog__mask {
+  position: fixed;
+  inset: 0;
+  background-color: var(--overlay-color);
+  z-index: var(--z-mask, 150);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+.ui-dialog__mask.is-open { opacity: 1; pointer-events: auto; }
+.ui-dialog__mask.is-closed { opacity: 0; pointer-events: none; }
+
+/* variantes de máscara */
+.ui-dialog__mask.mask-transparent { background-color: var(--overlay-color); }
+.ui-dialog__mask.mask-dimmed     { background-color: color-mix(in oklab, var(--overlay-color) 85%, black); }
+.ui-dialog__mask.mask-blur {
+  background-color: color-mix(in oklab, var(--overlay-color) 60%, transparent);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+/* ======== Panel (antes: .modal-miniature) ======== */
+.ui-dialog {
+  position: fixed;
+  z-index: var(--z-dialog, 200);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(.98);
+  background: var(--dialog-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  box-shadow:
+    0 10px 30px color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 70%, transparent),
+    0 1px 0 color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.2)) 30%, transparent);
+  min-width: 320px;
+  max-width: min(92vw, 820px);
+  width: min(92vw, 720px);
+  max-height: 86vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  outline: none;
+  opacity: 0;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.ui-dialog.is-open  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.ui-dialog.is-closed{ opacity: 0; transform: translate(-50%, -50%) scale(.98); }
+
+/* Tamaños */
+.ui-dialog.s-sm   { width: min(92vw, 520px); }
+.ui-dialog.s-md   { width: min(92vw, 720px); }
+.ui-dialog.s-lg   { width: min(92vw, 920px); }
+
+/* Variantes (relleno/borde) */
+.ui-dialog.v-filled   { border: none; }
+.ui-dialog.v-outlined { border: 1px solid var(--border-color); 
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0px 0px rgba(255, 255, 255, 0);
+}
+.ui-dialog.v-outlined::after {
+  
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+.ui-dialog.v-outlined::before {
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+.ui-dialog.v-flat     { background: transparent; border: none; }
+
+/* Neumorphism */
+.ui-dialog.neu-flat { box-shadow: none; }
+.ui-dialog.neu-raised {
+  box-shadow:
+    6px 8px 18px color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 70%, transparent),
+    -2px -2px 8px color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 40%, transparent);
+}
+.ui-dialog.neu-pressed {
+  box-shadow:
+    inset 6px 8px 18px color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 70%, transparent),
+    inset -2px -2px 8px color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 40%, transparent);
+}
+.ui-dialog.neu-convex {
+  background: radial-gradient(120% 120% at 30% 30%,
+              color-mix(in oklab, var(--dialog-bg) 88%, #fff 12%) 0%,
+              var(--dialog-bg) 60%);
+}
+.ui-dialog.neu-concave {
+  background: radial-gradient(120% 120% at 70% 70%,
+              color-mix(in oklab, var(--dialog-bg) 88%, #000 12%) 0%,
+              var(--dialog-bg) 60%);
+}
+
+/* Header */
+.ui-dialog__header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+.ui-dialog__title { display: flex; align-items: center; gap: 10px; }
+.ui-dialog__title-text { font-size: 14px; font-weight: 700; }
+.ui-dialog__header-actions, .ui-dialog__header-close {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+
+/* Body */
+.ui-dialog__body {
+  padding: 16px;
+  overflow: auto;
+}
+
+/* Footer */
+.ui-dialog__footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ======= “Miniature preview” (map de tus clases originales) ======= */
+.ui-dialog__preview {
+  width: 700px;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+
+/* ======= Utilidades portadas de tu CSS (renombradas) ======= */
+.ui-card--miniature {
+  width: calc(300px + 20px);
+  border: 1.5px dashed var(--border-color);
+  border-radius: 6px;
+  padding: 10px;
+}
+.ui-card--miniature:hover { border-color: var(--active-color); }
+
+.ui-card--miniature__view { width: 300px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; }
+
+.ui-card--miniature__overlay {
+  position: absolute; inset: 0;
+  background-color: var(--overlay-color);
+  opacity: 0; display: flex; align-items: center; justify-content: center;
+  transition: opacity .2s ease;
+  cursor: pointer;
+}
+.ui-card--miniature__overlay:hover{ opacity: 1; }
+
+/* === (tu CSS tal cual lo pegaste arriba) === */
+
+/* Contenido interno sin paddings (ambos modos) */
+.ui-dialog__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  max-width: 92vw;
+  max-height: 86vh;
+  overflow: hidden;
+}
+
+/* Modo imagen: negro total (máscara + panel) */
+/* .ui-dialog__mask.t-image {
+} */
+.ui-dialog.t-image {
+  background: #00000000;
+  border-radius: 0px;
+  border: none;
+  box-shadow: none;
+}
+
+/* Controles en la máscara (top-right) */
+.ui-dialog__mask-controls {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto; /* los botones sí reciben click */
+  width: auto;
+  height: auto;
+  display: flex;
+  
+}
+.ui-dialog__mask-rotate{
+  display: flex;
+  gap: 8px;
+}
+/* Para garantizar que botones "secundarios" destaquen sobre negro */
+/* .sev-secondary .app-btn,
+.ui-dialog__mask-controls .app-btn {
+  
+} */
+
+/* Imagen (si la proyectas tal cual) */
+.ui-dialog__preview {
+  width: min(100%, 700px);
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+

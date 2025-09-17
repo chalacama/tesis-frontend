@@ -8,6 +8,6 @@
    --z-sidebar:100;
    --z-nav:90;
    --z-drawer:99;
-   --z-modal:200;
-   
+   --z-dialog:200;
+   --z-mask:150;
 }

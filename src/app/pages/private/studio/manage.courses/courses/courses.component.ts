@@ -8,13 +8,15 @@ import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interf
 import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
 import { CourseService } from '../../../../../core/api/course/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component';
+import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
 
 
 
 
 @Component({
   selector: 'app-courses',
-  imports: [CommonModule,FormsModule ,ReactiveFormsModule ],
+  imports: [CommonModule,FormsModule ,ReactiveFormsModule, PreviewComponent, ButtonComponent ],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.css'
 })
