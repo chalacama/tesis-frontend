@@ -1,114 +1,89 @@
-/* toggle-witch.component.css */
+/* components/toggle-witch/toggle-witch.component.css */
+.ui-togg {
+  --togg-track-w: 44px;
+  --togg-track-h: 22px;
+  --togg-thumb: 18px;
+  --togg-pad: 2px;
+  --togg-on: var(--sev-primary, #ffffff);
+  --togg-on-hover: var(--sev-primary-hover, #000000);
+  --togg-off: var(--border-color, #cbd5e1);
 
-.tw-root {
   display: inline-flex;
   align-items: center;
-  gap: var(--tw-gap);
+  gap: var(--togg-gap, 8px);
+  font-size: var(--togg-font, .95rem);
   user-select: none;
   cursor: pointer;
-  font-size: var(--tw-font);
-  color: var(--tw-text);
   outline: none;
 }
 
-.tw-root.is-disabled {
-  opacity: .6;
+.ui-togg.is-disabled {
+  opacity: .55;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.tw-label {
-  color: var(--tw-text);
-  line-height: 1;
-}
-
-.tw-control {
-  position: relative;
-  inline-size: var(--tw-width);
-  block-size: var(--tw-height);
-}
-
-.tw-track {
-  position: relative;
-  inline-size: 100%;
-  block-size: 100%;
-  border-radius: var(--tw-radius);
-  background: var(--tw-bg);
-  border: 1px solid var(--sev-contrast);
-  transition: background-color .2s ease, border-color .2s ease;
-  /* #9CA3AF #4B5563 */
-}
-
-.tw-root:not(.is-disabled):hover .tw-track {
-  border-color: var(--tw-hover);
-}
-
-/* Variante */
-.tw-root.v-outline .tw-track {
-  background: transparent;
-}
-.tw-root.v-soft .tw-track {
-  background: color-mix(in oklab, var(--tw-variant-color) 12%, transparent);
-  border-color: color-mix(in oklab, var(--tw-variant-color) 35%, var(--tw-border));
-}
-
-.tw-thumb {
+/* input nativo oculto pero accesible para formularios */
+.ui-togg__native {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  inline-size: var(--tw-thumb);
-  block-size: var(--tw-thumb);
-  border-radius: 999px;
-  background: var(--text-color-contrast);
-  box-shadow: 0 1px 2px var(--shadow-color);
-  left: 3px;
-  transition: left .18s ease, right .18s ease, background-color .2s ease;
-}
-
-/* Etiquetas internas */
-.tw-control.with-text .tw-text {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: calc(var(--tw-font) - .1rem);
+  opacity: 0;
   pointer-events: none;
-  opacity: .9;
-  color: var(--tw-text-secondary);
-}
-.tw-control.with-text .tw-text.on { left: 8px; }
-.tw-control.with-text .tw-text.off { right: 8px; }
-
-/* Checked state */
-.tw-root.is-checked .tw-track {
-  background: var(--tw-active);
-  border-color: var(--tw-active);
-}
-.tw-root.is-checked.v-outline .tw-track {
-  background: transparent;
-  border-color: var(--tw-active);
-}
-.tw-root.is-checked .tw-thumb {
-  left: calc(100% - var(--tw-thumb) - 3px);
-  background: var(--switcher-active-icon);
+  width: 0; height: 0;
+  
 }
 
-/* Error */
-.tw-root.has-error .tw-track {
-  border-color: var(--sev-danger);
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--sev-danger) 18%, transparent);
+.ui-togg__track {
+  width: var(--togg-track-w);
+  height: var(--togg-track-h);
+  padding: var(--togg-pad);
+  border-radius: 999px;
+  background: var(--togg-off);
+  position: relative;
+  transition: background-color .18s ease;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, #000 8%, transparent);
 }
 
-/* Focus-visible a11y */
-.tw-root:focus-visible .tw-track {
-  outline: 3px solid color-mix(in oklab, var(--tw-variant-color) 45%, transparent);
-  outline-offset: 2px;
+.ui-togg__thumb {
+  width: var(--togg-thumb);
+  height: var(--togg-thumb);
+  border-radius: 999px;
+  background: var(--sev-contrast, #353535);
+  display: block;
+  transform: translateX(0);
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
 }
 
-/* Density */
-.tw-root.is-dense .tw-label { font-size: calc(var(--tw-font) - .08rem); }
+/* Estado ON */
+.ui-togg.is-checked .ui-togg__track {
+  background: var(--togg-on);
+}
+.ui-togg.is-checked:hover .ui-togg__track {
+  background: var(--togg-on-hover);
+}
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .tw-thumb { transition: none; }
-  .tw-track { transition: none; }
+.ui-togg.is-checked .ui-togg__thumb {
+  transform: translateX(calc(var(--togg-track-w) - var(--togg-thumb) - (var(--togg-pad) * 2)));
+  background-color: var(--background-color, #fff);
+}
+
+/* Neumorphism opcional */
+.ui-togg.neu-raised .ui-togg__track {
+  box-shadow:
+    0 2px 6px color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    0 -2px 4px color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 30%, transparent);
+}
+.ui-togg.neu-pressed .ui-togg__track {
+  box-shadow:
+    inset 0 2px 6px color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    inset 0 -2px 4px color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 30%, transparent);
+}
+
+/* Variantes (si quieres jugar con borde/flat) */
+.ui-togg.v-outlined .ui-togg__track{
+  background: var(--togg-on) 90% transparent;
+  box-shadow: inset 0 0 0 2px var(--togg-off);
+}
+.ui-togg.v-flat .ui-togg__track {
+  box-shadow: none;
 }

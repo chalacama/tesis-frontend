@@ -19,22 +19,25 @@ import { DialogComponent } from '../../../../../shared/UI/components/overlay/dia
 import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component';
 import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
 import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
+import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
+import { PopoverComponent } from '../../../../../shared/UI/components/overlay/popover/popover.component';
 /* import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component'; */
 // import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
 // import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
 
 @Component({
   selector: 'app-details',
-  standalone: true,
+  /* standalone: true, */
   imports: [CommonModule, ReactiveFormsModule,
     SelectButtonComponent,
     ButtonComponent,
     InputLabelComponent,
     FileUploadComponent,
+    PopoverComponent,
     // DialogComponent,
     // PreviewComponent,
 
-    // ToggleWitchComponent,
+    ToggleWitchComponent,
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -43,7 +46,7 @@ import { SelectButtonComponent } from '../../../../../shared/UI/components/form/
 
 export class DetailsComponent implements OnInit {
 
-
+ povOpen = false;
   // Inyección
   private readonly route = inject(ActivatedRoute);
   private readonly courseService = inject(CourseService);
@@ -70,7 +73,7 @@ export class DetailsComponent implements OnInit {
 
   isDialogOpen = true; // o false según el caso
 
-
+  
   // Datos
   course = signal<CourseDetail | null>(null);
   difficulties = signal<Difficulty[]>([]);
@@ -158,7 +161,7 @@ export class DetailsComponent implements OnInit {
       {
         title: c.title,
         description: c.description,
-        difficulty_id: c.difficulty_id,
+        difficulty_id: c.difficulty.id,
         private: c.private,
         enabled: c.enabled,
         code: c.code || '',
@@ -192,7 +195,7 @@ export class DetailsComponent implements OnInit {
 
     if (current.title !== orig.title) payload.title = current.title;
     if (current.description !== orig.description) payload.description = current.description;
-    if (current.difficulty_id !== orig.difficulty_id) payload.difficulty_id = current.difficulty_id;
+    if (current.difficulty_id !== orig.difficulty.id) payload.difficulty_id = current.difficulty_id;
     if (current.private !== orig.private) payload.private = current.private;
     if (current.enabled !== orig.enabled) payload.enabled = current.enabled;
 
@@ -279,8 +282,10 @@ export class DetailsComponent implements OnInit {
   onSelectDifficulty(val: any) {
   console.log('difficulty_id =>', val); // debería ser 1 | 2 | 3...
 }
+popoverOpen = false;
+popover() {
+  this.popoverOpen = !this.popoverOpen; 
 
-
-
+}
 }
 

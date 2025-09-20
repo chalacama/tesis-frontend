@@ -1,9 +1,7 @@
 // ui-preview.directive.ts
 import { Directive, Input } from '@angular/core';
 import { UiPreviewProps } from '../interfaces/ui-preview.interface';
-import { UiFileType, UiStyleProps, UiSeverity, UiSize } from '../interfaces/ui-presets.interface';
-import { MaskingProps, UiDialogProps } from '../interfaces/ui-dialog.interface';
-import { UiIconProps } from '../interfaces/ui-icon.interface';
+import { UiFileType, UiSize } from '../interfaces/ui-presets.interface';
 
 @Directive({
   selector: '[uiPreview]',

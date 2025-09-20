@@ -1,21 +1,27 @@
-<!-- toggle-witch.component.html -->
-<!-- <div
-  class="tw-root"
-  [ngClass]="hostClasses()"
-  [ngStyle]="groupVars()"
-  (click)="toggle()"
+<!-- components/toggle-witch/toggle-witch.component.html -->
+<div
+  [class]="hostClasses().join(' ')"
+  [ngStyle]="styleMap()"
+  [attr.role]="tgg.role || 'switch'"
+  [attr.tabindex]="tgg.tabIndex ?? 0"
+  [attr.aria-checked]="ariaChecked()"
+  [attr.aria-label]="tgg.ariaLabel || 'Toggle'"
+  [attr.title]="tgg.title || null"
+  (click)="toggleFromUI()"
 >
-  <label class="tw-label" *ngIf="tw.label && !tw.reverse">{{ tw.label }}</label>
+  <!-- Input real para formularios (CVA + autofocus posible) -->
+  <input
+    class="ui-togg__native"
+    type="checkbox"
+    [checked]="_checked"
+    [disabled]="tgg.disabled"
+    (change)="$event.stopPropagation(); toggleFromUI()"
+  />
 
-  <div class="tw-control" [class.with-text]="tw.onLabel || tw.offLabel">
-    <div class="tw-track">
-      <span class="tw-text on" *ngIf="tw.onLabel">{{ tw.onLabel }}</span>
-      <span class="tw-text off" *ngIf="tw.offLabel">{{ tw.offLabel }}</span>
-      <span class="tw-thumb"></span>
-    </div>
-  </div>
+  <span class="ui-togg__track">
+    <span class="ui-togg__thumb"></span>
+  </span>
+</div>
 
-  <label class="tw-label" *ngIf="tw.label && tw.reverse">{{ tw.label }}</label>
-</div> -->
 
 

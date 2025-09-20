@@ -147,7 +147,7 @@ isCheckedAndClass(item: { value: any }) {
       '--sbb-font': font,
       '--sbb-pad-block': padBlock,
       '--sbb-pad-inline': padInline,
-      '--sbb-gap': size === 'sm' ? '.375rem' : size === 'lg' ? '.625rem' : '.5rem',
+      '--sbb-gap': size === 'sm' ? '3px' : size === 'lg' ? '10px' : '6px',
       '--sbb-radius': '8px',
       '--sbb-border': 'var(--border-color)',
       '--sbb-active': `var(--sev-${this.sb.severity ?? 'primary'})`,

@@ -1,36 +1,28 @@
-<form class="content-details" [formGroup]="form">
-    <div class="content-details">
-        <div class="content-section-start">
-            <div class="section-start-left">
-                <div class="section-name">
-                    <div class="section-name-left">
+<div class="content-details">
+    <form class="details-form" [formGroup]="form">
+        <div class="details-start">
+            <div class="details-start-left">
+                <div class="start-left-name">
+                    <div class="start-left-name-left">
                         <h4>Detalles del curso</h4>
                     </div>
-                    <div class="section-name-right">
+                    <div class="start-left-name-right">
 
-                        <ui-button  neumorphism="raised" [btnStyle]="{borderRadius: '30px'}" label="Restablecer"
-                            severity="secondary" [icon]="{svgPath: 'svg/clear-all.svg'}">
+                        <ui-button [disabled]="form.pristine" (click)="resetForm()" neumorphism="raised"
+                            [btnStyle]="{borderRadius: '30px'}" label="Restablecer" severity="secondary"
+                            [icon]="{svgPath: 'svg/clear-all.svg'}">
                         </ui-button>
-                        <ui-button neumorphism="raised" [btnStyle]="{borderRadius: '30px'}" label="Guardar"
-                            severity="primary" [icon]="{svgPath: 'svg/save-outline.svg'}">
+                        <ui-button [disabled]="!form.valid" neumorphism="raised" [btnStyle]="{borderRadius: '30px'}"
+                            label="Guardar" severity="primary" [icon]="{svgPath: 'svg/save-outline.svg'}">
                         </ui-button>
 
                     </div>
 
                 </div>
-                <div class="section-card">
-                    <div class="section-card-item">
+                <div class="start-left-edit">
+                    <div class="start-left-edit-item">
 
-                        <div class="section-card-content">
-                            <!-- <div class="section-card-label">
-                                <label class="card-label" for="">Título</label>
-                                <span>(obligatorio)</span>
-                            </div>
-                            <textarea formControlName="title" autosize id="title" class="card-input" rows="1"
-                                placeholder="Escribe un título claro y único"></textarea>
-                            <div class="card-counter">
-                                <span>1/100</span>
-                            </div> -->
+                        <div class="start-left-edit-input">
                             <ui-input-label formControlName="title" label="Título (obligatorio)" severity="primary"
                                 placeholder="Escribe un título claro y único" type="text" variant="outlined"
                                 [counter]="true" [min]="10" [max]="100" [autoSize]="true"
@@ -39,22 +31,8 @@
                         </div>
                     </div>
 
-                    <div class="section-card-item">
-
-                        <!-- <div class="section-card-content">
-                            <div class="section-card-label">
-                                <label class="card-label" for="">Descripción</label>
-                                <span></span>
-                            </div>
-                            <textarea autosize id="title" class="card-input card-textarea" rows="1"
-                                placeholder="Describe el curso"></textarea>
-                            <div class="card-counter">
-                                <span>1/500</span>
-                            </div>
-
-                        </div> -->
-                        <div class="section-card-content">
-
+                    <div class="start-left-edit-item">
+                        <div class="start-left-edit-input">
                             <ui-input-label formControlName="description" label="Descripción" severity="primary"
                                 placeholder="Describe el curso" type="textarea" variant="outlined" [counter]="true"
                                 [min]="0" [max]="300" [autoSize]="true"
@@ -63,133 +41,113 @@
                     </div>
 
 
-                    <div class="section-card-item">
-                        <div class="content-cb-sb">
-
-                            <div class="card-select">
-                                <label class="card-select-label" for="difficulty">Dificultad</label>
-                                <ui-select-button
-  formControlName="difficulty_id"
-  [options]="mapDifficulties()"     
-  [optionLabel]="'name'"           
-  [optionValue]="'id'"           
-  orientation="horizontal"
-  variant="outlined"
-  severity="primary"
-  size="sm"
-  [multiple]="false"
-  (selectionChange)="onSelectDifficulty($event)"  
->
-</ui-select-button>
-
-
-                            </div>
-                            <div class="card-settings">
-                                <div class="course-settings">
-                                    <div>
-                                        <h4>Configuración de Privacidad y Estado</h4>
-                                    </div>
-                                    
-                                    <!-- Toggle para Curso Privado -->
-                                    <div class="toggle-container">
-                                        <label class="toggle-label" for="private-toggle">
-                                            Curso Privado
-                                            <span class="toggle-description">(Esto genera un código de acceso al
-                                                guardar)</span>
-                                        </label>
-                                        <div class="toggle-switch">
-                                            <!-- <ui-toggle-witch  label="Notificaciones" onLabel="ON" offLabel="OFF"
-                                                variant="soft" [severity]="'primary'" [size]="'md'" [raised]="true">
-                                            </ui-toggle-witch> -->
-                                        </div>
-                                    </div>
-
-                                    <!-- Campo para mostrar código (opcional, visible solo si privado está activado) -->
-                                    <div class="access-code">
-                                        <div class="access-code-letf">
-                                            <div class="access-code-content">
-                                                <label class="access-code-label" for="">Restablecer Código de
-                                                    Acceso</label>
-                                                <div class="access-code-show">
-                                                    <span>khJJJ</span>
-
-                                                </div>
-                                            </div>
-
-
-                                            <div class="access-code-note">
-                                                <span class="toggle-description">Activa para restablecer un nuevo codigo
-                                                    cuando se
-                                                    guarda</span>
-                                            </div>
-                                        </div>
-                                        <div class="access-code-right">
-                                            <div class="toggle-switch">
-                                                <!-- <ui-toggle-witch>
-                                                </ui-toggle-witch> -->
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-
-
-
-                                    <!-- Toggle para Curso Activo -->
-                                    <div class="toggle-container">
-                                        <label class="toggle-label" for="active-toggle">
-                                            Curso Activo
-                                            <span class="toggle-description">(El curso está publicado y disponible; off
-                                                lo desactiva)</span>
-                                        </label>
-                                        <div class="toggle-switch">
-                                            <!--  <ui-toggle-witch>
-                                            </ui-toggle-witch> -->
-                                        </div>
-                                    </div>
+                    <div class="start-left-edit-item flex-column-item">
+                        <label class="item-select-label" for="difficulty">Dificultad</label>
+                        <ui-select-button formControlName="difficulty_id" [options]="mapDifficulties()"
+                            [optionLabel]="'name'" [optionValue]="'id'" orientation="horizontal" variant="outlined"
+                            severity="primary" size="sm" [multiple]="false"
+                            (selectionChange)="onSelectDifficulty($event)">
+                        </ui-select-button>
+                    </div>
+                    <div class="start-left-edit-item flex-row-item">
+                        <div class="item-card">
+                            <div class="item-card-header">
+                                <label class="item-card-header-label" for="">Codigo de acceso</label>
+                                <div class="item-card-header-icon">
+                                    <ui-popover neumorphism="raised" [povStyle]="{width: 'auto'}" position="bottom-left"
+                                        [closeOnOutside]="true" [closeOnInside]="true" [(visible)]="povOpen"
+                                        [type]="'plain'" [variant]="'filled'" [severity]="'primary'">
+                                        <ui-button label="Copiar vinculo de acceso" style="width: 100%;" size="md"
+                                            variant="flat" neumorphism="flat"
+                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            severity="contrast">
+                                        </ui-button>
+                                        <ui-button label="Copiar codigo de acceso" style="width: 100%;" size="md"
+                                            variant="flat" neumorphism="flat"
+                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            severity="contrast">
+                                        </ui-button>
+                                        <ui-button label="Restablecer codigo de acceso" style="width: 100%;" size="md"
+                                            variant="flat" neumorphism="flat"
+                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            severity="contrast">
+                                        </ui-button>
+                                        <ui-button label="Desactivar" style="width: 100%;" size="md" variant="flat"
+                                            neumorphism="flat"
+                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            severity="contrast">
+                                        </ui-button>
+                                    </ui-popover>
+                                    <ui-button size="md" (click)="povOpen = !povOpen" variant="flat"
+                                        neumorphism="raised"
+                                        [btnStyle]="{borderRadius: '19px', width: '35px', height: '35px'}"
+                                        severity="primary" [icon]="{svgPath: 'svg/menu-dots.svg'}">
+                                    </ui-button>
 
                                 </div>
 
 
                             </div>
 
+                            <div class="item-card-body">
+                                <span *ngIf="!form.get('code')?.value">Sin codigo de acceso</span>
+                                <input readonly class="item-card-body-input" *ngIf="form.get('code')?.value" type="text"
+                                    formControlName="code">
+                                <div class="item-card-expand">
+                                    <ui-button *ngIf="form.get('code')?.value" variant="flat"
+                                        [btnStyle]="{borderRadius: '20px', width: '40px', height: '40px'}"
+                                        severity="primary" [icon]="{svgPath: 'svg/expand.svg'}">
+
+
+                                    </ui-button>
+
+                                </div>
+
+                            </div>
                         </div>
-
-
-
+                        
                     </div>
-
+                    <div class="start-left-edit-item">
+                            <div class="item-checkbox">
+                                <ui-toggle-witch formControlName="enabled" [severity]="'primary'" [size]="'sm'"
+                                [type]="'checkbox'">
+                            </ui-toggle-witch>
+                            
+                            <span *ngIf="form.get('enabled')?.value" for="">Curso activo</span>
+                            <span *ngIf="!form.get('enabled')?.value" for="">Curso inactivo</span>
+                            </div>
+                            <div class="item-checkbox-description">
+                                <span *ngIf="form.get('enabled')?.value">El curso estara disponible para los estudiantes</span>
+                                <span *ngIf="!form.get('enabled')?.value">El curso no estara disponible para los estudiantes</span>
+                            </div>
+                            
+                    </div>
 
                 </div>
             </div>
-            <div class="section-start-right">
-                <div>
-                    <div class="section-name section-name-start-right">
-                        <h4>Miniatura</h4>
-                    </div>
-                    <div>
-                        <ui-file-upload formControlName="miniatureUrl" [fudStyle]="{width: '350px'}" label="Suelta una imagen o selecciona"
-                            [types]="['image' , 'video' , 'document']" [formats]="['jpg','png','gif','mp4','pdf']" variant="outlined" severity="primary"
+            <div class="details-start-right">
+                <div class="start-right-name">
+                    <h4>Miniatura</h4>
+                </div>
+                <div class="start-right-edit">
+                    <div class="start-right-edit-item">
+                        <ui-file-upload formControlName="miniatureUrl" [fudStyle]="{width: '350px'}"
+                            label="Suelta una imagen o selecciona" [types]="['image' , 'video' , 'document']"
+                            [formats]="['jpg','png','gif','mp4','pdf']" variant="outlined" severity="primary"
                             size="sm"></ui-file-upload>
                     </div>
 
-
+                    <div class="start-right-edit-item">
+                        
+                    </div>
 
                 </div>
+                
 
             </div>
         </div>
-        <div class="content-section-end">
+        <div class="details-end">
 
         </div>
-        <div (click)="openModalMiniature()" *ngIf="modalOpenMiniature" class="modal-miniature-overlay">
-
-        </div>
-        <div *ngIf="modalOpenMiniature" class="modal-miniature">
-
-            <img class="miniature-preview" src="img\cover\no-thumbnail.jpg" alt="">
-
-        </div>
-
-    </div>
-</form>
+    </form>
+</div>

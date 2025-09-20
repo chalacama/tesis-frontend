@@ -29,7 +29,8 @@
 }
 .sbb-span{
   border-radius: 1px !important;
-  border-width: 1px !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
 }
 .sbb-span-right{
   border-top-left-radius: 5px !important;
@@ -40,8 +41,10 @@
   border-bottom-right-radius: 5px !important;
 }
 .checked{
-  background: color-mix(in oklab, var(--btn-bg) 30%, transparent) !important;
+  background: color-mix(in oklab, var(--btn-bg) 10%, transparent) !important;
   border-width: 1.5px !important;
+  border: 1.5px solid var(--btn-bg) !important;
+  color: var(--btn-bg) !important;
 }
 /* Estados */
 .app-btn:hover { background: var(--btn-bg-hover); }

@@ -4,7 +4,7 @@ export type UiSize =
   | 'sm'  //  Small: compacto, ideal para espacios reducidos o móvil
   | 'md'  //  Medium: tamaño estándar por defecto
   | 'lg'; //  Large: más grande, para botones destacados o pantallas amplias
-export type UiPosition    = 'top' | 'right' |'buttom' | 'left' | 'center' | UiCorner;
+export type UiPosition    = 'top' | 'right' |'bottom' | 'left' | 'center' | UiCorner;
 export type UiOrientation   = 'horizontal' | 'vertical';
 export type UiFileType = 'document' | 'video' | 'image';
 export type UiFileFormat = 'pdf' | 'mp4' | 'jpg' | 'png' | 'gif';
@@ -73,6 +73,7 @@ export interface UiStyleProps {
   margin?: string;
   borderRadius?: string;
   border?: string;
+  borderWidth?: string;
   boxShadow?: string;
   opacity?: number | string;
   cursor?: string;
@@ -89,8 +90,11 @@ export interface UiStyleProps {
 
   // Animation
   transition?: string;
-  
-  
+
+  display?: string;
+  justifyContent?: string;
+  alignItems?: string;
+  flexDirection?: string;
 
 }
 

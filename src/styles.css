@@ -27,7 +27,8 @@
 
   /* Elements */
   /* --modal-bg: light-dark(var(--surface-200), var(--surface-800)); */
-  --dialog-bg: light-dark(var(--surface-200), var(--surface-800));
+  --dialog-bg: light-dark(var(--surface-100), var(--surface-900));
+  --popover-bg: light-dark(var(--surface-200), var(--surface-800));
   --sidebar-bg: light-dark(var(--surface-100), var(--surface-900));
   --card-bg: light-dark(var(--surface-50), var(--surface-900));
 
@@ -37,7 +38,7 @@
   --overlay-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
   --overlay-color-contrast: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.2));
   --shadow-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
-  --shadow-color-contrast: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+  --shadow-color-contrast: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.11));
   /* Reactive */
   --border-color: light-dark(var(--surface-200), var(--surface-700));
   --border-color-contrast: light-dark(var(--surface-700), var(--surface-200));

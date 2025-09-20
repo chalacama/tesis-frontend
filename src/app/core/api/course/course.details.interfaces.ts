@@ -33,14 +33,15 @@ export interface CourseDetail {
     private:       boolean;
     code:          null;
     enabled:       boolean;
-    difficulty_id: number;
+    difficulty:    Difficulty;
     created_at:    Date;
     updated_at:    Date;
     deleted_at:    null;
+
     miniature:     Miniature;
-    careers:       Career[];
     categories:    Category[];
-    difficulty:    Difficulty;
+    careers:       Career[];
+    
 }
 
 export interface Career {

@@ -1,0 +1,20 @@
+<!-- popover.component.html -->
+<div
+  *ngIf="pov.visible"
+  #panel
+  [id]="pov.id || null"
+  [class]="hostClasses().join(' ')"
+  [ngStyle]="styleMap()"
+  [attr.role]="pov.role || 'dialog'"
+  [attr.aria-label]="pov.ariaLabel || null"
+  [attr.tabindex]="pov.disabled ? -1 : (pov.tabIndex ?? -1)"
+  [attr.aria-pressed]="pov.ariaPressed ?? null"
+  [attr.title]="pov.title || null"
+  (click)="onInsideClick($event)"
+>
+  <div class="pov-arrow" *ngIf="pov.type === 'pointer'"></div>
+  <div class="pov-content">
+    <ng-content></ng-content>
+  </div>
+</div>
+

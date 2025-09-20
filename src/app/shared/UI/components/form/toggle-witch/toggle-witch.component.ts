@@ -1,171 +1,155 @@
-// toggle-witch.component.ts
-// import {
-//   Component, ChangeDetectionStrategy, forwardRef, Output, EventEmitter, inject, HostListener
-// } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+// components/toggle-witch/toggle-witch.component.ts
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  HostListener,
+  OnChanges,
+  forwardRef,
+  computed,
+  inject
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-// // Tus directivas base
-// import { UiPresetsDirective } from '../../../directive/ui-presets.directive';
+import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
+import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
+import { UiToogleWitchDirective } from '../../../directive/ui-toogle-witch.directive';
 
+@Component({
+  selector: 'ui-toggle-witch',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './toggle-witch.component.html',
+  styleUrls: ['./toggle-witch.component.css'],
+  hostDirectives: [
+    {
+      directive: UiToogleWitchDirective,
+      inputs: [
+        // Re-export de TODOS los inputs
+        'severity',
+        'size',
+        'disabled',
+        'neumorphism',
+        'variant',
+        'invalid',
+        'ariaLabel',
+        'role',
+        'tabIndex',
+        'ariaPressed',
+        'title',
+        'type',
+        'tggWClass',
+        'tggWStyle'
+      ]
+    }
+  ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ToggleWitchComponent),
+      multi: true
+    }
+  ]
+})
+export class ToggleWitchComponent implements ControlValueAccessor, OnChanges {
+  // Inyectamos la directiva para leer sus valores actuales
+  constructor(public readonly tgg: UiToogleWitchDirective) {}
 
-// import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
-// import { UiToogleWitchDirective } from '../../../directive/ui-toogle-witch.directive';
+  /** ===== ControlValueAccessor ===== */
+   _checked = false;
+  private onChange: (val: boolean) => void = () => {};
+  private onTouched: () => void = () => {};
 
-// @Component({
-//   selector: 'ui-toggle-witch',
-//   standalone: true,
-//   imports: [CommonModule],
-//   templateUrl: './toggle-witch.component.html',
-//   styleUrls: ['./toggle-witch.component.css'],
-//   changeDetection: ChangeDetectionStrategy.OnPush,
-//   providers: [{
-//     provide: NG_VALUE_ACCESSOR,
-//     useExisting: forwardRef(() => ToggleWitchComponent),
-//     multi: true
-//   }],
-//   hostDirectives: [
-//     {
-//       directive: UiPresetsDirective,
-//       inputs: [
-//         'severity','size','disabled','raised',
-//         'width','height','radius','fontSize','gap',
-//         'bg','fg','hoverBg','borderColor','borderWidth','iconSize',
-//         'ariaLabel'
-//       ],
-//     },
-//     {
-//       directive: UiToogleWitchDirective,
-//       inputs: ['label','onLabel','offLabel','variant','reverse','dense','error','ariaLabel'],
-//     }
-//   ],
-//   host: {
-//     '[attr.role]': '"switch"',
-//     '[attr.aria-checked]': 'checked',
-//     '[attr.aria-label]': 'tw.ariaLabel || presets.ariaLabel || null',
-//     '[attr.tabindex]': 'presets.disabled ? -1 : 0'
-//   }
-// })
-// export class ToggleWitchComponent implements ControlValueAccessor {
-//   readonly presets = inject(UiPresetsDirective);
-//   readonly tw = inject(UiToogleWitchDirective);
+  writeValue(val: boolean): void {
+    this._checked = !!val;
+  }
+  registerOnChange(fn: (val: boolean) => void): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+  setDisabledState(isDisabled: boolean): void {
+    this.tgg.disabled = isDisabled;
+  }
 
-//   @Output() changed = new EventEmitter<boolean>();
+  /** ===== UI ===== */
+  ngOnChanges(): void {}
 
-//   checked = false;
+  toggleFromUI(): void {
+    if (this.tgg.disabled) return;
+    this._checked = !this._checked;
+    this.onChange(this._checked);
+    this.onTouched();
+  }
 
-//   // CVA
-//   private onChange: (v: boolean) => void = () => {};
-//   private onTouched: () => void = () => {};
+  /** Accesibilidad con teclado (Enter/Espacio) */
+  @HostListener('keydown', ['$event'])
+  handleKeydown(ev: KeyboardEvent) {
+    if (this.tgg.disabled) return;
+    const key = ev.key.toLowerCase();
+    if (key === 'enter' || key === ' ') {
+      ev.preventDefault();
+      this.toggleFromUI();
+    }
+  }
 
-//   writeValue(v: boolean | null): void {
-//     this.checked = !!v;
-//   }
-//   registerOnChange(fn: any): void { this.onChange = fn; }
-//   registerOnTouched(fn: any): void { this.onTouched = fn; }
-//   setDisabledState(isDisabled: boolean): void { this.presets.disabled = isDisabled; }
+  /** Clases del host */
+  hostClasses(): string[] {
+    const v = `v-${this.tgg.variant ?? 'filled'}`;
+    const s = `s-${this.tgg.size ?? 'md'}`;
+    const neu = `neu-${this.tgg.neumorphism ?? 'flat'}`;
+    const dis = this.tgg.disabled ? 'is-disabled' : '';
+    const inv = this.tgg.invalid ? 'is-invalid' : '';
+    const ty = `t-${this.tgg.type ?? 'switch'}`;
+    const extra = this.tgg.tggWClass ?? '';
+    const isOn = this._checked ? 'is-checked' : '';
+    return ['ui-togg', v, s, neu, ty, dis, inv, isOn, extra].filter(Boolean);
+  }
 
-//   // Interacción
-//   toggle(): void {
-//     if (this.presets.disabled) return;
-//     this.checked = !this.checked;
-//     this.onChange(this.checked);
-//     this.changed.emit(this.checked);
-//     this.onTouched();
-//   }
+  /** Tokens por tamaño */
+  private sizeTokens(size: UiSize | undefined) {
+    const s = size ?? 'md';
+    return {
+      trackW: s === 'sm' ? '34px' : s === 'lg' ? '56px' : '44px',
+      trackH: s === 'sm' ? '18px' : s === 'lg' ? '28px' : '22px',
+      thumb:  s === 'sm' ? '14px' : s === 'lg' ? '24px' : '18px',
+      gap:    s === 'sm' ? '6px'  : s === 'lg' ? '10px' : '8px',
+      font:   s === 'sm' ? '.85rem': s === 'lg' ? '1rem' : '.95rem',
+      pad:    s === 'sm' ? '2px'  : s === 'lg' ? '3px' : '2px'
+    };
+  }
 
-//   @HostListener('keydown', ['$event'])
-//   onKeydown(e: KeyboardEvent) {
-//     if (this.presets.disabled) return;
-//     if (e.key === ' ' || e.key === 'Enter') {
-//       e.preventDefault();
-//       this.toggle();
-//     }
-//     if (e.key === 'ArrowLeft') { this.set(false); }
-//     if (e.key === 'ArrowRight') { this.set(true); }
-//   }
+  /** CSS vars + overrides */
+  styleMap(): Record<string, string> {
+    const sev: UiSeverity = (this.tgg.severity as UiSeverity) ?? 'primary';
+    const sTok = this.sizeTokens(this.tgg.size as UiSize);
 
-//   set(v: boolean) {
-//     if (this.presets.disabled) return;
-//     if (this.checked !== v) {
-//       this.checked = v;
-//       this.onChange(this.checked);
-//       this.changed.emit(this.checked);
-//       this.onTouched();
-//     }
-//   }
+    const sevBg = `var(--sev-${sev})`;
+    const sevBgHover = `var(--sev-${sev}-hover, ${sevBg})`;
+    const sevOff = `var(--border-color, #CBD5E1)`;
+    const fg = `var(--text-color-contrast, #fff)`;
 
-//   // ---- Estilos: variables y clases host ----
-//   private normalizeRadius(rad?: string | number): string {
-//     if (rad === undefined || rad === null) return '';
-//     return typeof rad === 'number'
-//       ? `${rad}px`
-//       : (/^\d+$/.test(rad) ? `${rad}px` : rad);
-//   }
+    const base: Record<string, string> = {
+      '--togg-track-w': sTok.trackW,
+      '--togg-track-h': sTok.trackH,
+      '--togg-thumb': sTok.thumb,
+      '--togg-pad': sTok.pad,
+      '--togg-font': sTok.font,
+      '--togg-gap': sTok.gap,
+      '--togg-on': sevBg,
+      '--togg-on-hover': sevBgHover,
+      '--togg-off': sevOff,
+      '--togg-fg': fg
+    };
 
-//   groupVars(): Record<string,string> {
-//     const p = this.presets;
-//     const sev = p.severity as UiSeverity;
+    const overrides = styleToNgStyle(this.tgg.tggWStyle);
+    return mergeStyles(base, overrides);
+  }
 
-//     const font =
-//       p.fontSize ?? (p.size === 'sm' ? '.85rem' : p.size === 'lg' ? '1rem' : '.95rem');
+  /** ARIA helpers */
+  ariaChecked(): 'true' | 'false' {
+    return this._checked ? 'true' : 'false';
+  }
+}
 
-//     const height =
-//       p.height ?? (p.size === 'sm' ? '22px' : p.size === 'lg' ? '30px' : '26px');
-
-//     const width =
-//       p.width ?? (p.size === 'sm' ? '40px' : p.size === 'lg' ? '56px' : '48px');
-
-//     const thumb =
-//       p.iconSize ?? (p.size === 'sm' ? '14px' : p.size === 'lg' ? '18px' : '16px');
-
-//     const gap =
-//       p.gap ?? (this.tw.dense ? '6px' : (p.size === 'sm' ? '8px' : p.size === 'lg' ? '10px' : '8px'));
-
-//     const normalized = this.normalizeRadius(p.radius);
-//     const computedRadius = normalized || '999px';
-
-//     const sevColor = `var(--sev-${sev})`;
-//     const sevHover = `var(--sev-${sev}-hover)`;
-
-//     const activeBg = p.bg ?? 'var(--switcher-active-bg)';
-//     const baseBg   = p.bg ?? 'var(--background-active)';
-
-//     return {
-//       '--tw-font': font,
-//       '--tw-width': width,
-//       '--tw-height': height,
-//       '--tw-thumb': thumb,
-//       '--tw-gap': gap,
-
-//       '--tw-radius': computedRadius,
-//       '--tw-border': p.borderColor ?? 'var(--switcher-border)',
-
-//       '--tw-text': p.fg ?? 'var(--text-color)',
-//       '--tw-text-secondary': 'var(--text-color-secondary)',
-
-//       '--tw-active': activeBg ?? sevColor,
-//       '--tw-hover': p.hoverBg ?? 'var(--switcher-hover)',
-//       '--tw-bg': baseBg,
-
-//       '--tw-variant-color': sevColor,
-//       '--tw-variant-hover': sevHover
-//     };
-//   }
-
-//   hostClasses(): string[] {
-//     const p = this.presets;
-//     const t = this.tw;
-
-//     return [
-//       `s-${p.size as UiSize}`,
-//       `v-${t.variant}`,
-//       this.checked ? 'is-checked' : 'is-unchecked',
-//       p.disabled ? 'is-disabled' : '',
-//       t.error ? 'has-error' : '',
-//       t.reverse ? 'is-reverse' : 'is-normal',
-//       t.dense ? 'is-dense' : ''
-//     ];
-//   }
-// }
 

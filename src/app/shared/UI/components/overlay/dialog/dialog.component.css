@@ -1,5 +1,7 @@
 /* ui/components/dialog/dialog.component.css */
-
+:host {
+  display: contents;
+}
 /* Accesibilidad */
 .sr-only {
   position: absolute !important;
