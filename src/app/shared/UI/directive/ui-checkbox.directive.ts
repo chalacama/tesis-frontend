@@ -1,14 +1,37 @@
-// import { Directive, Input } from '@angular/core';
+import { Directive, Input } from '@angular/core';
+import { UiCheckboxProps } from '../interfaces/ui-checkbox.interface';
 
-// @Directive({
-//   selector: '[uiCheckbox]',
-//   standalone: true,
-// })
-// export class UiCheckboxDirective {
-//   /** Texto del label al lado del checkbox */
-//   @Input() label: string | null = null;
 
-//   /** Fondo cuando está marcado (override opcional) */
-//   @Input() bgChecked?: string;
-// }
+export type CheckboxType = 'checkbox';
+
+/** Directiva: solo inputs para el componente */
+@Directive({
+  selector: '[uiCheckbox]',
+  standalone: true,
+})
+export class UiCheckboxDirective {
+  // === UiProps / UiFormProps ===
+  @Input() severity?: UiCheckboxProps['severity'] = 'primary';
+  @Input() size?: UiCheckboxProps['size'] = 'sm';
+  @Input() disabled?: UiCheckboxProps['disabled'] = false;
+  @Input() neumorphism?: UiCheckboxProps['neumorphism'] = 'flat';
+  @Input() variant?: UiCheckboxProps['variant'] = 'flat';
+  @Input() invalid?: UiCheckboxProps['invalid'] = false;
+
+  // === UiA11Props (sin onKeyDown) ===
+  @Input() ariaLabel?: UiCheckboxProps['ariaLabel'];
+  @Input() role?: UiCheckboxProps['role'] = 'checkbox';
+  @Input() tabIndex?: UiCheckboxProps['tabIndex'] = 0;
+  @Input() ariaPressed?: UiCheckboxProps['ariaPressed'];
+  @Input() title?: UiCheckboxProps['title'];
+
+  // === UiCheckboxProps ===
+  @Input() id?: UiCheckboxProps['id'];
+  @Input() checkClass?: UiCheckboxProps['checkClass'];
+  @Input() checkStyle?: UiCheckboxProps['checkStyle'];
+  @Input() type?: UiCheckboxProps['type'] = 'column';
+  @Input() checked?: UiCheckboxProps['checked'] = false;
+  @Input() indeterminate?: UiCheckboxProps['indeterminate'] = false;
+}
+
 

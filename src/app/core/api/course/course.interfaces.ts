@@ -19,7 +19,7 @@ export interface Course {
     saved_courses_count:  number;
     registrations_count:  number;
     total_stars:          number;
-    is_certified:         boolean;
+    /* is_certified:         boolean; */
     difficulty:           Difficulty;
     miniature:            Miniature;
     categorias:           Difficulty[];

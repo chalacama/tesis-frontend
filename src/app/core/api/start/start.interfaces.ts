@@ -13,7 +13,7 @@ export interface Course {
   title:                      string;
   description:                string;
   created_at:                 string;
-  is_certified:               boolean | number;
+  // is_certified:               boolean | number;
   thumbnail_url:              null | string;
   tutor:                      Tutor;
   category:                   Category;

@@ -1,26 +1,4 @@
 
-// export interface CourseDetailResponse {
-//   message: string;
-//   course:  CourseDetail;
-// }
-
-// export interface CourseDetail {
-//   id:            number;
-//   title:         string;
-//   description:   string;
-//   private:       boolean;
-//   code:          null;
-//   enabled:       boolean;
-//   difficulty_id: number;
-//   created_at:    Date;
-//   updated_at:    Date;
-//   deleted_at:    Date;
-//   difficulty:    Difficulty;
-// }
-// export interface Difficulty {
-//     id:   number;
-//     name: string;
-// }
 export interface CourseDetailResponse {
     message: string;
     course:  CourseDetail;

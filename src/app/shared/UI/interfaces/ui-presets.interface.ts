@@ -95,6 +95,6 @@ export interface UiStyleProps {
   justifyContent?: string;
   alignItems?: string;
   flexDirection?: string;
-
+  
 }
 

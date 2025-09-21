@@ -54,7 +54,7 @@
                <div *ngFor="let course of courses()" class="table_content_body content-padding" [ngClass]="{ 'highlighted-row': highlightedCourseId() === course.id }">
                 <div class="body_cell-checkbox cell-display">
                     <td>
-                        <input [class.checked-archived] = "course.deleted_at" type="checkbox" type="checkbox" 
+                        <input [class.checked-archived] = "course.deleted_at" type="checkbox" 
                 [checked]="isCourseSelected(course.id)"
                 (change)="toggleCourseSelection(course.id)">
                     </td>

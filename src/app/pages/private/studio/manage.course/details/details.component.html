@@ -54,7 +54,7 @@
                             <div class="item-card-header">
                                 <label class="item-card-header-label" for="">Codigo de acceso</label>
                                 <div class="item-card-header-icon">
-                                    <ui-popover neumorphism="raised" [povStyle]="{width: 'auto'}" position="bottom-left"
+                                    <ui-popover  neumorphism="raised" [povStyle]="{width: 'auto'}" position="bottom-left"
                                         [closeOnOutside]="true" [closeOnInside]="true" [(visible)]="povOpen"
                                         [type]="'plain'" [variant]="'filled'" [severity]="'primary'">
                                         <ui-button label="Copiar vinculo de acceso" style="width: 100%;" size="md"
@@ -78,9 +78,9 @@
                                             severity="contrast">
                                         </ui-button>
                                     </ui-popover>
-                                    <ui-button size="md" (click)="povOpen = !povOpen" variant="flat"
+                                    <ui-button  size="md" (click)="povOpen = !povOpen" variant="flat"
                                         neumorphism="raised"
-                                        [btnStyle]="{borderRadius: '19px', width: '35px', height: '35px'}"
+                                        [btnStyle]="{borderRadius: '19px', width: '35px', height: '35px' }"
                                         severity="primary" [icon]="{svgPath: 'svg/menu-dots.svg'}">
                                     </ui-button>
 
@@ -110,7 +110,7 @@
                     <div class="start-left-edit-item">
                             <div class="item-checkbox">
                                 <ui-toggle-witch formControlName="enabled" [severity]="'primary'" [size]="'sm'"
-                                [type]="'checkbox'">
+                                [type]="'switch'">
                             </ui-toggle-witch>
                             
                             <span *ngIf="form.get('enabled')?.value" for="">Curso activo</span>
@@ -132,13 +132,13 @@
                 <div class="start-right-edit">
                     <div class="start-right-edit-item">
                         <ui-file-upload formControlName="miniatureUrl" [fudStyle]="{width: '350px'}"
-                            label="Suelta una imagen o selecciona" [types]="['image' , 'video' , 'document']"
-                            [formats]="['jpg','png','gif','mp4','pdf']" variant="outlined" severity="primary"
+                            label="Suelta una imagen o selecciona" [types]="['image']"
+                            [formats]="['jpg','png','gif']" variant="outlined" severity="primary"
                             size="sm"></ui-file-upload>
                     </div>
 
                     <div class="start-right-edit-item">
-                        
+
                     </div>
 
                 </div>

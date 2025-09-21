@@ -105,12 +105,12 @@
 .start-left-edit-input{
     width: calc(100% - 40px);
     flex: 1;
-    /* position: relative; */
+    
     height: auto;
 
 }
 .item-card{
-    width: 250px;
+    width: 280px;
     /* height: 150px; */
     display: flex;
     flex-direction: column;

@@ -1,108 +1,147 @@
-// import { CommonModule } from '@angular/common';
-// import { Component, forwardRef, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
-// import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import {
+  Component, forwardRef, Input, Output, EventEmitter, OnChanges, inject
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
-// import { UiPresetsDirective } from '../../../directive/ui-presets.directive';
-// import { UiCheckboxDirective } from '../../../directive/ui-checkbox.directive'; // <- el de arriba
-// import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
+import {  UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
+import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
+import { UiCheckboxDirective } from '../../../directive/ui-checkbox.directive';
 
-// @Component({
-//   selector: 'ui-checkbox',
-//   standalone: true,
-//   imports: [CommonModule],
-//   templateUrl: './checkbox.component.html',
-//   styleUrls: ['./checkbox.component.css'],
-//   changeDetection: ChangeDetectionStrategy.OnPush,
-//   providers: [{
-//     provide: NG_VALUE_ACCESSOR,
-//     useExisting: forwardRef(() => CheckboxComponent),
-//     multi: true
-//   }],
-//   hostDirectives: [
-//     {
-//       directive: UiPresetsDirective,
-//       inputs: [
-//         'severity','size','disabled','raised',
-//         'width','height','radius','fontSize','gap',
-//         'bg','fg','hoverBg','borderColor','borderWidth','iconSize',
-//         'ariaLabel'
-//       ],
-//     },
-//     {
-//       directive: UiCheckboxDirective,
-//       inputs: ['label','bgChecked'],
-//     }
-//   ],
-// })
-// export class CheckboxComponent implements ControlValueAccessor {
-//   /** Inyección de presets y props específicas del checkbox */
-//   readonly presets = inject(UiPresetsDirective);
-//   readonly cb = inject(UiCheckboxDirective);
+@Component({
+  selector: 'ui-checkbox',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './checkbox.component.html',
+  styleUrls: ['./checkbox.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CheckboxComponent),
+      multi: true
+    }
+  ],
+  hostDirectives: [{
+    directive: UiCheckboxDirective,
+    inputs: [
+      // UiForm/UiProps
+      'severity','size','disabled','neumorphism','variant','invalid',
+      // A11y
+      'ariaLabel','role','tabIndex','ariaPressed','title',
+      // Checkbox specifics
+      'checkClass','checkStyle','type','checked','indeterminate','id'
+    ]
+  }]
+})
+export class CheckboxComponent implements ControlValueAccessor, OnChanges {
+  constructor(public readonly ui: UiCheckboxDirective) {}
 
-//   private _value = signal<boolean>(false);
-//   value = computed(() => this._value());
+  /** Output opcional para casos fuera de Reactive Forms */
+  @Output() changed = new EventEmitter<boolean>();
 
-//   // CVA
-//   writeValue(v: boolean): void { this._value.set(!!v); }
-//   registerOnChange(fn: (v: boolean) => void): void { this.onChange = fn; }
-//   registerOnTouched(fn: () => void): void { this.onTouched = fn; }
-//   setDisabledState(isDisabled: boolean): void { this.presets.disabled = isDisabled; }
+  /** ControlValueAccessor */
+  private onChange: (val: boolean) => void = () => {};
+  private onTouched: () => void = () => {};
 
-//   private onChange: (v: boolean) => void = () => {};
-//   private onTouched: () => void = () => {};
+  writeValue(val: boolean | null): void {
+    const v = !!val;
+    this.ui.checked = v;
+    // si viene null y hay indeterminate en tablas, respetamos indeterminate
+    if (val === null) this.ui.indeterminate = true;
+    else this.ui.indeterminate = false;
+  }
+  registerOnChange(fn: (val: boolean) => void): void { this.onChange = fn; }
+  registerOnTouched(fn: () => void): void { this.onTouched = fn; }
+  setDisabledState(isDisabled: boolean): void { this.ui.disabled = isDisabled; }
 
-//   toggleFromInput(checked: boolean) {
-//     if (this.presets.disabled) return;
-//     this._value.set(checked);
-//     this.onChange(checked);
-//     this.onTouched();
-//   }
+  /** Manejo click/teclado */
+  toggleFromUser(ev?: Event) {
+    if (this.ui.disabled) return;
+    // si estaba indeterminate, lo limpiamos y pasamos a true
+    if (this.ui.indeterminate) {
+      this.ui.indeterminate = false;
+      this.ui.checked = true;
+    } else {
+      this.ui.checked = !this.ui.checked;
+    }
+    this.onChange(this.ui.checked);
+    this.changed.emit(this.ui.checked);
+    this.onTouched();
+    ev?.preventDefault();
+  }
 
-//   /** Normaliza '8' -> '8px' */
-//   private normalizeRadius(rad?: string): string {
-//     if (!rad) return '';
-//     return /^\d+$/.test(rad) ? `${rad}px` : rad;
-//   }
+  onKeydown(ev: KeyboardEvent) {
+    if (this.ui.disabled) return;
+    const k = ev.key.toLowerCase();
+    if (k === ' ' || k === 'spacebar' || k === 'enter') {
+      this.toggleFromUser(ev);
+      ev.preventDefault();
+    }
+  }
 
-//   /** Mapear presets -> CSS vars del checkbox */
-//   groupVars(): Record<string,string> {
-//     const p = this.presets;
+  ngOnChanges(): void {
+    // Si el host le pasa [checked]/[indeterminate] directos (no Reactive Forms)
+    // no hacemos nada especial: el template refleja ui.checked/ui.indeterminate
+  }
 
-//     // tokens de color según severidad
-//     const sev = p.severity as UiSeverity;
-//     const sevColor = `var(--sev-${sev})`;
-//     const sevHover = `var(--sev-${sev}-hover)`;
+  /** === Style tokens (size + severity) === */
+  private sizeTokens(size: UiSize | undefined) {
+    const s = (size ?? 'md') as UiSize;
+    return {
+      box:   s === 'sm' ? '16px' : s === 'lg' ? '22px' : '18px',
+      font:  s === 'sm' ? '.86rem' : s === 'lg' ? '1rem' : '.93rem',
+      gap:   s === 'sm' ? '8px'   : s === 'lg' ? '10px' : '8px',
+      radius:s === 'sm' ? '4px'   : s === 'lg' ? '6px'  : '5px',
+      mark:  s === 'sm' ? '10px'  : s === 'lg' ? '14px' : '12px',
+      shadow: s === 'sm' ? '1px 2px 6px' : s === 'lg' ? '4px 6px 10px' : '2px 4px 8px',
+      shadowContrast: s === 'sm' ? '0px -1px 3px' : s === 'lg' ? '3px -4px 5px' : '2px -2px 4px',
+    };
+  }
 
-//     // tamaño del cuadro (usa iconSize si lo pasas; si no, por tamaño)
-//     const size = p.iconSize
-//       ?? (p.size === 'sm' ? '14px' : p.size === 'lg' ? '16px' : '25px');
+  cssVars(): Record<string, string> {
+    const sev = (this.ui.severity as UiSeverity) ?? 'primary';
+    const size = this.sizeTokens(this.ui.size as UiSize);
 
-//     const borderWidth = p.borderWidth ?? '1.5px';
-//     const radius = this.normalizeRadius(p.radius) || '5px';
-//     const gap = p.gap ?? '10px';
+    const sevBg = `var(--sev-${sev})`;
+    const sevHover = `var(--sev-${sev}-hover, ${sevBg})`;
+    const text = `var(--text-color)`;
+    const border = `var(--border-color)`;
 
-//     // fondo al estar marcado (override opcional via UiCheckboxDirective)
-//     const bgChecked = this.cb.bgChecked ?? `color-mix(in oklab, ${sevColor} 18%, transparent)`;
+    return mergeStyles({
+      '--chk-size': size.box,
+      '--chk-radius': size.radius,
+      '--chk-gap': size.gap,
+      '--chk-font': size.font,
+      '--chk-mark-size': size.mark,
 
-//     return {
-//       '--cb-size': size,
-//       '--cb-border-width': borderWidth,
-//       '--cb-radius': radius,
-//       '--cb-gap': gap,
+      '--chk-fg': text,
+      '--chk-border': border,
+      '--chk-active': sevBg,
+      '--chk-active-hover': sevHover,
 
-//       '--cb-color': sevColor,
-//       '--cb-color-hover': sevHover,
-//       '--cb-border-color': p.borderColor ?? sevColor,
+      '--chk-shadow': size.shadow,
+      '--chk-shadow-contrast': size.shadowContrast,
+    }, styleToNgStyle(this.ui.checkStyle));
+  }
 
-//       '--cb-bg-checked': bgChecked,
-//       '--cb-text': p.fg ?? 'var(--text-color)',
-//     };
-//   }
+  hostClasses(): string[] {
+    const neu = `neu-${this.ui.neumorphism ?? 'flat'}`;
+    const v   = `v-${this.ui.variant ?? 'flat'}`;
+    const s   = `s-${this.ui.size ?? 'md'}`;
+    const t   = `t-${this.ui.type ?? 'column'}`; // row|column
+    const sev = `sev-${this.ui.severity ?? 'primary'}`;
+    const bad = this.ui.invalid ? 'is-invalid' : '';
+    const dis = this.ui.disabled ? 'is-disabled' : '';
+    const ind = this.ui.indeterminate ? 'is-indeterminate' : '';
+    const extra = this.ui.checkClass ?? '';
+    return ['ui-checkbox', neu, v, s, t, sev, bad, dis, ind, extra].filter(Boolean);
+  }
 
-//   hostClasses(): string[] {
-//     const p = this.presets;
-//     return [
-//       p.disabled ? 'is-disabled' : ''
-//     ];
-//   }
-// }
+  /** A11y bindings */
+  ariaChecked(): 'true'|'false'|'mixed' {
+    if (this.ui.indeterminate) return 'mixed';
+    return this.ui.checked ? 'true' : 'false';
+  }
+}
+
+

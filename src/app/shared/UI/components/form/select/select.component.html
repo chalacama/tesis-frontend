@@ -1,1 +1,172 @@
-<p>select works!</p>
+
+<div
+  class="sel-trigger"
+  [class.open]="povOpen"
+  [ngClass]="hostClasses()"
+  [ngStyle]="styleMap()"
+  (click)="togglePopover()"
+  [attr.role]="ui.role || 'combobox'"
+  [attr.aria-expanded]="povOpen"
+  [attr.aria-label]="ui.ariaLabel || ui.placeholder"
+  [attr.tabindex]="ui.tabIndex"
+>
+  <!-- Placeholder modes -->
+  <label
+    class="sel-placeholder"
+    [class.float]="ui.type==='float' && (displayText || povOpen)"
+    [class.ifta]="ui.type==='ifta'"
+    [class.hidden]="ui.type==='disappear' && !!displayText"
+  >
+    {{ ui.placeholder }}
+  </label>
+
+  <!-- Contenido seleccionado -->
+  <div class="sel-value">
+    <ng-container *ngIf="!isMultiple; else multiTpl">
+      <span class="value-text" [class.empty]="!displayText">{{ displayText || '' }}</span>
+    </ng-container>
+
+    <ng-template #multiTpl>
+      <div class="chips" *ngIf="(selectedArray?.length || 0) > 0; else emptyTpl">
+        <!-- hasta 3 chips inline -->
+        <ng-container *ngFor="let v of selectedArray | slice:0:3">
+          <span class="chip" (click)="$event.stopPropagation()">
+            <span class="chip-text">
+              {{ getChipLabel(v) }}
+            </span>
+            <!-- X para remover -->
+            <ui-icon
+              [size]="ui.size || 'sm'"
+              [severity]="ui.severity || 'primary'"
+              [svgPath]="ui.icon?.svgPath || 'assets/svg/x.svg'"
+              [iconStyle]="ui.icon?.iconStyle"
+              (click)="removeChip(v, $event)"
+            ></ui-icon>
+          </span>
+        </ng-container>
+
+        <!-- contador +N si supera 3 -->
+        <span class="chip counter" *ngIf="showCounterBadge">{{ counterBadge }}</span>
+      </div>
+      <ng-template #emptyTpl>
+        <span class="value-text empty"></span>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- Botón clear -->
+  <button
+    class="clear-btn"
+    *ngIf="ui.showClear && ((isMultiple && (selectedArray?.length||0)>0) || (!isMultiple && displayText))"
+    (click)="clearAll($event)"
+    [disabled]="ui.disabled"
+    type="button"
+    aria-label="Limpiar selección"
+  >
+    <ui-icon
+      [size]="ui.size || 'sm'"
+      [severity]="ui.severity || 'primary'"
+      [svgPath]="ui.icon?.svgPath || 'assets/svg/x.svg'"
+      [iconStyle]="ui.icon?.iconStyle"
+    ></ui-icon>
+  </button>
+
+  <!-- Icono flecha -->
+  <ui-icon
+    class="caret"
+    [size]="ui.size || 'sm'"
+    [severity]="ui.severity || 'primary'"
+    [svgPath]="ui.icon?.svgPath || 'assets/svg/chevron-down.svg'"
+    [iconStyle]="ui.icon?.iconStyle"
+  ></ui-icon>
+</div>
+
+<!-- POPOVER -->
+<ui-popover
+  
+  neumorphism="raised"
+  [povStyle]="{ width: 'auto', width: '260px' }"
+  position="bottom-left"
+  [closeOnOutside]="true"
+  [closeOnInside]="false"
+  [(visible)]="povOpen"
+  [type]="'plain'"
+  [variant]="'filled'"
+  [severity]="'primary'"
+>
+  <div class="pov-content" (click)="$event.stopPropagation()">
+    <!-- Filtro -->
+    <div class="pov-search" *ngIf="ui.filter">
+      <input
+        class="search-input"
+        [placeholder]="'Buscar...'"
+        [(ngModel)]="search"
+        
+      />
+    </div>
+
+    <!-- Header multiple: seleccionar todo -->
+    <div class="pov-header" *ngIf="isMultiple">
+      <ui-checkbox
+        [indeterminate]="someSelected && !allSelected"
+        [checked]="allSelected"
+        (changed)="toggleAll($event)"
+        size="sm"
+        type="column"
+        ariaLabel="Seleccionar todos"
+      ></ui-checkbox>
+      <span class="pov-header-text">Seleccionar todos</span>
+    </div>
+
+    <!-- Opciones -->
+    <div class="pov-list">
+      <!-- MULTIPLE -->
+      <div class="pov-row" *ngIf="isMultiple; else singleList" 
+           [class.disabled]="!canAddMore()"
+           >
+        <div class="row" *ngFor="let row of filteredOptions">
+          <ui-checkbox
+            [checked]="isChecked(row)"
+            (changed)="toggleItem(row)"
+            size="sm"
+            type="row"
+            [ariaLabel]="'Seleccionar ' + getLabel(row)"
+          ></ui-checkbox>
+          <span class="row-label">{{ getLabel(row) }}</span>
+        </div>
+      </div>
+
+      <!-- SINGLE -->
+      <ng-template #singleList>
+        <button
+          type="button"
+          class="row-btn"
+          *ngFor="let row of filteredOptions"
+          (click)="chooseOne(row)"
+          [disabled]="ui.disabled"
+        >
+          {{ getLabel(row) }}
+        </button>
+      </ng-template>
+    </div>
+
+    <!-- Chips bajo el select (solo multiple) -->
+    <div class="pov-chips" *ngIf="isMultiple && (selectedArray?.length||0) > 0">
+      <div class="chip big" *ngFor="let v of selectedArray">
+        <span class="chip-text">
+          {{ getChipLabel(v) }}
+        </span>
+        <ui-icon
+          [size]="'sm'"
+          [severity]="ui.severity || 'primary'"
+          [svgPath]="ui.icon?.svgPath || 'assets/svg/x.svg'"
+          [iconStyle]="ui.icon?.iconStyle"
+          (click)="removeChip(v, $event)"
+        ></ui-icon>
+      </div>
+    </div>
+  </div>
+</ui-popover>
+

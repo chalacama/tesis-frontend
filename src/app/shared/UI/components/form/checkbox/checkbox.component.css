@@ -1,51 +1,113 @@
-/* Wrapper */
-.cb-wrapper{
-  display:inline-flex;
-  align-items:center;
-  gap:var(--cb-gap,10px);
-  user-select:none;
-  cursor:pointer;
-  color: var(--cb-text, var(--text-color));
-}
-.cb-wrapper.disabled{ opacity:.6; cursor:not-allowed; }
+/* Contenedor principal */
+.chk-wrap.ui-checkbox {
+  --chk-size: 18px;
+  --chk-radius: 5px;
+  --chk-gap: 8px;
+  --chk-font: .93rem;
 
-/* Checkbox base (vars) */
-.cyberpunk-checkbox{
-  appearance:none; margin:0; cursor:inherit; position:relative; display:inline-block;
-  width:var(--cb-size,20px); height:var(--cb-size,20px);
-  border:var(--cb-border-width,2px) solid var(--cb-border-color, var(--cb-color, #30cfd0));
-  border-radius:var(--cb-radius,5px); background:transparent;
-  transition: box-shadow .2s ease, border-color .2s ease, transform .05s ease, background-color .2s ease;
-}
+  --chk-fg: var(--text-color);
+  --chk-border: var(--border-color);
+  --chk-active: var(--sev-primary);
+  --chk-active-hover: var(--sev-primary-hover);
 
-/* “Check” interior animado */
-.cyberpunk-checkbox::before{
-  content:""; position:absolute; display:block; top:50%; left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  width:calc(var(--cb-size,20px)*.5); height:calc(var(--cb-size,20px)*.5);
-  border-radius:calc(var(--cb-radius,5px)*.6); background:var(--cb-color,#30cfd0);
-  transition: transform .18s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--chk-gap);
+  font-size: var(--chk-font);
+  color: var(--chk-fg);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
 }
 
-/* Fondo al estar marcado */
-.cyberpunk-checkbox:checked{
-  background: var(--cb-bg-checked, color-mix(in oklab, var(--cb-color) 18%, transparent));
+/* Solo caja (sin label) */
+.chk-wrap.only-box .chk-label { display: none; }
+
+/* Caja visual */
+.chk-box {
+  width: var(--chk-size);
+  height: var(--chk-size);
+  border-radius: var(--chk-radius);
+  border: 1.5px solid var(--chk-border);
+  background: var(--background-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease; */
+  position: absolute;
 }
 
-/* Mostrar “check” */
-.cyberpunk-checkbox:checked::before{
-  transform:translate(-50%,-50%) scale(1);
+/* Estados hover/focus */
+.chk-wrap:hover .chk-box {
+  border-color: var(--chk-active-hover);
 }
 
-/* Hover/Focus */
-.cyberpunk-checkbox:hover{ border-color: var(--cb-color-hover, var(--cb-color)); }
-.cyberpunk-checkbox:focus-visible{
-  outline:none;
-  box-shadow:0 0 0 3px color-mix(in oklab, var(--cb-color) 35%, transparent);
+/* Checked */
+/* .ui-checkbox:not(.is-indeterminate) .chk-box:has(+ .chk-label) {}
+.ui-checkbox.sev-primary .chk-box {} */
+
+.ui-checkbox .chk-box:has(svg) {
+  background: color-mix(in oklab, var(--chk-active) 16%, transparent);
+  border-color: var(--chk-active);
 }
 
-/* Active */
-.cyberpunk-checkbox:active{ transform:scale(.98); }
+/* Mark */
+.chk-mark, .chk-mid {
+  width: calc(var(--chk-mark-size));
+  height: calc(var(--chk-mark-size));
+  fill: var(--chk-active);
+  display: flex;
+}
 
 /* Label */
-.cb-label{ line-height:1; }
+.chk-label {
+  line-height: 1.1;
+}
+
+/* Native (oculta pero accesible si se quiere usar) */
+.chk-native {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  
+}
+
+/* Invalid/Disabled */
+.ui-checkbox.is-invalid .chk-box {
+  border-color: var(--sev-danger);
+}
+.ui-checkbox.is-disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Neumorphism */
+.ui-checkbox.neu-raised .chk-box {
+  box-shadow:
+    var(--chk-shadow) color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    var(--chk-shadow-contrast) color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 30%, transparent);
+}
+.ui-checkbox.neu-pressed .chk-box {
+  box-shadow:
+    inset var(--chk-shadow) color-mix(in oklab, var(--shadow-color, rgba(0,0,0,.35)) 60%, transparent),
+    inset var(--chk-shadow-contrast) color-mix(in oklab, var(--shadow-color-contrast, rgba(255,255,255,.35)) 30%, transparent);
+}
+.ui-checkbox.neu-convex .chk-box {
+  background: radial-gradient(120% 120% at 30% 30%,
+    color-mix(in oklab, var(--chk-active) 14%, #fff 86%) 0%,
+    var(--background-color) 60%);
+}
+.ui-checkbox.neu-concave .chk-box {
+  background: radial-gradient(120% 120% at 70% 70%,
+    color-mix(in oklab, var(--chk-active) 14%, #000 86%) 0%,
+    var(--background-color) 60%);
+}
+
+/* Variantes visuales rápidas (bordeado/plano) */
+.ui-checkbox.v-outlined .chk-box {
+  border-width: 1px;
+}
+.ui-checkbox.v-flat .chk-box {
+  background: transparent;
+}

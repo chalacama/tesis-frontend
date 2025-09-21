@@ -1,7 +1,7 @@
 import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ReactiveFormsModule, Validators, FormBuilder, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CourseService } from '../../../../../core/api/course/course.service';
@@ -11,19 +11,14 @@ import { CourseDetail, CourseDetailResponse } from '../../../../../core/api/cour
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 import { CourseRequest } from '../../../../../core/api/course/course.interfaces';
 import { ElementRef } from '@angular/core';
-// import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
 import { InputLabelComponent } from '../../../../../shared/UI/components/form/input-label/input-label.component';
-// import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
-import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
-import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component';
+
 import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
 import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
 import { PopoverComponent } from '../../../../../shared/UI/components/overlay/popover/popover.component';
-/* import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component'; */
-// import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
-// import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
+
 
 @Component({
   selector: 'app-details',
@@ -34,9 +29,6 @@ import { PopoverComponent } from '../../../../../shared/UI/components/overlay/po
     InputLabelComponent,
     FileUploadComponent,
     PopoverComponent,
-    // DialogComponent,
-    // PreviewComponent,
-
     ToggleWitchComponent,
   ],
   templateUrl: './details.component.html',

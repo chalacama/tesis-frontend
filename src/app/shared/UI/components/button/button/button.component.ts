@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule , } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, Input, OnChanges, inject } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { UiButtonDirective } from '../../../directive/ui-button.directive';
 import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
@@ -25,7 +25,8 @@ import { IconComponent } from '../icon/icon.component';
       'badge','badgeSeverity','badgeSize','badgeClass','badgeStyle','badgeValue',
       'link','neumorphism'
     ]
-  }]
+  }],
+  
 })
 export class ButtonComponent implements OnChanges {
 
@@ -34,7 +35,7 @@ export class ButtonComponent implements OnChanges {
   private sanitizer = inject(DomSanitizer);
 
   // instancia de la directiva para leer los valores actuales
-  constructor(public readonly btn: UiButtonDirective) {
+  constructor(public readonly btn: UiButtonDirective ) {
    /*  this.ngOnChanges(); */
   }
 
