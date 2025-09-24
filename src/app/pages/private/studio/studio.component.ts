@@ -14,10 +14,11 @@ import { MiniatureService } from '../../../core/api/miniature/miniature.service'
 import { MiniatureResponse } from '../../../core/api/miniature/miniature.interface';
 import { PreviewComponent } from '../../../shared/UI/components/media/preview/preview.component';
 import { ButtonComponent } from '../../../shared/UI/components/button/button/button.component';
+import { AvatarComponent } from '../../../shared/UI/components/media/avatar/avatar.component';
 
 @Component({
   selector: 'app-studio',
-  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent],
+  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent, AvatarComponent],
   templateUrl: './studio.component.html',
   styleUrl: './studio.component.css'
 })
@@ -227,20 +228,20 @@ export class StudioComponent implements OnInit {
     switchTheme(theme: 'light' | 'dark' | 'system') {
       this.themeService.setTheme(theme);
       this.currentTheme = theme;
-      console.log('Theme switched to:', this.currentTheme);
+      
     }
     toggleSidebar() {
       if (this.isMobile === false && this.isTablet === false) {
         this.isSidebarCollapsed = !this.isSidebarCollapsed;
-        console.log('pc');
+       
       } if (this.isMobile) {
         this.isSidebarClose = !this.isSidebarClose;
         this.isdrawer = !this.isdrawer;
-        console.log('Movil');
+        
       } else if (this.isTablet) {
         this.isSidebarCollapsed = !this.isSidebarCollapsed;
         this.isdrawer = !this.isdrawer;
-        console.log('Tablet');
+        
       }
   
     }

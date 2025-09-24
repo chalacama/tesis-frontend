@@ -22,7 +22,8 @@ import { IconComponent } from '../icon/icon.component';
       'severity','size','disabled','btnClass','btnStyle',
       'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown', 'icon',
       // 'svgPath','iconSeverity','iconSize','iconClass','iconStyle',
-      'badge','badgeSeverity','badgeSize','badgeClass','badgeStyle','badgeValue',
+      'showBadge', 'badge',
+      // 'badgeSeverity','badgeSize','badgeClass','badgeStyle','badgeValue',
       'link','neumorphism'
     ]
   }],
@@ -69,7 +70,7 @@ export class ButtonComponent implements OnChanges {
       iconPx:s === 'sm' ? '16px' : s === 'lg' ? '24px' : '20px',
       badgefontSize: s === 'sm' ? '0.70rem' : s === 'lg' ? '.80rem' : '0.75rem',
 
-      badgePx: this.btn.badgeValue ? (s === 'sm' ? '18px' : s === 'lg' ? '23px' : '29px') : (s === 'sm' ? '5px' : s === 'lg' ? '10px' : '15px')
+      badgePx: this.btn.badge?.value ? (s === 'sm' ? '18px' : s === 'lg' ? '23px' : '29px') : (s === 'sm' ? '5px' : s === 'lg' ? '10px' : '15px')
     };
   }
 
@@ -84,7 +85,7 @@ export class ButtonComponent implements OnChanges {
     const sevBgHover = `var(--sev-${sev}-hover, ${sevBg})`;
     const sevBorder = `var(--sev-${sev})`;
 
-    const badgeSev: UiSeverity = (this.btn.badgeSeverity as UiSeverity) ?? sev;
+    const badgeSev: UiSeverity = (this.btn.badge?.severity as UiSeverity) ?? sev;
     const badgeBg = `var(--sev-${badgeSev})`;
 
     const iconSizeByUiSize = this.btn.icon?.size ? this.sizeTokens(this.btn.icon?.size as   UiSize).iconPx : sizeTok.iconPx;
@@ -108,7 +109,7 @@ export class ButtonComponent implements OnChanges {
       '--btn-badge-fg': 'var(--text-color-contrast, #fff)',
       '--btn-badge-font': sizeTok.badgefontSize,
       '--btn-badge-size': sizeTok.badgePx,
-      '--btn-badge-top-right': this.btn.badgeValue ? '-6px' : '6px'
+      '--btn-badge-top-right': this.btn.badge?.value ? '-6px' : '6px'
     };
   }
 

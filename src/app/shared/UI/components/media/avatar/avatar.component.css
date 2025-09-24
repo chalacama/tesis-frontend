@@ -1,0 +1,71 @@
+/* src/app/shared/ui/components/avatar/avatar.component.css */
+:host {
+  display: contents;
+}
+.app-avatar {
+  /* Tamaño / forma */
+  inline-size: var(--av-size);
+  block-size: var(--av-size);
+  border-radius: var(--av-radius, 50%);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  /* Colores */
+  background: var(--av-bg, var(--sev-secondary));
+ 
+  color: var(--av-fg, var(--text-color-contrast, #fff));
+
+  /* Texto */
+  font: 600 var(--av-font, .95rem) / 1 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  text-transform: uppercase;
+
+  /* Borde/sombra (neumorphism-friendly) */
+  /* box-shadow: 0 0 0 var(--av-ring, 2px) color-mix(in oklab, var(--av-bg, #888), transparent 72%),
+              0 6px 12px var(--shadow-color, rgba(0,0,0,.25)); */
+  user-select: none;
+}
+
+.app-avatar.is-disabled {
+  opacity: .6;
+  filter: grayscale(.15);
+  pointer-events: none;
+}
+
+.av-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.av-initials {
+  letter-spacing: .5px;
+}
+
+.av-badge {
+  position: absolute;
+  top: var(--av-badge-offset, 0px);
+  right: var(--av-badge-offset, 0px);
+  inline-size: var(--av-badge-size, 16px);
+  block-size: var(--av-badge-size, 16px);
+  border-radius: 999px;
+  background: var(--av-badge-bg, #f44);
+  color: var(--av-badge-fg, #fff);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--av-badge-font, .72rem);
+  line-height: 1;
+  box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.25));
+  transform: translate(25%, -25%);
+  padding: 0; /* se ajusta por tamaño circular */
+}
+
+.av-badge:not(.has-value) {
+  /* Cuando no hay value -> punto de estado */
+  font-size: 0; /* oculta texto */
+}

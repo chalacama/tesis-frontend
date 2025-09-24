@@ -49,7 +49,7 @@ export interface UiFormProps extends UiProps {
 export interface UiMediaProps extends UiProps {
   src?: string;
   alt?: string ;
-  types?: UiFileType;
+  
   
 }
 export interface UiA11Props {

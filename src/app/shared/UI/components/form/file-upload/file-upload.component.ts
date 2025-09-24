@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input, OnDestroy, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit, signal, computed, inject, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import { UiFileUploadDirective } from '../../../directive/ui-file-upload.directive';
 import { UiFileFormat, UiFileType, UiFileFormats, UiNeumorphism, UiSeverity, UiSize, UiVariant } from '../../../interfaces/ui-presets.interface';
@@ -40,12 +40,15 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
       // === Propios del FileUpload
       'id','types','formats','orientation','label','fudClass','fudStyle',
       'clearbtn','icon','max','min','maxMb','minSecond','maxSecond','preview'
-    ]
+    ],
+    outputs: ['fileSelected']
+
   }]
 })
 export class FileUploadComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
 
   constructor(public readonly fud: UiFileUploadDirective) {}
+  
 
   // ======= STATE =======
   /** Archivos seleccionados (controlado internamente, pero refleja el valor del form) */
@@ -509,9 +512,13 @@ async onFileInputChange(ev: Event) {
   this.errors = errors;
 
   if (valid) {
-    this.files = combined;
+    /* this.files = combined;
     await this.syncPreviewsFromFiles(true); // true => limpia previews URL si hay files nuevos
-    this.propagate();
+    this.propagate(); */
+    this.files = combined;
+  await this.syncPreviewsFromFiles(true);
+  this.fud.fileSelected.emit(this.files[0] ?? null);
+  this.propagate();
   }
 
   input.value = '';

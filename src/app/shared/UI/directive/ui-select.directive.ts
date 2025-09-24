@@ -12,7 +12,7 @@ export type SelectType = 'disappear' | 'ifta' | 'float';
 export class UiSelectDirective implements UiA11Props, UiFormProps {
   // === UiProps / UiFormProps ===
   @Input() severity?: UiFormProps['severity'] = 'primary';
-  @Input() size?: UiFormProps['size'] = 'md';
+  @Input() size?: UiFormProps['size'] = 'sm';
   @Input() disabled?: UiFormProps['disabled'] = false;
   @Input() neumorphism?: UiFormProps['neumorphism'] = 'flat';
   @Input() variant?: UiFormProps['variant'] = 'outlined';
@@ -46,6 +46,9 @@ export class UiSelectDirective implements UiA11Props, UiFormProps {
   @Input() filter?: boolean = false;
 
   @Input() max!: number | string; // requerido por tu interfaz
+  // slice
+  @Input() maxBadge?: number | string = 2; // numero de badge
   @Input() type?: SelectType = 'float';
+  @Input() showBadge?: boolean = true; // oculta solo el badge del popover
 }
 

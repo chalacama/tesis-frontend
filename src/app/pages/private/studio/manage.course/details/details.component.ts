@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild} from '@angular/core';
+import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
@@ -18,6 +18,13 @@ import { FileUploadComponent } from '../../../../../shared/UI/components/form/fi
 import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
 import { PopoverComponent } from '../../../../../shared/UI/components/overlay/popover/popover.component';
+import { SelectComponent } from '../../../../../shared/UI/components/form/select/select.component';
+import { CategoryService } from '../../../../../core/api/category/category.service';
+import { SelectDataviewComponent } from '../../../../../shared/UI/components/form/select-dataview/select-dataview.component';
+// + imports
+import { CareerService } from '../../../../../core/api/carrer/career.service';
+import { Career } from '../../../../../core/api/carrer/career.interface';
+import { min } from 'rxjs';
 
 
 @Component({
@@ -30,6 +37,8 @@ import { PopoverComponent } from '../../../../../shared/UI/components/overlay/po
     FileUploadComponent,
     PopoverComponent,
     ToggleWitchComponent,
+    SelectComponent,
+    SelectDataviewComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -38,14 +47,15 @@ import { PopoverComponent } from '../../../../../shared/UI/components/overlay/po
 
 export class DetailsComponent implements OnInit {
 
- povOpen = false;
+  povOpen = false;
   // Inyección
   private readonly route = inject(ActivatedRoute);
   private readonly courseService = inject(CourseService);
   private readonly difficultyService = inject(DifficultyService);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
-
+  private readonly categoryService = inject(CategoryService);
+  private readonly careerService = inject(CareerService);
   private readonly host = inject(ElementRef<HTMLElement>);
 
   @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
@@ -57,32 +67,38 @@ export class DetailsComponent implements OnInit {
   }
 
   // Estado de UI
+  loadingCategories = signal<boolean>(true);
   loadingCourse = signal<boolean>(true);
   loadingDifficulties = signal<boolean>(true);
+  loadingCareers = signal<boolean>(true);
+  careersAvail = signal<{ id: number; name: string; url_logo: string }[]>([]); // lo que pintaremos en el dataview
   saving = signal<boolean>(false);
   errorMsg = signal<string | null>(null);
   successMsg = signal<string | null>(null);
 
   isDialogOpen = true; // o false según el caso
+  selectedMiniature: File | null = null;
 
-  
+  readonly MAX_CATEGORIES = 4;
+readonly MAX_CAREERS = 2;
+
   // Datos
   course = signal<CourseDetail | null>(null);
   difficulties = signal<Difficulty[]>([]);
-
+  categoriesAvail = signal<{ id: number; name: string }[]>([])
   // Para reset/diff
   private originalCourse: CourseDetail | null = null;
 
   // Form reactivo tipado (sin nullables)
-    form = this.fb.group({
-    title:        ['', [Validators.required, Validators.minLength(3)]],
-    description:  ['', [Validators.required, Validators.minLength(10)]],
-    difficulty_id:[2,  [Validators.required]],
-    private:      [false, [Validators.required]],
-    enabled:      [true,  [Validators.required]],
-    code:         [''], // nullable en backend; aquí lo tratamos como string ('' -> null al guardar si quieres)
-    careers:      this.fb.control<number[]>([], { nonNullable: true }),    // ids
-    categories:   this.fb.control<number[]>([], { nonNullable: true }),    // ids
+  form = this.fb.group({
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    description: ['', [Validators.required, Validators.minLength(10)]],
+    difficulty_id: [2, [Validators.required]],
+    private: [false, [Validators.required]],
+    enabled: [true, [Validators.required]],
+    code: [''], // nullable en backend; aquí lo tratamos como string ('' -> null al guardar si quieres)
+    careers: this.fb.control<number[]>([], { nonNullable: true }),    // ids
+    categories: this.fb.control<number[]>([], { nonNullable: true }),    // ids
     // Solo UI (no se envía): previsualización de la miniatura actual o del archivo cargado
     miniatureUrl: [''],
   });
@@ -101,9 +117,54 @@ export class DetailsComponent implements OnInit {
 
     this.loadDifficulties();
     this.loadCourse(courseParam);
+    this.loadCategories();
+    this.loadCareers(); // + cargar carreras
   }
-
-
+  private loadCareers(): void {
+    this.loadingCareers.set(true);
+    this.careerService.getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items: Career[]) => {
+          // mapeo a la forma que usa el select-dataview (label/value/src)
+          this.careersAvail.set(
+            items.map(c => ({ id: c.id, name: c.name, url_logo: c.url_logo }))
+          );
+          this.loadingCareers.set(false);
+        },
+        error: (err: Error) => {
+          this.errorMsg.set(err.message || 'No se pudieron cargar las carreras.');
+          this.careersAvail.set([]);
+          this.loadingCareers.set(false);
+        }
+      });
+  }
+  onMiniatureChange(file: File | null) {
+  this.selectedMiniature = file;
+  if (file) {
+    // solo previsualización (opcional)
+    const reader = new FileReader();
+    reader.onload = () => this.form.patchValue({ miniatureUrl: String(reader.result) });
+    reader.readAsDataURL(file);
+  }
+}
+  private loadCategories(): void {
+    this.loadingCategories.set(true);
+    this.categoryService.getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items) => {
+          // Mapea a {id, name} que usa el ui-select (optionLabel/optionValue)
+          this.categoriesAvail.set(items.map(c => ({ id: c.id, name: c.name })));
+          this.loadingCategories.set(false);
+        },
+        error: (err: Error) => {
+          this.errorMsg.set(err.message || 'No se pudieron cargar las categorías.');
+          this.categoriesAvail.set([]);
+          this.loadingCategories.set(false);
+        }
+      });
+  }
   // ----- Carga de datos -----
   private loadDifficulties(): void {
     this.loadingDifficulties.set(true);
@@ -175,24 +236,7 @@ export class DetailsComponent implements OnInit {
 
   trackByDifficulty = (_: number, item: Difficulty) => item.id;
 
-  // Construye un payload reducido solo con campos modificados
-  private buildDiffPayload(): Partial<CourseRequest> & {
-    private?: boolean;
-    enabled?: boolean;
-    difficulty_id?: number;
-  } {
-    const current = this.form.getRawValue();
-    const orig = this.originalCourse!;
-    const payload: any = {};
-
-    if (current.title !== orig.title) payload.title = current.title;
-    if (current.description !== orig.description) payload.description = current.description;
-    if (current.difficulty_id !== orig.difficulty.id) payload.difficulty_id = current.difficulty_id;
-    if (current.private !== orig.private) payload.private = current.private;
-    if (current.enabled !== orig.enabled) payload.enabled = current.enabled;
-
-    return payload;
-  }
+  
 
   // ----- Acciones -----
   save(): void {
@@ -204,34 +248,53 @@ export class DetailsComponent implements OnInit {
       return;
     }
 
-    const payload = this.buildDiffPayload();
-    if (Object.keys(payload).length === 0) {
-      this.successMsg.set('No hay cambios por guardar.');
-      setTimeout(() => this.successMsg.set(null), 1800);
-      return;
-    }
+    // Respeta límites también en front
+  let careers = this.form.value.careers ?? [];
+  let categories = this.form.value.categories ?? [];
+  careers = Array.isArray(careers) ? [...new Set(careers)].slice(0, this.MAX_CAREERS) : [];
+  categories = Array.isArray(categories) ? [...new Set(categories)].slice(0, this.MAX_CATEGORIES) : [];
 
-    this.errorMsg.set(null);
-    this.successMsg.set(null);
-    this.saving.set(true);
+  // Construye el payload
+  const payload = {
+    title: this.form.value.title ?? undefined,
+    description: this.form.value.description ?? undefined,
+    difficulty_id: this.form.value.difficulty_id ?? undefined,
+    private: this.form.value.private ?? undefined,
+    enabled: this.form.value.enabled ?? undefined,
+    code: this.form.value.code ?? undefined,
+    careers,
+    categories, // si quieres enviar con order, arma [{id, order}]
+    miniature: this.selectedMiniature ?? undefined, // si hay archivo, lo envía
+  };
 
-    this.courseService.updateCourse(c.id, payload)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (res) => {
-          const updated = res.course;
-          this.course.set(updated);
-          this.originalCourse = updated;
-          this.patchFromCourse(updated);
-          this.saving.set(false);
-          this.successMsg.set('Cambios guardados correctamente.');
-          setTimeout(() => this.successMsg.set(null), 2500);
-        },
-        error: (err: Error) => {
-          this.saving.set(false);
-          this.errorMsg.set(err.message || 'Error al guardar los cambios.');
-        }
-      });
+  this.saving.set(true);
+  this.errorMsg.set(null);
+  this.successMsg.set(null);
+
+  this.courseService
+    .updateCourse(c.id, payload) // << envía archivo si hay
+    .pipe()
+    .subscribe({
+      next: (res) => {
+        // Actualiza estado local
+        this.course.set(res.course);
+        this.originalCourse = res.course;
+        this.patchFromCourse(res.course);
+
+        this.form.markAsPristine();
+        this.successMsg.set('Curso actualizado correctamente.');
+        this.saving.set(false);
+        // opcional: cierra modal de miniatura
+        this.modalOpenMiniature = false;
+      },
+      error: (err: Error) => {
+        this.errorMsg.set(err.message || 'No se pudo actualizar el curso.');
+        this.saving.set(false);
+      }
+    });
+    
+      
+      
   }
 
   resetForm(): void {
@@ -265,19 +328,74 @@ export class DetailsComponent implements OnInit {
         return { id: d.id, name: d.name, color: 'var(--warn-500)' };
       }
       if (d.id === 3) {
-        return { id: d.id, name: d.name, color: 'var(--danger-500)'};
+        return { id: d.id, name: d.name, color: 'var(--danger-500)' };
       }
       // por defecto usa el color activo de tu DS
       return { id: d.id, name: d.name, color: 'var(--active-color)' };
     });
   }
   onSelectDifficulty(val: any) {
-  console.log('difficulty_id =>', val); // debería ser 1 | 2 | 3...
-}
-popoverOpen = false;
-popover() {
-  this.popoverOpen = !this.popoverOpen; 
+    // console.log('difficulty_id =>', val); 
+  }
+  popoverOpen = false;
+  popover() {
+    this.popoverOpen = !this.popoverOpen;
 
+  }
+
+  codeGeneration() {
+
+    this.errorMsg.set(null);
+    this.successMsg.set(null);
+
+    this.courseService.generateCode()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (newcode: string) => {
+
+          this.form.patchValue({
+            code: newcode
+          });
+          console.log(newcode);
+          this.form.markAsDirty();
+
+          this.successMsg.set('Código generado correctamente.');
+          setTimeout(() => this.successMsg.set(null), 2000);
+        },
+        error: (err: Error) => {
+          this.errorMsg.set(err.message || 'No se pudo generar el código.');
+        }
+      });
+  }
+  codeActivation() {
+    
+    this.form.patchValue({
+      private: true
+    });
+    this.form.markAsDirty(); // <-- Añade esta línea
+    
+
+  }
+  
+  codeDesactivation() {
+  
+  
+    this.form.patchValue({
+      private: false,
+    });
+    this.form.markAsDirty();
+    
+  }
+  copyToClipboard() {
+    const code = this.form.get('code')?.value;
+    if (code) {
+      navigator.clipboard.writeText(code).then(() => {
+        this.successMsg.set('Código copiado al portapapeles.');
+        setTimeout(() => this.successMsg.set(null), 2000);
+      }).catch(err => {
+        this.errorMsg.set('No se pudo copiar el código.');
+      });
+  }
 }
 }
 

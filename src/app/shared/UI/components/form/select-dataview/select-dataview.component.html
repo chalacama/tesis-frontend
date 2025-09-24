@@ -1,0 +1,84 @@
+<!-- src/app/shared/components/select-dataview/select-dataview.component.html -->
+<div
+  class="sdv-wrap"
+  [ngClass]="hostClasses()"
+  [ngStyle]="styleMap()"
+  [attr.role]="sdv.role || 'listbox'"
+  [attr.aria-multiselectable]="sdv.multiple"
+  [attr.aria-label]="sdv.ariaLabel"
+  [attr.title]="sdv.title"
+  [attr.tabindex]="sdv.tabIndex"
+>
+
+  <!-- Filtro -->
+  <div class="sdv-filter" *ngIf="sdv.filter">
+    <ui-icon
+      [size]="sdv.icon?.size || sdv.size || 'sm'"
+      [severity]="sdv.icon?.severity || sdv.severity || 'primary'"
+      [svgPath]="sdv.icon?.svgPath || 'svg/search.svg'"
+      [iconStyle]="sdv.icon?.iconStyle">
+    </ui-icon>
+    
+    <input
+      class="sdv-input"
+      type="text"
+      [placeholder]="sdv.ariaLabel || 'Filtrar...'"
+      [(ngModel)]="filterText"
+      />
+      <div class="sdv-actions">
+    <button
+      type="button"
+      class="sdv-clear"
+      *ngIf="sdv.showClear"
+      (click)="clearSelection()"
+      [disabled]="sdv.disabled">
+      Limpiar
+    </button>
+  </div>
+  </div>
+
+  <!-- Grid de opciones -->
+  <div class="sdv-grid">
+    <button
+      type="button"
+      class="sdv-item"
+      *ngFor="let opt of viewOptions(); trackBy: trackByValue"
+      [ngClass]="{'is-selected': isSelected(opt)}"
+      [ngStyle]="optionStyleMap()"
+      role="option"
+      [attr.aria-selected]="isSelected(opt)"
+      (click)="toggleSelection(opt)"
+      (keydown)="handleItemKeydown($event, opt)"
+      [disabled]="sdv.disabled">
+
+      <img *ngIf="getSrc(opt)" class="sdv-thumb" [src]="getSrc(opt)!" [alt]="getLabel(opt)" />
+      <span class="sdv-label">{{ getLabel(opt) }}</span>
+    </button>
+  </div>
+
+  <!-- Acciones -->
+  <!-- <div class="sdv-actions">
+    <button
+      type="button"
+      class="sdv-clear"
+      *ngIf="sdv.showClear"
+      (click)="clearSelection()"
+      [disabled]="sdv.disabled">
+      Limpiar
+    </button>
+  </div> -->
+
+  <!-- Agregar opción (editable) -->
+  <div class="sdv-edit" *ngIf="sdv.editable">
+    <input
+      class="sdv-input"
+      type="text"
+      placeholder="Nueva opción..."
+      [(ngModel)]="newLabel"
+       />
+    <button type="button" class="sdv-add" (click)="addOption()" [disabled]="sdv.disabled || !newLabel.trim()">
+      Agregar
+    </button>
+  </div>
+</div>
+

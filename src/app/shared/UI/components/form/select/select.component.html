@@ -9,6 +9,7 @@
   [attr.aria-expanded]="povOpen"
   [attr.aria-label]="ui.ariaLabel || ui.placeholder"
   [attr.tabindex]="ui.tabIndex"
+  
 >
   <!-- Placeholder modes -->
   <label
@@ -27,10 +28,10 @@
     </ng-container>
 
     <ng-template #multiTpl>
-      <div class="chips" *ngIf="(selectedArray?.length || 0) > 0; else emptyTpl">
+      <div cdkDropList (cdkDropListDropped)="onDropPopover($event)" [cdkDropListDisabled]="ui.disabled" class="chips" *ngIf="(selectedArray?.length || 0) > 0; else emptyTpl">
         <!-- hasta 3 chips inline -->
-        <ng-container *ngFor="let v of selectedArray | slice:0:3">
-          <span class="chip" (click)="$event.stopPropagation()">
+        <ng-container *ngFor="let v of selectedArray | slice:0:maxInline">
+          <span class="chip" cdkDrag (click)="$event.stopPropagation()">
             <span class="chip-text">
               {{ getChipLabel(v) }}
             </span>
@@ -38,7 +39,7 @@
             <ui-icon
               [size]="ui.size || 'sm'"
               [severity]="ui.severity || 'primary'"
-              [svgPath]="ui.icon?.svgPath || 'assets/svg/x.svg'"
+              [svgPath]="ui.icon?.svgPath || 'svg/x.svg'"
               [iconStyle]="ui.icon?.iconStyle"
               (click)="removeChip(v, $event)"
             ></ui-icon>
@@ -54,12 +55,12 @@
     </ng-template>
   </div>
 
-  <div class="spacer"></div>
+  <!-- <div class="spacer"></div> -->
 
   <!-- Botón clear -->
-  <button
+   <button
     class="clear-btn"
-    *ngIf="ui.showClear && ((isMultiple && (selectedArray?.length||0)>0) || (!isMultiple && displayText))"
+    *ngIf="showClear && ((isMultiple && (selectedArray?.length||0)>0) || (!isMultiple && displayText))"
     (click)="clearAll($event)"
     [disabled]="ui.disabled"
     type="button"
@@ -68,27 +69,25 @@
     <ui-icon
       [size]="ui.size || 'sm'"
       [severity]="ui.severity || 'primary'"
-      [svgPath]="ui.icon?.svgPath || 'assets/svg/x.svg'"
+      [svgPath]="ui.icon?.svgPath || 'svg/x.svg'"
       [iconStyle]="ui.icon?.iconStyle"
     ></ui-icon>
   </button>
+  
 
   <!-- Icono flecha -->
   <ui-icon
-    class="caret"
-    [size]="ui.size || 'sm'"
+  
+    [size]="ui.size || 'md'"
     [severity]="ui.severity || 'primary'"
-    [svgPath]="ui.icon?.svgPath || 'assets/svg/chevron-down.svg'"
-    [iconStyle]="ui.icon?.iconStyle"
+    [svgPath]="ui.icon?.svgPath || 'svg/arrow-down.svg'"
+    [iconStyle]="{width: '22px', height: '22px'}"
   ></ui-icon>
-</div>
-
-<!-- POPOVER -->
 <ui-popover
   
   neumorphism="raised"
-  [povStyle]="{ width: 'auto', width: '260px' }"
-  position="bottom-left"
+  [povStyle]="{ width: '100%' }"
+  position="top-left"
   [closeOnOutside]="true"
   [closeOnInside]="false"
   [(visible)]="povOpen"
@@ -109,7 +108,9 @@
 
     <!-- Header multiple: seleccionar todo -->
     <div class="pov-header" *ngIf="isMultiple">
+      
       <ui-checkbox
+      style="margin-bottom: 5px;"
         [indeterminate]="someSelected && !allSelected"
         [checked]="allSelected"
         (changed)="toggleAll($event)"
@@ -128,6 +129,7 @@
            >
         <div class="row" *ngFor="let row of filteredOptions">
           <ui-checkbox
+          style="margin-bottom: 8px;"
             [checked]="isChecked(row)"
             (changed)="toggleItem(row)"
             size="sm"
@@ -153,15 +155,15 @@
     </div>
 
     <!-- Chips bajo el select (solo multiple) -->
-    <div class="pov-chips" *ngIf="isMultiple && (selectedArray?.length||0) > 0">
-      <div class="chip big" *ngFor="let v of selectedArray">
+    <div cdkDropList (cdkDropListDropped)="onDropPopover($event)" [cdkDropListDisabled]="ui.disabled"  class="pov-chips" *ngIf="ui.showBadge && isMultiple && (selectedArray?.length||0) > 0">
+      <div class="chip big" cdkDrag *ngFor="let v of selectedArray">
         <span class="chip-text">
           {{ getChipLabel(v) }}
         </span>
         <ui-icon
           [size]="'sm'"
           [severity]="ui.severity || 'primary'"
-          [svgPath]="ui.icon?.svgPath || 'assets/svg/x.svg'"
+          [svgPath]="ui.icon?.svgPath || 'svg/x.svg'"
           [iconStyle]="ui.icon?.iconStyle"
           (click)="removeChip(v, $event)"
         ></ui-icon>
@@ -169,4 +171,8 @@
     </div>
   </div>
 </ui-popover>
+</div>
+
+<!-- POPOVER -->
+
 

@@ -13,5 +13,6 @@ export interface UiPreviewProps  extends UiMediaProps   {
     mask?: boolean;
     masking?: MaskingProps;
     dialog?: UiDialogProps;
+    types?: UiFileType;
 }
 

@@ -33,10 +33,11 @@ export class UiButtonDirective {
   @Input() icon?: UiButtonProps['icon'];
 
   // ===== Badge (BadgeProps) =====
-  @Input() badge?: UiButtonProps['badge'] = false;
-  @Input() badgeValue?: UiButtonProps['badgeValue'];
-  @Input() badgeSeverity?: UiButtonProps['badgeSeverity'] = 'danger';
-  @Input() badgeSize?: UiButtonProps['badgeSize'] = 'sm';     // sm | md | lg
-  @Input() badgeClass?: UiButtonProps['badgeClass'];
-  @Input() badgeStyle?: UiButtonProps['badgeStyle'];
+  @Input() showBadge?: UiButtonProps['showBadge'] = false;
+  /* @Input() badgeValue?: UiButtonProps['badgeValue']; */
+  /* @Input() badgeSeverity?: UiButtonProps['badgeSeverity'] = 'danger';
+  @Input() badgeSize?: UiButtonProps['badgeSize'] = 'sm';  */    // sm | md | lg
+@Input() badge?: UiButtonProps['badge'];
+  /* @Input() badgeClass?: UiButtonProps['badgeClass'];
+  @Input() badgeStyle?: UiButtonProps['badgeStyle']; */
 }

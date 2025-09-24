@@ -1,5 +1,5 @@
 // directive/ui-file-upload.directive.ts
-import { Directive, Input } from '@angular/core';
+import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { UifileUploadProps } from '../interfaces/ui-file-upload.interface';
 
 @Directive({
@@ -43,5 +43,7 @@ export class UiFileUploadDirective {
   @Input() maxSecond?: UifileUploadProps['maxSecond'];
 
   @Input() preview?: UifileUploadProps['preview'];
+
+  @Output() fileSelected = new EventEmitter<File|null>();
 }
 

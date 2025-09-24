@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
 import { environment } from '../../environment/environment';
 import { PortfolioResponse } from '../portfolio/portfolio.interface';
-import { CourseDetailResponse } from './course.details.interfaces';
+import { CodeResponse, CourseDetailRequest, CourseDetailResponse } from './course.details.interfaces';
 
 
 @Injectable({
@@ -216,17 +216,88 @@ getCourses(params: CourseQueryParams = {}, routeParams?: CourseRouteParams): Obs
     catchError(this.handleError)
   );
 }
-updateCourse(courseId: number, payload: Partial<CourseRequest> & {
-  private?: boolean;
-  enabled?: boolean;
-  difficulty_id?: number;
-}): Observable<CourseDetailResponse> {
-  this.loadingSubject.next(true);
-  // Ajusta la URL si tu Laravel expone otra ruta para update
-  return this.http.put<CourseDetailResponse>(`${this.apiUrl}/${courseId}/update`, payload).pipe(
-    finalize(() => this.loadingSubject.next(false)),
-    catchError(this.handleError)
-  );
-}
+
+  
+generateCode(): Observable<string> {
+    this.loadingSubject.next(true);
+    return this.http
+      .get<CodeResponse>(`${this.apiUrl}/generate-code`)
+      .pipe(
+        map(res => res.code),
+        finalize(() => this.loadingSubject.next(false)),
+        catchError(this.handleError)
+      );
+  }
+  updateCourse(
+    courseId: number | string,
+    data: CourseDetailRequest,
+    
+  ) {
+    const url = `${this.apiUrl}/${courseId}/update`;
+    const fd = new FormData();
+
+    // Helpers
+    const appendIfDefined = (key: string, v: unknown) => {
+      if (v === undefined) return;
+      if (v === null) {
+        // Si quieres limpiar 'code', puedes enviar string vacío o no enviar nada.
+        // El backend tiene 'sometimes', así que si no lo envías, no cambia.
+        // Si necesitas forzar null, podrías enviar '' y en backend interpretarlo.
+        fd.append(key, '');
+        return;
+      }
+      fd.append(key, String(v));
+    };
+
+    // Campos base
+    appendIfDefined('title', data.title);
+    appendIfDefined('description', data.description);
+    if (data.private !== undefined) fd.append('private', data.private ? '1' : '0');
+    if (data.enabled !== undefined) fd.append('enabled', data.enabled ? '1' : '0');
+    appendIfDefined('difficulty_id', data.difficulty_id);
+    if (data.code !== undefined) {
+      // Si code === '', enviamos '', si quieres no tocar, no lo envíes
+      fd.append('code', data.code ?? '');
+    }
+
+    // Carreras (ids)
+    if (Array.isArray(data.careers)) {
+      // El backend limita a 2; aquí recortamos por si acaso
+      const careers = [...new Set(data.careers)];
+      careers.forEach(id => fd.append('careers[]', String(id)));
+    }
+
+    // Categorías (ids o con order)
+    if (Array.isArray(data.categories)) {
+      // El backend limita a 4; recortamos
+      const cats = data.categories;
+      if (typeof cats[0] === 'number') {
+        (cats as number[]).forEach(id => fd.append('categories[]', String(id)));
+      } else {
+        (cats as { id: number; order?: number }[]).forEach((c, i) => {
+          fd.append(`categories[${i}][id]`, String(c.id));
+          if (c.order !== undefined) {
+            fd.append(`categories[${i}][order]`, String(c.order));
+          }
+        });
+      }
+    }
+
+    // Miniatura (archivo)
+    if (data.miniature) {
+      fd.append('miniature', data.miniature);
+    }
+
+    return this.http.post<CourseDetailResponse>(url, fd).pipe(
+      map(res => res),
+      catchError((err: HttpErrorResponse) => {
+        const msg =
+          (err.error && (err.error.message || err.error.error)) ||
+          err.message ||
+          'Error actualizando el curso';
+        return throwError(() => new Error(msg));
+      })
+    );
+  }
 
 }

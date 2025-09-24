@@ -1,5 +1,5 @@
 // ui-icon.interface.ts
-import { UiSeverity, UiSize, UiStyleProps } from "./ui-presets.interface";
+import { UiProps, UiSeverity, UiSize, UiStyleProps } from "./ui-presets.interface";
 
 /* export interface IconProps {
   svgPath?: string;
@@ -18,11 +18,9 @@ export interface UiIconProps {
   iconStyle?: UiStyleProps;
   
 }
-export interface BadgeProps {
-  badge?: boolean;
-  badgeSeverity?: UiSeverity;  
-  badgeSize?: UiSize;
+export interface UiBadgeProps extends UiProps {
+  id?: string;
   badgeClass?: string;
   badgeStyle?: UiStyleProps;
-  badgeValue?: string | number;
+  value?: string | number;
 }

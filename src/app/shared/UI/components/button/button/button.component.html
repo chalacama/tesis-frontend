@@ -26,9 +26,9 @@
   <span class="btn-label" *ngIf="btn.label">{{ btn.label }}</span>
 
   <!-- Badge -->
-  <span class="btn-badge" *ngIf="btn.badge"
-        [ngClass]="btn.badgeClass"
-        [ngStyle]="btn.badgeStyle">
-    {{ btn.badgeValue }}
+  <span class="btn-badge" *ngIf="btn.showBadge"
+        [ngClass]="btn.badge?.badgeClass"
+        [ngStyle]="btn.badge?.badgeStyle">
+    {{ btn.badge?.value}}
   </span>
 </button>

@@ -18,6 +18,9 @@
   cursor: pointer;
   user-select: none;
   position: relative;
+  width: var(--chk-size);
+  height: var(--chk-size);
+  
 }
 
 /* Solo caja (sin label) */
@@ -110,4 +113,17 @@
 }
 .ui-checkbox.v-flat .chk-box {
   background: transparent;
+}
+
+/* Cursor "mover" cuando el chip es arrastrable */
+.chip[cdkdrag] { cursor: grab; }
+.chip[cdkdrag].cdk-drag-dragging { cursor: grabbing; opacity: 0.9; }
+
+/* Ghost/preview del chip arrastrado (Angular CDK) */
+.cdk-drag-preview {
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border-radius: 999px;
+}
+.cdk-drag-placeholder {
+  opacity: 0.35;
 }

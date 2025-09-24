@@ -13,7 +13,7 @@ export class DifficultyService {
 
   getAll(): Observable<Difficulty[]> {
     return this.http.get<DifficultyResponse>(`${this.apiUrl}/index`).pipe(
-      map(response => response.difficulties),
+      map(response => response.data),
       catchError(this.handleError)
     );
   }

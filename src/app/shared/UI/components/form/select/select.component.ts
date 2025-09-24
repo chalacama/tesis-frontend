@@ -3,6 +3,7 @@ import {
   Component, ElementRef, forwardRef, HostListener, OnDestroy, OnInit, ViewChild, inject
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { UiSelectDirective } from '../../../directive/ui-select.directive';
 import { IconComponent } from '../../button/icon/icon.component';
@@ -15,7 +16,7 @@ type Primitive = string | number | boolean | null | undefined;
 @Component({
   selector: 'ui-select',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, IconComponent,PopoverComponent, CheckboxComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IconComponent,PopoverComponent, CheckboxComponent,DragDropModule],
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.css'],
   hostDirectives: [{
@@ -27,7 +28,9 @@ type Primitive = string | number | boolean | null | undefined;
       'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown',
       // Select props
       'id','placeholder','editable','showClear','selectClass','selectStyle',
-      'icon','popover','options','optionLabel','optionValue','multiple','filter','max','type'
+      'icon','popover','options','optionLabel','optionValue','multiple','filter','max','type',
+      'maxBadge', // numero de badge
+      'showBadge', // oculta solo el badge del popover
     ]
   }],
   providers: [{
@@ -45,6 +48,7 @@ export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy 
   search = '';
   allSelected = false;
   someSelected = false;
+  showClear = this.ui.showClear ?? true;
 
   // Para cerrar al hacer click fuera
   private host = inject(ElementRef<HTMLElement>);
@@ -85,9 +89,11 @@ export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy 
     const n = Number(m);
     return Number.isFinite(n) ? n : Infinity;
   }
-   get selectedArray(): any[] {
+  get selectedArray(): any[] {
     return Array.isArray(this._value) ? this._value : [];
   }
+
+ 
   getChipLabel(v: any): string {
   const option = (this.ui.options ?? []).find(o => JSON.stringify(this.getValue(o)) === JSON.stringify(v));
   return option ? this.getLabel(option) : v;
@@ -133,6 +139,12 @@ export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy 
       this.onTouched();
     }
   }
+  // Añade este getter en la clase SelectComponent
+get maxInline(): number {
+  const n = Number(this.ui.maxBadge ?? 3);
+  // seguridad: al menos 1
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 3;
+}
 
   // ====== Selección single ======
   chooseOne(opt: any) {
@@ -211,7 +223,7 @@ export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy 
   }
 
   // ====== Visual del placeholder y display ======
-  get displayText(): string {
+  /* get displayText(): string {
     if (this.isMultiple) {
       const selected = this.selectedArray;
       if (selected.length === 0) return '';
@@ -231,20 +243,43 @@ export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy 
       const found = (this.ui.options ?? []).find(o => this.equals(this.getValue(o), this._value));
       return found ? this.getLabel(found) : String(this._value);
     }
+  } */
+get displayText(): string {
+  if (this.isMultiple) {
+    const selected = this.selectedArray;
+    if (selected.length === 0) return '';
+    if (selected.length <= this.maxInline) { // 👈 aquí
+      const labels = selected
+        .map(v => (this.ui.options ?? []).find(o => this.equals(this.getValue(o), v)))
+        .filter(Boolean)
+        .map(o => this.getLabel(o));
+      return labels.join(', ');
+    }
+    return `${selected.length} seleccionados`;
+  } else {
+    if (this._value == null) return '';
+    const found = (this.ui.options ?? []).find(o => this.equals(this.getValue(o), this._value));
+    return found ? this.getLabel(found) : String(this._value);
   }
+}
+get popoverBadgeText(): string {
+  const sel = this.selectedArray.length;
+  return sel > 0 ? `${sel} seleccionados` : '';
+}
+
 
   get showCounterBadge(): boolean {
-    return this.isMultiple && this.selectedArray.length > 3;
+    return this.isMultiple && this.selectedArray.length > Number(this.ui.maxBadge);
   }
   get counterBadge(): string {
-    const extra = this.selectedArray.length - 3;
+    const extra = this.selectedArray.length - Number(this.ui.maxBadge);
     return extra > 0 ? `+${extra}` : '';
   }
 
   // Estilos del host
   styleMap(): Record<string,string> {
     const base: Record<string,string> = {
-      '--sel-height': this.ui.size === 'sm' ? '36px' : this.ui.size === 'lg' ? '48px' : '42px',
+      '--sel-height': this.ui.size === 'sm' ? '70px' : this.ui.size === 'lg' ? '100px' : '80px',
       '--sel-radius': '10px',
       '--sel-pad-x': '12px',
       '--sel-gap': '8px',
@@ -267,5 +302,37 @@ export class SelectComponent implements ControlValueAccessor, OnInit, OnDestroy 
     const extra = this.ui.selectClass ?? '';
     return ['ui-select', v, s, neu, dis, inv, extra].filter(Boolean);
   }
+  // Reordenar en el POPOVER (usa el array completo de seleccionados)
+onDropPopover(event: CdkDragDrop<any[]>) {
+  if (!this.isMultiple || this.ui.disabled) return;
+  const arr = [...this.selectedArray];
+  moveItemInArray(arr, event.previousIndex, event.currentIndex);
+  this._value = arr;
+  this.onChange(this._value);
+  this.syncHeaderState();
+}
+
+// Reordenar en el TRIGGER (solo chips visibles: 0..maxInline-1)
+onDropTrigger(event: CdkDragDrop<any[]>) {
+  if (!this.isMultiple || this.ui.disabled) return;
+
+  const visible = this.selectedArray.slice(0, this.maxInline);
+  const prevVal = visible[event.previousIndex];
+  const currVal = visible[event.currentIndex];
+
+  // indices reales dentro del arreglo completo
+  const prevIndexFull = this.selectedArray.findIndex(v => this.equals(v, prevVal));
+  const currIndexFull = this.selectedArray.findIndex(v => this.equals(v, currVal));
+
+  if (prevIndexFull < 0 || currIndexFull < 0) return;
+
+  const arr = [...this.selectedArray];
+  moveItemInArray(arr, prevIndexFull, currIndexFull);
+
+  this._value = arr;
+  this.onChange(this._value);
+  this.syncHeaderState();
+}
+
 }
 

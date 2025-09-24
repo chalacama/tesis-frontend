@@ -1,4 +1,4 @@
-
+// course.details.interfaces.ts
 export interface CourseDetailResponse {
     message: string;
     course:  CourseDetail;
@@ -42,6 +42,7 @@ export interface Category {
 export interface CategoryPivot {
     course_id:   number;
     category_id: number;
+    order:       number;
 }
 
 export interface Difficulty {
@@ -54,4 +55,27 @@ export interface Miniature {
     course_id: number;
     url:       string;
 }
+export interface CodeResponse {
+    message: string;
+    code:    string;
+}
 
+export interface CourseDetailRequest {
+    title?: string;
+  description?: string;
+  private?: boolean;
+  enabled?: boolean;
+  difficulty_id?: number;
+  code?: string | null;
+
+  // Relaciones
+  // Hasta 2 carreras (ids)
+  careers?: number[];
+
+  // Hasta 4 categorías: puedes enviar solo ids o { id, order }
+  categories?: (number | { id: number; order?: number })[];
+
+  // Archivo para miniatura (si lo incluyes, el request se envía como multipart/form-data)
+  miniature?: File;
+  
+}

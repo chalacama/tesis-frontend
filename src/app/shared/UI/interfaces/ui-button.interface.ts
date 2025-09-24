@@ -1,10 +1,10 @@
 // ui-botton.interface.ts
-import { BadgeProps, UiIconProps } from "./ui-icon.interface";
+import { UiBadgeProps, UiIconProps } from "./ui-icon.interface";
 import { UiA11Props, UiProps, UiStyleProps } from "./ui-presets.interface";
 
 export type BtnTypes   = 'button' | 'submit' | 'reset';  
 
-export interface UiButtonProps extends UiProps, BadgeProps , UiA11Props {  
+export interface UiButtonProps extends UiProps , UiA11Props {  
   id?: string;  
   btnClass?: string;
   btnStyle?: UiStyleProps;       
@@ -12,5 +12,7 @@ export interface UiButtonProps extends UiProps, BadgeProps , UiA11Props {
   link?: string;
   label?: string;
   icon?: UiIconProps;
+  showBadge?: boolean;
+  badge?: UiBadgeProps;
 } 
 
