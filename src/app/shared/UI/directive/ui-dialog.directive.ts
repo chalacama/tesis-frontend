@@ -22,7 +22,7 @@ export class UiDialogDirective {
   @Input() visible: UiDialogProps['visible'] = false;
   @Input() type: UiDialogProps['type'] = 'free';
   /* @Output() visibleChange = new EventEmitter<VisibleChangeEvent>(); */
-@Output() visibleChange = new EventEmitter<boolean>();
+  @Output() visibleChange = new EventEmitter<boolean>();
   // ======== Tokens base (UiProps) ========
   @Input() severity?: UiDialogProps['severity'] = 'primary';
   @Input() size?: UiDialogProps['size'] = 'sm';
@@ -38,21 +38,19 @@ export class UiDialogDirective {
   @Input() title?: UiDialogProps['title'];
 
   // ======== Diálogo (contenedor/panel) ========
-  @Input() dialogClass?: UiDialogProps['dialogClass'];
-  @Input() dialogStyle?: UiDialogProps['dialogStyle'];
+  @Input() class?: UiDialogProps['class'];
+  @Input() style?: UiDialogProps['style'];
 
   // ======== Comportamiento de cierre ========
   @Input() closeOnMaskClick: UiDialogProps['closeOnMaskClick'] = true;
-  @Input() closeOnEsc: UiDialogProps['closeOnEsc'] = false;
+  @Input() closeOnEsc: UiDialogProps['closeOnEsc'] = true;
 
   // ======== Máscara (backdrop) ========
-  @Input() mask: UiDialogProps['mask'] = true;
-  @Input() maskClass?: UiDialogProps['maskClass'];
-  @Input() maskStyle?: UiDialogProps['maskStyle'];
-  @Input() maskType?: UiDialogProps['maskType'] = 'transparent';
-  @Input() visibleBnt?: UiDialogProps['visibleBnt'] = true;
+  @Input() showMask: UiDialogProps['showMask'] = true;
+  @Input() mask?: UiDialogProps['mask'] = {
+    type: 'blur',
+    showBnt: true
+  };
+  @Input() showBtn?: UiDialogProps['showBnt'] = true;
 
-  // ======== Acciones e íconos (MaskingProps: Uibtns & Icons) ========
-  @Input() buttons?: UiDialogProps['buttons'];
-  @Input() icons?: UiDialogProps['icons'];
 }

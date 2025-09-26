@@ -13,13 +13,11 @@ export class UiInputLabelDirective {
   @Input() invalid: UiInputLabelProps['invalid'] = false;
 
   // ===== Label (UiLabelProps) =====
-  @Input() label: UiInputLabelProps['label'] = '';
-  @Input() labelClass?: UiInputLabelProps['labelClass'];
-  @Input() labelStyle?: UiInputLabelProps['labelStyle'];
+  @Input() label: UiInputLabelProps['label'];
 
   // ===== Input base =====
-  @Input() inputClass?: UiInputLabelProps['inputClass'];
-  @Input() inputStyle?: UiInputLabelProps['inputStyle'];
+  @Input() class?: UiInputLabelProps['class'];
+  @Input() style?: UiInputLabelProps['style'];
   @Input() placeholder?: UiInputLabelProps['placeholder'];
   @Input() type: UiInputLabelProps['type'] = 'text';              
   @Input() variant: UiInputLabelProps['variant'] = 'outlined'; 
@@ -28,9 +26,7 @@ export class UiInputLabelDirective {
   // ===== Counter (UiCounterProps) =====
   @Input() max?: UiInputLabelProps['max'];
   @Input() min?: UiInputLabelProps['min'];
-  @Input() counter: UiInputLabelProps['counter'] = false;
-  @Input() counterClass?: UiInputLabelProps['counterClass'];
-  @Input() counterStyle?: UiInputLabelProps['counterStyle'];
+  @Input() counter: UiInputLabelProps['counter'];
 
   // ===== A11Y (UiA11Props) =====
   @Input() ariaLabel?: UiInputLabelProps['ariaLabel'];
@@ -38,6 +34,8 @@ export class UiInputLabelDirective {
   @Input() tabIndex?: UiInputLabelProps['tabIndex'] = 0;
   @Input() ariaPressed?: UiInputLabelProps['ariaPressed'];
   @Input() title?: UiInputLabelProps['title'];
+  // showCounter
+  @Input() showCounter: UiInputLabelProps['showCounter'] = true;
 
   constructor() { }
 

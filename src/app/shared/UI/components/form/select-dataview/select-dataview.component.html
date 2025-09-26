@@ -16,7 +16,7 @@
       [size]="sdv.icon?.size || sdv.size || 'sm'"
       [severity]="sdv.icon?.severity || sdv.severity || 'primary'"
       [svgPath]="sdv.icon?.svgPath || 'svg/search.svg'"
-      [iconStyle]="sdv.icon?.iconStyle">
+      [style]="sdv.icon?.style">
     </ui-icon>
     
     <input
@@ -48,7 +48,7 @@
       role="option"
       [attr.aria-selected]="isSelected(opt)"
       (click)="toggleSelection(opt)"
-      (keydown)="handleItemKeydown($event, opt)"
+      
       [disabled]="sdv.disabled">
 
       <img *ngIf="getSrc(opt)" class="sdv-thumb" [src]="getSrc(opt)!" [alt]="getLabel(opt)" />

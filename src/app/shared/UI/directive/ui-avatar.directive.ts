@@ -9,8 +9,8 @@ import { UiAvatarProps } from '../interfaces/ui-avatar.interface';
 export class UiAvatarDirective {
   // === Identificación / clases / estilos ===
   @Input() id?: UiAvatarProps['id'];
-  @Input() avatarClass?: UiAvatarProps['avatarClass'] = '';
-  @Input() avatarStyle?: UiAvatarProps['avatarStyle'];
+  @Input() class?: UiAvatarProps['class'] = '';
+  @Input() style?: UiAvatarProps['style'];
 
   // === Contenido / media ===
   @Input() name?: UiAvatarProps['name'];               // Para iniciales si no hay imagen
@@ -30,7 +30,6 @@ export class UiAvatarDirective {
   @Input() tabIndex?: UiAvatarProps['tabIndex'] = 0;
   @Input() ariaPressed?: UiAvatarProps['ariaPressed'];
   @Input() title?: UiAvatarProps['title'];
-  @Input() onKeyDown?: UiAvatarProps['onKeyDown']; // ['enter','space']
 
   // === Badge opcional ===
   @Input() badge?: UiAvatarProps['badge'];

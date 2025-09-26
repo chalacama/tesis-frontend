@@ -36,21 +36,21 @@ export type UiInputType =
   | 'color'      // Selector de color
 
 
-export interface UiInputLabelProps extends UiA11Props , UiFormProps , UiLabelProps , UiCounterProps {
-    inputClass?: string;
-    inputStyle?: UiStyleProps;
+export interface UiInputLabelProps extends UiA11Props , UiFormProps   {
+    class?: string;
+    style?: UiStyleProps;
     placeholder?: string;
     type?: UiInputType ;
     variant?: UiVariant;
     autoSize?: boolean;
-    
-}
-export interface UiCounterProps {
+    counter?:  UiCounterProps;
+    label?: UiLabelProps;
     max?: number;
     min?: number;
-    counter?: boolean;
-    counterClass?: string;
-    counterStyle?: UiStyleProps;
-
+    showCounter?: boolean;
+}
+export interface UiCounterProps {
+    class?: string;
+    style?: UiStyleProps;
 }
 

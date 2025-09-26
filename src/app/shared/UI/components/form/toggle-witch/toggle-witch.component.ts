@@ -37,8 +37,8 @@ import { UiToogleWitchDirective } from '../../../directive/ui-toogle-witch.direc
         'ariaPressed',
         'title',
         'type',
-        'tggWClass',
-        'tggWStyle'
+        'class',
+        'style'
       ]
     }
   ],
@@ -101,7 +101,7 @@ export class ToggleWitchComponent implements ControlValueAccessor, OnChanges {
     const dis = this.tgg.disabled ? 'is-disabled' : '';
     const inv = this.tgg.invalid ? 'is-invalid' : '';
     const ty = `t-${this.tgg.type ?? 'switch'}`;
-    const extra = this.tgg.tggWClass ?? '';
+    const extra = this.tgg.class ?? '';
     const isOn = this._checked ? 'is-checked' : '';
     return ['ui-togg', v, s, neu, ty, dis, inv, isOn, extra].filter(Boolean);
   }
@@ -142,7 +142,7 @@ export class ToggleWitchComponent implements ControlValueAccessor, OnChanges {
       '--togg-fg': fg
     };
 
-    const overrides = styleToNgStyle(this.tgg.tggWStyle);
+    const overrides = styleToNgStyle(this.tgg.style);
     return mergeStyles(base, overrides);
   }
 

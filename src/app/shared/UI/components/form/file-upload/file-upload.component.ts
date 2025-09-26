@@ -38,8 +38,8 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
       'severity','size','disabled','neumorphism','variant','invalid',
       'ariaLabel','role','tabIndex','ariaPressed','title',
       // === Propios del FileUpload
-      'id','types','formats','orientation','label','fudClass','fudStyle',
-      'clearbtn','icon','max','min','maxMb','minSecond','maxSecond','preview'
+      'id','types','formats','orientation','label','class','style',
+      'clearbtn','icon','max','min','maxMb','minSecond','maxSecond','preview' ,
     ],
     outputs: ['fileSelected']
 
@@ -339,7 +339,7 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
     const ori = `o-${this.fud.orientation ?? 'vertical'}`;
     const invalid = (this.errors.length > 0 || this.fud.invalid) ? 'is-invalid' : '';
     const drag = this.isDragOver ? 'is-dragover' : '';
-    const extra = this.fud.fudClass ?? '';
+    const extra = this.fud.class ?? '';
     return ['ui-file-upload', v, s, neu, ori, dis, invalid, drag, extra].filter(Boolean);
   }
 
@@ -418,7 +418,7 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
   /** === NUEVO ===: mezcla de cssVars con fudStyle del usuario */
   styleMap(): Record<string, string> {
     const base = this.cssVars();
-    const overrides = styleToNgStyle(this.fud.fudStyle);
+    const overrides = styleToNgStyle(this.fud.style);
     return mergeStyles(base, overrides);
   }
 

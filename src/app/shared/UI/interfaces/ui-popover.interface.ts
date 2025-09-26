@@ -4,12 +4,11 @@ export type PopoverType   =
     'pointer' | 'plain'
     
 
-export interface UiPopoverProps extends Omit<UiProps ,'size'> ,Omit<UiA11Props, 'onKeyDown'>  {
+export interface UiPopoverProps extends Omit<UiProps ,'size'> ,UiA11Props  {
     id?: string;
-    povClass?: string;
-    povStyle?: UiStyleProps;
+    class?: string;
+    style?: UiStyleProps;
     visible?: boolean;
     type: PopoverType;
-    position?: UiPosition;
-    
+    position?: UiPosition; 
 }

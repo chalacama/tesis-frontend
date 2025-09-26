@@ -4,15 +4,15 @@ import { UiIconProps } from "./ui-icon.interface";
 import { UiA11Props, UiFileFormat, UiFileType, UiFormProps, UiOrientation, UiStyleProps, UiVariant } from "./ui-presets.interface";
 import { UiPreviewProps } from "./ui-preview.interface";
 
-export interface UifileUploadProps extends UiFormProps , Omit<UiA11Props, 'onKeyDown'> {
+export interface UifileUploadProps extends UiFormProps , UiA11Props {
     id?: string;
     types?: UiFileType [];
     formats?: UiFileFormat[];
     variant?: UiVariant;
     orientation?: UiOrientation;
     label?: string;
-    fudClass?: string;
-    fudStyle?: UiStyleProps
+    class?: string;
+    style?: UiStyleProps
     clearbtn: UiButtonProps;
     icon: UiIconProps;
     max?: number | string;
@@ -21,5 +21,4 @@ export interface UifileUploadProps extends UiFormProps , Omit<UiA11Props, 'onKey
     minSecond ?: number | string;
     maxSecond ?: number | string;
     preview ?: UiPreviewProps;
-
 }

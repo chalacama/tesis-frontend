@@ -19,11 +19,11 @@ import { IconComponent } from '../icon/icon.component';
     // Re-exportamos TODOS los inputs de la directiva para usarlos como <ui-button ...>
     inputs: [
       'label','type','variant',
-      'severity','size','disabled','btnClass','btnStyle',
-      'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown', 'icon',
-      // 'svgPath','iconSeverity','iconSize','iconClass','iconStyle',
+      'severity','size','disabled',
+      // 'btnClass','btnStyle',
+      'class','style',
+      'ariaLabel','role','tabIndex','ariaPressed','title', 'icon',
       'showBadge', 'badge',
-      // 'badgeSeverity','badgeSize','badgeClass','badgeStyle','badgeValue',
       'link','neumorphism'
     ]
   }],
@@ -115,7 +115,7 @@ export class ButtonComponent implements OnChanges {
 
 styleMap(): Record<string, string> {
   const baseVars = this.cssVars();                   // tus --btn-*
-  const overrides = styleToNgStyle(this.btn.btnStyle);
+  const overrides = styleToNgStyle(this.btn.style);
   return mergeStyles(baseVars, overrides);
 }
   hostClasses(): string[] {
@@ -123,20 +123,8 @@ styleMap(): Record<string, string> {
     const s = `s-${this.btn.size ?? 'md'}`;
     const neu = `neu-${this.btn.neumorphism ?? 'flat'}`;
     const dis = this.btn.disabled ? 'is-disabled' : '';
-    const extra = this.btn.btnClass ?? '';
+    const extra = this.btn.class ?? '';
     return ['app-btn', v, s,neu, dis, extra].filter(Boolean);
   }
 
-  /** Soporte para Enter/Espacio si onKeyDown incluye esos valores */
-  handleKeydown(ev: KeyboardEvent) {
-    if (!this.btn.onKeyDown || this.btn.disabled) return;
-    const key = ev.key.toLowerCase();
-    if (key === 'enter' && this.btn.onKeyDown.includes('enter')) {
-      (ev.target as HTMLElement)?.dispatchEvent(new Event('click', { bubbles: true }));
-      ev.preventDefault();
-    } else if ((key === ' ' || key === 'spacebar') && this.btn.onKeyDown.includes('space')) {
-      (ev.target as HTMLElement)?.dispatchEvent(new Event('click', { bubbles: true }));
-      ev.preventDefault();
-    }
-  }
 }

@@ -29,8 +29,8 @@ export class UiFileUploadDirective {
   @Input() orientation?: UifileUploadProps['orientation'] = 'vertical';
 
   @Input() label?: UifileUploadProps['label'];
-  @Input() fudClass?: UifileUploadProps['fudClass'];
-  @Input() fudStyle?: UifileUploadProps['fudStyle'];
+  @Input() class?: UifileUploadProps['class'];
+  @Input() style?: UifileUploadProps['style'];
 
   @Input() clearbtn?: UifileUploadProps['clearbtn'];
 

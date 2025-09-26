@@ -14,14 +14,13 @@ export class UiPopoverDirective {
   /** ---- Props A11y (Omit<UiA11Props, 'onKeyDown'>) ---- */
   @Input() ariaLabel?: UiPopoverProps['ariaLabel'];
   @Input() role: UiPopoverProps['role'] = 'dialog';
-  @Input() tabIndex: UiPopoverProps['tabIndex'] = -1;
   @Input() ariaPressed?: UiPopoverProps['ariaPressed'];
   @Input() title?: UiPopoverProps['title'];
 
   /** ---- Props específicas del popover ---- */
   @Input() id?: UiPopoverProps['id'];
-  @Input() povClass?: UiPopoverProps['povClass'];
-  @Input() povStyle?: UiPopoverProps['povStyle'];
+  @Input() class?: UiPopoverProps['class'];
+  @Input() style?: UiPopoverProps['style'];
   @Input() visible: UiPopoverProps['visible'] = false;
   @Input() position?: UiPopoverProps['position'] = 'bottom-left';
 

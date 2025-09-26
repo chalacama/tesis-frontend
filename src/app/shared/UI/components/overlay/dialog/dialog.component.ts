@@ -20,13 +20,10 @@ import { UiButtonProps } from '../../../interfaces/ui-button.interface';
     inputs: [
       'visible','type',
       'severity','size','disabled','neumorphism','variant',
-      'ariaLabel','role','tabIndex','ariaPressed','title',
-      'dialogClass','dialogStyle',
+      'ariaLabel','role','ariaPressed','title',
+      'class','style',
       'closeOnMaskClick','closeOnEsc',
-      'mask','maskClass','maskStyle','maskType',
-      'buttons','icons',
-      // 👇 NUEVO para controlar la visibilidad de los botones en la máscara
-      'visibleBnt'
+      'showMask' ,'style','showBtn'
     ],
     outputs: ['visibleChange']
   }]
@@ -127,19 +124,19 @@ export class DialogComponent implements OnInit, OnDestroy {
     const t  = `t-${this.dlg.type ?? 'free'}`;
     const dis= this.dlg.disabled ? 'is-disabled' : '';
     const open = this.dlg.visible ? 'is-open' : 'is-closed';
-    const extra = this.dlg.dialogClass ?? '';
+    const extra = this.dlg.class ?? '';
     return ['ui-dialog', v, s, neu, sev, t, dis, open, extra].filter(Boolean);
   }
 
   maskClasses(): string[] {
-    const mt = `mask-${(this.dlg as any).maskType ?? 'transparent'}`;
+    const mt = `mask-${(this.dlg.mask?.type) ?? 'transparent'}`;
     const type = `t-${this.dlg.type ?? 'free'}`;
     const extra = (this.dlg as any).maskClass ?? '';
     return ['ui-dialog__mask', mt, type, this.dlg.visible ? 'is-open' : 'is-closed', extra].filter(Boolean);
   }
 
   styleMap(): Record<string, string> {
-    const s = (this.dlg.dialogStyle ?? {}) as UiStyleProps;
+    const s = (this.dlg.style ?? {}) as UiStyleProps;
     const out: Record<string, string> = {};
     for (const [k, v] of Object.entries(s)) if (v != null) out[k] = String(v);
     return out;

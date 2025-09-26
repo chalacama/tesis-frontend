@@ -14,8 +14,8 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
     directive: UiPopoverDirective,
     inputs: [
       'severity','disabled','variant','neumorphism',
-      'ariaLabel','role','tabIndex','ariaPressed','title',
-      'id','povClass','povStyle','visible','type','position'
+      'ariaLabel','role','ariaPressed','title',
+      'id','class','style','visible','type','position'
     ],
     outputs: ['visibleChange'] // re-exporta el output de la DIRECTIVA
   }]
@@ -74,13 +74,13 @@ export class PopoverComponent {
       '--pov-arrow-size': '10px',
       '--pov-pad': '0px',
       '--pov-minw': '100px',
-      '--pov-maxw': '-' + (this.pov.povStyle?.width ?? '400px')
+      '--pov-maxw': '-' + (this.pov.style?.width ?? '400px')
     };
   }
 
   styleMap(): Record<string, string> {
     const base = this.cssVars();
-    const overrides = styleToNgStyle(this.pov.povStyle);
+    const overrides = styleToNgStyle(this.pov.style);
     return mergeStyles(base, overrides);
   }
 
@@ -91,7 +91,7 @@ export class PopoverComponent {
     const sev = `s-${this.pov.severity ?? 'primary'}`;
     const vis = this.pov.visible ? 'is-visible' : 'is-hidden';
     const t = this.pov.type === 'pointer' ? 't-pointer' : 't-plain';
-    const extra = this.pov.povClass ?? '';
+    const extra = this.pov.class ?? '';
     const dis = this.pov.disabled ? 'is-disabled' : '';
     
     return ['ui-pov', v, neu, sev, vis, t, dis, extra,post].filter(Boolean);

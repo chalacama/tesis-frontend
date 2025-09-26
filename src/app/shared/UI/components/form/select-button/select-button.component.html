@@ -19,7 +19,7 @@
       [disabled]="sb.disabled || it.disabled"
       [attr.role]="sb.multiple ? 'checkbox' : 'radio'"
       [attr.aria-checked]="isCheckedAndClass(it)"
-      [btnClass]="isCheckedAndClass(it)"
+      [class]="isCheckedAndClass(it)"
      
       (click)="selectOption(it)"
     ></ui-button>

@@ -27,8 +27,8 @@ export class UiCheckboxDirective {
 
   // === UiCheckboxProps ===
   @Input() id?: UiCheckboxProps['id'];
-  @Input() checkClass?: UiCheckboxProps['checkClass'];
-  @Input() checkStyle?: UiCheckboxProps['checkStyle'];
+  @Input() class?: UiCheckboxProps['class'];
+  @Input() style?: UiCheckboxProps['style'];
   @Input() type?: UiCheckboxProps['type'] = 'column';
   @Input() checked?: UiCheckboxProps['checked'] = false;
   @Input() indeterminate?: UiCheckboxProps['indeterminate'] = false;

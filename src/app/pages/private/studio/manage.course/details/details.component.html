@@ -1,5 +1,5 @@
 <div class="content-details">
-    <form class="details-form" [formGroup]="form">
+    <form class="details-form" [formGroup]="form" (ngSubmit)="save()">
         <div class="details-start">
             <div class="details-start-left">
                 <div class="start-left-name">
@@ -9,10 +9,10 @@
                     <div class="start-left-name-right">
 
                         <ui-button [disabled]="form.pristine" (click)="resetForm()" neumorphism="raised"
-                            [btnStyle]="{borderRadius: '30px'}" label="Restablecer" severity="secondary"
+                            [style]="{borderRadius: '30px'}" label="Restablecer" severity="secondary"
                             [icon]="{svgPath: 'svg/clear-all.svg'}">
                         </ui-button>
-                        <ui-button (click)="save()" [disabled]="form.invalid" neumorphism="raised" [btnStyle]="{borderRadius: '30px'}"
+                        <ui-button [type]="'submit'" (click)="save()" [disabled]="" neumorphism="raised" [style]="{borderRadius: '30px'}"
                             label="Guardar" severity="primary" [icon]="{svgPath: 'svg/save-outline.svg'}">
                         </ui-button>
 
@@ -23,69 +23,59 @@
                     <div class="start-left-edit-item">
 
                         <div class="start-left-edit-input">
-                            <ui-input-label formControlName="title" label="Título (obligatorio)" severity="primary"
+                            <ui-input-label formControlName="title" [label]="{label:'Título (obligatorio)'}" severity="primary"
                                 placeholder="Escribe un título claro y único" type="text" variant="outlined"
-                                [counter]="true" [min]="10" [max]="100" [autoSize]="true"
-                                [invalid]="f.description.invalid && (f.title.touched || f.title.dirty)"></ui-input-label>
+                                 [max]="100" [autoSize]="true"
+                                [invalid]="f.title.invalid && (f.title.touched || f.title.dirty)"></ui-input-label>
 
                         </div>
                     </div>
 
                     <div class="start-left-edit-item">
                         <div class="start-left-edit-input">
-                            <ui-input-label formControlName="description" label="Descripción" severity="primary"
-                                placeholder="Describe el curso" type="textarea" variant="outlined" [counter]="true"
-                                [min]="0" [max]="300" [autoSize]="true"
+                            <ui-input-label formControlName="description"[label]="{label:'Descripción'}"  severity="primary"
+                                placeholder="Describe el curso" type="textarea" variant="outlined"
+                                [max]="300" [autoSize]="true"
                                 [invalid]="f.description.invalid && (f.description.touched || f.description.dirty)"></ui-input-label>
                         </div>
                     </div>
-
-
-                    <!-- <div class="start-left-edit-item flex-column-item">
-                        <label class="item-select-label" for="difficulty">Dificultad</label>
-                        <ui-select-button formControlName="difficulty_id" [options]="mapDifficulties()"
-                            [optionLabel]="'name'" [optionValue]="'id'" orientation="horizontal" variant="outlined"
-                            severity="primary" size="sm" [multiple]="false"
-                            (selectionChange)="onSelectDifficulty($event)">
-                        </ui-select-button>
-                    </div> -->
                     <div class="start-left-edit-item flex-row-item">
                         <div class="item-card">
                             <div class="item-card-header">
                                 <label class="item-card-header-label" for="">Codigo de acceso</label>
                                 <div class="item-card-header-icon">
-                                    <ui-popover neumorphism="raised" [povStyle]="{width: 'auto'}" position="bottom-left"
+                                    <ui-popover neumorphism="raised" [style]="{width: 'auto'}" position="bottom-left"
                                         [closeOnOutside]="true" [closeOnInside]="true" [(visible)]="povOpen"
                                         [type]="'plain'" [variant]="'filled'" [severity]="'primary'">
-                                        <ui-button *ngIf="form.get('private')?.value" label="Copiar vinculo de acceso" style="width: 100%;" size="md"
+                                        <ui-button *ngIf="form.get('private')?.value" label="Copiar vinculo de acceso" size="md"
                                             variant="flat" neumorphism="flat"
-                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
                                             severity="contrast">
                                         </ui-button>
-                                        <ui-button label="Copiar codigo de acceso" *ngIf="form.get('private')?.value" (click)="copyToClipboard()" style="width: 100%;" size="md"
+                                        <ui-button label="Copiar codigo de acceso" *ngIf="form.get('private')?.value" (click)="copyToClipboard()"  size="md"
                                             variant="flat" neumorphism="flat"
-                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
                                             severity="contrast">
                                         </ui-button>
-                                        <ui-button *ngIf="form.get('private')?.value" (click)="codeGeneration()" label="Restablecer codigo de acceso" style="width: 100%;" size="md"
+                                        <ui-button *ngIf="form.get('private')?.value" (click)="codeGeneration()" label="Restablecer codigo de acceso"  size="md"
                                             variant="flat" neumorphism="flat"
-                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
                                             severity="contrast">
                                         </ui-button>
-                                        <ui-button (click)="codeDesactivation()"  *ngIf="form.get('private')?.value" label="Desactivar" style="width: 100%;" size="md" variant="flat"
+                                        <ui-button (click)="codeDesactivation()"  *ngIf="form.get('private')?.value" label="Desactivar"  size="md" variant="flat"
                                             neumorphism="flat"
-                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
                                             severity="contrast">
                                         </ui-button>
-                                        <ui-button (click)="codeActivation()" *ngIf="!form.get('private')?.value" label="Activar" style="width: 100%;" size="md" variant="flat"
+                                        <ui-button (click)="codeActivation()" *ngIf="!form.get('private')?.value" label="Activar"  size="md" variant="flat"
                                             neumorphism="flat"
-                                            [btnStyle]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
+                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
                                             severity="contrast">
                                         </ui-button>
                                     </ui-popover>
                                     <ui-button size="md" (click)="povOpen = !povOpen" variant="flat"
                                         neumorphism="raised"
-                                        [btnStyle]="{borderRadius: '19px', width: '35px', height: '35px' }"
+                                        [style]="{borderRadius: '19px', width: '35px', height: '35px' }"
                                         severity="primary" [icon]="{svgPath: 'svg/menu-dots.svg'}">
                                     </ui-button>
 
@@ -100,7 +90,7 @@
                                     formControlName="code">
                                 <div class="item-card-expand">
                                     <ui-button *ngIf="form.get('private')?.value" variant="flat"
-                                        [btnStyle]="{borderRadius: '20px', width: '40px', height: '40px'}"
+                                        [style]="{borderRadius: '20px', width: '40px', height: '40px'}"
                                         severity="primary" [icon]="{svgPath: 'svg/expand.svg'}">
 
 
@@ -138,7 +128,7 @@
                 </div>
                 <div class="start-right-edit">
                     <div class="start-right-edit-item">
-                        <ui-file-upload (fileSelected)="selectedMiniature = $event"   formControlName="miniatureUrl" [fudStyle]="{width: '350px'}"
+                        <ui-file-upload  (fileSelected)="selectedMiniature = $event"   formControlName="miniatureUrl" [style]="{width: '350px'}"
                             label="Suelta una imagen o selecciona" [types]="['image']" [formats]="['jpg','png','gif']"
                             variant="outlined" severity="primary" size="sm"></ui-file-upload>
                     </div>
@@ -150,7 +140,7 @@
                             </div>
                             <div>
                                 <ui-select variant="outlined" [showClear]="true" [showBadge]="true" [maxBadge]="4"
-                                    [selectStyle]="{width: '350px'}" formControlName="categories"
+                                    [style]="{width: '350px'}" formControlName="categories"
                                     [options]="categoriesAvail()" optionLabel="name" optionValue="id" [multiple]="true"
                                     [filter]="true" [showClear]="true" [max]="MAX_CATEGORIES" placeholder="Selecciona categorías"
                                     type="float" [severity]="'primary'"></ui-select>

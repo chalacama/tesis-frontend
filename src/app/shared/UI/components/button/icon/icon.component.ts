@@ -13,7 +13,7 @@ import { UiIconDirective } from '../../../directive/ui-icon.directive';
   hostDirectives: [{
     directive: UiIconDirective,
     // Re-exporta inputs para poder usarlos directamente en <ui-icon ...>
-    inputs: ['svgPath', 'severity', 'size', 'iconClass', 'iconStyle', 'ariaLabel', 'role']
+    inputs: ['svgPath', 'severity', 'size', 'class', 'style', 'ariaLabel', 'role']
   }]
 })
 export class IconComponent implements OnChanges {
@@ -64,7 +64,7 @@ export class IconComponent implements OnChanges {
   cssMap(): Record<string, string> {
     // mergeamos las variables de la directiva + iconStyle opcional
     const vars = this.iconDir.cssVars();
-    const style = (this.iconDir.iconStyle ?? {}) as Record<string, string>;
+    const style = (this.iconDir.style ?? {}) as Record<string, string>;
     return { ...vars, ...style };
   }
 

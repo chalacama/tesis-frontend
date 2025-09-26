@@ -22,8 +22,8 @@ export class UiPreviewDirective implements UiPreviewProps {
   @Input() variant: UiPreviewProps['variant'] = 'filled';
 
   // ===== UiPreviewProps =====
-  @Input() previewClass?: UiPreviewProps['previewClass'];
-  @Input() previewStyle?: UiPreviewProps['previewStyle'];
+  @Input() class?: UiPreviewProps['class'];
+  @Input() style?: UiPreviewProps['style'];
 
   /** Si es true, muestra overlay (ojito) y permite abrir el diálogo */
   @Input() overlay: UiPreviewProps['overlay'] = true;
@@ -35,7 +35,7 @@ export class UiPreviewDirective implements UiPreviewProps {
   @Input() mask?: UiPreviewProps['mask'];
 
   /** Config avanzada de máscara (blur/dimmed/transparent + botones/íconos) */
-  @Input() masking?: UiPreviewProps['masking'];
+  @Input() showMask?: UiPreviewProps['showMask'] = true;
 
   /** Config del diálogo (type, visible, closeOnMaskClick, etc.) */
   @Input() dialog?: UiPreviewProps['dialog'];

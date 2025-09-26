@@ -5,8 +5,8 @@
 >
   <div class="uil-input__wrapper">
     <!-- Label -->
-    <div class="uil-input__label" [ngClass]="il.labelClass" [ngStyle]="labelStyle()">
-      <label>{{ il.label }}</label>
+    <div class="uil-input__label" [ngClass]="il.label?.class" [ngStyle]="labelStyle()">
+      <label>{{ il.label?.label }}</label>
     </div>
 
     <!-- Field -->
@@ -16,7 +16,7 @@
         *ngSwitchCase="'text'"
         #inp
         size="md"
-        class="uil-input__field {{ il.inputClass || '' }}"
+        class="uil-input__field {{ il.class || '' }}"
         [ngStyle]="fieldStyle()"
         [placeholder]="il.placeholder || ''"
         [attr.aria-label]="il.ariaLabel || il.label || null"
@@ -35,7 +35,7 @@
         *ngSwitchDefault
         #ta
         rows="1"
-        class="uil-input__field uil-input__field--textarea {{ il.inputClass || '' }}"
+        class="uil-input__field uil-input__field--textarea {{ il.class || '' }}"
         [ngStyle]="fieldStyle()"
         [placeholder]="il.placeholder || ''"
         [attr.aria-label]="il.ariaLabel || il.label || null"
@@ -51,7 +51,7 @@
     </ng-container>
 
     <!-- Counter -->
-    <div *ngIf="il.counter" class="uil-input__counter {{ il.counterClass || '' }}" [ngStyle]="counterStyle()">
+    <div *ngIf="il.showCounter" class="uil-input__counter {{ il.counter?.class }}" [ngStyle]="counterStyle()">
       <span>{{ counterText() }}</span>
     </div>
   </div>

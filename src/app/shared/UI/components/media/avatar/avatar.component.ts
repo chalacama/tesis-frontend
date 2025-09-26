@@ -15,11 +15,11 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
     directive: UiAvatarDirective,
     inputs: [
       // Avatar base
-      'id','avatarClass','avatarStyle','name','src','alt',
+      'id','class','style','name','src','alt',
       // UiProps heredados
       'severity','size','disabled','neumorphism','variant',
       // A11y
-      'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown',
+      'ariaLabel','role','tabIndex','ariaPressed','title',
       // Badge
       'badge'
     ]
@@ -104,7 +104,7 @@ export class AvatarComponent implements OnChanges {
   /** Estilos finales combinando overrides del input avatarStyle */
   styleMap(): Record<string, string> {
     const baseVars = this.cssVars();
-    const overrides = styleToNgStyle(this.av.avatarStyle);
+    const overrides = styleToNgStyle(this.av.style);
     return mergeStyles(baseVars, overrides);
   }
 
@@ -113,7 +113,7 @@ export class AvatarComponent implements OnChanges {
     const neu = `neu-${this.av.neumorphism ?? 'flat'}`;
     const v   = `v-${this.av.variant ?? 'filled'}`;
     const dis = this.av.disabled ? 'is-disabled' : '';
-    const extra = this.av.avatarClass ?? '';
+    const extra = this.av.class ?? '';
     return ['app-avatar', s, neu, v, dis, extra].filter(Boolean);
   }
 
@@ -122,16 +122,6 @@ export class AvatarComponent implements OnChanges {
   }
 
   /** Soporte de teclado como en tu botón */
-  handleKeydown(ev: KeyboardEvent) {
-    if (!this.av.onKeyDown || this.av.disabled) return;
-    const key = ev.key.toLowerCase();
-    if (key === 'enter' && this.av.onKeyDown.includes('enter')) {
-      (ev.target as HTMLElement)?.dispatchEvent(new Event('click', { bubbles: true }));
-      ev.preventDefault();
-    } else if ((key === ' ' || key === 'spacebar') && this.av.onKeyDown.includes('space')) {
-      (ev.target as HTMLElement)?.dispatchEvent(new Event('click', { bubbles: true }));
-      ev.preventDefault();
-    }
-  }
+
 }
 

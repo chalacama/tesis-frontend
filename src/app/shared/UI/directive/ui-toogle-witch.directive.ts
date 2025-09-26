@@ -24,8 +24,8 @@ export class UiToogleWitchDirective {
 
   /** ===== Propias del toggle ===== */
   @Input() type: UiToggleWitchProps['type'] = 'switch';
-  @Input() tggWClass: UiToggleWitchProps['tggWClass'] = '';
-  @Input() tggWStyle: UiToggleWitchProps['tggWStyle'] = undefined;
+  @Input() class: UiToggleWitchProps['class'] = '';
+  @Input() style: UiToggleWitchProps['style'] = undefined;
 }
 
 

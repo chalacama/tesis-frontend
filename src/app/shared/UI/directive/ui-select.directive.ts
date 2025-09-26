@@ -24,7 +24,6 @@ export class UiSelectDirective implements UiA11Props, UiFormProps {
   @Input() tabIndex?: number = 0;
   @Input() ariaPressed?: boolean;
   @Input() title?: string;
-  @Input() onKeyDown?: ('enter' | 'space')[];
 
   // === UiSelectProps ===
   @Input() id?: string;
@@ -32,8 +31,8 @@ export class UiSelectDirective implements UiA11Props, UiFormProps {
   @Input() editable?: boolean = false;
   @Input() showClear?: boolean = false;
 
-  @Input() selectClass?: string;
-  @Input() selectStyle?: UiStyleProps;
+  @Input() class?: string;
+  @Input() style?: UiStyleProps;
 
   @Input() icon?: UiIconProps;
   @Input() popover?: UiPopoverProps;

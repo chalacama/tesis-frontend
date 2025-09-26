@@ -16,8 +16,8 @@
     [size]="btn.size || 'sm'"
     [severity]="btn.severity || 'primary'"
     [svgPath]="btn.icon?.svgPath"
-    [iconStyle]="btn.icon?.iconStyle"
-    [iconClass]="btn.icon?.iconClass">
+    [style]="btn.icon?.style"
+    [class]="btn.icon?.class">
   </ui-icon>
 </span>
 
@@ -27,8 +27,8 @@
 
   <!-- Badge -->
   <span class="btn-badge" *ngIf="btn.showBadge"
-        [ngClass]="btn.badge?.badgeClass"
-        [ngStyle]="btn.badge?.badgeStyle">
+        [ngClass]="btn.badge?.class"
+        [ngStyle]="btn.badge?.style">
     {{ btn.badge?.value}}
   </span>
 </button>

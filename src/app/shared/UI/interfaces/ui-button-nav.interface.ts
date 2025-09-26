@@ -5,14 +5,14 @@ import { UiA11Props, UiProps } from "./ui-presets.interface";
 export interface UiButtonNavProps extends UiA11Props ,UiProps {
    id?: string;
    showUnderline?: boolean;
-   activeUnderline?: number;
+   activeUnderline?: boolean;
    underline?: UiUnderlineProps;
-   buttonNavClass?: string;
-   buttonNavStyle?: object;
+   class?: string;
+   style?: object;
 }
 
 export interface UiUnderlineProps {
   id?: string;
-  underlineClass?: string;
-  underlineStyle?: object;
+  class?: string;
+  style?: object;
 }

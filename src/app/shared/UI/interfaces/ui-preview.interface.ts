@@ -6,12 +6,12 @@ import { UiFileType, UiMediaProps, UiStyleProps } from "./ui-presets.interface";
 
 export interface UiPreviewProps  extends UiMediaProps   {
     id?: string;
-    previewClass?: string;
-    previewStyle?: UiStyleProps;
+    class?: string;
+    style?: UiStyleProps;
     overlay?: boolean;   
     icon?: UiIconProps;
-    mask?: boolean;
-    masking?: MaskingProps;
+    showMask?: boolean;
+    mask?: MaskingProps;
     dialog?: UiDialogProps;
     types?: UiFileType;
 }

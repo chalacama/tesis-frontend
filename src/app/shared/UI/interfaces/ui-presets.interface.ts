@@ -57,8 +57,7 @@ export interface UiA11Props {
   role?: string;
   tabIndex?: number;
   ariaPressed?: boolean;  
-  title?: string;  
-  onKeyDown?: ('enter' | 'space')[];       
+  title?: string;      
 }
 
 export interface UiStyleProps {

@@ -13,7 +13,7 @@
     <div class="ufu-input-content">
       <div class="ufu-icon">
         <ui-icon [size]="fud.size || 'sm'" [severity]="fud.severity || 'primary'"
-          [svgPath]="fud.icon?.svgPath || 'svg/image.svg'" [iconStyle]="{width: '50px', height: '50px'}"></ui-icon>
+          [svgPath]="fud.icon?.svgPath || 'svg/image.svg'" [style]="{width: '50px', height: '50px'}"></ui-icon>
       </div>
       <div class="ufu-label">
         <span>{{ defaultLabel() }}</span>
@@ -28,23 +28,23 @@
         <div class="ufu-preview">
           <ng-container [ngSwitch]="p.type">
             <ng-container *ngSwitchCase="'image'">
-              <ui-preview [previewStyle]="{width: '150px'}" [types]="'image'" [overlay]="true"
+              <ui-preview [style]="{width: '150px'}" [types]="'image'" [overlay]="true"
                 [severity]="fud.severity || 'primary'" [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'"
-                [mask]="true" [masking]="{ maskType: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
+                [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
               </ui-preview>
             </ng-container>
 
             <ng-container *ngSwitchCase="'video'">
               <ui-preview [types]="'video'" [overlay]="true" [severity]="fud.severity || 'primary'"
-                [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" [mask]="true"
-                [masking]="{ maskType: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
+                [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" 
+                [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
               </ui-preview>
             </ng-container>
 
             <ng-container *ngSwitchDefault>
               <ui-preview [types]="'document'" [overlay]="true" [severity]="fud.severity || 'primary'"
-                [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" [mask]="true"
-                [masking]="{ maskType: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
+                [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" 
+                [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
               </ui-preview>
             </ng-container>
           </ng-container>
@@ -58,16 +58,16 @@
 
         <div class="ufu-remove">
           <ui-button [severity]="fud.severity || 'danger'" [size]="'sm'"
-            [btnStyle]="{borderRadius: '17px', width: '25px', height: '25px'}" [variant]="'flat'"
+            [style]="{borderRadius: '17px', width: '25px', height: '25px'}" [variant]="'flat'"
             [icon]="{ svgPath: 'svg/x.svg'}" [disabled]="fud.disabled" (click)="removeAt(i)">
           </ui-button>
         </div>
       </div>
 
       <div class="ufu-empty" *ngIf="!previews.length">
-        <ui-preview [src]="" [previewStyle]="{width: '150px', borderRadius: '5px'}" [types]="'image'" [overlay]="true"
+        <ui-preview [src]="" [style]="{width: '150px', borderRadius: '5px'}" [types]="'image'" [overlay]="true"
           [severity]="fud.severity || 'primary'" [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'"
-          [mask]="true" [masking]="{ maskType: 'blur' }">
+           [mask]="{ type: 'blur' }">
         </ui-preview>
         <div class="ufu-errors" *ngIf="errors.length">
             <span *ngFor="let e of errors">{{ e }}</span>
@@ -79,7 +79,7 @@
           
         <div class="ufu-remove">
           <ui-button [severity]="fud.severity || 'danger'" [size]="'sm'"
-            [btnStyle]="{borderRadius: '17px', width: '25px', height: '25px'}" [variant]="'flat'"
+            [style]="{borderRadius: '17px', width: '25px', height: '25px'}" [variant]="'flat'"
             [icon]="{ svgPath: 'svg/x.svg'}" [disabled]="true">
           </ui-button>
         </div>

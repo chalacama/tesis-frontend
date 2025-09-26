@@ -25,9 +25,9 @@ type Primitive = string | number | boolean | null | undefined;
       // UiProps / UiFormProps
       'severity','size','disabled','neumorphism','variant','invalid',
       // A11y
-      'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown',
+      'ariaLabel','role','tabIndex','ariaPressed','title',
       // Select props
-      'id','placeholder','editable','showClear','selectClass','selectStyle',
+      'id','placeholder','editable','showClear','class','style',
       'icon','popover','options','optionLabel','optionValue','multiple','filter','max','type',
       'maxBadge', // numero de badge
       'showBadge', // oculta solo el badge del popover
@@ -289,7 +289,7 @@ get popoverBadgeText(): string {
       '--sel-placeholder': 'var(--text-color-secondary)',
       '--sel-shadow': 'var(--shadow-color)',
     };
-    const overrides = styleToNgStyle(this.ui.selectStyle);
+    const overrides = styleToNgStyle(this.ui.style);
     return mergeStyles(base, overrides);
   }
 
@@ -299,7 +299,7 @@ get popoverBadgeText(): string {
     const neu = `neu-${this.ui.neumorphism ?? 'flat'}`;
     const dis = this.ui.disabled ? 'is-disabled' : '';
     const inv = this.ui.invalid ? 'is-invalid' : '';
-    const extra = this.ui.selectClass ?? '';
+    const extra = this.ui.class ?? '';
     return ['ui-select', v, s, neu, dis, inv, extra].filter(Boolean);
   }
   // Reordenar en el POPOVER (usa el array completo de seleccionados)

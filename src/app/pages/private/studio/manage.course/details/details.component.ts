@@ -81,21 +81,22 @@ export class DetailsComponent implements OnInit {
 
   readonly MAX_CATEGORIES = 4;
 readonly MAX_CAREERS = 2;
+  
 
   // Datos
   course = signal<CourseDetail | null>(null);
   difficulties = signal<Difficulty[]>([]);
   categoriesAvail = signal<{ id: number; name: string }[]>([])
   // Para reset/diff
-  private originalCourse: CourseDetail | null = null;
+   originalCourse: CourseDetail | null = null;
 
   // Form reactivo tipado (sin nullables)
   form = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(10)]],
     difficulty_id: [2, [Validators.required]],
-    private: [false, [Validators.required]],
-    enabled: [true, [Validators.required]],
+    private: [false],
+    enabled: [true],
     code: [''], // nullable en backend; aquí lo tratamos como string ('' -> null al guardar si quieres)
     careers: this.fb.control<number[]>([], { nonNullable: true }),    // ids
     categories: this.fb.control<number[]>([], { nonNullable: true }),    // ids
@@ -240,13 +241,17 @@ readonly MAX_CAREERS = 2;
 
   // ----- Acciones -----
   save(): void {
+    console.log('Guardando cambios...');
     const c = this.course();
     if (!c) return;
-
+    console.log('Curso actual:');
     if (!this.form.valid) {
+      console.log('Formulario inválido:');
       this.form.markAllAsTouched();
+      
       return;
     }
+    console.log('Formulario válido, procediendo a guardar...');
 
     // Respeta límites también en front
   let careers = this.form.value.careers ?? [];
@@ -270,7 +275,7 @@ readonly MAX_CAREERS = 2;
   this.saving.set(true);
   this.errorMsg.set(null);
   this.successMsg.set(null);
-
+console.log('Payload a enviar:', payload);
   this.courseService
     .updateCourse(c.id, payload) // << envía archivo si hay
     .pipe()
@@ -283,6 +288,7 @@ readonly MAX_CAREERS = 2;
 
         this.form.markAsPristine();
         this.successMsg.set('Curso actualizado correctamente.');
+        console.log('Curso actualizado:');
         this.saving.set(false);
         // opcional: cierra modal de miniatura
         this.modalOpenMiniature = false;

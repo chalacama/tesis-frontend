@@ -66,12 +66,12 @@
 
                     <div class="cell_miniature">
                         <td>
-                            <ui-preview style="width: 100%;" [previewStyle]="{borderRadius: '5px'}"
-                                [src]="course.miniature.url" [types]="'image'" [overlay]="false" [mask]="true"
+                            <ui-preview  [style]="{borderRadius: '5px' , width:'100%'}"
+                                [src]="course.miniature.url" [types]="'image'" [overlay]="false" [showMask]="true"
                                 [severity]="'primary'" [size]="'sm'" [variant]="'outlined'"
-                                [masking]="{ maskType: 'blur' }">
+                                [mask]="{ type: 'blur' }">
 
-                                <ui-button variant="flat" [btnStyle]="{borderRadius: '15px', width: '30px', height: '30px'}"
+                                <ui-button variant="flat" [style]="{borderRadius: '15px', width: '30px', height: '30px'}"
                             severity="primary" [icon]="{svgPath: 'svg/search.svg'}">
                         </ui-button>
                             </ui-preview>

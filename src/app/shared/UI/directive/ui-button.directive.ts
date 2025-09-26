@@ -18,9 +18,11 @@ export class UiButtonDirective {
   @Input() severity?: UiButtonProps['severity'];
   @Input() size?: UiButtonProps['size'] = 'sm';
   @Input() disabled: UiButtonProps['disabled'] = false;
-  @Input() btnClass?: UiButtonProps['btnClass'];
-  @Input() btnStyle?: UiButtonProps['btnStyle'];
-
+/*   @Input() btnClass?: UiButtonProps['btnClass'];
+  @Input() btnStyle?: UiButtonProps['btnStyle']; */
+    @Input() class?: UiButtonProps['class'];
+  @Input() style?: UiButtonProps['style'];
+  @Input() id?: UiButtonProps['id'];
 
   // ===== Accesibilidad (UiA11Props) =====
   @Input() ariaLabel?: UiButtonProps['ariaLabel'];
@@ -28,16 +30,11 @@ export class UiButtonDirective {
   @Input() tabIndex?: UiButtonProps['tabIndex'] = 0;
   @Input() ariaPressed?: UiButtonProps['ariaPressed'];
   @Input() title?: UiButtonProps['title'];
-  @Input() onKeyDown?: UiButtonProps['onKeyDown'];
 
   @Input() icon?: UiButtonProps['icon'];
 
   // ===== Badge (BadgeProps) =====
   @Input() showBadge?: UiButtonProps['showBadge'] = false;
-  /* @Input() badgeValue?: UiButtonProps['badgeValue']; */
-  /* @Input() badgeSeverity?: UiButtonProps['badgeSeverity'] = 'danger';
-  @Input() badgeSize?: UiButtonProps['badgeSize'] = 'sm';  */    // sm | md | lg
-@Input() badge?: UiButtonProps['badge'];
-  /* @Input() badgeClass?: UiButtonProps['badgeClass'];
-  @Input() badgeStyle?: UiButtonProps['badgeStyle']; */
+  @Input() badge?: UiButtonProps['badge'];
+
 }

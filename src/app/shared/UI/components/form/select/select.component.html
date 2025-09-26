@@ -40,7 +40,7 @@
               [size]="ui.size || 'sm'"
               [severity]="ui.severity || 'primary'"
               [svgPath]="ui.icon?.svgPath || 'svg/x.svg'"
-              [iconStyle]="ui.icon?.iconStyle"
+              [style]="ui.icon?.style"
               (click)="removeChip(v, $event)"
             ></ui-icon>
           </span>
@@ -70,7 +70,7 @@
       [size]="ui.size || 'sm'"
       [severity]="ui.severity || 'primary'"
       [svgPath]="ui.icon?.svgPath || 'svg/x.svg'"
-      [iconStyle]="ui.icon?.iconStyle"
+      [style]="ui.icon?.style"
     ></ui-icon>
   </button>
   
@@ -81,12 +81,12 @@
     [size]="ui.size || 'md'"
     [severity]="ui.severity || 'primary'"
     [svgPath]="ui.icon?.svgPath || 'svg/arrow-down.svg'"
-    [iconStyle]="{width: '22px', height: '22px'}"
+    [style]="{width: '22px', height: '22px'}"
   ></ui-icon>
 <ui-popover
   
   neumorphism="raised"
-  [povStyle]="{ width: '100%' }"
+  [style]="{ width: '100%' }"
   position="top-left"
   [closeOnOutside]="true"
   [closeOnInside]="false"
@@ -110,7 +110,7 @@
     <div class="pov-header" *ngIf="isMultiple">
       
       <ui-checkbox
-      style="margin-bottom: 5px;"
+        [style]="{margin: '0px 0px 8px 0px'}"
         [indeterminate]="someSelected && !allSelected"
         [checked]="allSelected"
         (changed)="toggleAll($event)"
@@ -129,7 +129,7 @@
            >
         <div class="row" *ngFor="let row of filteredOptions">
           <ui-checkbox
-          style="margin-bottom: 8px;"
+            [style]="{margin: '0px 0px 8px 0px'}"
             [checked]="isChecked(row)"
             (changed)="toggleItem(row)"
             size="sm"
@@ -164,7 +164,7 @@
           [size]="'sm'"
           [severity]="ui.severity || 'primary'"
           [svgPath]="ui.icon?.svgPath || 'svg/x.svg'"
-          [iconStyle]="ui.icon?.iconStyle"
+          [style]="ui.icon?.style"
           (click)="removeChip(v, $event)"
         ></ui-icon>
       </div>

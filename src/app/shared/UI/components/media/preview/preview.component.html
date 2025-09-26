@@ -5,7 +5,7 @@
     'v-' + (pv.variant || 'filled'),
     's-' + (pv.size || 'md'),
     pv.disabled ? 'is-disabled' : '',
-    pv.previewClass || ''
+    pv.class || ''
   ]"
   [ngStyle]="styleMap()"
   [attr.role]="'button'"
@@ -35,8 +35,8 @@
         [size]="pv.icon?.size || 'sm'"
         [severity]="pv.icon?.severity || pv.severity || 'primary'"
         [svgPath]="pv.icon?.svgPath || 'svg/eye.svg'"
-        [iconStyle]="pv.icon?.iconStyle"
-        [iconClass]="pv.icon?.iconClass">
+        [style]="pv.icon?.style"
+        [class]="pv.icon?.class">
       </ui-icon>
 
       <!-- Botones extra en overlay; NO abren el diálogo -->
@@ -48,12 +48,9 @@
 
   <!-- Diálogo reutilizable (solo image por ahora) -->
   <ui-dialog
-    *ngIf="pv.types === 'image'"
     type="image"
     [variant]="pv.variant || 'flat'"
-    [maskType]="pv.masking?.maskType || 'blur'"
     [closeOnMaskClick]="pv.dialog?.closeOnMaskClick ?? true"
-    [mask]="pv.dialog?.mask ?? true"
     [(visible)]="dialogVisible"
     (maskClick)="onMaskClick()"
   >

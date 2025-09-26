@@ -1,20 +1,20 @@
 <!-- Máscara (incluye controles flotantes en modo 'image') -->
 <div
-  *ngIf="dlg.mask && dlg.visible"
+  *ngIf="dlg.showMask && dlg.visible"
   class="{{ maskClasses().join(' ') }}"
-  [ngStyle]="dlg.maskStyle"
+  [ngStyle]="dlg.mask?.style"
   (click)="onMaskClick()"
 >
   <!-- Controles en máscara (no cierran el modal) -->
   <div
     class="ui-dialog__mask-controls"
-    *ngIf="dlg.visibleBnt"
+    *ngIf="dlg.mask?.showBnt"
     (click)="$event.stopPropagation()"
   >
     <div class="ui-dialog__mask-rotate" *ngIf="showMaskButtons">
       <ui-button
 
-    [btnStyle]="{borderRadius: '50%', width: '40px', height: '40px'}"
+    [style]="{borderRadius: '50%', width: '40px', height: '40px'}"
       [variant]="dlg.variant"
       [severity]="dlg.severity"
       ariaLabel="Rotar a la izquierda"
@@ -24,7 +24,7 @@
     ></ui-button>
     <ui-button
 
-      [btnStyle]="{borderRadius: '50%' , width: '40px', height: '40px'}"
+      [style]="{borderRadius: '50%' , width: '40px', height: '40px'}"
       [variant]="dlg.variant"
       [severity]="dlg.severity"
       ariaLabel="Rotar a la derecha"
@@ -34,7 +34,7 @@
     </div>
     
       <ui-button
-      [btnStyle]="{borderRadius: '50%' , width: '40px', height: '40px'}"
+      [style]="{borderRadius: '50%' , width: '40px', height: '40px'}"
       
       [variant]="dlg.variant"
       [severity]="dlg.severity"
@@ -54,7 +54,6 @@
   [attr.role]="dlg.role || 'dialog'"
   [attr.aria-modal]="true"
   [attr.aria-label]="dlg.ariaLabel || dlg.title || 'Dialog'"
-  tabindex="{{ dlg.tabIndex ?? -1 }}"
   (wheel)="onWheel($event)"
 >
   <div class="ui-dialog__content" [ngStyle]="contentStyle()">

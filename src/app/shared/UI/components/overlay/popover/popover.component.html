@@ -7,7 +7,6 @@
   [ngStyle]="styleMap()"
   [attr.role]="pov.role || 'dialog'"
   [attr.aria-label]="pov.ariaLabel || null"
-  [attr.tabindex]="pov.disabled ? -1 : (pov.tabIndex ?? -1)"
   [attr.aria-pressed]="pov.ariaPressed ?? null"
   [attr.title]="pov.title || null"
   (click)="onInsideClick($event)"

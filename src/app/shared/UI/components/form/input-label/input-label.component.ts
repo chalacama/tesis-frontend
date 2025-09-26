@@ -26,13 +26,13 @@ import { UiSeverity, UiSize, UiVariant } from '../../../interfaces/ui-presets.in
       // UiFormProps
       'severity','size','disabled','invalid',
       // UiLabelProps
-      'label','labelClass','labelStyle',
+      'label',
       // Base
-      'inputClass','inputStyle','placeholder','type','variant','autoSize',
+      'class','style','placeholder','type','variant','autoSize',
       // Counter
-      'max','min','counter','counterClass','counterStyle',
+      'max','min','counter',
       // A11y
-      'ariaLabel','role','tabIndex','ariaPressed','title'
+      'ariaLabel','role','tabIndex','ariaPressed','title','showCounter'
     ]
   }]
 })
@@ -120,7 +120,7 @@ export class InputLabelComponent implements ControlValueAccessor, OnChanges, Aft
   }
 
   fieldStyle(): Record<string,string> {
-    const s = this.il.inputStyle;
+    const s = this.il.style;
     const map: Record<string,string> = {};
     if (!s) return map;
     if (s.backgroundColor) map['background']   = s.backgroundColor;
@@ -149,7 +149,7 @@ export class InputLabelComponent implements ControlValueAccessor, OnChanges, Aft
   }
 
   labelStyle(): Record<string,string> {
-    const s = this.il.labelStyle;
+    const s = this.il.label?.style;
     const map: Record<string,string> = {};
     if (!s) return map;
     if (s.color)        map['color']        = s.color;
@@ -161,7 +161,7 @@ export class InputLabelComponent implements ControlValueAccessor, OnChanges, Aft
   }
 
   counterStyle(): Record<string,string> {
-    const s = this.il.counterStyle;
+    const s = this.il.counter?.style;
     const map: Record<string,string> = {};
     if (!s) return map;
     if (s.color)      map['color']      = s.color;

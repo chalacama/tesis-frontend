@@ -29,7 +29,7 @@ import { UiCheckboxDirective } from '../../../directive/ui-checkbox.directive';
       // A11y
       'ariaLabel','role','tabIndex','ariaPressed','title',
       // Checkbox specifics
-      'checkClass','checkStyle','type','checked','indeterminate','id'
+      'class','style','type','checked','indeterminate','id'
     ]
   }]
 })
@@ -121,7 +121,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnChanges {
 
       '--chk-shadow': size.shadow,
       '--chk-shadow-contrast': size.shadowContrast,
-    }, styleToNgStyle(this.ui.checkStyle));
+    }, styleToNgStyle(this.ui.style));
   }
 
   hostClasses(): string[] {
@@ -133,7 +133,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnChanges {
     const bad = this.ui.invalid ? 'is-invalid' : '';
     const dis = this.ui.disabled ? 'is-disabled' : '';
     const ind = this.ui.indeterminate ? 'is-indeterminate' : '';
-    const extra = this.ui.checkClass ?? '';
+    const extra = this.ui.class ?? '';
     return ['ui-checkbox', neu, v, s, t, sev, bad, dis, ind, extra].filter(Boolean);
   }
 

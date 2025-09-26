@@ -18,8 +18,8 @@ export class UiIconDirective {
   @Input() svgPath?: UiIconProps['svgPath'];
   @Input() severity?: UiIconProps['severity'] = 'secondary';
   @Input() size?: UiIconProps['size'] = 'md';         // 'sm' | 'md' | 'lg'
-  @Input() iconClass?: UiIconProps['iconClass'];
-  @Input() iconStyle?: UiIconProps['iconStyle'];
+  @Input() class?: UiIconProps['class'];
+  @Input() style?: UiIconProps['style'];
 
   // === Accesibilidad opcional ===
   @Input() ariaLabel?: string | null = null;
@@ -49,7 +49,7 @@ export class UiIconDirective {
   hostClasses(): string[] {
     const s = `s-${this.size ?? 'md'}`;
     const sev = `sev-${this.severity ?? 'secondary'}`;
-    const extra = this.iconClass ?? '';
+    const extra = this.class ?? '';
     return ['ui-icon', s, sev, extra].filter(Boolean);
   }
 }

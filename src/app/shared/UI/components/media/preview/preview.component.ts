@@ -20,7 +20,7 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
       // UiMediaProps / UiProps
       'src','alt','types','severity','size','disabled','neumorphism','variant',
       // UiPreviewProps
-      'previewClass','previewStyle','overlay','icon','mask','masking','dialog'
+      'class','style','overlay','icon','showMask','mask','dialog'
     ],
   }]
 })
@@ -120,7 +120,7 @@ export class PreviewComponent {
   }
   styleMap(): Record<string, string> {
     const baseVars = this.cssVars();                   // tus --btn-*
-    const overrides = styleToNgStyle(this.pv.previewStyle);
+    const overrides = styleToNgStyle(this.pv.style);
     return mergeStyles(baseVars, overrides);
   }
     /* styleMapMask(): Record<string, string> {

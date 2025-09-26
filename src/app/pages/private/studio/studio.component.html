@@ -34,7 +34,7 @@
         <div class="nav-right">
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" style="position: relative;">
                 
-                <ui-avatar (click)="toggleProfileMenu()" [avatarStyle]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
+                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
                     >
                 </ui-avatar>
                 
@@ -213,13 +213,13 @@
                 <div class="sidebar-padding" *ngIf="hasExternalCourse">
                     <div class="content-thumbnail-avatar content-thumbnail-miniature">
                         <div class="miniature-course" [class.miniature-course-collapsed]="isSidebarCollapsed">
-                            <ui-preview style="width: 100%;" [previewStyle]="{borderRadius: '5px'}"
-                                [src]="miniatureData?.miniature?.url" [types]="'image'" [overlay]="false" [mask]="true"
+                            <ui-preview [style]="{borderRadius: '5px' ,width:'100%'}"
+                                [src]="miniatureData?.miniature?.url" [types]="'image'" [overlay]="false" [showMask]="true"
                                 [severity]="'primary'" [size]="'sm'" [variant]="'outlined'"
-                                [masking]="{ maskType: 'blur' }">
+                                [mask]="{ type: 'blur' }">
 
                                 <ui-button variant="flat"
-                                    [btnStyle]="{borderRadius: '15px', width: '30px', height: '30px'}"
+                                    [style]="{borderRadius: '15px', width: '30px', height: '30px'}"
                                     severity="primary" [icon]="{svgPath: 'svg/search.svg'}">
                                 </ui-button>
                             </ui-preview>

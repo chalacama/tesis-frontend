@@ -5,8 +5,8 @@ import { UiA11Props, UiMediaProps, UiProps, UiStyleProps } from "./ui-presets.in
 
 export interface UiAvatarProps extends UiA11Props , UiMediaProps {
     id?: string
-    avatarClass?: string
-    avatarStyle?: UiStyleProps;
+    class?: string
+    style?: UiStyleProps;
     name?: string
     badge?: UiBadgeProps;
 }

@@ -13,8 +13,8 @@ export interface UiSelectProps extends UiA11Props, UiFormProps  {
     placeholder?: string;
     editable?: boolean;
     showClear?: boolean;
-    selectClass?: string;
-    selectStyle?: UiStyleProps;
+    class?: string;
+    style?: UiStyleProps;
     icon?: UiIconProps;
     popover?: UiPopoverProps;
     options?: any[];

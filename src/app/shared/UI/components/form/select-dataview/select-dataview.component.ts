@@ -27,11 +27,11 @@ import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
       // UiFormProps / UiProps
       'severity','size','disabled','neumorphism','variant','invalid',
       // A11y
-      'ariaLabel','role','tabIndex','ariaPressed','title','onKeyDown',
+      'ariaLabel','role','tabIndex','ariaPressed','title',
       // Identidad/edición
       'id','editable','showClear',
       // Estilos
-      'sdvClass','sdvStyle','optionStyle',
+      'class','style',
       // Icono
       'icon',
       // Datos
@@ -39,7 +39,7 @@ import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
       // Selección/filtro
       'multiple','filter',
       // Límite / disposición
-      'max','columns'
+      'max','columns', 'optionBtn'
     ]
   }]
 })
@@ -176,18 +176,7 @@ export class SelectDataviewComponent implements ControlValueAccessor {
     this.emitValue();
   }
 
-  handleItemKeydown(ev: KeyboardEvent, opt: any) {
-    const keys = this.sdv.onKeyDown;
-    const k = ev.key.toLowerCase();
-    if (!keys || this.sdv.disabled || this.isDisabledByCva) return;
 
-    const useEnter = keys.includes('enter') && k === 'enter';
-    const useSpace = keys.includes('space') && (k === ' ' || k === 'spacebar');
-    if (useEnter || useSpace) {
-      this.toggleSelection(opt);
-      ev.preventDefault();
-    }
-  }
 
   // ==== Filtro / Vista ====
   viewOptions(): any[] {
@@ -245,12 +234,12 @@ export class SelectDataviewComponent implements ControlValueAccessor {
       '--sdv-border': 'var(--border-color)'
     };
 
-    const overrides = styleToNgStyle(this.sdv.sdvStyle);
+    const overrides = styleToNgStyle(this.sdv.style);
     return mergeStyles(base, overrides);
   }
 
   optionStyleMap(): Record<string, string> {
-    return styleToNgStyle(this.sdv.optionStyle);
+    return styleToNgStyle(this.sdv.optionBtn?.style);
   }
 
   hostClasses(): string[] {
@@ -259,7 +248,7 @@ export class SelectDataviewComponent implements ControlValueAccessor {
     const neu = `neu-${this.sdv.neumorphism ?? 'flat'}`;
     const dis = this.sdv.disabled ? 'is-disabled' : '';
     const inv = this.sdv.invalid ? 'is-invalid' : '';
-    const extra = this.sdv.sdvClass ?? '';
+    const extra = this.sdv.class ?? '';
     return ['sdv', v, s, neu, dis, inv, extra].filter(Boolean);
   }
 

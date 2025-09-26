@@ -24,7 +24,6 @@ export class UiSelectDataviewDirective {
   @Input() tabIndex?: UiSelectDataviewProps['tabIndex'] = 0;
   @Input() ariaPressed?: UiSelectDataviewProps['ariaPressed'];
   @Input() title?: UiSelectDataviewProps['title'];
-  @Input() onKeyDown?: UiSelectDataviewProps['onKeyDown'];
 
   // === Identificación / edición ===
   @Input() id?: UiSelectDataviewProps['id'];
@@ -32,8 +31,8 @@ export class UiSelectDataviewDirective {
   @Input() showClear?: UiSelectDataviewProps['showClear'] = false;
 
   // === Estilos ===
-  @Input() sdvClass?: UiSelectDataviewProps['sdvClass'];
-  @Input() sdvStyle?: UiSelectDataviewProps['sdvStyle'];
+  @Input() class?: UiSelectDataviewProps['class'];
+  @Input() style?: UiSelectDataviewProps['style'];
 
   // === Icono del filtro ===
   @Input() icon?: UiSelectDataviewProps['icon'];
@@ -52,7 +51,9 @@ export class UiSelectDataviewDirective {
   @Input() max!: UiSelectDataviewProps['max']; // number | string
 
   // === Estilos ===
-  @Input() optionStyle?: UiSelectDataviewProps['optionStyle'];
   @Input() columns?: UiSelectDataviewProps['columns'] = 3;
+
+  // optionBtn
+  @Input() optionBtn?: UiSelectDataviewProps['optionBtn'];
 }
 
