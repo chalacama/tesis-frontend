@@ -1,5 +1,5 @@
 <div class="content-details">
-    <form class="details-form" [formGroup]="form" (ngSubmit)="save()">
+    <form class="details-form" [formGroup]="form">
         <div class="details-start">
             <div class="details-start-left">
                 <div class="start-left-name">
@@ -12,7 +12,7 @@
                             [style]="{borderRadius: '30px'}" label="Restablecer" severity="secondary"
                             [icon]="{svgPath: 'svg/clear-all.svg'}">
                         </ui-button>
-                        <ui-button [type]="'submit'" (click)="save()" [disabled]="" neumorphism="raised" [style]="{borderRadius: '30px'}"
+                        <ui-button [type]="'submit'" (click)="save()" [disabled]="sabed" neumorphism="raised" [style]="{borderRadius: '30px'}"
                             label="Guardar" severity="primary" [icon]="{svgPath: 'svg/save-outline.svg'}">
                         </ui-button>
 

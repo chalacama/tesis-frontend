@@ -71,26 +71,35 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
   }
 
   // ======= VALUE ACCESSOR =======
-  /* writeValue(value: File[] | null): void {
-    this.clearInternal(false);
-    if (Array.isArray(value) && value.length) {
-      // No podemos recrear File desde serializado, así que sólo aceptamos instancias reales
-      this.files = value.filter(v => v instanceof File);
-      // construir previews
-      void this.syncPreviews();
-    }
-  } */
+
   registerOnChange(fn: (value: File[] | null) => void): void { this.onChange = fn; }
   registerOnTouched(fn: () => void): void { this.onTouched = fn; }
   setDisabledState(isDisabled: boolean): void { this.fud.disabled = isDisabled; }
-
+ @Input() required = false;
   // ======= VALIDATOR =======
   validate(_: AbstractControl): ValidationErrors | null {
-    // reglas sincrónicas (conteo, tipos/formats, tamaño)
-    const syncErrs = this.validateSync(this.files);
-    // si hay errores async (duración de video) ya se agregaron a this.errors en el flujo async
-    const errs = [...syncErrs, ...this.errors.filter(e => e.startsWith('Duración'))];
-    return errs.length ? { fileUpload: errs } : null;
+    const urlCount = this.previews.filter(p => p.from === 'url').length;
+  const fileCount = this.files.length;
+  const total = urlCount + fileCount;
+
+  const minDefault = this.required ? 1 : 0;        // <-- clave
+  const min = this.num(this.fud.min, minDefault);
+  const max = this.num(this.fud.max, 1);           // si no pasas max, 1 por defecto
+
+  const errs: string[] = [];
+
+  // Reglas de conteo sobre el TOTAL (urls + files)
+  if (total < min) errs.push(`Debes seleccionar al menos ${min} archivo(s).`);
+  if (max && total > max) errs.push(`Solo se permiten ${max} archivo(s).`);
+
+  // Reglas de archivo SOLO aplican a files reales (no URLs)
+  errs.push(...this.validateSync(this.files, { min, max }));
+
+  // Errores async (duración) que acumulaste en this.errors
+  const asyncErrs = this.errors.filter(e => e.startsWith('Duración'));
+  const all = [...errs, ...asyncErrs];
+
+  return all.length ? { fileUpload: all } : null;
   }
 
   // ======= UI COMPUTEDS =======
@@ -117,46 +126,7 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
     return final.length ? Array.from(new Set(final)).join(',') : '';
   }
 
-  /* hostClasses(): string[] {
-    const v = `v-${this.fud.variant ?? 'filled'}`;
-    const s = `s-${this.fud.size ?? 'md'}`;
-    const neu = `neu-${this.fud.neumorphism ?? 'flat'}`;
-    const dis = this.fud.disabled ? 'is-disabled' : '';
-    const ori = `o-${this.fud.orientation ?? 'vertical'}`;
-    const extra = this.fud.fudClass ?? '';
-    return ['ui-file-upload', v, s, neu, ori, dis, extra].filter(Boolean);
-  } */
-
-  // ======= HANDLERS =======
-  /* async onFileInputChange(ev: Event) {
-    if (this.fud.disabled) return;
-    const input = ev.target as HTMLInputElement;
-    const list = input.files ? Array.from(input.files) : [];
-
-    // Si hay max -> respetar
-    const max = this.num(this.fud.max, 1);
-    const combined = [...this.files, ...list].slice(0, max);
-
-    const { valid, errors } = await this.validateAll(combined);
-    this.errors = errors;
-
-    if (valid) {
-      this.files = combined;
-      await this.syncPreviews();
-      this.propagate();
-    }
-
-    // limpiar el input para permitir volver a seleccionar el mismo archivo si se desea
-    input.value = '';
-    this.onTouched();
-  } */
-
-  /* async removeAt(idx: number) {
-    if (this.fud.disabled) return;
-    this.files.splice(idx, 1);
-    await this.syncPreviews();
-    this.propagate();
-  } */
+  
 
   async clearAll() {
     if (this.fud.disabled) return;
@@ -216,14 +186,16 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
     return { valid: errors.length === 0, errors };
   }
 
-  private validateSync(files: File[]): string[] {
-    const errs: string[] = [];
-    const min = this.num(this.fud.min, 1);
-    const max = this.num(this.fud.max, 1);
-    if (files.length < min) errs.push(`Debes seleccionar al menos ${min} archivo(s).`);
-    if (files.length > max) errs.push(`Solo se permiten ${max} archivo(s).`);
-    return errs;
-  }
+  private validateSync(files: File[], opts?: { min?: number; max?: number }): string[] {
+  const errs: string[] = [];
+  const min = opts?.min ?? this.num(this.fud.min, this.required ? 1 : 0);
+  const max = opts?.max ?? this.num(this.fud.max, 1);
+
+  // OJO: aquí validamos SOLO files. El mínimo real ya se chequeó en validate()
+  if (max && files.length > max) errs.push(`Solo se permiten ${max} archivo(s).`);
+  return errs;
+}
+
 
   // ======= PREVIEWS =======
   private async syncPreviews() {

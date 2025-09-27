@@ -46,7 +46,7 @@ export interface UiInputLabelProps extends UiA11Props , UiFormProps   {
     counter?:  UiCounterProps;
     label?: UiLabelProps;
     max?: number;
-    min?: number;
+   /*  min?: number; */
     showCounter?: boolean;
 }
 export interface UiCounterProps {

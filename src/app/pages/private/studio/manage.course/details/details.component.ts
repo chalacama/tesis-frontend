@@ -59,11 +59,12 @@ export class DetailsComponent implements OnInit {
   private readonly host = inject(ElementRef<HTMLElement>);
 
   @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
+  sabed = true;
   constructor(
 
 
   ) {
-
+    
   }
 
   // Estado de UI
@@ -89,7 +90,7 @@ readonly MAX_CAREERS = 2;
   categoriesAvail = signal<{ id: number; name: string }[]>([])
   // Para reset/diff
    originalCourse: CourseDetail | null = null;
-
+  
   // Form reactivo tipado (sin nullables)
   form = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
@@ -100,15 +101,18 @@ readonly MAX_CAREERS = 2;
     code: [''], // nullable en backend; aquí lo tratamos como string ('' -> null al guardar si quieres)
     careers: this.fb.control<number[]>([], { nonNullable: true }),    // ids
     categories: this.fb.control<number[]>([], { nonNullable: true }),    // ids
-    // Solo UI (no se envía): previsualización de la miniatura actual o del archivo cargado
-    miniatureUrl: [''],
+    miniatureUrl: [''], // solo para previsualización
+    /* miniatureUrl: this.fb.control({ value: '', disabled: true }), */ // solo para previsualización
   });
 
   // Computados útiles
   canSave = computed(() => this.form.valid && this.form.dirty && !this.saving());
+
   showSkeleton = computed(() => this.loadingCourse() || this.loadingDifficulties());
 
   ngOnInit(): void {
+    
+
     const courseParam = this.getCourseParamFromRoute();
     if (!courseParam) {
       this.errorMsg.set('No se encontró el parámetro de curso en la ruta.');
@@ -120,6 +124,9 @@ readonly MAX_CAREERS = 2;
     this.loadCourse(courseParam);
     this.loadCategories();
     this.loadCareers(); // + cargar carreras
+    this.formStatus();
+    
+
   }
   private loadCareers(): void {
     this.loadingCareers.set(true);
@@ -139,6 +146,7 @@ readonly MAX_CAREERS = 2;
           this.loadingCareers.set(false);
         }
       });
+     
   }
   onMiniatureChange(file: File | null) {
   this.selectedMiniature = file;
@@ -197,7 +205,7 @@ readonly MAX_CAREERS = 2;
         next: (res: CourseDetailResponse) => {
           const c = res.course;
           this.course.set(c);
-          console.log(c);
+          /* console.log(c) */;
           this.originalCourse = c;
           this.patchFromCourse(c);
           this.loadingCourse.set(false);
@@ -227,7 +235,7 @@ readonly MAX_CAREERS = 2;
       { emitEvent: false }
     );
   }
-
+  
   private getCourseParamFromRoute(): string | null {
     // Busca 'id' en la ruta actual y en el padre (robusto para layouts anidados)
     return this.route.snapshot.paramMap.get('id')
@@ -237,29 +245,39 @@ readonly MAX_CAREERS = 2;
 
   trackByDifficulty = (_: number, item: Difficulty) => item.id;
 
-  
+  formStatus() {
+    this.form.statusChanges.subscribe(() => {
+      this.sabed = this.form.pristine;
+      this.sabed = this.form.invalid;
+    });
+  }
 
   // ----- Acciones -----
   save(): void {
-    console.log('Guardando cambios...');
-    const c = this.course();
-    if (!c) return;
-    console.log('Curso actual:');
-    if (!this.form.valid) {
-      console.log('Formulario inválido:');
-      this.form.markAllAsTouched();
-      
-      return;
+    if (this.form.pristine){
+      console.log('No hay cambios para guardar.');
+      return
     }
-    console.log('Formulario válido, procediendo a guardar...');
+    if (this.form.invalid) {
+      /* this.errorMsg.set('El formulario contiene errores. Por favor, revísalo antes de guardar.'); */
+      /* this.form.markAllAsTouched(); */
+      console.log('El formulario contiene errores. Por favor, revísalo antes de guardar.');
+      return;
+    }else{
+      console.log('Formulario válido, procediendo a guardar...');
 
-    // Respeta límites también en front
+       const c = this.course();
+       if (!c) {
+         this.errorMsg.set('No se encontró el curso para actualizar.');
+         return;
+       }
+       // Respeta límites también en front
   let careers = this.form.value.careers ?? [];
   let categories = this.form.value.categories ?? [];
   careers = Array.isArray(careers) ? [...new Set(careers)].slice(0, this.MAX_CAREERS) : [];
   categories = Array.isArray(categories) ? [...new Set(categories)].slice(0, this.MAX_CATEGORIES) : [];
 
-  // Construye el payload
+//   // Construye el payload
   const payload = {
     title: this.form.value.title ?? undefined,
     description: this.form.value.description ?? undefined,
@@ -298,14 +316,14 @@ console.log('Payload a enviar:', payload);
         this.saving.set(false);
       }
     });
-    
-      
+    }      
       
   }
 
   resetForm(): void {
     if (!this.originalCourse) return;
     this.patchFromCourse(this.originalCourse);
+     this.formStatus();
   }
 
   retryLoad(): void {

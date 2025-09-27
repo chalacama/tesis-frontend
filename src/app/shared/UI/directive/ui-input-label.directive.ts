@@ -25,7 +25,7 @@ export class UiInputLabelDirective {
 
   // ===== Counter (UiCounterProps) =====
   @Input() max?: UiInputLabelProps['max'];
-  @Input() min?: UiInputLabelProps['min'];
+  /* @Input() min?: UiInputLabelProps['min']; */
   @Input() counter: UiInputLabelProps['counter'];
 
   // ===== A11Y (UiA11Props) =====

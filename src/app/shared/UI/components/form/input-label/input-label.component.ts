@@ -30,7 +30,7 @@ import { UiSeverity, UiSize, UiVariant } from '../../../interfaces/ui-presets.in
       // Base
       'class','style','placeholder','type','variant','autoSize',
       // Counter
-      'max','min','counter',
+      'max','counter',
       // A11y
       'ariaLabel','role','tabIndex','ariaPressed','title','showCounter'
     ]
