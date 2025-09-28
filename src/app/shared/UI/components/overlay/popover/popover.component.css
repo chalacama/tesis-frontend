@@ -65,7 +65,7 @@
 .ui-pov.is-visible { opacity: 1; transform: translateY(0) scale(1); }
 
 /* Variantes */
-.ui-pov.v-filled { background: var(--pov-bg); }
+.ui-pov.v-filled { background: var(--popover-bg); }
 .ui-pov.v-outlined { background: transparent; color: var(--text-color, #111); border-color: var(--pov-border); }
 .ui-pov.v-flat { background: transparent; color: var(--text-color, #111); }
 

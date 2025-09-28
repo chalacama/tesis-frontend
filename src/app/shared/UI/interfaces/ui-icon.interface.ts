@@ -13,3 +13,9 @@ export interface UiBadgeProps extends UiProps {
   style?: UiStyleProps;
   value?: string | number;
 }
+
+export interface UiUnderlineProps  {
+  id?: string;
+  class?: string;
+  style?: UiStyleProps;
+}

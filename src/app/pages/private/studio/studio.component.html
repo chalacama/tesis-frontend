@@ -2,9 +2,6 @@
     <div (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
 
     </div>
-
-
-
     <div class="nav">
         <div class="nav-left">
             <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="content-burger"
@@ -32,7 +29,7 @@
         <div class="nav-center">
         </div>
         <div class="nav-right">
-            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" style="position: relative;">
+            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel">
                 
                 <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
                     >
@@ -165,7 +162,6 @@
         </div>
 
     </div>
-
     <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose"
         [class.collapsed]="isSidebarCollapsed">
         <div class="sidebar_content">
@@ -443,10 +439,7 @@
         </div>
 
     </div>
-
     <div [class.content-main-collapsed]="isSidebarCollapsed" class="content-main">
-        <div class="main">
-            <router-outlet></router-outlet>
-        </div>
+        <router-outlet></router-outlet>
     </div>
 </div>

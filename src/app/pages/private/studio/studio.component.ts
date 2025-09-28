@@ -68,6 +68,12 @@ export class StudioComponent implements OnInit {
       this.checkIfExternalUser();
       this.checkIfExternalCourse();
       this.usernameEdit =this.portfolioData?.username
+
+      this.appRef.isStable
+  .pipe(first(isStable => isStable === true))
+  .subscribe(() => {
+    this.renderer.removeClass(document.body, 'app-loading');
+  });
     }
     isAdmin(): boolean {
       return this.authService.hasRole('admin');

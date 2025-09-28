@@ -12,7 +12,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* transition: background-color 0.3s ease, color 3s ease, border-color 0.3s ease; */
 }
 
 :root {
@@ -38,7 +37,7 @@
   --overlay-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
   --overlay-color-contrast: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.2));
   --shadow-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
-  --shadow-color-contrast: light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.11));
+  --shadow-color-contrast: light-dark(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
   /* Reactive */
   --border-color: light-dark(var(--surface-200), var(--surface-700));
   --border-color-contrast: light-dark(var(--surface-700), var(--surface-200));
@@ -141,4 +140,7 @@ body:not(.app-loading) #splash-screen {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease-out;
+}
+.content-body{
+  overflow: hidden;
 }

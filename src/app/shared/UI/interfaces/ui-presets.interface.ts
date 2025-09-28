@@ -37,6 +37,14 @@ export interface UiProps {
   neumorphism?: UiNeumorphism;
   variant?: UiVariant;   
 }
+export interface UiOverlayProps  {          
+  neumorphism?: UiNeumorphism;
+  variant?: UiVariant;
+}
+export interface UiPanelProps  {          
+  neumorphism?: UiNeumorphism;
+  variant?: UiVariant;
+}
 /* extends Pick<UiProps, 'neumorphism'> {
    Ereda solo la propiedad que nombras
 } */
@@ -85,7 +93,7 @@ export interface UiStyleProps {
   right?: string;
   bottom?: string;
   left?: string;
-  zIndex?: number;
+  zIndex?: number | string;
 
   // Animation
   transition?: string;

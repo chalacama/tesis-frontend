@@ -1,6 +1,25 @@
 <div class="content-module">
-    <div class="extructure-course">
-
+    <div class="course-module">
+        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae, assumenda praesentium aspernatur
+            fugiat beatae minima soluta voluptas, voluptates doloribus ratione molestias ea voluptate adipisci, id
+            numquam dolor nemo obcaecati quidem.</p>
     </div>
-    
+
+    <ui-sidebar [style]="{zIndex: '99'}" [expandWidth]="'220px'" [drawer]="false" [(visible)]="sidebarOpen" [(minimize)]="sidebarMin" [mask]="{ type: 'dimmed' }"
+        position="right" variant="outlined">
+        <div class="sidebar-module">
+            <div class="sidebar-header">
+            <button>minimizar</button>
+        </div>
+        <div class="sidebar-structure">
+
+        </div>
+        <div class="sidebar-footer">
+            <p>crear modulo</p>
+        </div>
+        </div>
+        
+    </ui-sidebar>
+
+
 </div>

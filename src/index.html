@@ -19,7 +19,7 @@
   <script>
   (function () {
     const pathname = window.location.pathname;
-    const splashRoutes = ['/learning', '/auth'];
+    const splashRoutes = ['/learning', '/auth', '/studio'];
     const showSplash = splashRoutes.some(route => pathname.startsWith(route));
     if (showSplash) {
       document.body.classList.add('app-loading');

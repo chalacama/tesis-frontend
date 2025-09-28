@@ -1,23 +1,24 @@
 <div class="content" *ngIf="datosUsuario$ | async as usuario">
-    <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
+    <div (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">
 
     </div>
     <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose"
         [class.collapsed]="isSidebarCollapsed">
         <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="didebar-header" (click)="toggleSidebar()">
+            <div class="content-logo">
+                <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
+            </div>
             <div class="content-logo-label" [class.content-logo-label-collapsed]="isSidebarCollapsed">
-                <div>
+                <!-- <div>
                     <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
-                </div>
+                </div> -->
 
                 <div class="content-digimentor-label">
                     <img class="digimentor-label" src="img\logo\png\digi-mentor-label.png" alt="DigiMentor" />
                 </div>
 
             </div>
-            <div class="content-logo" [class.content-logo-collapsed]="isSidebarCollapsed">
-                <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
-            </div>
+            
         </div>
         <div class="content-search">
             <button class="button-search">
@@ -131,8 +132,6 @@
             </svg>
         </div>
     </div>
-
-
     <div class="nav" [class.nav-collapsed]="isSidebarCollapsed">
         <div class="nav-left">
             <div (click)="toggleSidebar()">
@@ -282,7 +281,6 @@
 
     </div>
     <div [class.content-main-collapsed]="isSidebarCollapsed" class="content-main">
-        <div class="main">
-            <router-outlet></router-outlet>
-        </div>
+        <router-outlet></router-outlet>
     </div>
+</div>
