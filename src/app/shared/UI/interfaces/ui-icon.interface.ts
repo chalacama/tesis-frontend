@@ -18,4 +18,5 @@ export interface UiUnderlineProps  {
   id?: string;
   class?: string;
   style?: UiStyleProps;
+  position?: 'left' | 'bottom' | 'right' | 'top';
 }

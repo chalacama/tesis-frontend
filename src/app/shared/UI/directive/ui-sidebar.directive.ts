@@ -19,10 +19,9 @@ export class UiSidebarDirective {
   @Input() variant?: UiSidebarProps ['variant'] = 'filled';
 
 
-  @Input() drawer?: UiSidebarProps ['drawer'] = false;
   @Input() visible?: UiSidebarProps ['visible'] = true;
   @Input() minimize?: UiSidebarProps ['minimize'] = false;
-  @Input() expand?: UiSidebarProps ['expand'] = true;
+  
 
 
   @Input() minimizeWidth?: UiSidebarProps ['minimizeWidth'];

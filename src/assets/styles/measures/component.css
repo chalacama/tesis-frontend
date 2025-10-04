@@ -4,11 +4,14 @@
    --sidebar-width: 250px;
    --nav-height: 58px;
    --sidebar-width-small: 72px;
-
+   --sidebar-width-large: 300px;
    /* z-index */;
    --z-nav:300;
    --z-drawer:400;
+   --z-sidebar:200;
    --z-dialog:500;
    --z-popover:100;
    --z-mask-drawer:399;
+   --z-toast:700;
+   --z-loading:600;
 }

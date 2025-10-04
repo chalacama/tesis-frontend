@@ -1,0 +1,115 @@
+/* Viewports por posición (usa tus tokens globales) */
+
+.ui-toast-viewport {
+  position: fixed;
+  z-index: var(--z-toast, 800);
+  pointer-events: none; /* permite click-through fuera de las tarjetas */
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.pos.top         { top: 0; left: 50%; transform: translateX(-50%); }
+.pos.bottom      { bottom: 0; left: 50%; transform: translateX(-50%); }
+.pos.left        { top: 50%; left: 0; transform: translateY(-50%); }
+.pos.right       { top: 50%; right: 0; transform: translateY(-50%); }
+.pos.center      { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+.pos.top-left        { top: 0; left: 0; }
+.pos.top-right       { top: 0; right: 0; }
+.pos.bottom-left     { bottom: 0; left: 0; }
+.pos.bottom-right    { bottom: 0; right: 0; }
+
+/* Tarjeta */
+
+.ui-toast {
+  pointer-events: auto; /* clickable */
+  min-width: 280px;
+  max-width: min(92vw, 420px);
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  animation: toast-in 160ms ease forwards;
+}
+
+@keyframes toast-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ui-toast__content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 12px 12px 12px 14px;
+  align-items: start;
+}
+
+.ui-toast__summary {
+  font-weight: 700;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ui-toast__message {
+  font-size: 0.95rem;
+  line-height: 1.35rem;
+  color: var(--text-color-secondary);
+}
+
+.ui-toast__close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+/* .ui-toast__close:hover {
+ 
+} */
+
+/* Severities (usa tus tokens) */
+
+.ui-toast.sev-primary  { border-color: var(--sev-primary) ;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-primary) 10%, transparent);
+}
+.ui-toast.sev-secondary{ border-color: var(--sev-secondary); }
+.ui-toast.sev-info     { border-color: var(--sev-info); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-info) 10%, transparent);
+}
+.ui-toast.sev-warn     { border-color: var(--sev-warn); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-warn) 10%, transparent)
+}
+.ui-toast.sev-help     { border-color: var(--sev-help); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-help) 10%, transparent)
+}
+.ui-toast.sev-danger   { border-color: var(--sev-danger); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-danger) 10%, transparent)
+}
+.ui-toast.sev-contrast { border-color: var(--sev-contrast); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-contrast) 10%, transparent)
+}
+
+/* Responsive tweak */
+@media (max-width: 480px) {
+  .ui-toast { min-width: auto; width: 92vw; }
+}

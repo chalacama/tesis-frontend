@@ -1,0 +1,33 @@
+<!-- Renderiza un stack por cada posición encontrada -->
+<div class="ui-toast-viewport"
+     *ngFor="let group of groups()"
+     [class]="['pos', group[0]].join(' ')">
+
+  <div class="ui-toast"
+       *ngFor="let t of group[1]"
+       [attr.role]="t.severity === 'danger' ? 'alert' : 'status'"
+       [class]="'sev-' + t.severity">
+    
+    <div class="ui-toast__content">
+      <div class="ui-toast__text">
+        <div class="ui-toast__summary" *ngIf="t.summary">
+            <span>
+                <ui-icon [size]="'sm'" [severity]="t.severity" [svgPath]="'svg/x.svg'"></ui-icon>
+            </span>
+            <span>{{ t.summary }}</span>
+            
+        </div>
+        <div class="ui-toast__message" *ngIf="t.message">{{ t.message }}</div>
+      </div>
+
+      <button class="ui-toast__close"
+              type="button"
+              (click)="remove(t.id)"
+              aria-label="Cerrar notificación">
+        <!-- Usa tu componente de ícono -->
+        <ui-icon [size]="'sm'" [severity]="t.severity" [svgPath]="'svg/x.svg'"></ui-icon>
+      </button>
+    </div>
+  </div>
+</div>
+

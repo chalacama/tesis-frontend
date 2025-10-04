@@ -1,25 +1,258 @@
 <div class="content-module">
-    <div class="course-module">
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae, assumenda praesentium aspernatur
-            fugiat beatae minima soluta voluptas, voluptates doloribus ratione molestias ea voluptate adipisci, id
-            numquam dolor nemo obcaecati quidem.</p>
+    <div class="module-wrapper">
+        <!-- Header acciones -->
+        <div class="toolbar">
+            <div class="left">
+                <h3>Modulos del curso</h3>
+            </div>
+            <div class="add-bottom">
+                <ui-button (click)="addModule()" variant="outlined" [style]="{borderRadius: '5px'}"
+                    [label]="'Añadir módulo'" severity="primary" [icon]="{svgPath: 'svg/create.svg'}">
+                </ui-button>
+
+            </div>
+            <div class="right">
+                
+                <ui-button [disabled]="!hasChanges()" (click)="resetChanges()" neumorphism="raised"
+                    [style]="{borderRadius: '5px'}" label="Restablecer" severity="secondary"
+                    [icon]="{svgPath: 'svg/clear-all.svg'}">
+                </ui-button>
+                <ui-button [type]="'submit'" (click)="saveChanges()" [disabled]="!hasChanges()" neumorphism="raised"
+                    [style]="{borderRadius: '5px'}" label="Guardar" severity="primary"
+                    [icon]="{svgPath: 'svg/save-outline.svg'}">
+                </ui-button>
+            </div>
+        </div>
+
+        <!-- Lista de módulos -->
+        <div cdkDropList class="module-list" (cdkDropListDropped)="drop($event)">
+            <div class="module-item" *ngFor="let m of modules(); let i = index; trackBy: trackById" cdkDrag>
+                <div [class.item-module-open]="m.openChapters" class="item-module">
+
+                    <div class="item-module-body">
+                        <!-- Drag handle -->
+                        <div class="drag-handle" cdkDragHandle title="Arrastrar para reordenar">
+                            <span class="material-symbols-outlined">
+                                <ui-icon [size]="'sm'" [severity]=" 'primary'" [svgPath]="'svg/drag.svg'">
+                                </ui-icon>
+                            </span>
+                        </div>
+
+                        <!-- Contenido -->
+                        <div class="module-body">
+                            <div class="module-title module-title-module">
+
+                                <span class="order">Módulo {{ m.order }}</span>
+                                <span *ngIf="!m.openChapters" class="material-symbols-outlined">
+                                    <ui-icon [size]="'md'" [svgPath]="'svg/arrow-right.svg'">
+                                    </ui-icon>
+                                </span>
+                                <span *ngIf="m.openChapters" class="material-symbols-outlined">
+                                    <ui-icon [size]="'md'" [svgPath]="'svg/arrow-down.svg'">
+                                    </ui-icon>
+                                </span>
+                                <ng-container *ngIf="editingId() !== m.id; else editing">
+                                    <span (click)="openChapters(m)" class="name">{{ m.name
+                                        }}</span>
+                                        
+
+                                </ng-container>
+                                
+                                <ng-template #editing>
+                                    <!-- <span class="order">Módulo {{ m.order }}</span> -->
+                                    <div class="input-conntainer">
+                                        <input class="edit-input edit-input-module" type="text" [ngModel]="nameBuffer()"
+                                            (ngModelChange)="nameBuffer.set($event)" (keydown.enter)="applyRename(m)"
+                                            (blur)="applyRename(m)" autofocus />
+
+                                        <button class=" input-btn-cancel"
+                                            (mousedown)="$event.preventDefault(); cancelRename()">
+                                            <ui-icon [size]="'sm'" [svgPath]="'svg/x.svg'">
+                                            </ui-icon>
+                                        </button>
+                                    </div>
+
+                                </ng-template>
+
+                            </div>
+                            <div class="module-meta">
+                                <span class="cap">{{ m.chapters.length }} capítulo{{ m.chapters.length === 1 ? '' : 's'
+                                    }}</span>
+                            
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- Menu (3 puntitos) -->
+                    <div class="more">
+                        <button class="icon-btn" (click)="$event.stopPropagation(); toggleMenu(i)"
+                            [attr.aria-haspopup]="'menu'" [attr.aria-expanded]="openMenuIndex() === i">
+                            <span class="material-symbols-outlined"><ui-icon [size]="'sm'"
+                                    [svgPath]="'svg/more-column.svg'">
+                                </ui-icon></span>
+                        </button>
+
+
+                        <div class="popover-menu" *ngIf="openMenuIndex() === i">
+                            <button class="menu-item" (click)="addAbove(i)">
+                                <span class="material-symbols-outlined"><ui-icon [size]="'sm'"
+                                        [svgPath]="'svg/arrow-circle-up.svg'">
+                                    </ui-icon></span>
+                                <span>Agregar módulo</span>
+                            </button>
+                            <button class="menu-item" (click)="startRename(i)">
+                                <span class="material-symbols-outlined"><ui-icon [size]="'sm'"
+                                        [svgPath]="'svg/rename.svg'">
+                                    </ui-icon></span>
+                                <span>Renombrar</span>
+                            </button>
+                            <button class="menu-item" (click)="addChapter(m)">
+                                <span class="material-symbols-outlined"><ui-icon [size]="'sm'"
+                                        [svgPath]="'svg/create.svg'">
+                                    </ui-icon></span>
+                                <span>Agregar capítulo</span>
+                            </button>
+                            <button class="menu-item danger" (click)="removeAt(i)">
+                                <span class="material-symbols-outlined"><ui-icon [size]="'sm'"
+                                        [svgPath]="'svg/delete.svg'">
+                                    </ui-icon></span>
+                                <span>Eliminar</span>
+                            </button>
+
+                            <button class="menu-item" (click)="addBelow(i)">
+                                <span class="material-symbols-outlined"><ui-icon [size]="'sm'"
+                                        [svgPath]="'svg/arrow-circle-down.svg'">
+                                    </ui-icon></span>
+                                <span>Agregar módulo</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div [class.item-chapter-open]="m.openChapters" class="item-chapter" cdkDropList [id]="chapListId(m.id)"
+                    [cdkDropListData]="m.chapters" [cdkDropListConnectedTo]="chapterListIds()"
+                    (cdkDropListDropped)="dropChapter($event, m)">
+
+                    <div class="chapter-row" *ngFor="let ch of m.chapters; let ic = index; trackBy: trackByChapter"
+                        cdkDrag>
+
+                        <div class="item-module-body">
+                            <div class="drag-handle" cdkDragHandle title="Arrastrar para reordenar">
+                                <span class="material-symbols-outlined">
+                                    <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/drag.svg'"></ui-icon>
+                                </span>
+                            </div>
+<!-- [class.chapter-body-edit]="!ch.edited" -->
+                            <div  class="chapter-body">
+                                <div class="module-title">
+                                    <span class="order order-ch">{{ m.order }}.{{ ch.order }}</span>
+                                    <!-- Vista normal -->
+                                    <ng-container *ngIf="editingChapKey() !== chapKey(m.id, ch.id); else editingChap">
+                                        
+                                        <span (click)="chapterNavigateTo(ch.id , m.id)" class="name name-ch">{{ ch.title }}</span>
+                                        
+                                    </ng-container>
+
+                                    <!-- Edición -->
+                                    <ng-template #editingChap>
+                                        <!-- <span class="order order-ch">{{ m.order }}.{{ ch.order }}</span> -->
+                                        <div class="input-conntainer">
+                                            <input class="edit-input edit-input-ch" type="text" [ngModel]="chapTitleBuffer()"
+                                                (ngModelChange)="chapTitleBuffer.set($event)"
+                                                (keydown.enter)="applyRenameChap(m, ch)" (blur)="applyRenameChap(m, ch)"
+                                                autofocus />
+                                            <button class="input-btn-cancel"
+                                                (mousedown)="$event.preventDefault(); cancelRenameChap()">
+                                                <ui-icon [size]="'sm'" [svgPath]="'svg/x.svg'"></ui-icon>
+                                            </button>
+                                        </div>
+
+                                    </ng-template>
+
+                                </div>
+<!-- *ngIf="!ch.edited" -->
+                                <div  class="module-meta">
+                                    <span *ngIf="ch.type_name === 'youtube'">
+                                        <ui-icon [size]="'sm'" [severity]="'primary'"
+                                            [svgPath]="'svg/youtube.svg'"></ui-icon>
+                                    </span>
+                                    <span *ngIf="ch.type_name === 'archivo'">
+                                        <ui-icon [size]="'sm'" [severity]="'primary'"
+                                            [svgPath]="'svg/file.svg'"></ui-icon>
+                                    </span>
+                                    <span *ngIf="ch.type_name">{{ ch.type_name }}</span>
+                                    <span class="question">{{ ch.questions_count }} preguntas</span>
+                                </div>
+                            </div>
+<!-- *ngIf="!ch.edited" -->
+                            <div  class="chapter-description">
+                                <textarea class="desc-input" [placeholder]="'Añade una descripción...'"
+                                    [ngModel]="ch.description ?? ''" (ngModelChange)="onDescInput(m, ch, $event)"
+                                    (blur)="onDescBlur(m, ch)" rows="2">
+  </textarea>
+                                <!-- <span>{{ (ch.description ?? '').length }}/500</span> -->
+                            </div>
+                        </div>
+
+                        <!-- Menú capítulo -->
+                        <div class="more more-chapter">
+                            <button class="icon-btn" (click)="$event.stopPropagation(); toggleMenuChap(m.id, ch.id)"
+                                [attr.aria-haspopup]="'menu'"
+                                [attr.aria-expanded]="openMenuChapKey() === chapKey(m.id, ch.id)">
+                                <span class="material-symbols-outlined">
+                                    <ui-icon [size]="'sm'" [svgPath]="'svg/more-column.svg'"></ui-icon>
+                                </span>
+                            </button>
+
+                            <div class="popover-menu" *ngIf="openMenuChapKey() === chapKey(m.id, ch.id)">
+                                <button class="menu-item" (click)="addAboveChap(m, ic)">
+                                    <span class="material-symbols-outlined">
+                                        <ui-icon [size]="'sm'" [svgPath]="'svg/arrow-circle-up.svg'"></ui-icon>
+                                    </span>
+                                    <span>Agregar capítulo</span>
+                                </button>
+                                <button class="menu-item" (click)="startRenameChap(m, ch)">
+                                    <span class="material-symbols-outlined">
+                                        <ui-icon [size]="'sm'" [svgPath]="'svg/rename.svg'"></ui-icon>
+                                    </span>
+                                    <span>Renombrar</span>
+                                </button>
+                                <button class="menu-item danger" (click)="removeAtChap(m, ic)">
+                                    <span class="material-symbols-outlined">
+                                        <ui-icon [size]="'sm'" [svgPath]="'svg/delete.svg'"></ui-icon>
+                                    </span>
+                                    <span>Eliminar capítulo</span>
+                                </button>
+
+                                
+
+                                <button class="menu-item" (click)="addBelowChap(m, ic)">
+                                    <span class="material-symbols-outlined">
+                                        <ui-icon [size]="'sm'" [svgPath]="'svg/arrow-circle-down.svg'"></ui-icon>
+                                    </span>
+                                    <span>Agregar capítulo</span>
+                                </button>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div *ngIf="m.chapters.length === 0" class="chapter-empty">
+                        <em>Este módulo no tiene capítulos.</em>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Añadir al final -->
+
     </div>
-
-    <ui-sidebar [style]="{zIndex: '99'}" [expandWidth]="'220px'" [drawer]="false" [(visible)]="sidebarOpen" [(minimize)]="sidebarMin" [mask]="{ type: 'dimmed' }"
-        position="right" variant="outlined">
-        <div class="sidebar-module">
-            <div class="sidebar-header">
-            <button>minimizar</button>
-        </div>
-        <div class="sidebar-structure">
-
-        </div>
-        <div class="sidebar-footer">
-            <p>crear modulo</p>
-        </div>
-        </div>
-        
-    </ui-sidebar>
-
-
 </div>
+<ui-loading-bar
+  [visible]="loading()"
+  [mask]="{ type: 'dimmed' }">
+  Guardando cambios…
+</ui-loading-bar>

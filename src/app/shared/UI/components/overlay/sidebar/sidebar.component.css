@@ -4,9 +4,8 @@
 
 /* ====== MÁSCARA (drawer) ====== */
 .ui-sidebar__mask {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-mask, 300);
+  position: fixed;;
+  z-index: calc(var(--z-sidebar) - 1);
   cursor: pointer;
   transition: opacity .25s ease;
   opacity: 1;
@@ -24,8 +23,9 @@
   z-index: var(--z-sidebar, 310);
   top: var(--nav-height, 56px);
   height: calc(100vh - var(--nav-height, 56px));
-  width: var(--sidebar-width, 250px);
+  width: var(--sidebar-width-large);
   background: var(--sidebar-bg);
+  display: none;
   
 }
 .ui-sidebar.position-left {
@@ -44,52 +44,44 @@
 /* .ui-sidebar.v-filled {  } */
 
 /* Abierto */
-/* .ui-sidebar--open {
- 
-} */
-
-/* Drawer: se superpone y NO empuja layout */
-.ui-sidebar--drawer {
-  position: fixed;
-  z-index: var(--z-drawer, 300);
+.ui-sidebar--open {
+ display: block;
 }
+
+
 /* No drawer (estático): empuja contenido.
    Usa --layout-sidebar-offset en tu layout para compensar. */
 
 /* Minimized: solo cambia width, tú defines min/max por inputs */
-.ui-sidebar--minimized {
-  width: var(--sidebar-width, 72px);
-}
+
 
 /* Expanded es el default, pero añadimos la clase para toggles */
-.ui-sidebar--expanded {
-  width: var(--sidebar-width, 250px);
-}
+
 
 /* ====== RESPONSIVE ====== */
 /* Móvil: siempre drawer; el ancho respeta el input expandWidth */
 @media (max-width: 599px) {
-  .ui-sidebar {
+  /* .ui-sidebar {
     width: min(var(--sidebar-width, 250px), 90vw);
-  }
+  } */
 }
 
 /* Tablet: drawer por UX (si tú lo activas con [drawer]="true") */
 @media (min-width: 600px) and (max-width: 959px) {
-  .ui-sidebar {
+  /* .ui-sidebar {
     width: var(--sidebar-width, 220px);
-  }
+  } */
 }
 
 /* Desktop: ancho por defecto */
 @media (min-width: 960px) {
-  .ui-sidebar {
+  /* .ui-sidebar {
     width: var(--sidebar-width, 250px);
-  }
+  } */
+}
+.ui-sidebar--minimized {
+  width: var(--sidebar-width-small);
 }
 
-/* Accesibilidad visual (opcional) */
-.ui-sidebar:focus-visible {
-  outline: 2px solid var(--sev-primary, #3b82f6);
-  outline-offset: -2px;
-}
+
+

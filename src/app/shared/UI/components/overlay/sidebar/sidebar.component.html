@@ -1,27 +1,23 @@
 <!-- Máscara (solo en modo drawer y visible) -->
 <div
   class="ui-sidebar__mask"
-  *ngIf="isDrawer() && isOpen()"
+  *ngIf="ismobile"
   [class.ui-sidebar__mask--dimmed]="ui.mask?.type === 'dimmed' || !ui.mask?.type"
   [class.ui-sidebar__mask--transparent]="ui.mask?.type === 'transparent'"
   [class.ui-sidebar__mask--blur]="ui.mask?.type === 'blur'"
   [attr.aria-hidden]="true"
-  (click)="close()">
+  >
 </div>
 
 <!-- Sidebar -->
 <div
   [class]="hostClasses().join(' ')"
   class="ui-sidebar"
-  [class.ui-sidebar--open]="isOpen()"
-  [class.ui-sidebar--drawer]="isDrawer()"
-  [class.ui-sidebar--minimized]="isMinimized()"
-  [class.ui-sidebar--expanded]="isExpanded()"
+  [class.ui-sidebar--open]="ui.visible"
+  [class.ui-sidebar--minimized]="ui.minimize"
   [ngStyle]="styleMap()"
   [attr.id]="ui.id || null"
   [attr.role]="'navigation'"
-  [attr.aria-hidden]="!isOpen()"
-  [attr.aria-expanded]="isOpen()"
   >
   <ng-content></ng-content>
 </div>

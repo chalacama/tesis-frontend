@@ -16,7 +16,7 @@
 
 :root {
   color-scheme: light dark;
-
+  
   /* background */
 
   --background-color: light-dark(var(--surface-0), var(--surface-950));

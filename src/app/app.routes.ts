@@ -101,6 +101,11 @@ export const routes: Routes = [
         {
           path: 'modules',
         loadComponent: () => import('./pages/private/studio/manage.course/module/module.component').then((c) => c.ModuleComponent),
+        
+        },
+        {
+            path: 'module/:module/chapter/:chapter',
+            loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/chapter.component').then((c) => c.ChapterComponent),
         },
         {
           path: 'analytic',

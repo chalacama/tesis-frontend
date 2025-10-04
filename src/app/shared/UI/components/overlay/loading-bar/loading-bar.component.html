@@ -1,0 +1,20 @@
+@if (ui.visible) {
+  <div class="ui-loading-mask" 
+       [class.type-dimmed]="ui.mask?.type === 'dimmed'"
+       [class.type-blur]="ui.mask?.type === 'blur'">
+  </div>
+
+  <div class="ui-loading-wrap" role="status" aria-live="polite">
+    <div *ngIf="ui.bar" class="ui-loading-topbar">
+      <div  class="ui-loading-indicator"></div>
+    </div>
+
+    <div class="ui-loading-content">
+      <div *ngIf="ui.spinner" class="ui-loading-spinner" aria-hidden="true"></div>
+      <div class="ui-loading-text">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+}
+

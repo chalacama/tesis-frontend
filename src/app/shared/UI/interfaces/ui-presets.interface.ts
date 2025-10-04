@@ -36,10 +36,12 @@ export interface UiProps {
   disabled?: boolean;
   neumorphism?: UiNeumorphism;
   variant?: UiVariant;   
+  skeleton?: boolean;
 }
 export interface UiOverlayProps  {          
   neumorphism?: UiNeumorphism;
   variant?: UiVariant;
+  skeleton?: boolean;
 }
 export interface UiPanelProps  {          
   neumorphism?: UiNeumorphism;

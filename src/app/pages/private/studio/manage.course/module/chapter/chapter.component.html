@@ -1,0 +1,97 @@
+<div class="chapter-wrapper">
+  <!-- HEADER / TITULO (opcional) -->
+  <div class="chapter-header">
+    <h4>Capítulo 1.1</h4>
+  </div>
+
+  <!-- TABS -->
+  <nav class="tabs" role="tablist" aria-label="Chapter sections">
+    <button *ngFor="let t of tabs" class="tab-btn" [class.active]="isActive(t.key)"
+      [class.disabled]="isTabDisabled(t.key)" role="tab" type="button" [attr.aria-selected]="isActive(t.key)"
+      [attr.aria-controls]="'panel-' + t.key" [id]="'tab-' + t.key" (click)="selectTab(t.key)">
+      <span class="tab-label">{{ t.label }}</span>
+      <span class="underline"></span>
+    </button>
+  </nav>
+
+  <!-- PANEL: DETALLES -->
+  <section *ngIf="isActive('details')" class="tab-panel" role="tabpanel" [attr.aria-labelledby]="'tab-details'"
+    [id]="'panel-details'">
+    <!-- Espacio para el contenido de Detalles (este mismo componente) -->
+    <!-- Aquí luego vendrán tus inputs/Reactive Form de título, descripción, etc. -->
+    <div class="panel-placeholder">
+      <form [formGroup]="detailsForm" class="chapter-details">
+        <ui-input-label
+        formControlName="title"
+        [label]="{label:'Título'}"
+        severity="primary"
+        placeholder="Escribe un título claro y único"
+        type="text"
+        variant="outlined"
+        [max]="255"
+        [autoSize]="true"
+        [invalid]="detailsForm.get('title')?.invalid && detailsForm.get('title')?.touched">
+      </ui-input-label>
+
+      <ui-input-label
+        formControlName="description"
+        [label]="{label:'Descripción'}"
+        severity="primary"
+        placeholder="Añade una descripción (opcional)"
+        type="textarea"
+        variant="outlined"
+        [max]="1000"
+        [autoSize]="true"
+        [invalid]="detailsForm.get('description')?.invalid && detailsForm.get('description')?.touched">
+      </ui-input-label>
+      </form>
+      <div class="chapter-actions">
+        
+       <ui-button
+        [disabled]="detailsForm.pristine"
+        (click)="resetDetails()"
+        label="Restablecer"
+        [icon]="{svgPath: 'svg/clear-all.svg'}"
+        severity="secondary">
+      </ui-button>
+
+      <ui-button
+        [disabled]="detailsForm.invalid || detailsForm.pristine"
+        
+        (click)="saveDetails()"
+        label="Guardar"
+        [icon]="{svgPath: 'svg/save-outline.svg'}"
+        severity="primary">
+      </ui-button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PANEL: CONTENIDO -->
+  <section *ngIf="isActive('content')" class="tab-panel" role="tabpanel" [attr.aria-labelledby]="'tab-content'"
+    [id]="'panel-content'">
+    <div class="panel-placeholder">
+
+      <app-content-learning></app-content-learning>
+    </div>
+  </section>
+
+  <!-- PANEL: TEST -->
+  <section *ngIf="isActive('test')" class="tab-panel" role="tabpanel" [attr.aria-labelledby]="'tab-test'"
+    [id]="'panel-test'">
+    <div class="panel-placeholder">
+      <app-test></app-test>
+    </div>
+  </section>
+
+</div>
+<!-- chapter.component.html (fragmento) -->
+<!-- ...tu contenido de pestañas, formularios, etc... -->
+
+<ui-loading-bar
+  [visible]="saving()"
+  [mask]="{ type: 'dimmed' }">
+  Guardando capítulo…
+</ui-loading-bar>
+<ui-toast />

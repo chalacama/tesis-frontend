@@ -1,0 +1,86 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loading); /* debajo del splash (9999) pero encima del resto */
+  pointer-events: none; /* el overlay decide si bloquea o no */
+}
+
+/* Máscara */
+.ui-loading-mask {
+  position: fixed;
+  inset: 0;
+  background: transparent; /* transparent por defecto */
+  pointer-events: auto;
+}
+
+.ui-loading-mask.type-dimmed {
+  background: var(--overlay-color);
+}
+
+.ui-loading-mask.type-blur {
+  background: var(--overlay-color-contrast);
+  backdrop-filter: blur(6px);
+}
+
+/* Contenedor general (barra+contenido) */
+.ui-loading-wrap {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  pointer-events: none; /* que solo la máscara capture clicks */
+}
+
+/* Barra superior indeterminada */
+.ui-loading-topbar {
+  height: 4px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.ui-loading-indicator {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--sev-primary) 40%,
+    var(--sev-primary-hover) 60%,
+    transparent 100%);
+  transform: translateX(-100%);
+  animation: loading-slide 1.4s infinite;
+}
+
+@keyframes loading-slide {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Centro: spinner + texto */
+.ui-loading-content {
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  padding: 24px;
+}
+
+.ui-loading-spinner {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 4px solid var(--background-skeleton);
+  border-top-color: var(--sev-primary);
+  animation: spin 0.9s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.ui-loading-text {
+  font-weight: 600;
+  color: var(--text-color);
+  text-shadow: 0 1px 2px var(--shadow-color);
+}

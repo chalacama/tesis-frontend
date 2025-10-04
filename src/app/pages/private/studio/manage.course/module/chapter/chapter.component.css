@@ -1,0 +1,155 @@
+.chapter-wrapper{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* padding: clamp(10px, 2vw, 18px); */
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+.chapter-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 10px 4px;
+}
+.chapter-header h2 {
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.chapter-header .subtitle {
+  color: var(--text-color-secondary);
+  font-size: .9rem;
+}
+
+/* ===== TABS ===== */
+.tabs{
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  background: var(--background-color);
+  z-index: 2;
+  padding-top: 6px;
+}
+
+.tab-btn{
+  position: relative;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+  font-weight: 700;
+  transition: color .2s ease, background-color .15s ease;
+}
+
+.tab-btn:hover{
+  background: var(--background-hover);
+  color: var(--text-color);
+}
+
+.tab-btn.disabled{
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.tab-btn .underline{
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px; /* cae justo sobre el borde del tablist */
+  height: 2px;
+  background: transparent;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .18s ease, background-color .18s ease;
+}
+
+.tab-btn.active{
+  color: var(--text-color);
+}
+
+.tab-btn.active .underline{
+  background: var(--sev-primary);
+  transform: scaleX(1);
+}
+
+/* ===== PANELS ===== */
+.tab-panel{
+ /*  background: var(--card-bg); */
+  /* border: 1px solid var(--border-color); */
+ /*  border-radius: 14px; */
+ /*  box-shadow: 0 1px 2px var(--shadow-color); */
+  padding: clamp(12px, 2vw, 18px);
+  min-height: 320px; /* deja espacio para el contenido */
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* placeholder simple mientras integras los formularios reales */
+.panel-placeholder{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-actions{
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Botones (coincide con tu sistema) */
+.btn{
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .06s ease, background-color .2s ease, border-color .2s ease, opacity .2s ease;
+  user-select: none;
+}
+.btn:active{ transform: translateY(1px); }
+.btn:disabled{ opacity: .6; cursor: not-allowed; }
+
+.btn.primary{
+  background: var(--sev-primary);
+  border-color: var(--sev-primary);
+  color: var(--text-color-contrast);
+}
+.btn.primary:hover{ background: var(--sev-primary-hover); border-color: var(--sev-primary-hover); }
+
+.btn.outline{
+  background: transparent;
+  border-color: var(--sev-secondary);
+}
+.btn.outline:hover{ background: var(--background-hover); }
+.chapter-details{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+}
+.chapter-actions{
+  width: 100%;
+  justify-content: right;
+  display: flex;
+  gap: 10px;
+  padding: 10px 0px 0px 0px;
+}
+@media (max-width: 680px){
+  .tab-btn{ padding: 8px 10px; }
+  .tab-panel{ padding: 12px; }
+}
