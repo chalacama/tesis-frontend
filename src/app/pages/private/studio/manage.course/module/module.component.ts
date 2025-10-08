@@ -59,7 +59,7 @@ export class ModuleComponent implements OnInit {
   // estado UI
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
-
+  
   // datos
   modules = signal<ModItem[]>([]);
   private original = signal<ModItem[]>([]);
@@ -590,7 +590,7 @@ trackByChapter(index: number, item: ChapItem): string {
   private recomputeChapterOrder(module: ModItem) {
     module.chapters.forEach((ch, idx) => (ch.order = idx + 1));
   }
-
+ saving  = signal<boolean>(false);
   // Guardar cambios (ejemplo de payload para capítulos)
   saveChanges() {
   const courseStr = this.getCourseParamFromRoute();
@@ -634,6 +634,7 @@ trackByChapter(index: number, item: ChapItem): string {
   };
 
   this.loading.set(true);
+  this.saving.set(true);
   this.moduleSrv.updateAll(payload).subscribe({
     next: (res) => {
       // Refresca el estado con lo que devuelve el backend (ids reales, orden ya normalizado)
@@ -651,6 +652,7 @@ trackByChapter(index: number, item: ChapItem): string {
       this.chaptersDirty.set(false);
 
       this.loading.set(false);
+      this.saving.set(false);
     },
     error: (err) => {
       console.error(err);

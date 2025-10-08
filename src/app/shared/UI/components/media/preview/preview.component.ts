@@ -1,4 +1,3 @@
-// preview.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 
@@ -31,19 +30,22 @@ export class PreviewComponent {
   /** Inyectamos la instancia de la directiva para leer inputs */
   constructor(public readonly pv: UiPreviewDirective) {}
 
+  /** Helpers de tipo */
+  readonly isImage = computed<boolean>(() => (this.pv.types ?? 'image') === 'image');
+  readonly isVideo = computed<boolean>(() => (this.pv.types ?? 'image') === 'video');
+
   /** Se puede abrir: overlay ON, no disabled, hay src y es image */
   readonly canOpen = computed<boolean>(() => {
-    const t = this.pv.types ?? ('image' as UiFileType);
     const hasSrc = !!this.pv.src;
-    return !this.pv.disabled && (this.pv.overlay ?? true) && hasSrc && t === 'image';
+    return !this.pv.disabled && (this.pv.overlay ?? true) && hasSrc && this.isImage();
   });
 
   /** Banana binding compatible, pero forzando cierre si overlay = false */
   get dialogVisible(): boolean {
-    return (this.pv.overlay ?? true) ? this.isDialogOpen() : false;
+    return (this.pv.overlay ?? true) && this.isImage() ? this.isDialogOpen() : false;
   }
   set dialogVisible(v: boolean) {
-    this.isDialogOpen.set((this.pv.overlay ?? true) ? v : false);
+    this.isDialogOpen.set((this.pv.overlay ?? true) && this.isImage() ? v : false);
   }
 
   /** Handlers del diálogo */
@@ -72,39 +74,38 @@ export class PreviewComponent {
     this.openDialog();
   }
 
-  /** Evitar que clics en <ng-content> abran el diálogo */
+  /** Evitar que clics en <ng-content> o video abran el diálogo */
   stopPropagation(ev: Event): void {
     ev.stopPropagation();
   }
+
+  /** Estilos con tokens */
   private cssVars(): Record<string, string> {
-      const sev: UiSeverity = (this.pv.severity as UiSeverity) ?? 'primary';
-      const sizeTok = this.sizeTokens(this.pv.size as UiSize);
-  
-      // Espera que tengas definidos en :root algo como:
-      // --sev-primary, --sev-primary-hover, etc.
-      const sevBg = `var(--sev-${sev})`;
-      const sevBgHover = `var(--sev-${sev}-hover, ${sevBg})`;
-      const sevBorder = `var(--sev-${sev})`;
-  
-  
-      return {
-        '--pv-width': 'auto',
-        '--pv-height': sizeTok.height,
-        '--pv-radius': '10px',
-        '--pv-gap': sizeTok.gap,
-        '--pv-font-size': sizeTok.font,
-        '--btn-shadow': sizeTok.shadow,
-        '--btn-shadow-contrast': sizeTok.shadowContrast,
-        '--btn-pad-x': sizeTok.padX,
-        '--btn-bg': sevBg,
-        '--pv-bg-hover': sevBgHover,
-        '--pv-fg': (sev === 'secondary') ? 'var(--text-color, #111)' : 'var(--text-color-contrast, #fff)',
-        '--pv-border': sevBorder,
-        '--pv-border-width': '2px',
-        
-      };
-    }
-    private sizeTokens(size: UiSize | undefined) {
+    const sev: UiSeverity = (this.pv.severity as UiSeverity) ?? 'primary';
+    const sizeTok = this.sizeTokens(this.pv.size as UiSize);
+
+    const sevBg = `var(--sev-${sev})`;
+    const sevBgHover = `var(--sev-${sev}-hover, ${sevBg})`;
+    const sevBorder = `var(--sev-${sev})`;
+
+    return {
+      '--pv-width': 'auto',
+      '--pv-height': sizeTok.height,
+      '--pv-radius': '10px',
+      '--pv-gap': sizeTok.gap,
+      '--pv-font-size': sizeTok.font,
+      '--btn-shadow': sizeTok.shadow,
+      '--btn-shadow-contrast': sizeTok.shadowContrast,
+      '--btn-pad-x': sizeTok.padX,
+      '--btn-bg': sevBg,
+      '--pv-bg-hover': sevBgHover,
+      '--pv-fg': (sev === 'secondary') ? 'var(--text-color, #111)' : 'var(--text-color-contrast, #fff)',
+      '--pv-border': sevBorder,
+      '--pv-border-width': '2px',
+    };
+  }
+
+  private sizeTokens(size: UiSize | undefined) {
     const s = size ?? 'md';
     return {
       height: s === 'sm' ? '34px' : s === 'lg' ? '48px' : '40px',
@@ -114,18 +115,12 @@ export class PreviewComponent {
       shadow : s === 'sm' ? '1px 2px 6px' : s === 'lg' ? '4px 6px 10px' : '2px 4px 8px',
       shadowContrast : s === 'sm' ? '0px -1px 3px' : s === 'lg' ? '3px -4px 5px' : '2px -2px 4px',
       iconPx:s === 'sm' ? '16px' : s === 'lg' ? '24px' : '20px',
-
-    
     };
   }
+
   styleMap(): Record<string, string> {
-    const baseVars = this.cssVars();                   // tus --btn-*
+    const baseVars = this.cssVars();
     const overrides = styleToNgStyle(this.pv.style);
     return mergeStyles(baseVars, overrides);
   }
-    /* styleMapMask(): Record<string, string> {
-    const baseVars = this.cssVars();                   // tus --btn-*
-    const overrides = styleToNgStyle(this.pv.);
-    return mergeStyles(baseVars, overrides);
-  } */
 }

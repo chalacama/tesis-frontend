@@ -98,7 +98,7 @@ export class ChapterComponent {
     this.loading.set(true);
     this.error.set(null);
 
-    this.chapterSrv.show(chapterId).subscribe({
+    this.chapterSrv.showChapter(chapterId).subscribe({
       next: (res) => {
         const ch = res.chapter as Chapter;
         // set form + snapshot original
@@ -144,7 +144,7 @@ export class ChapterComponent {
     };
 
     this.saving.set(true);
-    this.chapterSrv.update(chapterId, payload).subscribe({
+    this.chapterSrv.updateChapter(chapterId, payload).subscribe({
       next: (res) => {
         const ch = res.chapter;
         // sincronizar original tras guardar

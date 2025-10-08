@@ -90,7 +90,7 @@
 } */
 
 .ufu-card { width:100%; display:flex; align-items:center; justify-content: space-around; }
-.ufu-preview { width:auto; position:relative; padding: 5px 5px 0 5px; }
+.ufu-preview { width: auto; position:relative; padding: 5px 5px 0 5px; }
 .ufu-name   { font-size: .8rem; padding: 0 6px; color: var(--text-color-secondary); width: 150px; }
 .ufu-remove { width: 30px; display:flex; align-items:center; justify-content:center; }
 

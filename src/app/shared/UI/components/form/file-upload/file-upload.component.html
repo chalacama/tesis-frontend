@@ -35,7 +35,7 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'video'">
-              <ui-preview [types]="'video'" [overlay]="true" [severity]="fud.severity || 'primary'"
+              <ui-preview [style]="{width: '500px'}" [types]="'video'" [overlay]="true" [severity]="fud.severity || 'primary'"
                 [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" 
                 [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
               </ui-preview>

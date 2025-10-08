@@ -1,4 +1,3 @@
-<!-- preview.component.html -->
 <div
   [ngClass]="[
     'up-root',
@@ -13,23 +12,46 @@
   [attr.aria-disabled]="pv.disabled"
   class="up-root"
 >
-  <!-- Marco de miniatura (solo image por ahora) -->
-  <div class="up-frame" (click)="pv.overlay ? openDialog() : null">
+  <!-- Marco de miniatura -->
+  <div class="up-frame" (click)="isImage() && pv.overlay ? openDialog() : null">
+    <!-- IMAGE -->
     <img
-      [ngStyle]="styleMap()"
-      *ngIf="pv.types === 'image' && pv.src; else upEmpty"
+      *ngIf="isImage() && pv.src; else upVideoOrEmpty"
       class="up-thumb"
+      [ngStyle]="styleMap()"
       [src]="pv.src!"
       [alt]="pv.alt || 'Vista previa'"
-      (click)="pv.overlay ? tryOpenFromOverlayClick($event) : stopPropagation($event)"
+      (click)="isImage() && pv.overlay ? tryOpenFromOverlayClick($event) : stopPropagation($event)"
     />
 
-    <ng-template #upEmpty>
-      <div [ngStyle]="styleMap()" class="up-empty">Sin archivo</div>
+    <!-- VIDEO o EMPTY -->
+    <ng-template #upVideoOrEmpty>
+      <!-- VIDEO (sin overlay, sin dialog) -->
+      <video
+        *ngIf="isVideo() && pv.src; else upEmpty"
+        class="up-video"
+        [ngStyle]="styleMap()"
+        [attr.controls]="true"
+        preload="metadata"
+        playsinline
+        (click)="stopPropagation($event)"
+      >
+        <source [src]="pv.src!" type="video/mp4" />
+        Tu navegador no soporta la reproducción de video.
+      </video>
+
+      <!-- EMPTY -->
+      <ng-template #upEmpty>
+        <div [ngStyle]="styleMap()" class="up-empty">Sin archivo</div>
+      </ng-template>
     </ng-template>
 
-    <!-- Overlay propio del Preview (controlado por pv.mask) -->
-    <div [ngStyle]="styleMap()" class="up-overlay" *ngIf="pv.mask && pv.src">
+    <!-- Overlay SOLO para imágenes -->
+    <div
+      *ngIf="isImage() && pv.mask && pv.src"
+      [ngStyle]="styleMap()"
+      class="up-overlay"
+      (click)="tryOpenFromOverlayClick($event)">
       <ui-icon
         *ngIf="pv.overlay"
         [size]="pv.icon?.size || 'sm'"
@@ -46,15 +68,15 @@
     </div>
   </div>
 
-  <!-- Diálogo reutilizable (solo image por ahora) -->
+  <!-- Diálogo reutilizable (SOLO imagen) -->
   <ui-dialog
+    *ngIf="isImage()"
     type="image"
     [variant]="pv.variant || 'flat'"
     [closeOnMaskClick]="pv.dialog?.closeOnMaskClick ?? true"
     [(visible)]="dialogVisible"
     (maskClick)="onMaskClick()"
   >
-    <!-- Contenido del diálogo -->
     <img class="up-dialog-img" [src]="pv.src!" [alt]="pv.alt || 'Vista ampliada'">
   </ui-dialog>
 </div>

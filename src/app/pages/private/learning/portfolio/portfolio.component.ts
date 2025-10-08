@@ -1,9 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Portfolio } from '../../../../core/api/portfolio/portfolio.interface';
-import { PortfolioService } from '../../../../core/api/portfolio/portfolio.service';
+
+import { PortfolioService } from '../../../../core/api/profile/portfolio.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/api/auth/auth.service';
+import { Portfolio } from '../../../../core/api/profile/portfolio.interface';
 
 @Component({
   selector: 'app-portfolio',

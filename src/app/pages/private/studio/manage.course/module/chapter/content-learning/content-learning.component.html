@@ -1,1 +1,119 @@
-<p>content-learning works!</p>
+<div class="cl-wrapper" [class.loading]="loading()">
+  <div class="cl-header">
+    <small class="muted">
+      Elige si enlazas un <b>video de YouTube</b> o subes un <b>archivo</b>.
+    </small>
+  </div>
+
+  <!-- Selector binario (YouTube | Archivo) -->
+  <div class="switcher" role="tablist" aria-label="Tipo de contenido">
+    <button
+      type="button"
+      class="switcher-btn"
+      [class.active]="isYouTube()"
+      (click)="pickYouTube()"
+      [attr.aria-pressed]="isYouTube()"
+    >
+      <span class="icon">
+        <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/youtube.svg'"></ui-icon>
+      </span>
+      <span>YouTube</span>
+    </button>
+
+    <button
+      type="button"
+      class="switcher-btn"
+      [class.active]="isArchivo()"
+      (click)="pickArchivo()"
+      [attr.aria-pressed]="isArchivo()"
+    >
+      <span class="icon">
+        <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/file.svg'"></ui-icon>
+      </span>
+      <span>Archivo</span>
+    </button>
+  </div>
+
+  <!-- Panel YouTube -->
+  <div class="panel" *ngIf="isYouTube()">
+    <label class="lbl" for="yt-url">Pega la URL de YouTube</label>
+    <input
+      id="yt-url"
+      type="text"
+      class="input"
+      [class.invalid]="form.controls.url.touched && form.controls.url.invalid"
+      placeholder="Busca en YouTube o pega la URL de YouTube"
+      [formControl]="form.controls.url"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError('youtubeUrl')">
+  Ingresa una URL válida de YouTube.
+</div>
+    <div class="preview" *ngIf="isYouTube() && embedSafe()">
+  <iframe
+    class="preview-iframe"
+    [src]="embedSafe()"
+    title="YouTube video"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen>
+  </iframe>
+</div>
+  </div>
+
+  <!-- Panel Archivo -->
+  <div class="panel panel-file" *ngIf="isArchivo()">
+    <div class="uploader">
+      <form [formGroup]="form">
+        <ui-file-upload
+      [formControl]="form.controls.url"
+    [icon]="{svgPath: 'svg/file.svg'}"
+      (fileSelected)="onFileSelected($event)"
+      [style]="{ width: '100%' }"
+      label="Suelta un archivo o selecciona"
+      [types]="['video','document']"
+      [formats]="['mp4']"
+      variant="outlined"
+      severity="primary"
+      size="sm"
+      [invalid]="false"
+      [max]="1"
+      [maxMb]="100"
+      [maxSecond]="480"
+      [minSecond]="10"
+
+      >
+    </ui-file-upload>
+      </form>
+      
+    </div>
+    
+  </div>
+
+  <!-- Acciones -->
+  <div class="actions">
+    <ui-button
+      [disabled]="form.pristine"
+      (click)="reset()"
+      label="Restablecer"
+      [icon]="{svgPath: 'svg/clear-all.svg'}"
+      severity="secondary">
+      
+    </ui-button>
+
+    <ui-button
+      [disabled]="sabed"
+      (click)="save()"
+      label="Guardar"
+      [icon]="{svgPath: 'svg/save-outline.svg'}"
+      severity="primary">
+    </ui-button>
+  </div>
+
+</div>
+<ui-loading-bar
+  [visible]="loadbar()"
+  [mask]="{ type: 'dimmed' }">
+  Guardando cambios…
+</ui-loading-bar>

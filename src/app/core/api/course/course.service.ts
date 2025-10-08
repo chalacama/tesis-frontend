@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Course, CourseFilters, CourseQueryParams, CourseRequest, CourseResponse, CourseRouteParams } from './course.interfaces';
 import { environment } from '../../environment/environment';
-import { PortfolioResponse } from '../portfolio/portfolio.interface';
 import { CodeResponse, CourseDetailRequest, CourseDetailResponse } from './course.details.interfaces';
 
 
@@ -206,9 +205,9 @@ getCourses(params: CourseQueryParams = {}, routeParams?: CourseRouteParams): Obs
         switchMap(response => of(response.course))
       );
   }
-  getPortfolioByUsername(username: string): Observable<PortfolioResponse> {
+  /* getPortfolioByUsername(username: string): Observable<PortfolioResponse> {
     return this.http.get<PortfolioResponse>(`${this.apiUrl}/${username}`);
-  }
+  } */
   getCourseDetail(courseParam: string | number): Observable<CourseDetailResponse> {
   this.loadingSubject.next(true);
   return this.http.get<CourseDetailResponse>(`${this.apiUrl}/${courseParam}/show`).pipe(

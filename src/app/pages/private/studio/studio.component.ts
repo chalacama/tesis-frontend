@@ -8,13 +8,14 @@ import { HostListener } from '@angular/core';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { AuthService } from '../../../core/api/auth/auth.service';
 import { User } from '../../../core/api/auth/auth.interfaces';
-import { Portfolio } from '../../../core/api/portfolio/portfolio.interface';
+
 import { CourseService } from '../../../core/api/course/course.service';
-import { MiniatureService } from '../../../core/api/miniature/miniature.service';
-import { MiniatureResponse } from '../../../core/api/miniature/miniature.interface';
+import { StudioService } from '../../../core/api/studio/studio.service';
+import { MiniatureResponse } from '../../../core/api/studio/studio.interface';
 import { PreviewComponent } from '../../../shared/UI/components/media/preview/preview.component';
 import { ButtonComponent } from '../../../shared/UI/components/button/button/button.component';
 import { AvatarComponent } from '../../../shared/UI/components/media/avatar/avatar.component';
+import { Portfolio } from '../../../core/api/profile/portfolio.interface';
 
 @Component({
   selector: 'app-studio',
@@ -53,8 +54,8 @@ export class StudioComponent implements OnInit {
       private renderer: Renderer2,
       private appRef : ApplicationRef,
       private route: ActivatedRoute,
-      private courseService: CourseService,
-      private miniatureService: MiniatureService,
+      // private courseService: CourseService,
+      private studioService: StudioService,
     ) {
       this.setupRouterSubscription();
     }
@@ -85,7 +86,7 @@ export class StudioComponent implements OnInit {
     if (courseId ) {
       this.hasExternalCourse = true;
 
-      this.miniatureService.getMiniature(+courseId).subscribe({
+      this.studioService.getMiniature(+courseId).subscribe({
           next: (res) => {
             this.miniatureData = res;
           },
@@ -105,7 +106,7 @@ export class StudioComponent implements OnInit {
     if (username) {
       this.hasExternalUser = true;
 
-      this.courseService.getPortfolioByUsername(username).subscribe({
+      this.studioService.getPortfolioByUsername(username).subscribe({
         next: (res) => {
           this.portfolioData = res.portfolio;
         },
