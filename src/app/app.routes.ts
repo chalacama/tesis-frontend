@@ -106,6 +106,16 @@ export const routes: Routes = [
         {
             path: 'module/:module/chapter/:chapter',
             loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/chapter.component').then((c) => c.ChapterComponent),
+            // children: [
+            //   {
+            //     path: 'content',
+            //     loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component').then((c) => c.ContentLearningComponent)
+            //   },
+            //   {
+            //     path: 'test',
+            //     loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/test/test.component').then((c) => c.TestComponent)
+            //   }
+            // ]
         },
         {
           path: 'analytic',

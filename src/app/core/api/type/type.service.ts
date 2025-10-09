@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
-import { TypeLarningContentResponse } from './type.interface';
+import { TypeLarningContentResponse, TypeQuestionResponse } from './type.interface';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -16,9 +16,10 @@ export class TypeService {
       map((response: TypeLarningContentResponse[]) => response)
     );
   }
-  getTypeQuestionAll(): Observable<TypeLarningContentResponse[]> {
-    return this.http.get<TypeLarningContentResponse[]>(this.apiUrl + '/index/question').pipe(
-      map((response: TypeLarningContentResponse[]) => response)
+
+  getTypeQuestionAll(): Observable<TypeQuestionResponse[]> {
+    return this.http.get<TypeQuestionResponse[]>(`${this.apiUrl}/index/question`).pipe(
+      map((response) => response)
     );
   }
 }

@@ -1,1 +1,163 @@
-<p>test works!</p>
+<div class="test-wrapper" [class.loading]="loading()">
+
+  <!-- Header -->
+  <header class="test-header">
+    <div class="left">
+      <h3>Evaluación del capítulo</h3>
+      <p class="muted" *ngIf="total() > 0">
+        Preguntas: <b>{{ total() }}</b>
+      </p>
+    </div>
+
+    <div class="actions">
+      <ui-button label="Nueva pregunta" [icon]="{svgPath: 'svg/create.svg'}" severity="primary" (click)="addQuestion()">
+      </ui-button>
+
+      <ui-button [disabled]="form.pristine" (click)="reset()" label="Restablecer"
+        [icon]="{svgPath: 'svg/clear-all.svg'}" severity="secondary">
+      </ui-button>
+
+      <ui-button [disabled]="form.valid === false || form.pristine" (click)="submit()" label="Guardar"
+        [icon]="{svgPath: 'svg/save-outline.svg'}" severity="primary">
+      </ui-button>
+    </div>
+  </header>
+
+  <!-- Estados -->
+  <section *ngIf="loading()" class="state">
+    <div class="skeleton-card" *ngFor="let s of [1,2,3,4]"></div>
+  </section>
+
+  <section *ngIf="loadingError()" class="state error">
+    {{ loadingError() }}
+  </section>
+
+  <!-- Formulario -->
+  <form class="questions" [formGroup]="form">
+    <div class="questions-list" formArrayName="questions" cdkDropListGroup>
+      <div class="question-card" *ngFor="let q of qArray.controls; index as i; trackBy: trackByIndex"
+        [formGroupName]="i" [class.submitted]="submitted()">
+
+        <div class="q-head">
+          <div class="badge">P{{ i + 1 }}</div>
+
+          <!-- Enunciado editable -->
+          <textarea class="statement-input" placeholder="Escribe el enunciado de la pregunta..."
+            formControlName="statement" rows="2"></textarea>
+
+          <!-- Selector de tipo -->
+          <div class="type-chip">
+
+            <select class="type-select" formControlName="type_questions_id"
+              (change)="onTypeChange(i, $any($event.target).value)">
+              <option class="type-option" *ngFor="let t of typeOptions()" [value]="t.id">
+                <span class="type-label"> {{ t.nombre }}</span>
+
+              </option>
+            </select>
+          </div>
+          <!-- <div class="type-chip">
+            <select class="type-select" formControlName="type_questions_id" [compareWith]="comparePrimitive"
+              (change)="onTypeChange(i, $any($event.target).value)">
+              <option class="type-option" *ngFor="let t of typeOptions(); trackBy: trackById" [ngValue]="t.id">
+                {{ t.nombre }}
+              </option>
+            </select>
+          </div> -->
+
+        </div>
+
+        <div class="q-body" [cdkDropListConnectedTo]="connectedTo(i)" [cdkDropListData]="answersArray(i).controls"
+          [id]="listId(i)" cdkDropList (cdkDropListDropped)="dropAnswer($event)">
+
+          <!-- Opciones -->
+          <div class="option" *ngFor="let a of answersArray(i).controls; index as j" cdkDrag
+            [class.correct]="a.get('is_correct')!.value === true">
+
+            <div class="option-label" [formGroup]="a">
+              <span class="drag-handle" cdkDragHandle>
+                <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/drag.svg'"></ui-icon>
+              </span>
+
+              <!-- ÚNICA -->
+              <!-- <ng-container *ngIf="!isMultiple(i); else multipleTpl">
+                <input *ngIf="q.get('type_questions_id')?.value === 2" type="radio"
+                  [checked]="singleCtrl(i).value === j"
+                  (change)="markCorrectSingle(i, j)" />
+              </ng-container> -->
+              <!-- Control de selección -->
+              <ng-container *ngIf="!isMultiple(i); else multiBlock">
+
+                <input type="radio" [checked]="singleCtrl(i).value === j" (change)="markCorrectSingle(i, j)" />
+              </ng-container>
+
+              <ng-template #multiBlock>
+                <!-- MÚLTIPLE -->
+                <ng-container *ngIf="isTypeRadioMulti(i); else checkboxTpl">
+                  <!-- Múltiple CON apariencia de radio (usa checkbox para permitir varias) -->
+                  <label class="fake-radio">
+                    <input type="checkbox" class="visually-hidden" [checked]="a.get('is_correct')!.value === true"
+                      (change)="toggleCorrectMulti(i, j, $any($event.target).checked)" />
+                    <span class="radio-visual"></span>
+                  </label>
+                </ng-container>
+
+                <!-- Múltiple con checkbox nativo (tipo 2) -->
+                <ng-template #checkboxTpl>
+                  <input type="checkbox" [checked]="a.get('is_correct')!.value === true"
+                    (change)="toggleCorrectMulti(i, j, $any($event.target).checked)" />
+                </ng-template>
+              </ng-template>
+
+              <!-- Texto de la opción editable -->
+              <span class="letter">{{ letters(j) }}.</span>
+              <input type="text" class="answer-input" formControlName="option"
+                (focus)="onAnswerFocusSelectCorrect(i, j)" placeholder="Escribe la opción..." />
+            </div>
+
+            <!-- Acciones por opción -->
+            <span class="option-actions">
+              <ui-button [style]="{borderRadius: '50%', width: '35px', height: '35px' }" size="sm" variant="flat"
+                (click)="duplicateAnswer(i, j)" [icon]="{svgPath: 'svg/duplicate.svg'}" severity="primary"></ui-button>
+
+              <ui-button [style]="{borderRadius: '50%', width: '35px', height: '35px' }" size="sm" variant="flat"
+                (click)="removeAnswer(i, j)" [icon]="{svgPath: 'svg/x.svg'}" severity="danger"></ui-button>
+            </span>
+
+            <!-- Plantilla MÚLTIPLE (checkbox) -->
+            <ng-template #multipleTpl>
+              <input type="checkbox" [checked]="a.get('is_correct')!.value === true"
+                (change)="toggleCorrectMulti(i, j, $any($event.target).checked)" />
+            </ng-template>
+
+          </div>
+        </div>
+
+        <div class="q-footer">
+          <ui-button label="Agregar respuesta" variant="flat" (click)="addAnswer(i)"
+            [icon]="{svgPath: 'svg/create.svg'}">
+          </ui-button>
+          <div class="q-score">
+            <label class="score-label" [attr.for]="'q-spot-' + i">Puntos</label>
+            <input class="score-input" [id]="'q-spot-' + i" type="number" formControlName="spot" min="0" step="1"
+              inputmode="numeric" pattern="[0-9]*" (change)="coerceSpot(i)" />
+          </div>
+          <div class="q-footer-actions">
+            <ui-button [style]="{borderRadius: '50%', width: '40px', height: '40px'}" (click)="duplicateQuestion(i)"
+              [icon]="{svgPath: 'svg/duplicate.svg'}">
+            </ui-button>
+
+            <ui-button [style]="{borderRadius: '50%', width: '40px', height: '40px' }" size="sm"
+              (click)="removeQuestion(i)" [icon]="{svgPath: 'svg/delete.svg'}" severity="danger">
+            </ui-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<ui-loading-bar
+  [visible]="saved()"
+  [mask]="{ type: 'dimmed' }">
+</ui-loading-bar>

@@ -1,9 +1,4 @@
 <div class="chapter-wrapper">
-  <!-- HEADER / TITULO (opcional) -->
-  <div class="chapter-header">
-    <h4>Capítulo 1.1</h4>
-  </div>
-
   <!-- TABS -->
   <nav class="tabs" role="tablist" aria-label="Chapter sections">
     <button *ngFor="let t of tabs" class="tab-btn" [class.active]="isActive(t.key)"
@@ -92,6 +87,5 @@
 <ui-loading-bar
   [visible]="saving()"
   [mask]="{ type: 'dimmed' }">
-  Guardando capítulo…
 </ui-loading-bar>
 <ui-toast />

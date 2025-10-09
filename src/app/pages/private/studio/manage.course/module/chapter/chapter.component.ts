@@ -1,7 +1,7 @@
 // pages/course/.../chapter/chapter.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal, computed } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
 import { TestComponent } from './test/test.component';
@@ -29,7 +29,8 @@ type TabKey = 'details' | 'content' | 'test';
     ButtonComponent,
     InputLabelComponent,
     LoadingBarComponent,
-    ToastComponent
+    ToastComponent,
+    // RouterOutlet
   ],
   templateUrl: './chapter.component.html',
   styleUrl: './chapter.component.css'
@@ -82,7 +83,7 @@ export class ChapterComponent {
   isTabDisabled = (_: TabKey) => this.loading() || this.saving(); // si quieres desactivar tabs durante carga/guardado
   isActive = (tab: TabKey) => this.selected() === tab;
   selectTab(tab: TabKey) { if (!this.isTabDisabled(tab)) this.selected.set(tab); }
-
+  
   // carga inicial (solo lo necesario para Detalles)
   ngOnInit(): void {
     const chapterParam = this.getChapterParamFromRoute();

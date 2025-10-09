@@ -9,11 +9,12 @@ export interface TypeLarningContentResponse {
     updated_at:           Date;
     deleted_at:           null;
 }
+
 export interface TypeQuestionResponse {
-    id:         number;
-    nombre:     string;
-    created_at: Date;
-    updated_at: Date;
-    deleted_at: null;
+  id: number;
+  nombre: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
 }
 
