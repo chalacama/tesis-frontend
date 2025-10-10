@@ -9,16 +9,16 @@ export interface CourseDetail {
     title:         string;
     description:   string;
     private:       boolean;
-    code:          null;
+    code:          string | null;
     enabled:       boolean;
     difficulty:    Difficulty;
-    created_at:    Date;
-    updated_at:    Date;
+    created_at:    string;
+    updated_at:    string;
     deleted_at:    null;
 
-    miniature:     Miniature;
-    categories:    Category[];
-    careers:       Career[];
+    miniature:     Miniature | null;
+    categories:    Category[] | null;
+    careers:       Career[] | null;
     
 }
 
@@ -76,6 +76,6 @@ export interface CourseDetailRequest {
   categories?: (number | { id: number; order?: number })[];
 
   // Archivo para miniatura (si lo incluyes, el request se envía como multipart/form-data)
-  miniature?: File;
+  miniature?: File | null;
   
 }

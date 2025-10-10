@@ -1,10 +1,11 @@
+// preview.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 
 import { UiPreviewDirective } from '../../../directive/ui-preview.directive';
 import { DialogComponent } from '../../overlay/dialog/dialog.component'; // <ui-dialog>
 import { IconComponent } from '../../button/icon/icon.component';       // <ui-icon>
-import { UiFileType, UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
+import { UiSeverity, UiSize } from '../../../interfaces/ui-presets.interface';
 import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
 
 @Component({
@@ -27,17 +28,46 @@ export class PreviewComponent {
   /** Estado interno del diálogo */
   readonly isDialogOpen = signal<boolean>(false);
 
-  /** Inyectamos la instancia de la directiva para leer inputs */
+  /** Marca si el recurso dio error al cargar (404, tipo no soportado, etc.) */
+  private readonly loadError = signal<boolean>(false);
+
   constructor(public readonly pv: UiPreviewDirective) {}
 
   /** Helpers de tipo */
   readonly isImage = computed<boolean>(() => (this.pv.types ?? 'image') === 'image');
   readonly isVideo = computed<boolean>(() => (this.pv.types ?? 'image') === 'video');
 
-  /** Se puede abrir: overlay ON, no disabled, hay src y es image */
+  /** Validación de formato de URL (http/https, data:, blob:, o ruta absoluta /) */
+  private isUrlLikely(s?: string | null): boolean {
+    if (!s) return false;
+    const t = s.trim();
+    if (!t) return false;
+    if (t.startsWith('data:') || t.startsWith('blob:')) return true;
+    if (t.startsWith('/')) return true; // rutas absolutas del mismo sitio (p.ej. /assets/...)
+    try {
+      const u = new URL(t, window.location.origin);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  /** Invalida si: hay valor, pero no tiene forma de URL o el elemento reportó error */
+  invalidSrc(): boolean {
+    const s = this.pv.src?.trim();
+    if (!s) return false; // sin src -> "Sin archivo"
+    if (!this.isUrlLikely(s)) return true;
+    return this.loadError();
+  }
+
+  /** Reset/actualiza error de carga */
+  onMediaLoad(): void { this.loadError.set(false); }
+  onMediaError(): void { this.loadError.set(true); }
+
+  /** Se puede abrir: overlay ON, no disabled, hay src, es imagen y no inválida */
   readonly canOpen = computed<boolean>(() => {
     const hasSrc = !!this.pv.src;
-    return !this.pv.disabled && (this.pv.overlay ?? true) && hasSrc && this.isImage();
+    return !this.pv.disabled && (this.pv.overlay ?? true) && hasSrc && this.isImage() && !this.invalidSrc();
   });
 
   /** Banana binding compatible, pero forzando cierre si overlay = false */
@@ -81,7 +111,7 @@ export class PreviewComponent {
 
   /** Estilos con tokens */
   private cssVars(): Record<string, string> {
-    const sev: UiSeverity = (this.pv.severity as UiSeverity) ?? 'primary';
+    const sev = (this.pv.severity as UiSeverity) ?? 'primary';
     const sizeTok = this.sizeTokens(this.pv.size as UiSize);
 
     const sevBg = `var(--sev-${sev})`;

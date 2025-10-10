@@ -10,13 +10,21 @@ import { CourseService } from '../../../../../core/api/course/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PreviewComponent } from '../../../../../shared/UI/components/media/preview/preview.component';
 import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
+import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
+import { InputLabelComponent } from '../../../../../shared/UI/components/form/input-label/input-label.component';
+import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
+import { CheckboxComponent } from '../../../../../shared/UI/components/form/checkbox/checkbox.component';
+import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 
 
 
 
 @Component({
   selector: 'app-courses',
-  imports: [CommonModule,FormsModule ,ReactiveFormsModule, PreviewComponent, ButtonComponent ],
+  imports: [CommonModule,FormsModule ,ReactiveFormsModule, PreviewComponent, 
+    ButtonComponent , DialogComponent, InputLabelComponent, SelectButtonComponent,
+    CheckboxComponent, LoadingBarComponent
+  ],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.css'
 })
@@ -25,7 +33,7 @@ export class CoursesComponent {
   formCreate : FormGroup;
   highlightedCourseId = signal<number | null>(null);
   usernameParam?: string;
-
+  saved = signal <boolean>(false);
   difficulties = signal<Difficulty[]>([]);
   privacyOptions = [
     { value: true, label: 'Privado' },
@@ -70,6 +78,7 @@ export class CoursesComponent {
   difficulty_id: [null, [Validators.required]],
   private: [false]
 });
+
   /* this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -88,7 +97,12 @@ export class CoursesComponent {
     this.loadDifficulties();
 
   }
+onSelectDifficulty(event: any) {
+ /*  const selectedDifficultyId = event.value;
+  this.formCreate.get('difficulty_id')?.setValue(selectedDifficultyId); */
+  console.log('Dificultad seleccionada:', event.value);
 
+}
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -302,10 +316,11 @@ console.log(routeParams);
     this.showModalCreate = false;
   }
   submitCourse(): void {
-  if (this.formCreate.invalid) return;
+  if (this.formCreate.invalid || this.formCreate.pristine) return;
 
   const courseData: CourseRequest = this.formCreate.value;
 
+  this.saved.set(true);
   this.courseService.createCourse(courseData)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
@@ -316,6 +331,8 @@ console.log(routeParams);
         // Aumentar el total en la paginación
         this.pagination.update(p => p ? { ...p, total: p.total + 1 } : null);
         this.highlightedCourseId.set(newCourse.id);
+        this.saved.set(false);
+        this.formCreate.reset();
         this.closeModalCreate();
         setTimeout(() => this.highlightedCourseId.set(null), 9000);
       },

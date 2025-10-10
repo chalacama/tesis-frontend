@@ -25,6 +25,8 @@ import { SelectDataviewComponent } from '../../../../../shared/UI/components/for
 import { CareerService } from '../../../../../core/api/carrer/career.service';
 import { Career } from '../../../../../core/api/carrer/career.interface';
 import { min } from 'rxjs';
+import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
+import e from 'express';
 
 
 @Component({
@@ -38,7 +40,8 @@ import { min } from 'rxjs';
     PopoverComponent,
     ToggleWitchComponent,
     SelectComponent,
-    SelectDataviewComponent
+    SelectDataviewComponent,
+    LoadingBarComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -59,12 +62,12 @@ export class DetailsComponent implements OnInit {
   private readonly host = inject(ElementRef<HTMLElement>);
 
   @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
-  sabed = true;
+  
   constructor(
 
 
   ) {
-    
+    /* this.formStatus(); */
   }
 
   // Estado de UI
@@ -76,6 +79,8 @@ export class DetailsComponent implements OnInit {
   saving = signal<boolean>(false);
   errorMsg = signal<string | null>(null);
   successMsg = signal<string | null>(null);
+  saved = signal<boolean>(false);
+  sabed  = signal<boolean>(true);;
 
   isDialogOpen = true; // o false según el caso
   selectedMiniature: File | null = null;
@@ -112,7 +117,7 @@ readonly MAX_CAREERS = 2;
 
   ngOnInit(): void {
     
-
+    
     const courseParam = this.getCourseParamFromRoute();
     if (!courseParam) {
       this.errorMsg.set('No se encontró el parámetro de curso en la ruta.');
@@ -148,6 +153,9 @@ readonly MAX_CAREERS = 2;
       });
      
   }
+  private idsOrEmpty(arr?: { id: number }[] | null): number[] {
+  return Array.isArray(arr) ? arr.map(x => x.id) : [];
+}
   onMiniatureChange(file: File | null) {
   this.selectedMiniature = file;
   if (file) {
@@ -219,22 +227,25 @@ readonly MAX_CAREERS = 2;
 
   // ----- Helpers -----
   private patchFromCourse(c: CourseDetail): void {
-    this.form.reset(
-      {
-        title: c.title,
-        description: c.description,
-        difficulty_id: c.difficulty.id,
-        private: c.private,
-        enabled: c.enabled,
-        code: c.code || '',
-        careers: c.careers.map(c => c.id),
-        categories: c.categories.map(c => c.id),
-        miniatureUrl: c.miniature.url
+  this.form.reset(
+    {
+      title: c.title ?? '',
+      description: c.description ?? '',
+      difficulty_id: c.difficulty?.id ?? this.form.controls.difficulty_id.value ?? 1,
+      private: !!c.private,
+      enabled: !!c.enabled,
+      code: c.code ?? '',
+      careers: this.idsOrEmpty(c.careers),
+      categories: this.idsOrEmpty(c.categories),
+      miniatureUrl: c.miniature?.url ?? '' // <- clave: evita leer url si no hay miniatura
+    },
+    { emitEvent: false }
+  );
 
-      },
-      { emitEvent: false }
-    );
-  }
+  // al resetear, limpiamos estado local de archivo/flags
+  this.selectedMiniature = null;
+  
+}
   
   private getCourseParamFromRoute(): string | null {
     // Busca 'id' en la ruta actual y en el padre (robusto para layouts anidados)
@@ -244,11 +255,15 @@ readonly MAX_CAREERS = 2;
   }
 
   trackByDifficulty = (_: number, item: Difficulty) => item.id;
-
+  isSaveDisabled = signal<boolean>(true);
   formStatus() {
+    /* console.log('no hay cambios', this.sabed()); */
     this.form.statusChanges.subscribe(() => {
-      this.sabed = this.form.pristine;
-      this.sabed = this.form.invalid;
+      
+       this.isSaveDisabled.set(!this.form.dirty);
+        /* this.isSaveDisabled.set(!this.form.valid); */
+      console.log('falso si hay cambios:', this.isSaveDisabled());
+       console.log('true si es invalid:', this.form.invalid);
     });
   }
 
@@ -287,12 +302,13 @@ readonly MAX_CAREERS = 2;
     code: this.form.value.code ?? undefined,
     careers,
     categories, // si quieres enviar con order, arma [{id, order}]
-    miniature: this.selectedMiniature ?? undefined, // si hay archivo, lo envía
+    miniature: this.selectedMiniature ?? undefined , // si hay archivo, lo envía
   };
 
   this.saving.set(true);
   this.errorMsg.set(null);
   this.successMsg.set(null);
+  this.saved.set(true);
 console.log('Payload a enviar:', payload);
   this.courseService
     .updateCourse(c.id, payload) // << envía archivo si hay
@@ -307,6 +323,7 @@ console.log('Payload a enviar:', payload);
         this.form.markAsPristine();
         this.successMsg.set('Curso actualizado correctamente.');
         console.log('Curso actualizado:');
+        this.saved.set(false);
         this.saving.set(false);
         // opcional: cierra modal de miniatura
         this.modalOpenMiniature = false;
@@ -314,6 +331,7 @@ console.log('Payload a enviar:', payload);
       error: (err: Error) => {
         this.errorMsg.set(err.message || 'No se pudo actualizar el curso.');
         this.saving.set(false);
+        this.saved.set(false);
       }
     });
     }      
@@ -321,9 +339,13 @@ console.log('Payload a enviar:', payload);
   }
 
   resetForm(): void {
+     /* this.formStatus(); */
     if (!this.originalCourse) return;
     this.patchFromCourse(this.originalCourse);
-     this.formStatus();
+    console.log('Cambios restablecidos.');
+    /*  this.formStatus(); */
+    this.isSaveDisabled.set(true);
+
   }
 
   retryLoad(): void {

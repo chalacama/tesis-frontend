@@ -283,12 +283,9 @@
 }
 .cell_miniature{
     width: 150px;
-    height: 80px;
-    border-radius: 5px;
-    object-fit: contain;
-    background-color: #000000;
+    
 }
-.overlay-mask{
+/* .overlay-mask{
     width: 100%;
     height: 100%;
     display: flex;
@@ -300,15 +297,15 @@
     transform: translate(-50%, -50%);
     background-color: var(--overlay-color);
     z-index: 200;
-}
-.modal-create{
+} */
+/* .modal-create{
     width: 300px;
     height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background-color: var(--modal-bg);
+    background-color: var(--dialog-bg);
     box-shadow: var(--shadow-color);
     padding: 10px;    
     position: absolute;
@@ -316,12 +313,51 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+} */
 .select-button {
   display: flex;
   gap: 0.5rem;
 }
-
+.modal-create-body{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    
+    
+}
+.modal-create-content{
+    width: 500px;
+    height: 500px;
+    padding: 20px;
+    overflow-y: auto;
+    
+}
+.modal-create-header{
+    height: 50px;
+    width: 100%;
+}
+.modal-create-footer{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 10px;
+}
+.checkbox-privacy{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+}
+.input-group{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    
+}
 .select-button button {
   padding: 0.5rem 1rem;
   border-radius: 8px;

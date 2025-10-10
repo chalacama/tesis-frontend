@@ -1,3 +1,4 @@
+<!-- preview.component.html -->
 <div
   [ngClass]="[
     'up-root',
@@ -16,39 +17,48 @@
   <div class="up-frame" (click)="isImage() && pv.overlay ? openDialog() : null">
     <!-- IMAGE -->
     <img
-      *ngIf="isImage() && pv.src; else upVideoOrEmpty"
+      *ngIf="isImage() && pv.src && !invalidSrc(); else upVideoOrEmpty"
       class="up-thumb"
       [ngStyle]="styleMap()"
       [src]="pv.src!"
       [alt]="pv.alt || 'Vista previa'"
+      (load)="onMediaLoad()"
+      (error)="onMediaError()"
       (click)="isImage() && pv.overlay ? tryOpenFromOverlayClick($event) : stopPropagation($event)"
     />
 
-    <!-- VIDEO o EMPTY -->
+    <!-- VIDEO o EMPTY/INVALID -->
     <ng-template #upVideoOrEmpty>
       <!-- VIDEO (sin overlay, sin dialog) -->
       <video
-        *ngIf="isVideo() && pv.src; else upEmpty"
+        *ngIf="isVideo() && pv.src && !invalidSrc(); else upEmpty"
         class="up-video"
         [ngStyle]="styleMap()"
-        [attr.controls]="true"
         preload="metadata"
         playsinline
+        (loadeddata)="onMediaLoad()"
+        (error)="onMediaError()"
         (click)="stopPropagation($event)"
+        controls
       >
         <source [src]="pv.src!" type="video/mp4" />
         Tu navegador no soporta la reproducción de video.
       </video>
 
-      <!-- EMPTY -->
+      <!-- EMPTY / INVALID -->
       <ng-template #upEmpty>
-        <div [ngStyle]="styleMap()" class="up-empty">Sin archivo</div>
+        <div
+          [ngStyle]="styleMap()"
+          class="up-empty"
+          [class.up-invalid]="pv.src && invalidSrc()">
+          {{ pv.src ? 'URL inválida' : 'Sin archivo' }}
+        </div>
       </ng-template>
     </ng-template>
 
-    <!-- Overlay SOLO para imágenes -->
+    <!-- Overlay SOLO para imágenes válidas -->
     <div
-      *ngIf="isImage() && pv.mask && pv.src"
+      *ngIf="isImage() && pv.mask && pv.src && !invalidSrc()"
       [ngStyle]="styleMap()"
       class="up-overlay"
       (click)="tryOpenFromOverlayClick($event)">

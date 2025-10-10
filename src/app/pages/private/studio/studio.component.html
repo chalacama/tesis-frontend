@@ -210,7 +210,7 @@
                     <div class="content-thumbnail-avatar content-thumbnail-miniature">
                         <div class="miniature-course" [class.miniature-course-collapsed]="isSidebarCollapsed">
                             <ui-preview [style]="{borderRadius: '5px' ,width:'100%'}"
-                                [src]="miniatureData?.miniature?.url" [types]="'image'" [overlay]="false" [showMask]="true"
+                                [src]="miniatureData?.miniature === null ? '' : miniatureData?.miniature?.url" [types]="'image'" [overlay]="false" [showMask]="true"
                                 [severity]="'primary'" [size]="'sm'" [variant]="'outlined'"
                                 [mask]="{ type: 'blur' }">
 

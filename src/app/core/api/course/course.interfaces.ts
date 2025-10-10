@@ -66,6 +66,7 @@ export interface CourseRequest {
     description:   string;
     difficulty_id: number;
     private:       boolean;
+    
 }
 
 

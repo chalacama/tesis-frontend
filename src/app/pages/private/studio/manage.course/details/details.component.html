@@ -12,7 +12,7 @@
                             [style]="{borderRadius: '30px'}" label="Restablecer" severity="secondary"
                             [icon]="{svgPath: 'svg/clear-all.svg'}">
                         </ui-button>
-                        <ui-button [type]="'submit'" (click)="save()" [disabled]="sabed" neumorphism="raised" [style]="{borderRadius: '30px'}"
+                        <ui-button type="button"  (click)="save()" [disabled]="isSaveDisabled()" neumorphism="raised" [style]="{borderRadius: '30px'}"
                             label="Guardar" severity="primary" [icon]="{svgPath: 'svg/save-outline.svg'}">
                         </ui-button>
 
@@ -182,3 +182,7 @@
         </div>
     </form>
 </div>
+<ui-loading-bar
+  [visible]="saved()"
+  [mask]="{ type: 'dimmed' }">
+</ui-loading-bar>
