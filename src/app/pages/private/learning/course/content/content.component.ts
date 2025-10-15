@@ -13,7 +13,12 @@ import { catchError, distinctUntilChanged, filter, map, of, switchMap, tap } fro
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from '../../../../../core/api/feedback/feedback.service';
 import { LikeResponse, SavedResponse } from '../../../../../core/api/feedback/feedback.interface';
-
+declare global {
+  interface Window {
+    YT?: any;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
 @Component({
   selector: 'app-content',
   standalone: true,
@@ -46,6 +51,8 @@ readonly saving = signal(false);
   readonly isArchive = computed(() => ['archivo','archive','file'].includes((this.data()?.learning_meta?.type || '').toLowerCase()));
   readonly isVideoFile = computed(() => ['mp4','webm','ogg','mov','m4v'].includes((this.data()?.learning_meta?.format || '').toLowerCase()));
 
+
+
   ngOnInit(): void {
     // Escuchar cambios de capítulo en el padre
     const parent = this.route.parent ?? this.route;
@@ -67,7 +74,12 @@ readonly saving = signal(false);
     ).subscribe(res => {
       if (res) {
         this.data.set(res);
-        this.updateYouTubeEmbedFromResponse(res); // <-- SOLO aquí tocamos el src del iframe
+                        
+        this.data.set(res);
+           
+        this.updateYouTubeEmbedFromResponse(res); 
+
+        // <-- SOLO aquí tocamos el src del iframe
       }
       this.loading.set(false);
     });
@@ -213,4 +225,5 @@ toggleSaved(): void {
       return m?.[1] || null;
     }
   }
+  
 }

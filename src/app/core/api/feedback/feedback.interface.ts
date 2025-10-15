@@ -13,4 +13,15 @@ export interface LikeResponse {
 export interface SavedResponse {
     ok: boolean;
     saved: boolean;
+    
 }
+export interface ContendRequest {
+    second_seen : number
+}
+export interface ContendResponse {
+    ok: boolean;
+    second_seen: number
+    updated_at: string;
+}
+
+

@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
 import {
+  ContendRequest,
+  ContendResponse,
   LikedRequest, LikeResponse,
   SavedRequest, SavedResponse
 } from './feedback.interface';
@@ -29,5 +31,11 @@ export class FeedbackService {
   }
   setSaved(courseId: number | string, saved: boolean) {
     return this.saveCourse(courseId, { saved });
+  }
+  setProgress(learningContentId: number | string, second_seen: number) {
+    return this.updateProgress(learningContentId, { second_seen });
+  }
+  updateProgress(learningContentId: number | string, body: ContendRequest): Observable<ContendResponse> {
+    return this.http.post<ContendResponse>(`${this.apiUrl}/progress/${learningContentId}/update`, body);
   }
 }
