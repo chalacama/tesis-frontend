@@ -35,7 +35,10 @@ export class FeedbackService {
   setProgress(learningContentId: number | string, second_seen: number) {
     return this.updateProgress(learningContentId, { second_seen });
   }
-  updateProgress(learningContentId: number | string, body: ContendRequest): Observable<ContendResponse> {
-    return this.http.post<ContendResponse>(`${this.apiUrl}/progress/${learningContentId}/update`, body);
-  }
+  // core/api/feedback/feedback.service.ts
+updateProgress(learningContentId: number | string, body: ContendRequest): Observable<ContendResponse> {
+ 
+  return this.http.post<ContendResponse>(`${this.apiUrl}/content/${learningContentId}/update`, body);
+}
+
 }

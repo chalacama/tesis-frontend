@@ -10,16 +10,18 @@
       <!-- VIDEO -->
       <div class="video player-card" *ngIf="isVideoFile(); else documentPlaceholder">
         <video
-          #player
-          class="video-player"
-          controls
-          preload="metadata"
-          (loadedmetadata)="onVideoLoadedMetadata(player)"
-         
-        >
-          <source [src]="lc.url" [type]="'video/' + (d.learning_meta.format || 'mp4')" />
-          Tu navegador no soporta el elemento de video.
-        </video>
+  #player
+  class="video-player"
+  controls
+  preload="metadata"
+  (loadedmetadata)="onVideoLoadedMetadata(player)"
+  (timeupdate)="onVideoTimeUpdate(player)"
+  (pause)="onVideoPause(player)"
+  (ended)="onVideoEnded(player)"
+>
+  <source [src]="lc.url" [type]="'video/' + (d.learning_meta.format || 'mp4')" />
+  Tu navegador no soporta el elemento de video.
+</video>
         <!-- <div class="video-meta">
           <span class="pill">Formato: {{ d.learning_meta.format.toUpperCase() || 'MP4' }}</span>
           <span class="pill">Capítulo #{{ d.chapter.order }}</span>
@@ -38,14 +40,16 @@
     <div class="youtube player-card" *ngIf="isYouTube()">
       <div class="iframe-wrapper">
         <iframe
-      *ngIf="ytSafeSrc() as ySrc"
-      [src]="ySrc"
-      title="YouTube player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin">
-    </iframe>
+  #ytFrame
+  *ngIf="ytSafeSrc() as ySrc"
+  [src]="ySrc"
+  title="YouTube player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+  referrerpolicy="strict-origin-when-cross-origin">
+</iframe>
+
       </div>
       <!-- <div class="video-meta">
         <span class="pill">YouTube</span>
