@@ -1,0 +1,112 @@
+<div class="content">
+  <!-- Loading / Error -->
+  <div class="loading" *ngIf="loading()">Cargando contenido…</div>
+  <div class="error" *ngIf="!loading() && error()">{{ error() }}</div>
+
+  <div class="view" *ngIf="!loading() && !error() && data() as d">
+
+    <!-- Archivo (video/documento) -->
+    <div class="archive" *ngIf="isArchive() && d.learning_content as lc">
+      <!-- VIDEO -->
+      <div class="video player-card" *ngIf="isVideoFile(); else documentPlaceholder">
+        <video
+          #player
+          class="video-player"
+          controls
+          preload="metadata"
+          (loadedmetadata)="onVideoLoadedMetadata(player)"
+         
+        >
+          <source [src]="lc.url" [type]="'video/' + (d.learning_meta.format || 'mp4')" />
+          Tu navegador no soporta el elemento de video.
+        </video>
+        <!-- <div class="video-meta">
+          <span class="pill">Formato: {{ d.learning_meta.format.toUpperCase() || 'MP4' }}</span>
+          <span class="pill">Capítulo #{{ d.chapter.order }}</span>
+        </div> -->
+      </div>
+
+      <!-- DOCUMENTO (aún no implementado) -->
+      <ng-template #documentPlaceholder>
+        <div class="document player-card">
+          <p>Documento (próximamente) • Formato: {{ d.learning_meta.format.toUpperCase() || '—' }}</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- YouTube -->
+    <div class="youtube player-card" *ngIf="isYouTube()">
+      <div class="iframe-wrapper">
+        <iframe
+      *ngIf="ytSafeSrc() as ySrc"
+      [src]="ySrc"
+      title="YouTube player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+      </div>
+      <!-- <div class="video-meta">
+        <span class="pill">YouTube</span>
+        <span class="pill">Capítulo #{{ d.chapter.order }}</span>
+      </div> -->
+    </div>
+
+    <!-- Metadatos / acciones -->
+    <div class="watch-metadata">
+        <div class="meta-text">
+        <h4 class="title">{{ d.course.title }}</h4>
+        <small class="course">{{ d.chapter.title }}</small>
+      </div>
+      <div class="metadata-body">
+        <div class="meta-avatar">
+            <ui-avatar
+        [src]="d.owner.profile_picture_url || ''"
+        [name]="(d.owner.name || '') + ' ' + (d.owner.lastname || '')"
+        severity="primary"
+        size="md">
+      </ui-avatar>
+        <span>{{ d.owner.name }} {{ d.owner.lastname }}</span>
+        </div>
+        
+
+      
+
+      <div class="actions">
+        <ui-button
+        
+          *ngIf="!d.user_state.is_registered"
+          label="Registrarme"
+          severity="info"
+          (click)="onRegister()">
+        </ui-button>
+
+        <!-- Like -->
+        <button class="icon-btn" (click)="toggleLike()" [attr.aria-label]="d.user_state.liked_chapter ? 'Quitar like' : 'Dar like'">
+          <ui-icon
+            [size]="'lg'"
+            [severity]="'contrast'"
+            [svgPath]="d.user_state.liked_chapter ? 'svg/like-bold.svg' : 'svg/like-outline.svg'">
+          </ui-icon>
+          <span class="count">{{ d.likes_total }}</span>
+        </button>
+
+        <!-- Guardar -->
+        <button class="icon-btn" (click)="toggleSaved()" [attr.aria-label]="d.user_state.is_saved ? 'Quitar de guardados' : 'Guardar curso'">
+          <ui-icon
+            [size]="'lg'"
+            [severity]="'contrast'"
+            [svgPath]="d.user_state.is_saved ? 'svg/bookmark-bold.svg' : 'svg/bookmark-outline.svg'">
+          </ui-icon>
+        </button>
+
+        <!-- Preguntas -->
+        <span class="pill" *ngIf="d.user_state.has_questions">Contiene preguntas</span>
+      </div>
+      </div>
+      
+    </div>
+
+  </div>
+</div>

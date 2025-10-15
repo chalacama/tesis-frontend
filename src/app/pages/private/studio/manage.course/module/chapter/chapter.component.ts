@@ -4,7 +4,7 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
-import { TestComponent } from './test/test.component';
+import { QuestionComponent } from './question/question.component';
 import { ContentLearningComponent } from './content-learning/content-learning.component';
 import { ButtonComponent } from '../../../../../../shared/UI/components/button/button/button.component';
 import { InputLabelComponent } from '../../../../../../shared/UI/components/form/input-label/input-label.component';
@@ -24,7 +24,7 @@ type TabKey = 'details' | 'content' | 'test';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TestComponent,
+    QuestionComponent,
     ContentLearningComponent,
     ButtonComponent,
     InputLabelComponent,

@@ -70,7 +70,10 @@ onContainerScroll(): void {
 viewPortfolio(username: string) {
     this.router.navigate(['/learning/portfolio/@'+username]);
 }
-viewCourse(id: number) {
-    this.router.navigate(['/learning/course/'+id]);
+titleCoursePath (title: string) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+viewCourse(course: any) {
+    this.router.navigate(['/learning/course/'+this.titleCoursePath(course.title)+'/'+course.id]);
 }
 }

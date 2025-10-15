@@ -67,7 +67,7 @@ export class DetailsComponent implements OnInit {
 
 
   ) {
-    /* this.formStatus(); */
+    
   }
 
   // Estado de UI
@@ -106,9 +106,9 @@ readonly MAX_CAREERS = 2;
     code: [''], // nullable en backend; aquí lo tratamos como string ('' -> null al guardar si quieres)
     careers: this.fb.control<number[]>([], { nonNullable: true }),    // ids
     categories: this.fb.control<number[]>([], { nonNullable: true }),    // ids
-    miniatureUrl: [''], // solo para previsualización
-    /* miniatureUrl: this.fb.control({ value: '', disabled: true }), */ // solo para previsualización
+    miniatureUrl: [''], // Permite '' o null sin validación
   });
+   
 
   // Computados útiles
   canSave = computed(() => this.form.valid && this.form.dirty && !this.saving());
@@ -224,7 +224,7 @@ readonly MAX_CAREERS = 2;
         }
       });
   }
-
+  
   // ----- Helpers -----
   private patchFromCourse(c: CourseDetail): void {
   this.form.reset(
@@ -237,7 +237,7 @@ readonly MAX_CAREERS = 2;
       code: c.code ?? '',
       careers: this.idsOrEmpty(c.careers),
       categories: this.idsOrEmpty(c.categories),
-      miniatureUrl: c.miniature?.url ?? '' // <- clave: evita leer url si no hay miniatura
+      miniatureUrl: c.miniature?.url ?? '', // <- clave: evita leer url si no hay miniatura
     },
     { emitEvent: false }
   );
@@ -259,11 +259,12 @@ readonly MAX_CAREERS = 2;
   formStatus() {
     /* console.log('no hay cambios', this.sabed()); */
     this.form.statusChanges.subscribe(() => {
-      
-       this.isSaveDisabled.set(!this.form.dirty);
-        /* this.isSaveDisabled.set(!this.form.valid); */
-      console.log('falso si hay cambios:', this.isSaveDisabled());
+        
+      console.log('falso si hay cambios:',this.form.pristine);
+      this.isSaveDisabled.set(this.form.invalid && this.form.dirty);
+
        console.log('true si es invalid:', this.form.invalid);
+
     });
   }
 
@@ -322,6 +323,7 @@ console.log('Payload a enviar:', payload);
 
         this.form.markAsPristine();
         this.successMsg.set('Curso actualizado correctamente.');
+        this.isSaveDisabled.set(true);
         console.log('Curso actualizado:');
         this.saved.set(false);
         this.saving.set(false);

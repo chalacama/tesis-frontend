@@ -47,7 +47,7 @@
         
         <div class="container-card">
             <div class="card" *ngFor="let course of courses">
-                <div (click)="viewCourse(course.id)"  class="card_view">
+                <div (click)="viewCourse(course)"  class="card_view">
                     <div *ngIf="course.thumbnail_url" class="card_view_img">
                         <img [src]="course.thumbnail_url" src="" alt="">
                     </div>

@@ -128,9 +128,11 @@
                 </div>
                 <div class="start-right-edit">
                     <div class="start-right-edit-item">
-                        <ui-file-upload  (fileSelected)="selectedMiniature = $event"   formControlName="miniatureUrl" [style]="{width: '350px'}"
-                            label="Suelta una imagen o selecciona" [types]="['image']" [formats]="['jpg','png','gif']"
-                            variant="outlined" severity="primary" size="sm"></ui-file-upload>
+                        <ui-file-upload   (fileSelected)="selectedMiniature = $event" [formControl]="form.controls.miniatureUrl"  [style]="{width: '350px'}"
+                        label="Suelta una imagen o selecciona" [types]="['image']" [formats]="['jpg','png','gif']"
+                        variant="outlined" severity="primary" size="sm"></ui-file-upload>
+                        
+                        
                     </div>
 
                     <div class="start-right-edit-item">

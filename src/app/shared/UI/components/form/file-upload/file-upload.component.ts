@@ -46,6 +46,8 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
   }]
 })
 export class FileUploadComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
+  // 1) NUEVO: permite vacíos sin invalidar
+@Input() allowEmpty = true;
 
   constructor(public readonly fud: UiFileUploadDirective) {}
   
@@ -55,7 +57,7 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
   files: File[] = [];
   /** Previews para imágenes */
   /* previews: {file: File; url?: string; type: UiFileType; duration?: number}[] = []; */
-  previews: { file?: File; url: string; type: UiFileType; duration?: number; from: 'file'|'url'; name: string }[] = [];
+  previews: { file?: File; url: string | '' ; type: UiFileType; duration?: number; from: 'file'|'url'; name: string }[] = [];
   /** Errores de validación acumulados */
   errors: string[] = [];
 
@@ -77,30 +79,35 @@ export class FileUploadComponent implements ControlValueAccessor, Validator, OnI
   setDisabledState(isDisabled: boolean): void { this.fud.disabled = isDisabled; }
  @Input() required = false;
   // ======= VALIDATOR =======
-  validate(_: AbstractControl): ValidationErrors | null {
-    const urlCount = this.previews.filter(p => p.from === 'url').length;
+  // 2) Modifica validate(...) para que '' sea válido si allowEmpty === true
+validate(control: AbstractControl): ValidationErrors | null {
+  // Si se permite vacío y el valor actual es '' o null, es válido
+  const raw = control?.value;
+  if (this.allowEmpty && (raw === '' || raw == null)) {
+    this.errors = [];            // limpia cualquier rastro visual de error
+    return null;                 // NO invalida el control
+  }
+
+  const urlCount = this.previews.filter(p => p.from === 'url').length;
   const fileCount = this.files.length;
   const total = urlCount + fileCount;
 
-  const minDefault = this.required ? 1 : 0;        // <-- clave
+  const minDefault = this.required ? 1 : 0;
   const min = this.num(this.fud.min, minDefault);
-  const max = this.num(this.fud.max, 1);           // si no pasas max, 1 por defecto
+  const max = this.num(this.fud.max, 1);
 
   const errs: string[] = [];
-
-  // Reglas de conteo sobre el TOTAL (urls + files)
   if (total < min) errs.push(`Debes seleccionar al menos ${min} archivo(s).`);
   if (max && total > max) errs.push(`Solo se permiten ${max} archivo(s).`);
 
-  // Reglas de archivo SOLO aplican a files reales (no URLs)
   errs.push(...this.validateSync(this.files, { min, max }));
 
-  // Errores async (duración) que acumulaste en this.errors
   const asyncErrs = this.errors.filter(e => e.startsWith('Duración'));
   const all = [...errs, ...asyncErrs];
 
   return all.length ? { fileUpload: all } : null;
-  }
+}
+
 
   // ======= UI COMPUTEDS =======
   acceptAttr(): string {
@@ -551,23 +558,30 @@ private async syncPreviewsFromFiles(clearUrlPreviews = false) {
 }
 
 // ======= OUTPUT =======
+// 3) Modifica propagate() para emitir '' (o []) en lugar de null cuando no hay selección
 private propagate() {
-  // Si hay archivos, emitimos File[]
+  const isSingle = this.num(this.fud.max, 1) === 1;
+
   if (this.files.length) {
     this.onChange(this.files);
     return;
   }
 
-  // Si no hay archivos pero hay URLs en preview, emitimos string|string[]
   const urlValues = this.previews.filter(p => p.from === 'url').map(p => p.url);
+
   if (urlValues.length === 0) {
-    this.onChange(null);
-  } else if (this.num(this.fud.max, 1) === 1) {
-    this.onChange(urlValues[0] as any);  // string
-  } else {
-    this.onChange(urlValues as any);     // string[]
+    // Si se permite vacío, mantenemos '' (o []) para no disparar validaciones de "valor nulo"
+    if (this.allowEmpty) {
+      this.onChange((isSingle ? '' : []) as any);
+    } else {
+      this.onChange(null);
+    }
+    return;
   }
+
+  this.onChange((isSingle ? urlValues[0] : urlValues) as any);
 }
+
 
 // ======= HELPERS =======
 private inferTypeFromUrl(u: string): UiFileType | undefined {

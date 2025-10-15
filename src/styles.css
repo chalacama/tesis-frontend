@@ -22,7 +22,7 @@
   --background-color: light-dark(var(--surface-0), var(--surface-950));
   --background-hover: light-dark(var(--surface-200), var(--surface-900));
   --background-skeleton: light-dark(var(--surface-300), var(--surface-800));
-
+  
 
   /* Elements */
   /* --modal-bg: light-dark(var(--surface-200), var(--surface-800)); */

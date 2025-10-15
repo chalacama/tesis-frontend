@@ -1,0 +1,214 @@
+/* ---- Layout base para la columna de módulos ---- */
+.content-course {
+  display: flex;
+  width: 100%;
+    height: 100%;
+}
+.modules-header{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 5px;
+}
+.modules {
+  /* background: color-mix( in oklab, var(--sidebar-bg) 50%); */
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  box-shadow: 0 6px 16px var(--shadow-color);
+  
+  /* width: var(--sidebar-width); */
+  width: 300px;
+  height: 100%;
+}
+.modules-small{
+    display: none;
+}
+
+/* ---- Accordion ---- */
+/* .accordion + .accordion {
+  margin-top: 8px;
+} */
+
+.acc-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 10px;
+  background: transparent;
+  border: none;
+  
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+.accordion{
+    border-bottom: 1px solid var(--border-color);
+}
+.acc-header:hover {
+  text-decoration: underline;
+}
+
+.acc-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-weight: 600;
+}
+
+
+.mod-name {
+  font-size: .95rem;
+}
+
+/* Caret animado */
+.chevron {
+  transition: transform .2s ease;
+}
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Panel con animación "acordeón" usando grid-rows */
+.acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .22s ease;
+  margin-top: 6px;
+}
+.acc-panel.open {
+  grid-template-rows: 1fr;
+}
+.panel-inner {
+  overflow: hidden;
+}
+
+/* ---- Lista de capítulos ---- */
+.chapters {
+  list-style: none;
+  margin: 0;
+  /* padding: 8px; */
+  display: grid;
+  gap: 8px;
+}
+.chapter-underline{
+    width: 5px;
+    height: 100%;
+}
+.chapter-underline-active{
+    background: var(--sev-primary);
+}
+.chapter-item{
+    display: flex;
+    align-items: center;
+}
+.chapter-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* gap: 10px; */
+  padding: 0x;
+  background: transparent;
+  
+  border: none;
+
+  cursor: pointer;
+  height: 70px;
+ 
+}
+.chapter-btn-content{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.chapter-content{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    flex: 1;
+    padding: 12px 0px;
+}
+.status{
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.chapter-btn:hover {
+  background: var(--background-hover);
+  border-color: var(--sev-primary);
+}
+
+/* .chapter-btn:active {
+  transform: translateY(1px);
+} */
+
+.chapter-title {
+  display: block;
+  font-weight: 600;
+  font-size: .92rem;
+  line-height: 1.2;
+  
+}
+.chapter-title:hover {
+  text-decoration: underline;
+  
+  
+}
+.chapter-header {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 5px;
+width: 100%;
+padding-left: 5px;
+}
+.status-active{
+  background: var(--sev-primary);
+}
+/* Meta inferior: icono YouTube + # preguntas */
+.chapter-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .82rem;
+  color: var(--text-color-secondary);
+  padding-left: 14px;
+}
+
+.icon-slot {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+.view {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+}
+.watching{
+  width: 100%;
+  height: 500px;
+  /* background-color: rgba(255, 182, 193, 0.103); */
+}
+.comments{
+  width: 100%;
+  height: 100px;
+  /* background-color: rgba(0, 255, 255, 0.155); */
+}
+
+
+
+
+
+/* Responsivo */
+@media (max-width: 1100px) {
+  
+}

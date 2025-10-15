@@ -44,13 +44,13 @@ type QEditForm = FormGroup<{
 }>;
 
 @Component({
-  selector: 'app-test',
+  selector: 'app-question',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, DragDropModule, ButtonComponent, IconComponent, LoadingBarComponent],
-  templateUrl: './test.component.html',
-  styleUrl: './test.component.css',
+  templateUrl: './question.component.html',
+  styleUrl: './question.component.css',
 })
-export class TestComponent implements OnInit {
+export class QuestionComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly chapterApi = inject(ChapterService);
   private readonly typeApi = inject(TypeService);

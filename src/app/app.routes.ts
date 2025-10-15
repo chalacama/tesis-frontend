@@ -39,13 +39,34 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./pages/private/learning/profile/profile.component').then((c) => c.ProfileComponent)
       },
+      
       {
-        path: 'course/:id',
-        loadComponent: () => import('./pages/private/learning/course/course.component').then((c) => c.CourseComponent)
-      },
+      path: 'course/:title/:id/:chapterTitle/:chapterId',
+      loadComponent: () =>
+        import('./pages/private/learning/course/course.component')
+          .then(c => c.CourseComponent),
+           children: [
+            {
+              path: 'content',
+              loadComponent: () => import('./pages/private/learning/course/content/content.component').then((c) => c.ContentComponent)
+            },
+            {
+              path: 'test',
+              loadComponent: () => import('./pages/private/learning/course/test/test.component').then((c) => c.TestComponent)
+            }
+           ]
+    },
+    // 2) NUEVA ruta corta sin capítulo (para entrar desde Home)
+    {
+      path: 'course/:title/:id',
+      loadComponent: () =>
+        import('./pages/private/learning/course/course.component')
+          .then(c => c.CourseComponent)
+    },
       {
         path: 'portfolio/:username',
         loadComponent: () => import('./pages/private/learning/portfolio/portfolio.component').then((c) => c.PortfolioComponent)
+
       },
       ]
       },      
