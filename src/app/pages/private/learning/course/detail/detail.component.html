@@ -1,1 +1,105 @@
-<p>detail works!</p>
+<div class="detail-card card">
+
+  <!-- HEADER -->
+  <header class="card-header">
+    <h4 class="title">Detalles de curso</h4>
+
+    <div class="subhead">
+        <span>Nivel </span>
+      <div class="left" *ngIf="course()?.difficulty as d">
+        <span class="badge">{{ d.name }}</span>
+      </div>
+      <div class="right" *ngIf="course()?.created_at as created">
+        <span class="muted">Publicado:</span>
+        <strong>{{ created | date:'longDate' }}</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- <div class="divider"></div> -->
+
+  <!-- RATING -->
+  <section class="rating">
+    <div class="stars" aria-label="Calificación promedio">
+      <div class="stars-bg"></div>
+      <div class="stars-fill" [style.width.%]="avgPercent()"></div>
+    </div>
+    <div class="rating-stats">
+      <strong class="avg">{{ ratingLabel() }}</strong>
+      <span class="count">({{ course()?.ratings?.count ?? 0 }} reseñas)</span>
+      <span class="user" *ngIf="course()?.ratings?.user_stars as u">• Tu calificación: {{ u }}/5</span>
+    </div>
+  </section>
+
+  <!-- <div class="divider"></div> -->
+
+  <!-- DESCRIPCIÓN estilo YouTube -->
+<section class="description">
+  <!-- Hashtags de categorías (fuera del texto) -->
+  <div *ngIf="course()?.categories?.length" class="desc-categories">
+    <span class="hash" *ngFor="let cat of course()?.categories; trackBy: trackById" [title]="cat.name">
+      #{{ cat.name }}
+    </span>
+  </div>
+
+  <div class="desc-course">
+    <!-- Texto de la descripción, con enlaces azules y hashtags resaltados -->
+    <div class="desc-body" [class.collapsed]="descCollapsed()" [innerHTML]="descriptionHtml()"></div>
+
+    <button
+      type="button"
+      class="toggle"
+      (click)="toggleDesc()">
+      {{ descCollapsed() ? 'Mostrar más' : 'Mostrar menos' }}
+    </button>
+  </div>
+</section>
+
+
+  
+
+  <!-- CARRERAS -->
+  <section class="careers">
+    <h4>Carreras</h4>
+    <div class="chips" *ngIf="course()?.careers?.length; else noCareers">
+      <div class="chip" *ngFor="let car of course()?.careers; trackBy: trackById" [title]="car.name">
+        <span class="chip-label">{{ car.name }}</span>
+        <img *ngIf="car.url_logo" [src]="car.url_logo" alt="{{car.name}}" class="chip-logo" loading="lazy">
+        
+      </div>
+    </div>
+    <ng-template #noCareers>
+      <div class="empty">Sin carreras asociadas</div>
+    </ng-template>
+  </section>
+
+  
+
+  <!-- COLABORADORES -->
+  <section class="collaborators">
+    <h3>Colaboradores</h3>
+    <div class="people" *ngIf="course()?.collaborators?.length; else noPeople">
+      <div class="person" *ngFor="let c of course()?.collaborators">
+        <ui-avatar
+          class="avatar"
+          [src]="c.profile_picture_url || ''"
+          [name]="(c.name + ' ' + c.lastname)"
+          severity="primary"
+          size="md">
+        </ui-avatar>
+
+        <div class="info">
+          <div class="name">{{ c.name }} {{ c.lastname }}</div>
+          <div class="username">{{ c.username }}</div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noPeople>
+      <div class="empty">Aún no hay colaboradores visibles</div>
+    </ng-template>
+  </section>
+
+  <!-- ESTADOS -->
+  <div class="error" *ngIf="error()">{{ error() }}</div>
+  <div class="loading" *ngIf="loading()">Cargando detalles…</div>
+</div>

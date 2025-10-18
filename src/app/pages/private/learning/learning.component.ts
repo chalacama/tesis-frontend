@@ -1,5 +1,5 @@
 import { ApplicationRef, Component, inject, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, Observable, Subject, tap } from 'rxjs';
@@ -27,7 +27,7 @@ export class LearningComponent {
   isMobile = false;
   isTablet = false;
   private destroy$ = new Subject<void>();
-
+private readonly route = inject(ActivatedRoute);
 
   constructor(
     private themeService: ThemeService,
@@ -38,15 +38,39 @@ export class LearningComponent {
     private renderer: Renderer2,
     private appRef : ApplicationRef
   ) {
+    // this.router.events
+    //   .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+    //   .subscribe((event: NavigationEnd) => {
+    //     // Remove leading slash
+    //     this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
+    //   });
     this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        // Remove leading slash
-        this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
-      });
+ .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+ .subscribe((event: NavigationEnd) => {
+ // Remove leading slash
+ this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
+
+ // --- INICIO DE LA NUEVA LÓGICA ---
+ // Comprueba si la ruta actual comienza con 'learning/course/'
+ if (this.currentRoute.startsWith('learning/course/')) {
+ // Si es una ruta de curso, fuerza el colapso del sidebar
+this.isSidebarCollapsed = true;
+ } else {
+// Si NO es una ruta de curso, revierte al comportamiento por defecto
+ // (colapsado en tablet, abierto en PC)
+ // Usamos this.isTablet, que es actualizado por el BreakpointObserver
+ this.isSidebarCollapsed = this.isTablet;
+ }
+ // --- FIN DE LA NUEVA LÓGICA ---
+});
   }
 
+  
   ngOnInit() {
+    
+
+    
+    
 
     this.datosUsuario$ = this.authService.currentUser;
     this.currentTheme = this.themeService.getCurrentTheme();
@@ -157,6 +181,7 @@ myPortfolio() {
       }
     });
   }
+    
 
 
 

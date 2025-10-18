@@ -1,8 +1,95 @@
-/* ---- Layout base para la columna de módulos ---- */
+/* === ESTILO DE SCROLLBAR "FANTASMA" (Semistransparente) === */
+
+/* --- Para Firefox --- */
+* {
+  /* Hacemos la barra delgada */
+  scrollbar-width: thin;
+  
+  /* * Color del pulgar (thumb) y color del fondo (track).
+   * Usamos light-dark() para que sea un gris oscuro semitransparente 
+   * en modo claro, y un gris claro semitransparente en modo oscuro.
+   * El 'transparent' hace que el fondo del scroll no se vea.
+   */
+  scrollbar-color: light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.2)) transparent;
+}
+
+/* --- Para Chrome, Safari, Edge y Opera --- */
+
+/* 1. Definimos el ancho (vertical) y alto (horizontal) de la barra */
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* 2. Ocultamos las flechas de dirección */
+*::-webkit-scrollbar-button {
+  display: none !important;
+
+}
+
+/* 3. Ocultamos el fondo (track) */
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 4. Ocultamos la esquina que aparece en áreas de texto */
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 5. Estilizamos la barra (thumb) */
+*::-webkit-scrollbar-thumb {
+  background-color: light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.2));
+  border-radius: 10px; /* Bordes redondeados */
+  border: none; /* Sin bordes */
+}
+
+/* 6. Hacemos la barra un poco más visible al pasar el mouse */
+*::-webkit-scrollbar-thumb:hover {
+  background-color: light-dark(rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.35));
+}
+
+.module-drawer{
+  width: 100%;
+  height: auto;
+  border-color: var(--sev-contrast); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: color-mix(in oklab, var(--sev-contrast) 10%, transparent);
+  
+  display: flex;
+  align-items: center;
+  
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 10px;
+  gap: 20px;
+  
+}
+.module-drawer-right{
+  flex: 1;
+}
+.module-drawer-module{
+width: 100%;
+font-weight: 600;
+font-size: .95rem;
+line-height: 1.2;
+}
+.module-drawer-chapter{
+  font-weight: 500;
+  font-size: .85rem;
+  line-height: 1.2;
+}
 .content-course {
   display: flex;
   width: 100%;
-    height: 100%;
+  height: 100%;
+}
+.content-course-relative{
+  position: relative;
 }
 .modules-header{
     width: 100%;
@@ -10,7 +97,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 5px 10px 5px 10px;
+    
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 5px;
 }
@@ -24,10 +112,65 @@
   width: 300px;
   height: 100%;
 }
+
 .modules-small{
+  width: 70px;
+}
+/* === ESTILOS PARA VISTA COMPACTA (modules-small) === */
+
+/* Ajusta el padding del header del módulo y centra el título */
+.modules-small .acc-header {
+    padding-left: 5px;
+    padding-right: 5px;
+    justify-content: center; /* Centra todo el contenido */
+}
+
+/* Oculta la flecha (chevron) en modo compacto */
+.modules-small .chevron {
     display: none;
 }
 
+/* Centra el título (M1) */
+.modules-small .acc-title {
+    justify-content: center;
+    flex-grow: 1; /* Ocupa el espacio que dejó el chevron */
+}
+
+/* Estilo para "M1" */
+.mod-name-small {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Ajusta el botón del capítulo */
+.modules-small .chapter-btn {
+    height: 60px; /* Un poco más pequeño */
+}
+
+/* Ajusta la barra de activo */
+.modules-small .chapter-underline {
+    width: 4px; /* Un poco más delgada */
+}
+
+/* Centra el contenido del capítulo (C1) */
+.modules-small .chapter-content {
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    padding: 10px 0;
+}
+
+/* Centra el header del capítulo (status + C1) */
+.modules-small .chapter-header {
+    padding-left: 0;
+    margin-bottom: 0; /* No hay meta, quitamos margen */
+    justify-content: center;
+}
+
+/* Estilo para "C1" */
+.chapter-title-small {
+    font-size: 1rem;
+    font-weight: 600;
+}
 /* ---- Accordion ---- */
 /* .accordion + .accordion {
   margin-top: 8px;

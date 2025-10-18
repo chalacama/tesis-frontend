@@ -1,0 +1,216 @@
+.detail-card.card {
+  /* background: var(--card-bg); */
+  /* border: 1px solid var(--border-color); */
+  /* border-radius: 16px; */
+  padding: 16px;
+  /* box-shadow: 0 6px 18px -8px var(--shadow-color); */
+  display: grid;
+  gap: 14px;
+}
+
+/* Header */
+
+.subhead {
+  display: flex;
+  align-items: center;
+  padding: 10px 0px;
+  gap: 10px;
+}
+.subhead .badge {
+  background: color-mix(in srgb, var(--sev-primary) 20%, transparent);
+  /* color: var(--text-color-contrast); */
+  font-size: .82rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--sev-primary-hover);
+  display: inline-flex;
+}
+.subhead .right {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--text-color);
+}
+.subhead .muted { color: var(--text-color-secondary); }
+
+/* Divider */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border-color);
+  margin: 2px 0;
+}
+
+/* Rating */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.stars {
+  position: relative;
+  width: 110px;
+  height: 22px;
+  --star: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+}
+.stars-bg, .stars-fill {
+  position: absolute; inset: 0;
+  -webkit-mask: var(--star) repeat left / 22px 22px;
+  mask: var(--star) repeat left / 22px 22px;
+}
+.stars-bg  { background: var(--border-color-contrast); }
+.stars-fill{ background: var(--sev-warn); width: 0%; }
+
+.rating-stats {
+  display: flex; align-items: baseline; gap: 8px;
+  color: var(--text-color-secondary);
+}
+.rating-stats .avg { color: var(--text-color); font-size: 1.1rem; }
+
+
+.desc-categories{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    color: var(--sev-info);
+    font-size: 10px;
+    font-weight: 600;
+    
+}
+.desc-text{
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+}
+.desc-course{
+
+    padding-top: 10px;
+    width: 100%;
+}
+/* .desc-text.collapsed {
+  display: -webkit-box;
+  
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+}
+.desc-text.collapsed::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3.2em;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--card-bg) 70%);
+  pointer-events: none;
+} */
+.desc-text a.link { color: var(--sev-info); text-decoration: underline; }
+.desc-text .hash { color: var(--sev-info); font-weight: 600; }
+
+.toggle {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--sev-info);
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.toggle:hover { background: var(--background-hover); }
+
+/* Chips (carreras) */
+.careers h4 { font-size: .95rem; margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--border-color);
+  /* background: var(--background-hover); */
+ /*  color: var(--text-color); */
+  padding: 6px 10px;
+  /* border-radius: 999px; */
+  /* display: inline-flex; align-items: center; gap: 8px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  border-radius: 5px;
+  
+}
+.chip-logo { width: 300px; border-radius: 4px; object-fit: contain; }
+.chip-label { font-size: .85rem; }
+.empty { color: var(--text-color-secondary); font-size: .9rem; }
+
+/* Colaboradores */
+.collaborators h3 { font-size: 1rem; margin-bottom: 8px; }
+.people { display: grid; gap: 10px; }
+.person {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 10px; align-items: center;
+}
+.person .avatar { width: 40px; height: 40px; }
+.person .info .name { font-weight: 600; line-height: 1.2; }
+.person .info .username { color: var(--text-color-secondary); font-size: .85rem; }
+.person .info .username::before { content: '@'; margin-right: 2px; opacity: .8; }
+
+/* Estados */
+.error {
+  background: var(--danger-500, #b00020);
+  color: var(--text-color-contrast);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--danger-600, #a0001e);
+}
+.loading { color: var(--text-color-secondary); font-size: .95rem; }
+/* Categorías como # arriba de la descripción */
+.desc-categories{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 6px;
+}
+.desc-categories .hash{
+  color: var(--sev-info);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Contenedor de la descripción */
+.desc-course { padding-top: 8px; }
+
+/* Texto con colapso tipo YouTube */
+.desc-body {
+  line-height: 1.6;
+  color: var(--text-color);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  
+}
+.desc-body.collapsed{
+  display: -webkit-box;
+  -webkit-line-clamp: 5; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+}
+.description{
+    background-color: var(--card-bg);
+  border-radius: 10px;
+  padding: 10px;
+}
+.desc-body.collapsed::after{
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3.2em;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--card-bg) 70%);
+  pointer-events: none;
+}
+
+/* Enlaces y hashtags dentro del texto */
+.desc-body a.link{
+  color: var(--sev-info);
+  text-decoration: underline;
+  cursor: pointer;              /* para el “feeling” de YouTube */
+  word-break: break-word;       /* por si vienen URLs largas */
+}
+.desc-body .hash{
+  color: var(--sev-info);
+  font-weight: 600;
+}

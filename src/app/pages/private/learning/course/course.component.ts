@@ -33,9 +33,8 @@ type ModuleItem = {
   standalone: true,
   imports: [CommonModule, IconComponent, ButtonComponent,
     RouterOutlet,
-    CommentComponent ,
-    DetailComponent
-  ],
+    CommentComponent,
+    DetailComponent],
   templateUrl: './course.component.html',
   styleUrl: './course.component.css'
 })
@@ -45,7 +44,8 @@ export class CourseComponent implements OnInit {
   private readonly watchingSvc = inject(WatchingService);
 
   // UI state
-  openModule = true;
+  visibleModule = true;
+  smallModule = false;
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
 
@@ -249,5 +249,7 @@ export class CourseComponent implements OnInit {
   trackByModule = (_: number, m: ModuleItem) => m.id;
   trackByChapter = (_: number, c: ChapterItem) => c.id;
 
-  closeModules() { this.openModule = !this.openModule; }
+  showModule() { this.visibleModule = !this.visibleModule; }
+
+  sizeModule() { this.smallModule = !this.smallModule; }
 }

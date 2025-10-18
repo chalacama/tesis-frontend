@@ -1,9 +1,8 @@
-<div class="content-course">
-  <div [class.modules-small]="!openModule" class="modules">
-
-    <div class="modules-header">
+<div [class.content-course-relative]="!visibleModule" class="content-course">
+  <div class="module-drawer" *ngIf="!visibleModule">
+    <div class="module-drawer-left">
       <ui-button
-        (click)="closeModules()"
+        (click)="showModule()"
         type="button"
         size="lg"
         [style]="{borderRadius: '10px' , width: '50px', height: '50px' , padding: '0px'}"
@@ -11,9 +10,31 @@
         variant="flat"
         [icon]="{svgPath: 'svg/nav-list.svg'}">
       </ui-button>
-
+    </div>
+    <div class="module-drawer-right">
+      <div class="module-drawer-module">
+        Modulo 1
+      </div>
+      <div class="module-drawer-chapter">
+        capitulo 1
+      </div>
+    </div>
+  </div>
+  <div [class.modules-small]="smallModule" *ngIf="visibleModule" class="modules">
+    
+    <div class="modules-header">
       <ui-button
-        (click)="closeModules()"
+        (click)="sizeModule()"
+        type="button"
+        size="lg"
+        [style]="{borderRadius: '10px' , width: '50px', height: '50px' , padding: '0px'}"
+        severity="contrast"
+        variant="flat"
+        [icon]="{svgPath: 'svg/nav-list.svg'}">
+      </ui-button>
+      <span *ngIf="!smallModule" >
+              <ui-button
+        (click)="showModule()"
         type="button"
         size="lg"
         [style]="{borderRadius: '50%' , width: '40px', height: '40px', padding: '0px'}"
@@ -21,6 +42,8 @@
         variant="flat"
         [icon]="{svgPath: 'svg/x.svg'}">
       </ui-button>
+      </span>
+
     </div>
 
     <!-- Loading / error -->
@@ -28,19 +51,21 @@
     <div *ngIf="!loading() && error()" class="error">{{ error() }}</div>
 
     <ng-container *ngIf="!loading() && !error()">
-      <div class="accordion" *ngFor="let m of modules(); trackBy: trackByModule">
+            <div class="accordion" *ngFor="let m of modules(); let modIndex = index; trackBy: trackByModule">
         <button
           class="acc-header"
           type="button"
           (click)="toggle(m.id)"
           [attr.aria-expanded]="isOpen(m.id)"
           [attr.aria-controls]="'panel-' + m.id">
-          <div class="acc-title">
-            <span class="mod-name" >{{ m.name }}</span>
-          </div>
 
-          <!-- Caret -->
-          <ui-icon
+                    <div class="acc-title">
+                        <span class="mod-name" *ngIf="!smallModule">{{ m.name }}</span>
+            <span class="mod-name-small" *ngIf="smallModule">
+              M{{ modIndex + 1 }}
+            </span>
+          </div>
+                              <ui-icon
             class="chevron"
             [class.open]="isOpen(m.id)"
             [size]="'lg'"
@@ -52,28 +77,33 @@
         <div class="acc-panel" [class.open]="isOpen(m.id)" [id]="'panel-' + m.id">
           <div class="panel-inner">
             <ul class="chapters">
-              <li class="chapter-item" *ngFor="let c of m.chapters; trackBy: trackByChapter">
-  <button class="chapter-btn" type="button" (click)="selectChapter(c)">
-    <div class="chapter-btn-content">
-      
-      <span class="chapter-underline" [class.chapter-underline-active]="isActiveChapter(c.id)"></span>
+                            <li class="chapter-item" *ngFor="let c of m.chapters; let chapIndex = index; trackBy: trackByChapter">
+                  <button class="chapter-btn" type="button" (click)="selectChapter(c)">
+                    <div class="chapter-btn-content">
+                    
+                      <span class="chapter-underline" [class.chapter-underline-active]="isActiveChapter(c.id)"></span>
 
-      <div class="chapter-content">
-        <div class="chapter-header">
-          <span [class.status-active]="c.completed" class="status"></span>
-          <span class="chapter-title">{{ c.title }}</span>
-        </div>
+                      <div class="chapter-content">
+                        <div class="chapter-header">
+                          <span [class.status-active]="c.completed" class="status"></span>
+                          
+                          <span class="chapter-title" *ngIf="!smallModule">{{ c.title }}</span>
 
-        <div class="chapter-meta">
-          <span class="icon-slot" *ngIf="learningIcon(c) as iconPath">
-            <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="iconPath"></ui-icon>
-          </span>
-          <span class="questions">{{ c.questions }} preguntas</span>
-        </div>
-      </div>
-    </div>
-  </button>
-</li>
+                          <span class="chapter-title-small" *ngIf="smallModule">
+                            C{{ chapIndex + 1 }}
+                          </span>
+                        </div>
+
+                        <div class="chapter-meta" *ngIf="!smallModule">
+                          <span class="icon-slot" *ngIf="learningIcon(c) as iconPath">
+                            <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="iconPath"></ui-icon>
+                          </span>
+                          <span class="questions">{{ c.questions }} preguntas</span>
+                        </div>
+                      </div>
+                      </div>
+                  </button>
+                </li>
 
             </ul>
           </div>
