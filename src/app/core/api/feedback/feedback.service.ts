@@ -32,11 +32,11 @@ export class FeedbackService {
   setSaved(courseId: number | string, saved: boolean) {
     return this.saveCourse(courseId, { saved });
   }
-  setProgress(learningContentId: number | string, second_seen: number) {
-    return this.updateProgress(learningContentId, { second_seen });
+  setContent(learningContentId: number | string, second_seen: number) {
+    return this.updateContent(learningContentId, { second_seen });
   }
   // core/api/feedback/feedback.service.ts
-updateProgress(learningContentId: number | string, body: ContendRequest): Observable<ContendResponse> {
+updateContent(learningContentId: number | string, body: ContendRequest): Observable<ContendResponse> {
  
   return this.http.post<ContendResponse>(`${this.apiUrl}/content/${learningContentId}/update`, body);
 }

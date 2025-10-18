@@ -1,35 +1,37 @@
 /* Reset y configuración general */
 
-* {
+/* * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
+} */
 
-body {
+/* body {
     font-family: 'Segoe UI', sans-serif;
     overflow-x: hidden;
     background-color: #e6f4e9;
-    /* Fondo suave */
-}
+    
+} */
 
 
 /* Scroll suave */
 
-html {
+/* html {
     scroll-behavior: smooth;
-}
+} */
 
 
 /* Contenedor principal */
 
 .landing-container {
     width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
+    /* max-width: 100vw; */
+    height: 100vh;
+    /* overflow-x: hidden; */
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    /* height: auto; */
+    overflow-y: auto;
 }
 
 
@@ -105,11 +107,12 @@ a:focus {
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
     z-index: 1;
     padding: 3rem 1rem;
     text-align: center;
     background: linear-gradient(to left, #038c75, #0c7303);
+    /* overflow-y: auto; */
 }
 
 @keyframes gradientAnimation {
