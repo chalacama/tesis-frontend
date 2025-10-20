@@ -59,7 +59,7 @@ export interface Owner {
 
 export interface UserState {
     is_saved:      boolean;
-    is_registered: boolean;
+    
     liked_chapter: boolean;
     has_questions: boolean;
 }

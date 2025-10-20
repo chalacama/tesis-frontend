@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import {
   ContendRequest,
   ContendResponse,
+  LikedCommentRequest,
+  LikedCommentResponse,
   LikedRequest, LikeResponse,
   SavedRequest, SavedResponse
 } from './feedback.interface';
@@ -19,7 +21,9 @@ export class FeedbackService {
   likeChapter(chapterId: number | string, body: LikedRequest): Observable<LikeResponse> {
     return this.http.post<LikeResponse>(`${this.apiUrl}/like/${chapterId}/update`, body);
   }
-
+  likeComment(commentId: number | string, body: LikedCommentRequest): Observable<LikedCommentResponse> {
+    return this.http.post<LikedCommentResponse>(`${this.apiUrl}/comment/${commentId}/update`, body);
+  }
   /** POST /feedback/saved/{course}/update */
   saveCourse(courseId: number | string, body: SavedRequest): Observable<SavedResponse> {
     return this.http.post<SavedResponse>(`${this.apiUrl}/saved/${courseId}/update`, body);
@@ -28,6 +32,9 @@ export class FeedbackService {
   // Azúcar sintáctico opcional
   setLiked(chapterId: number | string, liked: boolean) {
     return this.likeChapter(chapterId, { liked });
+  }
+  setLikedComment(commentId: number | string, liked: boolean) {
+    return this.likeChapter(commentId, { liked });
   }
   setSaved(courseId: number | string, saved: boolean) {
     return this.saveCourse(courseId, { saved });

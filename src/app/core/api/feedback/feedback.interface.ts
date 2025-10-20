@@ -24,4 +24,14 @@ export interface ContendResponse {
     updated_at: string;
 }
 
+export interface LikedCommentRequest {
+    liked: boolean;
+}
+export interface LikedCommentResponse {
+    ok: boolean;
+    liked: boolean;
+}
+
+
+
 

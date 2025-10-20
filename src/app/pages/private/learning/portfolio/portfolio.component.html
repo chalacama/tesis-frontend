@@ -1,27 +1,135 @@
-<p>portfolio works!</p>
-<button *ngIf="canManage()" (click)="goToCourses()">Gestionar cursos</button>
-<section *ngIf="!loading() && portfolio() as p; else loadingTpl">
-  <h1>{{ p.name }} {{ p.lastname }}</h1>
-  <p>Usuario: {{ p.username }} ({{ p.email }})</p>
-  <p>Fecha de ingreso: {{ p.joined_at }}</p>
+<!-- Loading / Error -->
+ <div class="content-portfolio">
+<div class="state" *ngIf="loading()">
+  <div class="skeleton header"></div>
+  <div class="skeleton tabs"></div>
+  <div class="skeleton card"></div>
+</div>
 
-  <div *ngIf="p.career">
-    <h2>Carrera</h2>
-    <p>{{ p.career.name }}</p>
+<p class="error" *ngIf="!loading() && error()">{{ error() }}</p>
+
+<section *ngIf="!loading() && !error() && portfolio() as p" class="container">
+
+  <!-- Channel Header -->
+  <div class="channel-header card">
+    <div class="profile-section">
+      <div class="profile-image">
+        <ng-container *ngIf="avatarUrl(); else initialsAvatar">
+          <img
+            [ngSrc]="avatarUrl()!"
+            alt="{{ p.name }} {{ p.lastname }}"
+            width="160" height="160"
+          />
+        </ng-container>
+        <ng-template #initialsAvatar>
+          <div class="avatar-fallback" aria-hidden="true">{{ initials() }}</div>
+        </ng-template>
+      </div>
+
+      <div class="channel-info">
+        <div class="channel-name">
+          <h1>{{ p.name }} {{ p.lastname }}</h1>
+
+          <svg *ngIf="verifiedByRole()" class="verified-badge" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-label="Verificado">
+            <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
+            <path d="M6 8L7.5 9.5L10 6.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+
+        <div class="channel-stats">
+          <span><span></span><span>{{ p.username }}</span></span>
+          <span class="dot">·</span>
+          <span>{{ p.role | titlecase }}</span>
+          <span class="dot">·</span>
+          <span>{{ p.active_courses_count }} cursos activos</span>
+          <span class="dot">·</span>
+          <span>Miembro desde {{ p.joined_at | date:'longDate' }}</span>
+        </div>
+
+        <div class="channel-description">
+          <p *ngIf="p.career || p.sede">
+            <span *ngIf="p.career">Carrera: <strong>{{ p.career.name }}</strong></span>
+            <span *ngIf="p.career && p.sede" class="dot">·</span>
+            <span *ngIf="p.sede">Sede: <strong>{{ p.sede.canton }}, {{ p.sede.province }}</strong></span>
+          </p>
+          <p class="email" *ngIf="p.email">Contacto: <a [href]="'mailto:'+p.email">{{ p.email }}</a></p>
+        </div>
+
+        <div class="channel-actions">
+          <button class="subscribe-btn" (click)="onFollow()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 22C10.7 22 9.5 21.3 8.8 20.2L3 11.5C2.4 10.5 2.5 9.2 3.2 8.3L7.5 3C8.3 2 9.6 1.5 10.9 1.8L18.6 3.4C20.3 3.8 21.5 5.3 21.5 7V17C21.5 19.8 19.3 22 16.5 22H12Z" stroke="currentColor" stroke-width="1.5"></path>
+            </svg>
+            Seguir
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+
+          <button class="join-btn" (click)="onJoin()">Contactar</button>
+
+          <button class="manage-btn" *ngIf="canManage()" (click)="goToCourses()">
+            Gestionar cursos
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="p.sede">
-    <h2>Sede</h2>
-    <p>{{ p.sede.canton }}, {{ p.sede.province }}</p>
-    <p>Unidad educativa: {{ p.sede.educational_unit.name }}</p>
+  <!-- Navigation Tabs -->
+  <nav class="channel-nav">
+    <div class="nav-items">
+      <button class="nav-item active" type="button">Principal</button>
+      <button class="nav-item" type="button" (click)="goToCourses()">Cursos</button>
+      <button class="nav-item" type="button" disabled>Playlists</button>
+      <button class="nav-item" type="button" disabled>Certificados</button>
+    </div>
+    <button class="search-btn" type="button" aria-label="Buscar en el portafolio">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+        <path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Filter Buttons (placeholder de UX; actívalo cuando listes contenido) -->
+  <div class="filter-section">
+    <button class="filter-btn active" type="button">Más recientes</button>
+    <button class="filter-btn" type="button">Popular</button>
+    <button class="filter-btn" type="button">Más antiguos</button>
   </div>
 
-  <p><strong>Cursos activos:</strong> {{ p.active_courses_count }}</p>
+  <!-- Principal / Overview -->
+  <section class="overview">
+    <div class="about card">
+      <h2>Acerca de</h2>
+      <ul>
+        <li><strong>Usuario:</strong>{{ p.username }}</li>
+        <li *ngIf="p.career"><strong>Carrera:</strong> {{ p.career.name }}</li>
+        <li *ngIf="p.sede"><strong>Unidad educativa:</strong> {{ p.sede.educational_unit.name }}</li>
+        <li><strong>Email:</strong> <a [href]="'mailto:'+p.email">{{ p.email }}</a></li>
+      </ul>
+    </div>
+
+    <div class="cta card">
+      <h3>¿Buscas sus cursos?</h3>
+      <p>Explora y gestiona cursos según tus permisos.</p>
+      <div class="cta-actions">
+        <button class="primary" (click)="goToCourses()">Ver cursos</button>
+        <button class="secondary" (click)="onFollow()">Seguir perfil</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grid tipo “YouTube” (cuando tengas items) -->
+  <!--
+  <div class="video-grid">
+    <div class="video-card" *ngFor="let item of items">
+      ...
+    </div>
+  </div>
+  -->
 
 </section>
 
-<ng-template #loadingTpl>
-  <p>Cargando portafolio...</p>
-</ng-template>
-
-<p *ngIf="error()">{{ error() }}</p>
+ </div>

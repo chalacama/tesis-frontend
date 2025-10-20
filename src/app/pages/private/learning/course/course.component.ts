@@ -12,6 +12,8 @@ import {
 
 import { CommentComponent } from './comment/comment.component';
 import { DetailComponent } from './detail/detail.component';
+import { CourseBridge } from '../../../../core/api/watching/course-bridge.service';
+
 
 type ChapterItem = {
   id: number;
@@ -31,6 +33,7 @@ type ModuleItem = {
 @Component({
   selector: 'app-course',
   standalone: true,
+  providers: [CourseBridge],
   imports: [CommonModule, IconComponent, ButtonComponent,
     RouterOutlet,
     CommentComponent,
@@ -42,7 +45,8 @@ export class CourseComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly watchingSvc = inject(WatchingService);
-
+  readonly bridge = inject(CourseBridge);
+   private firstChapterId: number | null = null;
   // UI state
   visibleModule = true;
   smallModule = false;
@@ -69,12 +73,16 @@ export class CourseComponent implements OnInit {
 
     this.watchingSvc.getCourseWatching(courseId).subscribe({
       next: (res: WatchingResponse) => {
+        
         // Mapear módulos/ capítulos
         const uiModules = this.mapApiToUiModules(res.course.modules);
+        this.firstChapterId = uiModules[0]?.chapters[0]?.id ?? null;
         this.modules.set(uiModules);
 
         // Construir índice capítulo -> módulo
         this.indexChapterToModule(uiModules);
+
+        this.bridge.setRegistered(!!res.course.is_registered);
 
         // Resolver capítulo activo (ruta -> último visto -> primero)
         const routeChapterId = this.getCourseParam('chapterId');
@@ -115,7 +123,7 @@ export class CourseComponent implements OnInit {
       }
     });
   }
-
+isFirstChapter = (chapterId: number) => this.firstChapterId === chapterId;
   /** Lee parámetro de ruta (soporta parent anidado) */
   private getCourseParam(key: string): string | null {
     return (

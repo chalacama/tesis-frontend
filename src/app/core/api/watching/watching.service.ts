@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
 
@@ -8,6 +8,7 @@ import {
 } from './structure.interface';
 import { ContentResponse } from './content.interface';
 import { DetailResponse } from './detail.interface';
+import { CommentResponse, PaginationParams, RepliesResponse } from './comment.interface';
 
 @Injectable({ providedIn: 'root' })
 export class WatchingService {
@@ -29,6 +30,37 @@ export class WatchingService {
    */
   getCourseDetail(courseId: number | string): Observable<DetailResponse> {
     return this.http.get<DetailResponse>(`${this.apiUrl}/detail/${courseId}/show`);
+  }
+
+  /**
+   * GET /watching/comment/{course}/index
+   * Comentarios raíz del curso (scroll infinito)
+   */
+  getCourseComments(courseId: number | string, params?: PaginationParams): Observable<CommentResponse> {
+    const httpParams = new HttpParams({ fromObject: {
+      ...(params?.per_page ? { per_page: params.per_page } : {}),
+      ...(params?.page ? { page: params.page } : {}),
+    }});
+    return this.http.get<CommentResponse>(`${this.apiUrl}/comment/${courseId}/index`, { params: httpParams });
+  }
+
+  /**
+   * GET /watching/comment/{course}/comment/{comment}/replies
+   * Respuestas a un comentario (también paginadas)
+   */
+  getCommentReplies(
+    courseId: number | string,
+    commentId: number | string,
+    params?: PaginationParams
+  ): Observable<RepliesResponse> {
+    const httpParams = new HttpParams({ fromObject: {
+      ...(params?.per_page ? { per_page: params.per_page } : {}),
+      ...(params?.page ? { page: params.page } : {}),
+    }});
+    return this.http.get<RepliesResponse>(
+      `${this.apiUrl}/comment/${courseId}/comment/${commentId}/replies`,
+      { params: httpParams }
+    );
   }
 
 }

@@ -190,6 +190,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   position: relative;
+  line-clamp: 5;
 }
 .description{
     background-color: var(--card-bg);

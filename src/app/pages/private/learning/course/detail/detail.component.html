@@ -1,5 +1,27 @@
 <div class="detail-card card">
+<!-- COLABORADORES -->
+  <section class="collaborators">
+    <h3>Colaboradores</h3>
+    <div class="people" *ngIf="course()?.collaborators?.length; else noPeople">
+      <div class="person" *ngFor="let c of course()?.collaborators">
+        <ui-avatar
+          class="avatar"
+          [src]="c.profile_picture_url || ''"
+          [name]="(c.name + ' ' + c.lastname)"
+          severity="primary"
+          size="md">
+        </ui-avatar>
 
+        <div class="info">
+          <div class="name">{{ c.name }} {{ c.lastname }}</div>
+          <div class="username">{{ c.username }}</div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noPeople>
+      <div class="empty">Aún no hay colaboradores visibles</div>
+    </ng-template>
+  </section>
   <!-- HEADER -->
   <header class="card-header">
     <h4 class="title">Detalles de curso</h4>
@@ -75,29 +97,7 @@
 
   
 
-  <!-- COLABORADORES -->
-  <section class="collaborators">
-    <h3>Colaboradores</h3>
-    <div class="people" *ngIf="course()?.collaborators?.length; else noPeople">
-      <div class="person" *ngFor="let c of course()?.collaborators">
-        <ui-avatar
-          class="avatar"
-          [src]="c.profile_picture_url || ''"
-          [name]="(c.name + ' ' + c.lastname)"
-          severity="primary"
-          size="md">
-        </ui-avatar>
-
-        <div class="info">
-          <div class="name">{{ c.name }} {{ c.lastname }}</div>
-          <div class="username">{{ c.username }}</div>
-        </div>
-      </div>
-    </div>
-    <ng-template #noPeople>
-      <div class="empty">Aún no hay colaboradores visibles</div>
-    </ng-template>
-  </section>
+  
 
   <!-- ESTADOS -->
   <div class="error" *ngIf="error()">{{ error() }}</div>

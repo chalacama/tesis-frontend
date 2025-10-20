@@ -330,7 +330,9 @@ padding-left: 5px;
   align-items: center;
 }
 
-
+.chapter-lock{
+  color: var(--sev-info);
+}
 .view {
   flex: 1;
   height: 100%;

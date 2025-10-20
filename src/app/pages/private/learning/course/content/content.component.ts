@@ -23,6 +23,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from '../../../../../core/api/feedback/feedback.service';
 import { LikeResponse, SavedResponse } from '../../../../../core/api/feedback/feedback.interface';
+import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
 
 declare global {
   interface Window { onYouTubeIframeAPIReady?: () => void; YT?: any; }
@@ -42,7 +43,7 @@ export class ContentComponent implements OnInit {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroyRef = inject(DestroyRef);
   private readonly feedbackSvc = inject(FeedbackService);
-
+   private readonly bridge = inject(CourseBridge);
   @ViewChild('ytFrame') ytFrame?: ElementRef<HTMLIFrameElement>;
 
   // state
@@ -87,8 +88,9 @@ export class ContentComponent implements OnInit {
     } catch {}
     return null;
   }
-
+  isRegistered = computed(() => this.bridge.isRegistered());
   ngOnInit(): void {
+     
     // a) Canal de progreso con throttling 4s
     this.progress$
       .pipe(
@@ -264,7 +266,24 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  onRegister(): void { console.log('Registro solicitado'); }
+  onRegister(): void {
+    const courseId = this.route.parent?.snapshot.paramMap.get('id');
+    if (!courseId) return;
+
+    // Llama a tu backend para registrar al usuario en el curso
+    // Puedes ponerlo en WatchingService o FeedbackService; aquí un ejemplo genérico:
+    /* this.watchingSvc.registerInCourse(courseId).subscribe({
+      next: (res: { ok: boolean; is_registered?: boolean }) => {
+        // Si el backend confirma, actualiza el estado compartido
+        if (res?.ok) {
+          this.bridge.setRegistered(true);
+        }
+      },
+      error: () => {
+        // Maneja error si quieres mostrar toast, etc.
+      }
+    }); */
+  }
 
   // -----------------------------
   // HTML5 video events (archivo)
