@@ -21,14 +21,19 @@
     </ng-container>
 
     <div class="add-comment-input">
-      <input
-        class="comment-input"
-        type="text"
-        placeholder="Escribe un comentario…"
-        [ngModel]="rootDraft()"
-        (ngModelChange)="rootDraft.set($event)"
-        (focus)="onRootFocus()"
-        (keydown.enter)="sendTopComment()" />
+      <textarea
+  #ta
+  rows="1"
+  class="comment-input"
+  type="text"
+  placeholder="Escribe un comentario…"
+  [ngModel]="rootDraft()"
+  (ngModelChange)="rootDraft.set($event)"
+  (input)="onRootInput($event)"
+  (focus)="onRootFocus()"
+  (keydown.enter)="sendTopComment()"
+></textarea>
+
 
       <div class="comment-input-actions" *ngIf="rootActionsVisible()">
         <button class="send-btn" (click)="cancelTopComment()">Cancelar</button>
@@ -105,7 +110,9 @@
               </ui-avatar>
             </ng-container>
 
-            <input
+            <textarea
+              autosize
+              rows="1"
               id="reply-input-{{c.id}}"
               type="text"
               class="comment-input"
@@ -113,6 +120,7 @@
               (input)="updateDraft(c.id, $any($event.target).value)"
               (keydown.enter)="sendReplyToComment(c)"
               placeholder="Escribe una respuesta…">
+            </textarea>
           </div>
 
           <div class="comment-input-actions">
@@ -177,7 +185,9 @@
                     </ui-avatar>
                   </ng-container>
 
-                  <input
+                  <textarea
+                    autosize
+                    rows="1"
                     id="child-reply-input-{{c.id}}"
                     type="text"
                     class="comment-input"
@@ -185,6 +195,7 @@
                     (input)="updateChildDraft(c.id, $any($event.target).value)"
                     (keydown.enter)="sendReplyToReply(c)"
                     placeholder="Escribe una respuesta…">
+                  </textarea>
                 </div>
 
                 <div class="comment-input-actions">

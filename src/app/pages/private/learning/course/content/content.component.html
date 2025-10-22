@@ -66,6 +66,7 @@
       <div class="metadata-body">
         <div class="meta-avatar">
             <ui-avatar
+            (click)="goToPortfolio(d.owner.username)"
         [src]="d.owner.profile_picture_url || ''"
         [name]="(d.owner.name || '') + ' ' + (d.owner.lastname || '')"
         severity="primary"

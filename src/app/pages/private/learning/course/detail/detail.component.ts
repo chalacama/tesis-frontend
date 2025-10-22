@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, DestroyRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { WatchingService } from '../../../../../core/api/watching/watching.service';
@@ -21,6 +21,7 @@ import { CourseBridge } from '../../../../../core/api/watching/course-bridge.ser
 })
 export class DetailComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly watching = inject(WatchingService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly sanitizer = inject(DomSanitizer);
@@ -140,6 +141,9 @@ private toRichHtml(text: string): string {
   // Párrafos y saltos de línea
   out = out.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>');
   return `<p>${out}</p>`;
+}
+goToPortfolio(username: string) {
+  this.router.navigate(['learning/portfolio', '@' + username]);
 }
 
 }

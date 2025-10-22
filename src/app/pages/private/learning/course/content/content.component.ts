@@ -500,4 +500,7 @@ export class ContentComponent implements OnInit {
       return m?.[1] || null;
     }
   }
+  goToPortfolio(username: string) {
+  this.router.navigate(['learning/portfolio', '@' + username]);
+}
 }

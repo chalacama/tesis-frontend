@@ -8,7 +8,8 @@ import {
   inject,
   signal,
   ViewChild,
-  ElementRef
+  ElementRef,
+  HostListener
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -27,6 +28,7 @@ import {
 } from '../../../../../core/api/watching/comment.interface';
 import { AuthService } from '../../../../../core/api/auth/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AutosizeDirective } from '../../../../../shared/directives/autosize.directive';
 
 type ReplyState = {
   items: Datum[];
@@ -56,7 +58,7 @@ type MeUser = {
 @Component({
   selector: 'app-comment',
   standalone: true,
-  imports: [CommonModule, FormsModule, AvatarComponent, IconComponent],
+  imports: [CommonModule, FormsModule, AvatarComponent, IconComponent, AutosizeDirective],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.css'
 })
@@ -97,7 +99,10 @@ export class CommentComponent implements OnInit, AfterViewInit {
   // Sentinel
   @ViewChild('infAnchor', { static: true }) infAnchorRef!: ElementRef<HTMLDivElement>;
   private observer?: IntersectionObserver;
-
+  constructor() {
+  
+  this.destroyRef.onDestroy(() => this.ro?.disconnect());
+}
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.courseId = Number(idParam ?? 0);
@@ -116,15 +121,27 @@ export class CommentComponent implements OnInit, AfterViewInit {
           profile_picture_url: u.profile_picture_url ?? null
         };
       });
+      this.resizeTextarea();
   }
 
   ngAfterViewInit(): void {
+    
     this.observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry?.isIntersecting && this.hasMore() && !this.loading()) this.loadMore();
     }, { root: null, rootMargin: '0px', threshold: 0.1 });
 
     if (this.infAnchorRef?.nativeElement) this.observer.observe(this.infAnchorRef.nativeElement);
+
+     this.setupTextareaBase();
+  this.resizeTextarea();
+
+  // Observa cambios de ancho/estilo que afecten el layout del textarea
+  const ta = this.ta?.nativeElement;
+  if ('ResizeObserver' in window && ta) {
+    this.ro = new ResizeObserver(() => this.resizeTextarea());
+    this.ro.observe(ta);
+  }
   }
 
   // ------- Carga raíz -------
@@ -245,6 +262,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   cancelTopComment(): void {
     this.rootDraft.set('');
     this.rootActionsVisible.set(false);
+    queueMicrotask(() => this.resizeTextarea());
   }
 
   sendTopComment(): void {
@@ -310,6 +328,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
     if (!this.isRegistered()) return;
     const st = this.ensureReplyState(parent.id);
     const text = (st.draft ?? '').trim();
+    queueMicrotask(() => this.resizeTextarea());
     if (!text) return;
 
     // UI optimista
@@ -442,4 +461,35 @@ export class CommentComponent implements OnInit, AfterViewInit {
     const mo = Math.floor(d / 30); if (mo < 12) return r(mo, 'mes');
     const y = Math.floor(mo / 12); return r(y, 'año');
   }
+  
+  @ViewChild('ta') ta?: ElementRef<HTMLTextAreaElement>;
+private ro?: ResizeObserver;
+
+// Llama una vez al iniciar para preparar el textarea (overflow y resize)
+private setupTextareaBase() {
+  const ta = this.ta?.nativeElement;
+  if (!ta) return;
+  ta.style.overflowY = 'hidden';
+  ta.style.resize = 'none';
+}
+
+// Calcula el alto en base al contenido
+private resizeTextarea() {
+  const ta = this.ta?.nativeElement;
+  if (!ta) return;
+  // Evita “salto” visual: primero libera, luego ajusta
+  ta.style.height = 'auto';
+  // +2px ayuda cuando hay border-box/redondeos
+  ta.style.height = `${ta.scrollHeight + 2}px`;
+}
+
+// Mantén tu HostListener si lo tienes
+@HostListener('window:resize') onWinResize() { this.resizeTextarea(); }
+  
+onRootInput(ev: Event) {
+  const el = ev.target as HTMLTextAreaElement;
+  this.rootDraft.set(el.value ?? '');
+  this.resizeTextarea();
+}
+
 }

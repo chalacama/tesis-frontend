@@ -5,6 +5,7 @@
     <div class="people" *ngIf="course()?.collaborators?.length; else noPeople">
       <div class="person" *ngFor="let c of course()?.collaborators">
         <ui-avatar
+          (click)="goToPortfolio(c.username)"
           class="avatar"
           [src]="c.profile_picture_url || ''"
           [name]="(c.name + ' ' + c.lastname)"

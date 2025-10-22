@@ -28,6 +28,8 @@
   outline: none;
   border-bottom: 1px solid var(--border-color);
   padding: 10px;
+  resize: none;
+   line-height: 1.4;
 }
 .comment-input:focus {
   border-bottom: 1.5px solid var(--sev-primary);
