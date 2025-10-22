@@ -45,7 +45,7 @@ export class ContentComponent implements OnInit {
   private readonly feedbackSvc = inject(FeedbackService);
    private readonly bridge = inject(CourseBridge);
   @ViewChild('ytFrame') ytFrame?: ElementRef<HTMLIFrameElement>;
-
+  
   // state
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);

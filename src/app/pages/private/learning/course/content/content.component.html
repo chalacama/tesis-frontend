@@ -80,7 +80,7 @@
       <div class="actions">
         <ui-button
         
-          
+          *ngIf="!isRegistered()"
           label="Registrarme"
           severity="info"
           (click)="onRegister()">
@@ -91,7 +91,7 @@
           <ui-icon
             [size]="'lg'"
             [severity]="'contrast'"
-            [svgPath]="d.user_state.liked_chapter ? 'svg/like-bold.svg' : 'svg/like-outline.svg'">
+            [svgPath]="d.user_state.liked_chapter ? 'svg/I-like-bold.svg' : 'svg/I-like-outline.svg'">
           </ui-icon>
           <span class="count">{{ d.likes_total }}</span>
         </button>

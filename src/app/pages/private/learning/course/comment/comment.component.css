@@ -1,0 +1,101 @@
+:host { display: block; }
+.card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; }
+.comments-section{
+  width: 100%;
+  height: 100%;
+  padding: 0px 10px;
+}
+.comments-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.comments-title { display: inline-flex; align-items: baseline; gap: 8px; }
+.comments-title h4 { font-size: 1rem; margin: 0; }
+.comments-title .hint { color: var(--text-color-secondary); font-size: 0.85rem; }
+.sort-by { color: var(--text-color-secondary); font-size: 0.85rem; }
+
+.add-comment { display: flex; align-items: start; gap: 12px; padding: 12px 0; margin-bottom: 8px; }
+.add-comment-input{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.add-comment.disabled .note { color: var(--text-color-secondary); font-size: 0.9rem; }
+
+.comment-input {
+  width: 100%;
+  background: none;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px;
+}
+.comment-input:focus {
+  border-bottom: 1.5px solid var(--sev-primary);
+}
+
+.comment-input-actions{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 10px;
+}
+
+.state { padding: 8px 0; color: var(--text-color-secondary); }
+.state.error { color: var(--sev-danger); }
+
+.list { display: flex; flex-direction: column; gap: 16px; }
+article.comment { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
+.avatar-wrap { position: relative; width: 44px; height: 44px; }
+
+.content .meta { display: flex; align-items: baseline; gap: 8px; font-size: 0.9rem; }
+.reply-size{ font-size: 0.8rem; }
+.content .meta .fullname { color: var(--text-color-secondary); margin-left: 6px; }
+.content .meta .time, .content .meta .dot { color: var(--text-color-secondary); font-size: 0.85rem; }
+
+.text { margin: 6px 0 8px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+
+.actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.like-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px; border-radius: 999px; border: none;
+  background: transparent; color: var(--text-color); cursor: pointer;
+}
+.like-btn:hover { background: var(--background-hover); }
+.like-btn.active { border-color: var(--sev-primary); }
+.like-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.owner-chip { position: relative; display: inline-flex; align-items: center; }
+.owner-chip .heart {
+  position: absolute; right: -6px; bottom: -6px;
+  background: var(--background-color); border-radius: 999px; padding: 2px;
+}
+
+.reply-btn { border: 1px solid var(--border-color); background: transparent; border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.reply-btn:hover { background: var(--background-hover); }
+.reply-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.replies-toggle { margin-top: 6px; }
+.reply-toggle-link { border: none; background: none; color: var(--sev-info); cursor: pointer; padding: 4px 0; }
+
+.replies { margin-top: 8px; display: block; }
+.reply { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding-top: 8px; }
+.reply .avatar-wrap { width: 36px; height: 36px; }
+
+.reply-composer { display: flex; flex-direction: column; gap: 8px; }
+.reply-reply { padding: 0 0 0 40px; }
+.reply-composer-input{
+  display: grid; grid-template-columns: 36px 1fr auto;
+  gap: 8px; align-items: center; margin-top: 8px;
+}
+.reply-input { border: 1px solid var(--border-color); background: transparent; border-radius: 8px; padding: 8px 10px; color: var(--text-color); outline: none; }
+
+.send-btn { border: 1px solid var(--border-color); background: transparent; border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.send-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.replies-footer { margin-top: 8px; }
+.show-more { border: none; background: none; color: var(--sev-info); cursor: pointer; padding: 6px 0; }
+
+.infinite-anchor { height: 1px; width: 100%; }
+.end-state { text-align: center; color: var(--text-color-secondary); padding-top: 8px; font-size: 0.9rem; }

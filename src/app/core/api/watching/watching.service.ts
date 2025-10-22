@@ -58,7 +58,7 @@ export class WatchingService {
       ...(params?.page ? { page: params.page } : {}),
     }});
     return this.http.get<RepliesResponse>(
-      `${this.apiUrl}/comment/${courseId}/comment/${commentId}/replies`,
+      `${this.apiUrl}/course/${courseId}/comment/${commentId}/replies`,
       { params: httpParams }
     );
   }

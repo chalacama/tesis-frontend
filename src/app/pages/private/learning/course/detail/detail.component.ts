@@ -10,6 +10,7 @@ import { map, switchMap, catchError, of, distinctUntilChanged } from 'rxjs';
 
 // Usa tu ui-avatar
 import { AvatarComponent } from '../../../../../shared/UI/components/media/avatar/avatar.component';
+import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
 
 @Component({
   selector: 'app-detail',
@@ -23,7 +24,7 @@ export class DetailComponent {
   private readonly watching = inject(WatchingService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly sanitizer = inject(DomSanitizer);
-
+  private readonly bridge = inject(CourseBridge);
   loading = signal<boolean>(true);
   error   = signal<string | null>(null);
   course  = signal<Course | null>(null);

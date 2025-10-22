@@ -1,6 +1,221 @@
-<ui-avatar
-          [src]=""
-          [name]="'luis ramirez'"
+<div class="comments-section">
+  <header class="comments-header">
+    <div class="comments-title">
+      <h4>Comentarios</h4>
+      <span class="hint">
+        {{ comments().length }}<ng-container *ngIf="hasMore()">+</ng-container>
+      </span>
+    </div>
+    <div class="sort-by"><span>Más relevantes</span></div>
+  </header>
+
+  <!-- Caja para escribir (avatar del USUARIO LOGEADO) -->
+  <section class="add-comment" *ngIf="isRegistered(); else notRegistered">
+    <ng-container *ngIf="datosUsuario$ | async as me">
+      <ui-avatar
+        [src]="me?.profile_picture_url || ''"
+        [name]="(me?.name || '') + ' ' + (me?.lastname || '')"
+        severity="primary"
+        size="md">
+      </ui-avatar>
+    </ng-container>
+
+    <div class="add-comment-input">
+      <input
+        class="comment-input"
+        type="text"
+        placeholder="Escribe un comentario…"
+        [ngModel]="rootDraft()"
+        (ngModelChange)="rootDraft.set($event)"
+        (focus)="onRootFocus()"
+        (keydown.enter)="sendTopComment()" />
+
+      <div class="comment-input-actions" *ngIf="rootActionsVisible()">
+        <button class="send-btn" (click)="cancelTopComment()">Cancelar</button>
+        <button class="send-btn" [disabled]="!rootDraft().trim()" (click)="sendTopComment()">Comentar</button>
+      </div>
+    </div>
+  </section>
+
+  <ng-template #notRegistered>
+    <section class="add-comment disabled">
+      <div class="note">Debes estar inscrito en el curso para comentar.</div>
+    </section>
+  </ng-template>
+
+  <!-- Estado -->
+  <div class="state" *ngIf="loading()">Cargando comentarios…</div>
+  <div class="state error" *ngIf="!loading() && error()">{{ error() }}</div>
+
+  <!-- Lista -->
+  <section class="list" *ngIf="!loading() && !error()">
+    <article class="comment" *ngFor="let c of comments(); trackBy: trackById">
+      <div class="avatar-wrap">
+        <ui-avatar
+          [src]="c.user.avatar || ''"
+          [name]="c.user.name + ' ' + c.user.lastname"
           severity="primary"
           size="md">
-</ui-avatar>
+        </ui-avatar>
+      </div>
+
+      <div class="content">
+        <div class="meta">
+          <span class="user">
+            <strong>{{ '@' + c.user.username }}</strong>
+            <span class="fullname">{{ c.user.name }} {{ c.user.lastname }}</span>
+          </span>
+          <span class="dot">·</span>
+          <span class="time">{{ timeAgo(c.created_at) }}</span>
+        </div>
+
+        <div class="text">{{ c.text }}</div>
+
+        <!-- Acciones: like + owner-chip + responder -->
+        <div class="actions">
+          <button class="like-btn" [class.active]="c.liked_by_me" [disabled]="!isRegistered()" (click)="toggleLike(c)">
+            <ui-icon [size]="'lg'" [svgPath]="c.liked_by_me ? 'svg/like-bold.svg' : 'svg/like-outline.svg'"></ui-icon>
+            <span class="count">{{ c.likes }}</span>
+          </button>
+
+          <!-- Chip del dueño si dio like -->
+          <div class="owner-chip" *ngIf="c.liked_by_owner && owner()">
+            <ui-avatar
+              [src]="owner()?.avatar || ''"
+              [name]="(owner()?.name || '') + ' ' + (owner()?.lastname || '')"
+              severity="primary"
+              [style]="{width: '23px', height: '23px'}">
+            </ui-avatar>
+            <ui-icon class="heart" [style]="{width: '12px', height: '12px'}" [svgPath]="'svg/I-like-bold.svg'"></ui-icon>
+          </div>
+
+          <!-- Botón responder (a la derecha del chip del dueño) -->
+          <button class="reply-btn" [disabled]="!isRegistered()" (click)="toggleReplyComposer(c)">Responder</button>
+        </div>
+
+        <!-- Composer de respuesta (nivel 1: responder al comentario) -->
+        <div class="reply-composer" *ngIf="repliesState()[c.id]?.composerOpen">
+          <div class="reply-composer-input">
+            <ng-container *ngIf="datosUsuario$ | async as me">
+              <ui-avatar
+                [src]="me?.profile_picture_url || ''"
+                [name]="(me?.name || '') + ' ' + (me?.lastname || '')"
+                severity="primary"
+                size="sm">
+              </ui-avatar>
+            </ng-container>
+
+            <input
+              id="reply-input-{{c.id}}"
+              type="text"
+              class="comment-input"
+              [value]="repliesState()[c.id]?.draft || ''"
+              (input)="updateDraft(c.id, $any($event.target).value)"
+              (keydown.enter)="sendReplyToComment(c)"
+              placeholder="Escribe una respuesta…">
+          </div>
+
+          <div class="comment-input-actions">
+            <button class="send-btn" (click)="cancelReplyToComment(c)">Cancelar</button>
+            <button class="send-btn" [disabled]="!(repliesState()[c.id]?.draft || '').trim()" (click)="sendReplyToComment(c)">
+              Responder
+            </button>
+          </div>
+        </div>
+
+        <!-- “Ver respuestas” -->
+        <div class="replies-toggle" *ngIf="c.replies_count > 0">
+          <button class="reply-toggle-link" (click)="toggleReplies(c)">
+            {{ (repliesState()[c.id]?.open ? 'Ocultar' : 'Ver') + ' ' + c.replies_count + ' respuestas' }}
+          </button>
+        </div>
+
+        <!-- Respuestas -->
+        <div class="replies" *ngIf="repliesState()[c.id]?.open">
+          <div class="reply" *ngFor="let r of (repliesState()[c.id]?.items || []); trackBy: trackById">
+            <div class="avatar-wrap">
+              <ui-avatar
+                [src]="r.user.avatar || ''"
+                [name]="r.user.name + ' ' + r.user.lastname"
+                severity="primary"
+                size="sm">
+              </ui-avatar>
+            </div>
+
+            <div class="content">
+              <div class="meta">
+                <span class="user reply-size">
+                  <strong>{{ '@' + r.user.username }}</strong>
+                  <span class="fullname">{{ r.user.name }} {{ r.user.lastname }}</span>
+                </span>
+                <span class="dot reply-size">·</span>
+                <span class="time reply-size">{{ timeAgo(r.created_at) }}</span>
+              </div>
+
+              <div class="text reply-size">{{ r.text }}</div>
+
+              <div class="actions">
+                <button class="like-btn reply-size" [class.active]="r.liked_by_me" [disabled]="!isRegistered()" (click)="toggleLike(r)">
+                  <ui-icon [size]="'md'" [svgPath]="r.liked_by_me ? 'svg/like-bold.svg' : 'svg/like-outline.svg'"></ui-icon>
+                  <span class="count">{{ r.likes }}</span>
+                </button>
+                <button class="reply-btn reply-size" [disabled]="!isRegistered()" (click)="openChildReplyComposer(c, r)">
+                  Responder
+                </button>
+              </div>
+
+              <!-- Composer de respuesta (nivel 2: responder a una respuesta) -->
+              <div class="reply-composer reply-reply"
+                   *ngIf="repliesState()[c.id]?.childOpen && repliesState()[c.id]?.childTargetId === r.id">
+                <div class="reply-composer-input">
+                  <ng-container *ngIf="datosUsuario$ | async as me">
+                    <ui-avatar
+                      [src]="me?.profile_picture_url || ''"
+                      [name]="(me?.name || '') + ' ' + (me?.lastname || '')"
+                      severity="primary"
+                      size="sm">
+                    </ui-avatar>
+                  </ng-container>
+
+                  <input
+                    id="child-reply-input-{{c.id}}"
+                    type="text"
+                    class="comment-input"
+                    [value]="repliesState()[c.id]?.childDraft || ''"
+                    (input)="updateChildDraft(c.id, $any($event.target).value)"
+                    (keydown.enter)="sendReplyToReply(c)"
+                    placeholder="Escribe una respuesta…">
+                </div>
+
+                <div class="comment-input-actions">
+                  <button class="send-btn" (click)="cancelReplyToReply(c)">Cancelar</button>
+                  <button class="send-btn"
+                          [disabled]="!(repliesState()[c.id]?.childDraft || '').trim()"
+                          (click)="sendReplyToReply(c)">
+                    Responder
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- footer de respuestas -->
+          <div class="replies-footer">
+            <button class="show-more" *ngIf="repliesState()[c.id]?.hasMore && !(repliesState()[c.id]?.loading)"
+              (click)="loadMoreReplies(c)">
+              Mostrar más respuestas
+            </button>
+            <div class="state" *ngIf="repliesState()[c.id]?.loading">Cargando respuestas…</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Sentinel -->
+    <div #infAnchor class="infinite-anchor" aria-hidden="true"></div>
+
+    <div class="end-state" *ngIf="!hasMore() && comments().length > 0">
+      No hay más comentarios
+    </div>
+  </section>
+</div>

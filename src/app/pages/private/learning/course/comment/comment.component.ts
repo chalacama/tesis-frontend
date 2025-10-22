@@ -1,12 +1,445 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  AfterViewInit,
+  computed,
+  inject,
+  signal,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+
 import { AvatarComponent } from '../../../../../shared/UI/components/media/avatar/avatar.component';
+import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
+
+import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
+import { WatchingService } from '../../../../../core/api/watching/watching.service';
+import {
+  CommentResponse,
+  RepliesResponse,
+  Datum,
+  OwnerSummary,
+  PaginationParams
+} from '../../../../../core/api/watching/comment.interface';
+import { AuthService } from '../../../../../core/api/auth/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+type ReplyState = {
+  items: Datum[];
+  page: number;
+  hasMore: boolean;
+  open: boolean;
+  loading: boolean;
+
+  // Composer para responder al COMENTARIO (nivel 1)
+  composerOpen: boolean;
+  draft: string;
+
+  // Composer para responder a una RESPUESTA (nivel 2)
+  childOpen: boolean;
+  childDraft: string;
+  childTargetId: number | null; // id de la respuesta objetivo
+};
+
+type MeUser = {
+  id: number;
+  username: string;
+  name: string;
+  lastname: string;
+  profile_picture_url?: string | null;
+};
 
 @Component({
   selector: 'app-comment',
-  imports: [AvatarComponent],
+  standalone: true,
+  imports: [CommonModule, FormsModule, AvatarComponent, IconComponent],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.css'
 })
-export class CommentComponent {
-  
+export class CommentComponent implements OnInit, AfterViewInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly watching = inject(WatchingService);
+  private readonly bridge = inject(CourseBridge);
+  private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  // Solo registrados pueden comentar/responder/likear
+  isRegistered = computed(() => this.bridge.isRegistered());
+
+  // Para el template (avatar del usuario)
+  datosUsuario$ = this.authService.currentUser;
+  private me?: MeUser;
+
+  // Parámetros
+  readonly perPage = 20;
+  private courseId!: number;
+
+  // Estado raíz
+  loading = signal<boolean>(false);
+  error = signal<string | null>(null);
+  comments = signal<Datum[]>([]);
+  owner = signal<OwnerSummary | null>(null);
+  page = signal<number>(1);
+  hasMore = signal<boolean>(true);
+
+  // Draft y UI del comentario top-level
+  rootDraft = signal<string>('');
+  rootActionsVisible = signal<boolean>(false);
+
+  // Estado de respuestas por comentario
+  // Partial para permitir undefined y poder usar ?. en template (resuelve NG8107)
+  repliesState = signal<Partial<Record<number, ReplyState>>>({});
+
+  // Sentinel
+  @ViewChild('infAnchor', { static: true }) infAnchorRef!: ElementRef<HTMLDivElement>;
+  private observer?: IntersectionObserver;
+
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.courseId = Number(idParam ?? 0);
+    this.loadFirstPage();
+
+    // Guardamos un snapshot sencillo del usuario para UI optimista
+    this.authService.currentUser
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((u: any) => {
+        if (!u) { this.me = undefined; return; }
+        this.me = {
+          id: u.id ?? 0,
+          username: u.username ?? 'yo',
+          name: u.name ?? 'Tú',
+          lastname: u.lastname ?? '',
+          profile_picture_url: u.profile_picture_url ?? null
+        };
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry?.isIntersecting && this.hasMore() && !this.loading()) this.loadMore();
+    }, { root: null, rootMargin: '0px', threshold: 0.1 });
+
+    if (this.infAnchorRef?.nativeElement) this.observer.observe(this.infAnchorRef.nativeElement);
+  }
+
+  // ------- Carga raíz -------
+  loadFirstPage(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.page.set(1);
+    this.hasMore.set(true);
+    this.comments.set([]);
+
+    const params: PaginationParams = { per_page: this.perPage, page: this.page() };
+    this.watching.getCourseComments(this.courseId, params).subscribe({
+      next: (res: CommentResponse) => {
+        this.comments.set(res.data ?? []);
+        this.owner.set(res.owner ?? null);
+        this.hasMore.set(!!res.links?.next);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('No se pudieron cargar los comentarios.');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  loadMore(): void {
+    if (!this.hasMore() || this.loading()) return;
+
+    this.loading.set(true);
+    const nextPage = this.page() + 1;
+    const params: PaginationParams = { per_page: this.perPage, page: nextPage };
+
+    this.watching.getCourseComments(this.courseId, params).subscribe({
+      next: (res: CommentResponse) => {
+        this.comments.set([...this.comments(), ...(res.data ?? [])]);
+        this.page.set(nextPage);
+        this.hasMore.set(!!res.links?.next);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false)
+    });
+  }
+
+  // ------- Helpers de estado de respuestas -------
+  private ensureReplyState(commentId: number): ReplyState {
+    const full = this.repliesState();
+    if (!full[commentId]) {
+      full[commentId] = {
+        items: [],
+        page: 0,
+        hasMore: true,
+        open: false,
+        loading: false,
+        composerOpen: false,
+        draft: '',
+        childOpen: false,
+        childDraft: '',
+        childTargetId: null
+      };
+      this.repliesState.set({ ...full });
+    }
+    return this.repliesState()[commentId]!;
+  }
+
+  private patchReplyState(commentId: number, patch: Partial<ReplyState>): void {
+    const st = this.ensureReplyState(commentId);
+    this.repliesState.set({
+      ...this.repliesState(),
+      [commentId]: { ...st, ...patch }
+    });
+  }
+
+  // ------- Ver / ocultar respuestas -------
+  toggleReplies(parent: Datum): void {
+    const st = this.ensureReplyState(parent.id);
+    const willOpen = !st.open;
+    this.patchReplyState(parent.id, { open: willOpen });
+
+    // Si abre por primera vez, carga
+    if (willOpen && !st.items.length && st.hasMore && !st.loading) {
+      this.loadMoreReplies(parent);
+    }
+  }
+
+  loadMoreReplies(parent: Datum): void {
+    const st = this.ensureReplyState(parent.id);
+    if (!st.hasMore || st.loading) return;
+
+    const nextPage = st.page + 1;
+    const params: PaginationParams = { per_page: 10, page: nextPage };
+
+    this.patchReplyState(parent.id, { loading: true });
+
+    this.watching.getCommentReplies(this.courseId, parent.id, params).subscribe({
+      next: (res: RepliesResponse) => {
+        const merged = [...st.items, ...(res.data ?? [])];
+        const hasMore = !!res.links?.next;
+        this.patchReplyState(parent.id, {
+          items: merged,
+          page: nextPage,
+          hasMore,
+          loading: false,
+          open: true
+        });
+      },
+      error: () => this.patchReplyState(parent.id, { loading: false })
+    });
+  }
+
+  // =======================
+  //  ACCIONES: TOP-LEVEL
+  // =======================
+  onRootFocus(): void {
+    if (!this.isRegistered()) return;
+    this.rootActionsVisible.set(true);
+  }
+
+  cancelTopComment(): void {
+    this.rootDraft.set('');
+    this.rootActionsVisible.set(false);
+  }
+
+  sendTopComment(): void {
+    if (!this.isRegistered()) return;
+    const text = this.rootDraft().trim();
+    if (!text) return;
+
+    // UI optimista (TODO: reemplazar por POST real)
+    const temp: Datum = {
+      id: Date.now(),
+      text,
+      created_at: new Date().toISOString(),
+      likes: 0,
+      liked_by_me: false,
+      liked_by_owner: false as any,
+      replies_count: 0,
+      user: {
+        id: this.me?.id ?? 0,
+        username: this.me?.username ?? 'yo',
+        name: this.me?.name ?? 'Tú',
+        lastname: this.me?.lastname ?? '',
+        avatar: this.me?.profile_picture_url ?? null
+      } as any
+    } as unknown as Datum;
+
+    this.comments.set([temp, ...this.comments()]);
+    this.cancelTopComment();
+
+    // TODO: this.watching.createCourseComment(this.courseId, { text }).subscribe(...)
+  }
+
+  // ===================================
+  //  ACCIONES: RESPONDER COMENTARIO
+  // ===================================
+  toggleReplyComposer(parent: Datum): void {
+    if (!this.isRegistered()) return;
+    const st = this.ensureReplyState(parent.id);
+    const willOpen = !st.composerOpen;
+    // Al abrir, asegúrate de ver respuestas
+    this.patchReplyState(parent.id, { composerOpen: willOpen, open: true });
+
+    // Cerrar composer hijo si estaba abierto
+    if (st.childOpen) this.patchReplyState(parent.id, { childOpen: false, childDraft: '', childTargetId: null });
+
+    // Focus
+    if (willOpen) {
+      queueMicrotask(() => {
+        const el = document.getElementById(`reply-input-${parent.id}`) as HTMLInputElement | null;
+        el?.focus();
+      });
+    }
+  }
+
+  updateDraft(parentId: number, value: string): void {
+    this.patchReplyState(parentId, { draft: value });
+  }
+
+  cancelReplyToComment(parent: Datum): void {
+    this.patchReplyState(parent.id, { composerOpen: false, draft: '' });
+  }
+
+  sendReplyToComment(parent: Datum): void {
+    if (!this.isRegistered()) return;
+    const st = this.ensureReplyState(parent.id);
+    const text = (st.draft ?? '').trim();
+    if (!text) return;
+
+    // UI optimista
+    const temp: Datum = {
+      id: Date.now(),
+      text,
+      created_at: new Date().toISOString(),
+      likes: 0,
+      liked_by_me: false,
+      replies_count: 0,
+      user: {
+        id: this.me?.id ?? 0,
+        username: this.me?.username ?? 'yo',
+        name: this.me?.name ?? 'Tú',
+        lastname: this.me?.lastname ?? '',
+        avatar: this.me?.profile_picture_url ?? null
+      } as any
+    } as unknown as Datum;
+
+    this.patchReplyState(parent.id, {
+      items: [temp, ...st.items],
+      draft: '',
+      composerOpen: false,
+      open: true
+    });
+
+    // Incrementa contador de respuestas del padre
+    parent.replies_count = (parent.replies_count || 0) + 1;
+
+    // TODO: this.watching.createCommentReply(this.courseId, parent.id, { text }).subscribe(...)
+  }
+
+  // ===================================
+  //  ACCIONES: RESPONDER RESPUESTA
+  // ===================================
+  openChildReplyComposer(parent: Datum, target: Datum): void {
+    if (!this.isRegistered()) return;
+    const mention = `@${(target.user as any)?.username ?? ''}`.trim() + ' ';
+    const st = this.ensureReplyState(parent.id);
+
+    // Prefill con @usuario (si no está al inicio)
+    let draft = st.childDraft ?? '';
+    if (!draft.startsWith(mention)) draft = mention + draft;
+
+    this.patchReplyState(parent.id, {
+      childOpen: true,
+      childDraft: draft,
+      childTargetId: target.id,
+      composerOpen: false, // Cierra el composer de nivel 1 para evitar confusión
+      open: true
+    });
+
+    queueMicrotask(() => {
+      const el = document.getElementById(`child-reply-input-${parent.id}`) as HTMLInputElement | null;
+      if (el) {
+        el.focus();
+        // coloca el cursor al final
+        const len = el.value.length;
+        try { el.setSelectionRange(len, len); } catch {}
+      }
+    });
+  }
+
+  updateChildDraft(parentId: number, value: string): void {
+    this.patchReplyState(parentId, { childDraft: value });
+  }
+
+  cancelReplyToReply(parent: Datum): void {
+    this.patchReplyState(parent.id, { childOpen: false, childDraft: '', childTargetId: null });
+  }
+
+  sendReplyToReply(parent: Datum): void {
+    if (!this.isRegistered()) return;
+    const st = this.ensureReplyState(parent.id);
+    const text = (st.childDraft ?? '').trim();
+    if (!text) return;
+
+    const temp: Datum = {
+      id: Date.now(),
+      text,
+      created_at: new Date().toISOString(),
+      likes: 0,
+      liked_by_me: false,
+      replies_count: 0,
+      user: {
+        id: this.me?.id ?? 0,
+        username: this.me?.username ?? 'yo',
+        name: this.me?.name ?? 'Tú',
+        lastname: this.me?.lastname ?? '',
+        avatar: this.me?.profile_picture_url ?? null
+      } as any
+    } as unknown as Datum;
+
+    this.patchReplyState(parent.id, {
+      items: [temp, ...st.items],
+      childOpen: false,
+      childDraft: '',
+      childTargetId: null,
+      open: true
+    });
+
+    parent.replies_count = (parent.replies_count || 0) + 1;
+
+    // TODO: this.watching.createReplyToReply(this.courseId, parent.id, st.childTargetId!, { text }).subscribe(...)
+  }
+
+  // ------- Likes (UI optimista) -------
+  toggleLike(commentOrReply: Datum): void {
+    if (!this.isRegistered()) return;
+    const liked = commentOrReply.liked_by_me;
+    commentOrReply.liked_by_me = !liked;
+    commentOrReply.likes = liked ? Math.max(0, commentOrReply.likes - 1) : commentOrReply.likes + 1;
+
+    // TODO: conectar endpoint like/unlike
+  }
+
+  // ------- Helpers -------
+  trackById = (_: number, c: Datum) => c.id;
+
+  timeAgo(dateIso?: string): string {
+    if (!dateIso) return '';
+    const date = new Date(dateIso);
+    const now = new Date();
+    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const r = (n: number, u: string) => `hace ${n} ${u}${n !== 1 ? 's' : ''}`;
+    if (diff < 60) return r(diff, 'segundo');
+    const m = Math.floor(diff / 60); if (m < 60) return r(m, 'minuto');
+    const h = Math.floor(m / 60); if (h < 24) return r(h, 'hora');
+    const d = Math.floor(h / 24); if (d < 30) return r(d, 'día');
+    const mo = Math.floor(d / 30); if (mo < 12) return r(mo, 'mes');
+    const y = Math.floor(mo / 12); return r(y, 'año');
+  }
 }
