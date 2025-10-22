@@ -29,6 +29,7 @@ import {
 import { AuthService } from '../../../../../core/api/auth/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutosizeDirective } from '../../../../../shared/directives/autosize.directive';
+import { FeedbackService } from '../../../../../core/api/feedback/feedback.service';
 
 type ReplyState = {
   items: Datum[];
@@ -44,7 +45,11 @@ type ReplyState = {
   // Composer para responder a una RESPUESTA (nivel 2)
   childOpen: boolean;
   childDraft: string;
-  childTargetId: number | null; // id de la respuesta objetivo
+  childTargetId: number | null;
+
+  // @mention fuera del textarea (no se envía)
+  childMention?: string | null;   // ej. "@bautista69"
+  childTarget?: Datum | null;     // la respuesta objetivo
 };
 
 type MeUser = {
@@ -68,6 +73,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
   private readonly bridge = inject(CourseBridge);
   private readonly authService = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly feedback = inject(FeedbackService);
 
   // Solo registrados pueden comentar/responder/likear
   isRegistered = computed(() => this.bridge.isRegistered());
@@ -88,27 +94,30 @@ export class CommentComponent implements OnInit, AfterViewInit {
   page = signal<number>(1);
   hasMore = signal<boolean>(true);
 
+  // NUEVO: total de comentarios del curso (raíz + todas las respuestas)
+  totalComments = signal<number>(0);
+
   // Draft y UI del comentario top-level
   rootDraft = signal<string>('');
   rootActionsVisible = signal<boolean>(false);
 
   // Estado de respuestas por comentario
-  // Partial para permitir undefined y poder usar ?. en template (resuelve NG8107)
   repliesState = signal<Partial<Record<number, ReplyState>>>({});
 
   // Sentinel
   @ViewChild('infAnchor', { static: true }) infAnchorRef!: ElementRef<HTMLDivElement>;
   private observer?: IntersectionObserver;
+
   constructor() {
-  
-  this.destroyRef.onDestroy(() => this.ro?.disconnect());
-}
+    this.destroyRef.onDestroy(() => this.ro?.disconnect());
+  }
+
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.courseId = Number(idParam ?? 0);
     this.loadFirstPage();
 
-    // Guardamos un snapshot sencillo del usuario para UI optimista
+    // Snapshot del usuario para UI optimista
     this.authService.currentUser
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((u: any) => {
@@ -121,11 +130,11 @@ export class CommentComponent implements OnInit, AfterViewInit {
           profile_picture_url: u.profile_picture_url ?? null
         };
       });
-      this.resizeTextarea();
+
+    this.resizeTextarea();
   }
 
   ngAfterViewInit(): void {
-    
     this.observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry?.isIntersecting && this.hasMore() && !this.loading()) this.loadMore();
@@ -133,15 +142,15 @@ export class CommentComponent implements OnInit, AfterViewInit {
 
     if (this.infAnchorRef?.nativeElement) this.observer.observe(this.infAnchorRef.nativeElement);
 
-     this.setupTextareaBase();
-  this.resizeTextarea();
+    this.setupTextareaBase();
+    this.resizeTextarea();
 
-  // Observa cambios de ancho/estilo que afecten el layout del textarea
-  const ta = this.ta?.nativeElement;
-  if ('ResizeObserver' in window && ta) {
-    this.ro = new ResizeObserver(() => this.resizeTextarea());
-    this.ro.observe(ta);
-  }
+    // Observa cambios que afecten el layout del textarea
+    const ta = this.ta?.nativeElement;
+    if ('ResizeObserver' in window && ta) {
+      this.ro = new ResizeObserver(() => this.resizeTextarea());
+      this.ro.observe(ta);
+    }
   }
 
   // ------- Carga raíz -------
@@ -154,9 +163,11 @@ export class CommentComponent implements OnInit, AfterViewInit {
 
     const params: PaginationParams = { per_page: this.perPage, page: this.page() };
     this.watching.getCourseComments(this.courseId, params).subscribe({
-      next: (res: CommentResponse) => {
+      next: (res: CommentResponse & { total_comments?: number }) => {
         this.comments.set(res.data ?? []);
         this.owner.set(res.owner ?? null);
+        // total del curso (raíz + respuestas)
+        this.totalComments.set((res as any).total_comments ?? this.totalComments());
         this.hasMore.set(!!res.links?.next);
         this.loading.set(false);
       },
@@ -199,7 +210,9 @@ export class CommentComponent implements OnInit, AfterViewInit {
         draft: '',
         childOpen: false,
         childDraft: '',
-        childTargetId: null
+        childTargetId: null,
+        childMention: null,
+        childTarget: null
       };
       this.repliesState.set({ ...full });
     }
@@ -215,6 +228,8 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   // ------- Ver / ocultar respuestas -------
+  isOpen = (commentId: number) => !!this.repliesState()[commentId]?.open;
+
   toggleReplies(parent: Datum): void {
     const st = this.ensureReplyState(parent.id);
     const willOpen = !st.open;
@@ -270,9 +285,11 @@ export class CommentComponent implements OnInit, AfterViewInit {
     const text = this.rootDraft().trim();
     if (!text) return;
 
-    // UI optimista (TODO: reemplazar por POST real)
+    // UI optimista
+    const tempId = Date.now();
     const temp: Datum = {
-      id: Date.now(),
+      id: tempId,
+      parent_id: null as any,
       text,
       created_at: new Date().toISOString(),
       likes: 0,
@@ -289,9 +306,31 @@ export class CommentComponent implements OnInit, AfterViewInit {
     } as unknown as Datum;
 
     this.comments.set([temp, ...this.comments()]);
+    this.totalComments.set(this.totalComments() + 1);
     this.cancelTopComment();
 
-    // TODO: this.watching.createCourseComment(this.courseId, { text }).subscribe(...)
+    // POST real
+    this.watching.createComment(this.courseId, { texto: text }).subscribe({
+      next: (res: any) => {
+        this.replaceTempRoot(tempId, res?.data);
+      },
+      error: () => {
+        // rollback: elimina el temp
+        this.comments.set(this.comments().filter(c => c.id !== tempId));
+        this.totalComments.set(Math.max(0, this.totalComments() - 1));
+      }
+    });
+  }
+
+  private replaceTempRoot(tempId: number, real?: Datum) {
+    if (!real) return;
+    const list = this.comments();
+    const idx = list.findIndex(c => c.id === tempId);
+    if (idx >= 0) {
+      const next = [...list];
+      next[idx] = real;
+      this.comments.set(next);
+    }
   }
 
   // ===================================
@@ -301,16 +340,19 @@ export class CommentComponent implements OnInit, AfterViewInit {
     if (!this.isRegistered()) return;
     const st = this.ensureReplyState(parent.id);
     const willOpen = !st.composerOpen;
-    // Al abrir, asegúrate de ver respuestas
+
+    // Asegúrate de abrir replies
     this.patchReplyState(parent.id, { composerOpen: willOpen, open: true });
 
     // Cerrar composer hijo si estaba abierto
-    if (st.childOpen) this.patchReplyState(parent.id, { childOpen: false, childDraft: '', childTargetId: null });
+    if (st.childOpen) {
+      this.patchReplyState(parent.id, { childOpen: false, childDraft: '', childTargetId: null, childMention: null, childTarget: null });
+    }
 
     // Focus
     if (willOpen) {
       queueMicrotask(() => {
-        const el = document.getElementById(`reply-input-${parent.id}`) as HTMLInputElement | null;
+        const el = document.getElementById(`reply-input-${parent.id}`) as HTMLTextAreaElement | null;
         el?.focus();
       });
     }
@@ -324,7 +366,7 @@ export class CommentComponent implements OnInit, AfterViewInit {
     this.patchReplyState(parent.id, { composerOpen: false, draft: '' });
   }
 
-  sendReplyToComment(parent: Datum): void {
+  sendReplyToComment(parent: Datum & { all_replies_count?: number }): void {
     if (!this.isRegistered()) return;
     const st = this.ensureReplyState(parent.id);
     const text = (st.draft ?? '').trim();
@@ -332,8 +374,10 @@ export class CommentComponent implements OnInit, AfterViewInit {
     if (!text) return;
 
     // UI optimista
+    const tempId = Date.now();
     const temp: Datum = {
-      id: Date.now(),
+      id: tempId,
+      parent_id: parent.id,
       text,
       created_at: new Date().toISOString(),
       likes: 0,
@@ -345,7 +389,8 @@ export class CommentComponent implements OnInit, AfterViewInit {
         name: this.me?.name ?? 'Tú',
         lastname: this.me?.lastname ?? '',
         avatar: this.me?.profile_picture_url ?? null
-      } as any
+      } as any,
+      reply_to: parent.user // para que se vea a quién respondes
     } as unknown as Datum;
 
     this.patchReplyState(parent.id, {
@@ -355,10 +400,38 @@ export class CommentComponent implements OnInit, AfterViewInit {
       open: true
     });
 
-    // Incrementa contador de respuestas del padre
-    parent.replies_count = (parent.replies_count || 0) + 1;
+    // incrementos correctos
+    parent.replies_count = (parent.replies_count || 0) + 1;               // hijos directos
+    parent.all_replies_count = (parent.all_replies_count || 0) + 1;       // total descendientes
+    this.totalComments.set(this.totalComments() + 1);                      // total del curso
 
-    // TODO: this.watching.createCommentReply(this.courseId, parent.id, { text }).subscribe(...)
+    // POST real
+    this.watching.createComment(this.courseId, { texto: text, parent_id: parent.id }).subscribe({
+      next: (res) => {
+        this.replaceTempReply(parent.id, tempId, res?.data);
+      },
+      error: () => {
+        // rollback
+        const st2 = this.ensureReplyState(parent.id);
+        this.patchReplyState(parent.id, {
+          items: st2.items.filter(i => i.id !== tempId)
+        });
+        parent.replies_count = Math.max(0, (parent.replies_count || 0) - 1);
+        parent.all_replies_count = Math.max(0, (parent.all_replies_count || 0) - 1);
+        this.totalComments.set(Math.max(0, this.totalComments() - 1));
+      }
+    });
+  }
+
+  private replaceTempReply(parentId: number, tempId: number, real?: Datum) {
+    if (!real) return;
+    const st = this.ensureReplyState(parentId);
+    const idx = st.items.findIndex(i => i.id === tempId);
+    if (idx >= 0) {
+      const arr = [...st.items];
+      arr[idx] = real;
+      this.patchReplyState(parentId, { items: arr });
+    }
   }
 
   // ===================================
@@ -366,29 +439,22 @@ export class CommentComponent implements OnInit, AfterViewInit {
   // ===================================
   openChildReplyComposer(parent: Datum, target: Datum): void {
     if (!this.isRegistered()) return;
-    const mention = `@${(target.user as any)?.username ?? ''}`.trim() + ' ';
-    const st = this.ensureReplyState(parent.id);
 
-    // Prefill con @usuario (si no está al inicio)
-    let draft = st.childDraft ?? '';
-    if (!draft.startsWith(mention)) draft = mention + draft;
+    const mention = target?.user?.username ? `@${target.user.username}` : null;
 
     this.patchReplyState(parent.id, {
       childOpen: true,
-      childDraft: draft,
+      childDraft: '',             // NO insertamos @ dentro del textarea
       childTargetId: target.id,
-      composerOpen: false, // Cierra el composer de nivel 1 para evitar confusión
+      childTarget: target,
+      childMention: mention,      // mostramos el chip a la izquierda
+      composerOpen: false,        // cierra el composer de nivel 1
       open: true
     });
 
     queueMicrotask(() => {
-      const el = document.getElementById(`child-reply-input-${parent.id}`) as HTMLInputElement | null;
-      if (el) {
-        el.focus();
-        // coloca el cursor al final
-        const len = el.value.length;
-        try { el.setSelectionRange(len, len); } catch {}
-      }
+      const el = document.getElementById(`child-reply-input-${parent.id}`) as HTMLTextAreaElement | null;
+      el?.focus();
     });
   }
 
@@ -397,18 +463,28 @@ export class CommentComponent implements OnInit, AfterViewInit {
   }
 
   cancelReplyToReply(parent: Datum): void {
-    this.patchReplyState(parent.id, { childOpen: false, childDraft: '', childTargetId: null });
+    this.patchReplyState(parent.id, {
+      childOpen: false,
+      childDraft: '',
+      childTargetId: null,
+      childMention: null,
+      childTarget: null
+    });
   }
 
-  sendReplyToReply(parent: Datum): void {
+  sendReplyToReply(parent: (Datum & { all_replies_count?: number })): void {
     if (!this.isRegistered()) return;
     const st = this.ensureReplyState(parent.id);
-    const text = (st.childDraft ?? '').trim();
-    if (!text) return;
+    const targetId = st.childTargetId!;
+    let text = (st.childDraft ?? '').trim();
+    if (!text || !targetId) return;
 
+    // UI optimista
+    const tempId = Date.now();
     const temp: Datum = {
-      id: Date.now(),
-      text,
+      id: tempId,
+      parent_id: targetId, // responde a la RESPUESTA real
+      text,                // sin @mention en el contenido
       created_at: new Date().toISOString(),
       likes: 0,
       liked_by_me: false,
@@ -419,7 +495,8 @@ export class CommentComponent implements OnInit, AfterViewInit {
         name: this.me?.name ?? 'Tú',
         lastname: this.me?.lastname ?? '',
         avatar: this.me?.profile_picture_url ?? null
-      } as any
+      } as any,
+      reply_to: st.childTarget?.user // para mostrar @inline en la lista
     } as unknown as Datum;
 
     this.patchReplyState(parent.id, {
@@ -427,22 +504,54 @@ export class CommentComponent implements OnInit, AfterViewInit {
       childOpen: false,
       childDraft: '',
       childTargetId: null,
+      childMention: null,
+      childTarget: null,
       open: true
     });
 
-    parent.replies_count = (parent.replies_count || 0) + 1;
+    // incrementos correctos
+    parent.all_replies_count = (parent.all_replies_count || 0) + 1;       // total descendientes
+    this.totalComments.set(this.totalComments() + 1);                      // total del curso
 
-    // TODO: this.watching.createReplyToReply(this.courseId, parent.id, st.childTargetId!, { text }).subscribe(...)
+    // POST real (usa el endpoint genérico con parent_id=targetId)
+    this.watching.createComment(this.courseId, { texto: text, parent_id: targetId }).subscribe({
+      next: (res) => {
+        this.replaceTempReply(parent.id, tempId, res?.data);
+      },
+      error: () => {
+        // rollback
+        const st2 = this.ensureReplyState(parent.id);
+        this.patchReplyState(parent.id, {
+          items: st2.items.filter(i => i.id !== tempId)
+        });
+        parent.all_replies_count = Math.max(0, (parent.all_replies_count || 0) - 1);
+        this.totalComments.set(Math.max(0, this.totalComments() - 1));
+      }
+    });
   }
 
-  // ------- Likes (UI optimista) -------
+  // ------- Likes (UI optimista + backend) -------
   toggleLike(commentOrReply: Datum): void {
     if (!this.isRegistered()) return;
-    const liked = commentOrReply.liked_by_me;
-    commentOrReply.liked_by_me = !liked;
-    commentOrReply.likes = liked ? Math.max(0, commentOrReply.likes - 1) : commentOrReply.likes + 1;
 
-    // TODO: conectar endpoint like/unlike
+    const wasLiked = commentOrReply.liked_by_me;
+    const prevLikes = commentOrReply.likes;
+
+    // Optimista
+    commentOrReply.liked_by_me = !wasLiked;
+    commentOrReply.likes = wasLiked ? Math.max(0, prevLikes - 1) : prevLikes + 1;
+
+    this.feedback.setLikedComment(commentOrReply.id, !wasLiked).subscribe({
+      next: (res) => {
+        if (typeof res.liked === 'boolean') commentOrReply.liked_by_me = res.liked;
+        if (typeof (res as any).likes === 'number') commentOrReply.likes = (res as any).likes;
+      },
+      error: () => {
+        // rollback
+        commentOrReply.liked_by_me = wasLiked;
+        commentOrReply.likes = prevLikes;
+      }
+    });
   }
 
   // ------- Helpers -------
@@ -461,35 +570,31 @@ export class CommentComponent implements OnInit, AfterViewInit {
     const mo = Math.floor(d / 30); if (mo < 12) return r(mo, 'mes');
     const y = Math.floor(mo / 12); return r(y, 'año');
   }
-  
+
   @ViewChild('ta') ta?: ElementRef<HTMLTextAreaElement>;
-private ro?: ResizeObserver;
+  private ro?: ResizeObserver;
 
-// Llama una vez al iniciar para preparar el textarea (overflow y resize)
-private setupTextareaBase() {
-  const ta = this.ta?.nativeElement;
-  if (!ta) return;
-  ta.style.overflowY = 'hidden';
-  ta.style.resize = 'none';
-}
+  // Llama una vez al iniciar para preparar el textarea (overflow y resize)
+  private setupTextareaBase() {
+    const ta = this.ta?.nativeElement;
+    if (!ta) return;
+    ta.style.overflowY = 'hidden';
+    ta.style.resize = 'none';
+  }
 
-// Calcula el alto en base al contenido
-private resizeTextarea() {
-  const ta = this.ta?.nativeElement;
-  if (!ta) return;
-  // Evita “salto” visual: primero libera, luego ajusta
-  ta.style.height = 'auto';
-  // +2px ayuda cuando hay border-box/redondeos
-  ta.style.height = `${ta.scrollHeight + 2}px`;
-}
+  // Calcula el alto en base al contenido
+  private resizeTextarea() {
+    const ta = this.ta?.nativeElement;
+    if (!ta) return;
+    ta.style.height = 'auto';
+    ta.style.height = `${ta.scrollHeight + 2}px`;
+  }
 
-// Mantén tu HostListener si lo tienes
-@HostListener('window:resize') onWinResize() { this.resizeTextarea(); }
-  
-onRootInput(ev: Event) {
-  const el = ev.target as HTMLTextAreaElement;
-  this.rootDraft.set(el.value ?? '');
-  this.resizeTextarea();
-}
+  @HostListener('window:resize') onWinResize() { this.resizeTextarea(); }
 
+  onRootInput(ev: Event) {
+    const el = ev.target as HTMLTextAreaElement;
+    this.rootDraft.set(el.value ?? '');
+    this.resizeTextarea();
+  }
 }

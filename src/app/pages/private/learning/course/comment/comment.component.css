@@ -29,7 +29,7 @@
   border-bottom: 1px solid var(--border-color);
   padding: 10px;
   resize: none;
-   line-height: 1.4;
+  line-height: 1.4;
 }
 .comment-input:focus {
   border-bottom: 1.5px solid var(--sev-primary);
@@ -79,7 +79,16 @@ article.comment { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
 .reply-btn:disabled { opacity: .6; cursor: not-allowed; }
 
 .replies-toggle { margin-top: 6px; }
-.reply-toggle-link { border: none; background: none; color: var(--sev-info); cursor: pointer; padding: 4px 0; }
+.reply-toggle-link {
+  border: none;
+  background: none;
+  color: var(--sev-info);
+  cursor: pointer;
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 
 .replies { margin-top: 8px; display: block; }
 .reply { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding-top: 8px; }
@@ -91,6 +100,7 @@ article.comment { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
   display: grid; grid-template-columns: 36px 1fr auto;
   gap: 8px; align-items: center; margin-top: 8px;
 }
+
 .reply-input { border: 1px solid var(--border-color); background: transparent; border-radius: 8px; padding: 8px 10px; color: var(--text-color); outline: none; }
 
 .send-btn { border: 1px solid var(--border-color); background: transparent; border-radius: 999px; padding: 6px 12px; cursor: pointer; }
@@ -101,3 +111,35 @@ article.comment { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
 
 .infinite-anchor { height: 1px; width: 100%; }
 .end-state { text-align: center; color: var(--text-color-secondary); padding-top: 8px; font-size: 0.9rem; }
+
+/* ====== AÑADIDOS MÍNIMOS PARA @MENTION ====== */
+.input-with-mention {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mention-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+
+.mention-chip.inline {
+  margin-right: 6px;
+  padding: 1px 6px;
+  font-size: 0.75rem;
+}
+
+/* Flecha del acordeón con animación */
+.chevron {
+  transition: transform .2s ease;
+}
+.chevron.open {
+  transform: rotate(180deg);
+}

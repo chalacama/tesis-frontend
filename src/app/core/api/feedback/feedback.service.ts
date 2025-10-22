@@ -21,7 +21,7 @@ export class FeedbackService {
   likeChapter(chapterId: number | string, body: LikedRequest): Observable<LikeResponse> {
     return this.http.post<LikeResponse>(`${this.apiUrl}/like/${chapterId}/update`, body);
   }
-  likeComment(commentId: number | string, body: LikedCommentRequest): Observable<LikedCommentResponse> {
+   likeComment(commentId: number | string, body: LikedCommentRequest): Observable<LikedCommentResponse> {
     return this.http.post<LikedCommentResponse>(`${this.apiUrl}/comment/${commentId}/update`, body);
   }
   /** POST /feedback/saved/{course}/update */
@@ -34,7 +34,8 @@ export class FeedbackService {
     return this.likeChapter(chapterId, { liked });
   }
   setLikedComment(commentId: number | string, liked: boolean) {
-    return this.likeChapter(commentId, { liked });
+    // ⬅️ FIX: ahora sí llama a likeComment
+    return this.likeComment(commentId, { liked });
   }
   setSaved(courseId: number | string, saved: boolean) {
     return this.saveCourse(courseId, { saved });

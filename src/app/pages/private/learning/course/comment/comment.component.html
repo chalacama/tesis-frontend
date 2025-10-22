@@ -3,7 +3,7 @@
     <div class="comments-title">
       <h4>Comentarios</h4>
       <span class="hint">
-        {{ comments().length }}<ng-container *ngIf="hasMore()">+</ng-container>
+        {{ totalComments() }}
       </span>
     </div>
     <div class="sort-by"><span>Más relevantes</span></div>
@@ -22,18 +22,17 @@
 
     <div class="add-comment-input">
       <textarea
-  #ta
-  rows="1"
-  class="comment-input"
-  type="text"
-  placeholder="Escribe un comentario…"
-  [ngModel]="rootDraft()"
-  (ngModelChange)="rootDraft.set($event)"
-  (input)="onRootInput($event)"
-  (focus)="onRootFocus()"
-  (keydown.enter)="sendTopComment()"
-></textarea>
-
+        #ta
+        rows="1"
+        class="comment-input"
+        type="text"
+        placeholder="Escribe un comentario…"
+        [ngModel]="rootDraft()"
+        (ngModelChange)="rootDraft.set($event)"
+        (input)="onRootInput($event)"
+        (focus)="onRootFocus()"
+        (keydown.enter)="sendTopComment()"
+      ></textarea>
 
       <div class="comment-input-actions" *ngIf="rootActionsVisible()">
         <button class="send-btn" (click)="cancelTopComment()">Cancelar</button>
@@ -94,8 +93,18 @@
             <ui-icon class="heart" [style]="{width: '12px', height: '12px'}" [svgPath]="'svg/I-like-bold.svg'"></ui-icon>
           </div>
 
-          <!-- Botón responder (a la derecha del chip del dueño) -->
+          <!-- Botón responder -->
           <button class="reply-btn" [disabled]="!isRegistered()" (click)="toggleReplyComposer(c)">Responder</button>
+        </div>
+
+        <!-- Botón acordeón de respuestas (si hay) -->
+        <div class="replies-toggle" *ngIf="$any(c)?.all_replies_count > 0">
+          <button class="reply-toggle-link" (click)="toggleReplies(c)">
+            <ui-icon class="chevron" [class.open]="isOpen(c.id)" [size]="'lg'" [severity]="'primary'"
+                     [svgPath]="'svg/arrow-down.svg'">
+            </ui-icon>
+            <span>{{ $any(c)?.all_replies_count }} Respuestas</span>
+          </button>
         </div>
 
         <!-- Composer de respuesta (nivel 1: responder al comentario) -->
@@ -131,13 +140,6 @@
           </div>
         </div>
 
-        <!-- “Ver respuestas” -->
-        <div class="replies-toggle" *ngIf="c.replies_count > 0">
-          <button class="reply-toggle-link" (click)="toggleReplies(c)">
-            {{ (repliesState()[c.id]?.open ? 'Ocultar' : 'Ver') + ' ' + c.replies_count + ' respuestas' }}
-          </button>
-        </div>
-
         <!-- Respuestas -->
         <div class="replies" *ngIf="repliesState()[c.id]?.open">
           <div class="reply" *ngFor="let r of (repliesState()[c.id]?.items || []); trackBy: trackById">
@@ -160,7 +162,13 @@
                 <span class="time reply-size">{{ timeAgo(r.created_at) }}</span>
               </div>
 
-              <div class="text reply-size">{{ r.text }}</div>
+              <div class="text reply-size">
+                <!-- @reply_to.username inline (si viene del backend) -->
+                <ng-container *ngIf="r.reply_to as rt">
+                  <span class="mention-chip inline">{{ '@' + rt.username }}</span>
+                </ng-container>
+                {{ r.text }}
+              </div>
 
               <div class="actions">
                 <button class="like-btn reply-size" [class.active]="r.liked_by_me" [disabled]="!isRegistered()" (click)="toggleLike(r)">
@@ -185,17 +193,22 @@
                     </ui-avatar>
                   </ng-container>
 
-                  <textarea
-                    autosize
-                    rows="1"
-                    id="child-reply-input-{{c.id}}"
-                    type="text"
-                    class="comment-input"
-                    [value]="repliesState()[c.id]?.childDraft || ''"
-                    (input)="updateChildDraft(c.id, $any($event.target).value)"
-                    (keydown.enter)="sendReplyToReply(c)"
-                    placeholder="Escribe una respuesta…">
-                  </textarea>
+                  <!-- Contenedor con @mention fuera del textarea -->
+                  <div class="input-with-mention">
+                    <span class="mention-chip" *ngIf="repliesState()[c.id]?.childMention as mention">{{ mention }}</span>
+
+                    <textarea
+                      autosize
+                      rows="1"
+                      id="child-reply-input-{{c.id}}"
+                      type="text"
+                      class="comment-input"
+                      [value]="repliesState()[c.id]?.childDraft || ''"
+                      (input)="updateChildDraft(c.id, $any($event.target).value)"
+                      (keydown.enter)="sendReplyToReply(c)"
+                      placeholder="Escribe una respuesta…">
+                    </textarea>
+                  </div>
                 </div>
 
                 <div class="comment-input-actions">
