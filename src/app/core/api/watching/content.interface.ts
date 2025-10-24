@@ -21,6 +21,7 @@ export interface Chapter {
 
 export interface Course {
     title: string;
+    private: boolean;
 }
 
 export interface LastView {

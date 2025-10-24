@@ -84,7 +84,7 @@
           *ngIf="!isRegistered()"
           label="Registrarme"
           severity="info"
-          (click)="onRegister()">
+          (click)="onRegister(d.course.private)">
         </ui-button>
 
         <!-- Like -->
@@ -107,7 +107,7 @@
         </button>
 
         <!-- Preguntas -->
-        <span class="pill" *ngIf="d.user_state.has_questions">Contiene preguntas</span>
+        <span  (click)="toTest()" class="pill btn-pill" *ngIf="d.user_state.has_questions">Contiene preguntas</span>
       </div>
       </div>
       
@@ -115,3 +115,49 @@
 
   </div>
 </div>
+  <ui-dialog
+   
+    type="free"
+    [variant]="'filled'"
+    [closeOnMaskClick]="true"
+    [(visible)]="dialogCodeShow"
+    
+  >
+<div class="content-code">
+
+    <h3 class="code-title">Código de acceso</h3>
+    <p class="code-subtitle">Ingresa el código de 7 caracteres para unirte al curso privado.</p>
+
+    <div class="otp-group" (paste)="onOtpPaste($event)">
+      <input
+        *ngFor="let _ of otp(); index as i"
+        #otpBox
+        class="otp-input"
+        maxlength="1"
+        autocomplete="one-time-code"
+        inputmode="text"
+        [value]="otp()[i]"
+        (input)="onOtpInput($event, i)"
+        (keydown)="onOtpKeyDown($event, i)">
+    </div>
+
+    <div class="code-error" *ngIf="codeError()">{{ codeError() }}</div>
+
+    <div class="code-actions">
+      <ui-button
+        label="Cancelar"
+        severity="secondary"
+        (click)="dialogCodeShow = false">
+      </ui-button>
+
+      <ui-button
+        label="Confirmar"
+        severity="primary"
+        [disabled]="otp().join('').length !== otpLength"
+        
+        (click)="submitOtp()">
+      </ui-button>
+    </div>
+  </div>
+    
+  </ui-dialog>

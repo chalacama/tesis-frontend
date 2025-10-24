@@ -4,11 +4,17 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
 import {
+  CompletedContentRequest,
+  CompletedContentResponse,
   ContendRequest,
   ContendResponse,
+  EmptyBody,
   LikedCommentRequest,
   LikedCommentResponse,
   LikedRequest, LikeResponse,
+  RegisterCourseByCodeRequest,
+  RegisterCourseRequest,
+  RegisterCourseResponse,
   SavedRequest, SavedResponse
 } from './feedback.interface';
 
@@ -48,5 +54,49 @@ updateContent(learningContentId: number | string, body: ContendRequest): Observa
  
   return this.http.post<ContendResponse>(`${this.apiUrl}/content/${learningContentId}/update`, body);
 }
+
+/** POST /feedback/completed/content/{chapter}/update  (delta %) */
+  updateCompletedContent(chapterId: number | string, body: CompletedContentRequest): Observable<CompletedContentResponse> {
+    return this.http.post<CompletedContentResponse>(`${this.apiUrl}/completed/content/${chapterId}/update`, body);
+  }
+
+  /** Azúcar sintáctico */
+  setCompletedContentDelta(chapterId: number | string, delta: number) {
+    return this.updateCompletedContent(chapterId, { delta });
+  }
+
+  /**
+   * Inscribirse SIN código (curso público y activo)
+   * POST /feedback/register/{course}/store
+   */
+  registerToCourse(
+    courseId: number | string,
+    body: RegisterCourseRequest = {} as EmptyBody
+  ) {
+    return this.http.post<RegisterCourseResponse>(
+      `${this.apiUrl}/register/${courseId}/store`,
+      body
+    );
+  }
+
+  /**
+   * Inscribirse CON código (curso privado y activo)
+   * POST /feedback/code/store
+   */
+  registerToCourseByCode(body: RegisterCourseByCodeRequest) {
+    return this.http.post<RegisterCourseResponse>(
+      `${this.apiUrl}/code/store`,
+      body
+    );
+  }
+
+  /** Azúcar sintáctico */
+  enrollPublic(courseId: number | string) {
+    return this.registerToCourse(courseId);
+  }
+
+  enrollPrivate(code: string) {
+    return this.registerToCourseByCode({ code });
+  }
 
 }

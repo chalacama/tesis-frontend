@@ -12,6 +12,62 @@
   width: 100%;
   padding: 16px;
 }
+.content-code{
+  width: min(520px, 90vw);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.code-title{
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.code-subtitle{
+  color: var(--text-color-secondary);
+  font-size: 0.92rem;
+}
+
+.otp-group{
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.otp-input{
+  width: 48px;
+  height: 52px;
+  text-align: center;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  text-transform: uppercase;
+}
+
+.otp-input:focus{
+  border-color: var(--active-color);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--active-color) 25%, transparent);
+}
+
+.code-error{
+  color: var(--sev-danger);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.code-actions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
 
 .loading,
 .error {
@@ -136,7 +192,9 @@
 .icon-btn .count {
   font-size: 0.9rem;
 }
-
+.btn-pill{
+  cursor: pointer;
+}
 /* Pills/etiquetas */
 .pill {
   display: inline-block;

@@ -100,10 +100,10 @@
   <!-- La vista derecha queda tal cual (tu diseño actual) -->
   <div class="view">
     <router-outlet></router-outlet>
-    <div class="detail">
+    <div class="detail" *ngIf="isContentView()">
       <app-detail></app-detail>
     </div>
-    <div class="comment">
+    <div class="comment" *ngIf="isContentView()">
       <app-comment></app-comment>
     </div>
   </div>

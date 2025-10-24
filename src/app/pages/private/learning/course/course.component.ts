@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, effect ,  } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet , NavigationEnd,} from '@angular/router';
 import { IconComponent } from '../../../../shared/UI/components/button/icon/icon.component';
 import { ButtonComponent } from '../../../../shared/UI/components/button/button/button.component';
 import { WatchingService } from '../../../../core/api/watching/watching.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Chapter as ApiChapter,
   Module as ApiModule,
@@ -13,6 +14,7 @@ import {
 import { CommentComponent } from './comment/comment.component';
 import { DetailComponent } from './detail/detail.component';
 import { CourseBridge } from '../../../../core/api/watching/course-bridge.service';
+import { filter } from 'rxjs';
 
 
 type ChapterItem = {
@@ -52,7 +54,22 @@ export class CourseComponent implements OnInit {
   smallModule = false;
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+  constructor() {
+    // Evalúa la URL inicial
+this.syncViewModeFromUrl(this.router.url);
 
+// Reacciona a cambios de ruta (content <-> test)
+this.router.events
+  .pipe(
+    // Solo cuando termina la navegación
+    filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+    takeUntilDestroyed()
+  )
+  .subscribe(e => this.syncViewModeFromUrl(e.urlAfterRedirects));
+
+  }
+
+  readonly viewMode = signal<'content' | 'test'>('content');
   // Datos
   readonly modules = signal<ModuleItem[]>([]);
   readonly openSet = signal<Set<number>>(new Set<number>());
@@ -63,7 +80,16 @@ export class CourseComponent implements OnInit {
   // Aux para abrir módulo del capítulo activo rápido
   private chapterIdToModuleId = new Map<number, number>();
 
+  private syncViewModeFromUrl(url: string): void {
+  // Quita query/hash y toma el último segmento
+  const last = url.split('?')[0].split('#')[0].split('/').filter(Boolean).pop();
+  this.viewMode.set(last === 'test' ? 'test' : 'content');
+}
+  // Helpers para el template
+isTestView = () => this.viewMode() === 'test';
+isContentView = () => this.viewMode() === 'content';
   ngOnInit(): void {
+    
     const courseId = this.getCourseParam('id'); // del /course/:title/:id
     if (!courseId) {
       this.error.set('No se pudo obtener el ID del curso.');
@@ -78,7 +104,12 @@ export class CourseComponent implements OnInit {
         const uiModules = this.mapApiToUiModules(res.course.modules);
         this.firstChapterId = uiModules[0]?.chapters[0]?.id ?? null;
         this.modules.set(uiModules);
-
+        // IDs completados que vienen de la API
+        const initialCompletedIds = uiModules
+      .flatMap(m => m.chapters)
+      .filter(c => c.completed)
+      .map(c => c.id);
+      this.bridge.seedCompleted(initialCompletedIds);
         // Construir índice capítulo -> módulo
         this.indexChapterToModule(uiModules);
 
@@ -99,6 +130,7 @@ export class CourseComponent implements OnInit {
           const courseTitle = this.getCourseParam('title') ?? this.slugify(res.course.title);
           const chapter = this.findChapterById(computedActive);
           if (chapter) {
+
             this.router.navigate(
               [
                 '/learning',
@@ -122,6 +154,25 @@ export class CourseComponent implements OnInit {
         this.loading.set(false);
       }
     });
+    effect(() => {
+  const completed = this.bridge.completed(); // Set<number>
+  
+  if (!completed) return;
+
+  // Actualiza módulos sin mutar estructuras previas
+  const next = this.modules().map(m => ({
+    ...m,
+    chapters: m.chapters.map(c => {
+      const isDone = completed.has(c.id) || c.completed;
+      // Evita reconstruir objetos si no hay cambio
+      return isDone === c.completed ? c : { ...c, completed: isDone };
+    })
+  }));
+
+  this.modules.set(next);
+
+  });
+
   }
 isFirstChapter = (chapterId: number) => this.firstChapterId === chapterId;
   /** Lee parámetro de ruta (soporta parent anidado) */
@@ -225,6 +276,7 @@ isFirstChapter = (chapterId: number) => this.firstChapterId === chapterId;
     return ch.completed ? 'success' : 'warn';
   }
 
+  
   /** Click en capítulo → navegar + activar */
   selectChapter(c: ChapterItem): void {
     const courseTitle = this.getCourseParam('title') ?? 'curso';
@@ -235,6 +287,7 @@ isFirstChapter = (chapterId: number) => this.firstChapterId === chapterId;
       this.router.navigate(
       ['/learning', 'course', courseTitle, courseId, this.slugify(c.title), c.id,'content'],
       { replaceUrl: false }
+      
     );
     }else if (c.questions > 0){
       this.router.navigate(

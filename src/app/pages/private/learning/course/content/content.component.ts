@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, DestroyRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, DestroyRef, ViewChild,  ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -24,6 +24,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from '../../../../../core/api/feedback/feedback.service';
 import { LikeResponse, SavedResponse } from '../../../../../core/api/feedback/feedback.interface';
 import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
+import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
 
 declare global {
   interface Window { onYouTubeIframeAPIReady?: () => void; YT?: any; }
@@ -32,7 +33,7 @@ declare global {
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent],
+  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent , DialogComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.css'
 })
@@ -52,7 +53,7 @@ export class ContentComponent implements OnInit {
   readonly data = signal<ContentResponse | null>(null);
   readonly liking = signal(false);
   readonly saving = signal(false);
-
+   dialogCodeShow = false
   // YouTube embed cache (no re-render en likes/saves)
   readonly ytEmbedRaw = signal<string | null>(null);
   readonly ytSafeSrc = computed<SafeResourceUrl | null>(() => {
@@ -73,6 +74,16 @@ export class ContentComponent implements OnInit {
 
   private lastHtml5Time = 0; // último segundo visto en <video>
   private lastYtTime = 0;    // último segundo visto en YouTube
+
+  // ---- Completed Chapter (progreso %)
+private lastPercentReported = 0;     // último % reportado al backend
+private readonly minDeltaPercent = 0.5; // evita spam: no mandar deltas < 0.5%
+  // ---- Registro (OTP) ----
+readonly otpLength = 7;
+readonly otp = signal<string[]>(Array.from({ length: 7 }, () => ''));
+readonly enrolling = signal(false);
+readonly codeError = signal<string | null>(null);
+@ViewChildren('otpBox') otpBoxes?: QueryList<ElementRef<HTMLInputElement>>;
 
   // ---------- Local backup ----------
   private resumeKey(lcId: number | string) { return `resume:${lcId}`; }
@@ -156,6 +167,7 @@ export class ContentComponent implements OnInit {
   // -----------------------------
   private setDataAndPreparePlayers(res: ContentResponse) {
     // reset de memorias por capítulo
+    this.lastPercentReported = 0;
     this.lastHtml5Time = 0;
     this.lastYtTime = 0;
     this.lastSentSecond = -1;
@@ -266,24 +278,36 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  onRegister(): void {
-    const courseId = this.route.parent?.snapshot.paramMap.get('id');
-    if (!courseId) return;
+  onRegister(isPrivate: boolean): void {
+  const courseId = this.courseId;
+  if (!courseId) return;
 
-    // Llama a tu backend para registrar al usuario en el curso
-    // Puedes ponerlo en WatchingService o FeedbackService; aquí un ejemplo genérico:
-    /* this.watchingSvc.registerInCourse(courseId).subscribe({
-      next: (res: { ok: boolean; is_registered?: boolean }) => {
-        // Si el backend confirma, actualiza el estado compartido
-        if (res?.ok) {
-          this.bridge.setRegistered(true);
-        }
+  // Curso público → registro directo
+  if (!isPrivate) {
+    
+    this.enrolling.set(true);
+    this.feedbackSvc.enrollPublic(courseId).subscribe({
+      next: () => {
+        this.bridge.setRegistered(true);
+        this.enrolling.set(false);
       },
-      error: () => {
-        // Maneja error si quieres mostrar toast, etc.
+      error: (err) => {
+        this.codeError.set(err?.error?.message || 'No se pudo registrar.');
+        this.enrolling.set(false);
       }
-    }); */
+    });
+    return;
   }
+
+  // Curso privado → abrir diálogo de código
+  this.codeError.set(null);
+  this.clearOtp();
+  this.dialogCodeShow = true;
+
+  // Focus primera casilla al abrir el diálogo
+  setTimeout(() => this.focusOtp(0), 50);
+}
+
 
   // -----------------------------
   // HTML5 video events (archivo)
@@ -333,15 +357,16 @@ export class ContentComponent implements OnInit {
 
   /** Encola el progreso (pasa por throttling de 4s) */
   private sendProgress(sec: number) {
+    
     const lcId = this.learningContentId;
     if (lcId == null) return of(null);
     const s = Math.max(0, Math.floor(sec));
     if (s === this.lastSentSecond) return of(null); // evita duplicados
     this.lastSentSecond = s;
-
+    
     // respaldo local por si el usuario recarga muy rápido
     this.saveResumeLocal(lcId, s);
-
+    this.reportCompletedDelta(s);
     return this.feedbackSvc.setContent(lcId, s).pipe(
       catchError(() => of(null))
     );
@@ -503,4 +528,172 @@ export class ContentComponent implements OnInit {
   goToPortfolio(username: string) {
   this.router.navigate(['learning/portfolio', '@' + username]);
 }
+
+private getHtml5Duration(): number {
+  const videoEl = document.querySelector<HTMLVideoElement>('video.video-player');
+  const d = videoEl?.duration;
+  return typeof d === 'number' && Number.isFinite(d) ? d : 0;
+}
+/** Calcula y envía delta de progreso (%) a /feedback/completed/content/{chapter}/update */
+/** Calcula y envía delta de progreso (%) y, si cruza 70%, marca completado en el bridge */
+private reportCompletedDelta(currentSec: number) {
+  const d = this.data(); 
+  if (!d) return;
+
+  const chapterId = d.chapter.id;
+
+  // Duración
+  let total = 0;
+  if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
+  else total = this.getHtml5Duration();
+  if (!total || total <= 0) return;
+
+  // % actual y delta a reportar
+  const percent = Math.min(100, (currentSec / total) * 100);
+  const delta = Math.max(0, percent - this.lastPercentReported);
+  if (delta < this.minDeltaPercent) return;
+
+  this.lastPercentReported = percent;
+
+  // POST al backend (devuelve crossed70/after)
+  this.feedbackSvc
+    .setCompletedContentDelta(chapterId, +delta.toFixed(2))
+    .subscribe({
+      next: (res) => {
+        if (res?.ok && res.data) {
+          // Si cruza 70% o ya quedó >=70%, marcamos completado en el bridge
+          if (res.data.crossed70 || res.data.after >= 70) {
+            this.bridge.markChapterCompleted(chapterId);
+          }
+        }
+      },
+      error: () => { /* silencioso para UX */ }
+    });
+}
+private get courseId(): string | null {
+  return this.route.parent?.snapshot.paramMap.get('id') ?? null;
+}
+
+private otpValue(): string {
+  return this.otp().join('');
+}
+
+private clearOtp() {
+  this.otp.set(Array.from({ length: this.otpLength }, () => ''));
+}
+private focusOtp(i: number) {
+  const el = this.otpBoxes?.get(i)?.nativeElement;
+  if (el) {
+    el.focus();
+    el.select?.();
+  }
+}
+
+private allowedChar(c: string): boolean {
+  // Mismo set que genera el backend: 23456789ABCDEFGHJKLMNPQRSTUVWXYZ (sin 0,O,1,I,L)
+  return /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]$/.test(c);
+}
+
+onOtpInput(ev: Event, index: number) {
+  const input = ev.target as HTMLInputElement;
+  let v = (input.value || '').toUpperCase();
+
+  // Si el usuario pega 2+ chars aquí, lo tratamos como paste:
+  if (v.length > 1) {
+    const data = v.toUpperCase().replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
+    this.fillOtpFrom(0, data);
+    if (this.otpValue().length === this.otpLength) this.submitOtp();
+    return;
+  }
+
+  // Solo 1 char
+  if (v && !this.allowedChar(v)) v = '';
+  const arr = [...this.otp()];
+  arr[index] = v;
+  this.otp.set(arr);
+
+  if (v && index < this.otpLength - 1) this.focusOtp(index + 1);
+  if (this.otpValue().length === this.otpLength) this.submitOtp();
+}
+
+onOtpKeyDown(ev: KeyboardEvent, index: number) {
+  const key = ev.key;
+  if (key === 'Backspace') {
+    ev.preventDefault();
+    const arr = [...this.otp()];
+    if (arr[index]) {
+      arr[index] = '';
+      this.otp.set(arr);
+      return;
+    }
+    if (index > 0) {
+      arr[index - 1] = '';
+      this.otp.set(arr);
+      this.focusOtp(index - 1);
+    }
+    return;
+  }
+
+  if (key === 'ArrowLeft' && index > 0) {
+    ev.preventDefault();
+    this.focusOtp(index - 1);
+  }
+  if (key === 'ArrowRight' && index < this.otpLength - 1) {
+    ev.preventDefault();
+    this.focusOtp(index + 1);
+  }
+  if (key === 'Enter' && this.otpValue().length === this.otpLength) {
+    ev.preventDefault();
+    this.submitOtp();
+  }
+}
+
+onOtpPaste(ev: ClipboardEvent) {
+  ev.preventDefault();
+  const data = (ev.clipboardData?.getData('text') || '')
+    .toUpperCase()
+    .replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
+  if (!data) return;
+  this.fillOtpFrom(0, data);
+  if (this.otpValue().length === this.otpLength) this.submitOtp();
+}
+
+private fillOtpFrom(start: number, data: string) {
+  const arr = [...this.otp()];
+  let j = start;
+  for (let i = 0; i < data.length && j < this.otpLength; i++, j++) {
+    arr[j] = data[i];
+  }
+  this.otp.set(arr);
+  const next = Math.min(start + data.length, this.otpLength - 1);
+  this.focusOtp(next);
+}
+
+submitOtp() {
+  const code = this.otpValue();
+  if (code.length !== this.otpLength) return;
+  this.enrolling.set(true);
+  this.codeError.set(null);
+
+  this.feedbackSvc.enrollPrivate(code).subscribe({
+    next: () => {
+      this.bridge.setRegistered(true);
+      this.enrolling.set(false);
+      this.dialogCodeShow = false;
+      this.clearOtp();
+    },
+    error: (err) => {
+      this.codeError.set(err?.error?.message || 'Código inválido o curso no disponible.');
+      this.enrolling.set(false);
+      // Selecciona todo para volver a intentar rápido
+      this.focusOtp(0);
+    }
+  });
+}
+
+toTest() {
+  this.router.navigate([ 'test'], { relativeTo: this.route.parent });
+
+  }
+
 }
