@@ -534,42 +534,66 @@ private getHtml5Duration(): number {
   const d = videoEl?.duration;
   return typeof d === 'number' && Number.isFinite(d) ? d : 0;
 }
-/** Calcula y envía delta de progreso (%) a /feedback/completed/content/{chapter}/update */
-/** Calcula y envía delta de progreso (%) y, si cruza 70%, marca completado en el bridge */
+
+// private reportCompletedDelta(currentSec: number) {
+//   const d = this.data(); 
+//   if (!d) return;
+
+//   const chapterId = d.chapter.id;
+
+//   // Duración
+//   let total = 0;
+//   if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
+//   else total = this.getHtml5Duration();
+//   if (!total || total <= 0) return;
+
+//   // % actual y delta a reportar
+//   const percent = Math.min(100, (currentSec / total) * 100);
+//   const delta = Math.max(0, percent - this.lastPercentReported);
+//   if (delta < this.minDeltaPercent) return;
+
+//   this.lastPercentReported = percent;
+
+//   // POST al backend (update progreso del contenido)
+//   // this.bridge.markChapterCompleted(chapterId);
+// }
+/** Calcula y envía delta de progreso (%) a /feedback/progress/{learningContent}/update */
 private reportCompletedDelta(currentSec: number) {
-  const d = this.data(); 
+  const d = this.data();
   if (!d) return;
 
+  const lcId = d.learning_content?.id;
   const chapterId = d.chapter.id;
+  if (lcId == null) return;
 
-  // Duración
+  // 1) Duración total según player activo
   let total = 0;
   if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
   else total = this.getHtml5Duration();
-  if (!total || total <= 0) return;
 
-  // % actual y delta a reportar
+  if (!total || total <= 0) return; // aún no hay duración fiable
+
+  // 2) Porcentaje actual y DELTA a reportar (incremental)
   const percent = Math.min(100, (currentSec / total) * 100);
-  const delta = Math.max(0, percent - this.lastPercentReported);
-  if (delta < this.minDeltaPercent) return;
+  const delta = +(Math.max(0, percent - this.lastPercentReported).toFixed(2));
+  if (delta < this.minDeltaPercent) return; // anti-spam (< 0.5%)
 
+  // 3) Avanza el puntero local y envía al backend
   this.lastPercentReported = percent;
 
-  // POST al backend (devuelve crossed70/after)
-  this.feedbackSvc
-    .setCompletedContentDelta(chapterId, +delta.toFixed(2))
-    .subscribe({
-      next: (res) => {
-        if (res?.ok && res.data) {
-          // Si cruza 70% o ya quedó >=70%, marcamos completado en el bridge
-          if (res.data.crossed70 || res.data.after >= 70) {
-            this.bridge.markChapterCompleted(chapterId);
-          }
+  this.feedbackSvc.updateProgress(lcId, { progress: delta }).subscribe({
+    next: (res) => {
+      // Opcional: si quieres reaccionar cuando el capítulo queda completado:
+       if (res?.data?.chapter_completed) { 
+          this.bridge.markChapterCompleted(chapterId);
         }
-      },
-      error: () => { /* silencioso para UX */ }
-    });
+    },
+    error: () => {
+      // Silencioso: no interrumpimos la UX por un fallo puntual de red
+    }
+  });
 }
+
 private get courseId(): string | null {
   return this.route.parent?.snapshot.paramMap.get('id') ?? null;
 }

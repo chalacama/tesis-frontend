@@ -4,14 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
 import {
-  CompletedContentRequest,
-  CompletedContentResponse,
+
   ContendRequest,
   ContendResponse,
   EmptyBody,
   LikedCommentRequest,
   LikedCommentResponse,
   LikedRequest, LikeResponse,
+  ProgressRequest,
+  ProgressResponse,
   RegisterCourseByCodeRequest,
   RegisterCourseRequest,
   RegisterCourseResponse,
@@ -55,15 +56,11 @@ updateContent(learningContentId: number | string, body: ContendRequest): Observa
   return this.http.post<ContendResponse>(`${this.apiUrl}/content/${learningContentId}/update`, body);
 }
 
-/** POST /feedback/completed/content/{chapter}/update  (delta %) */
-  updateCompletedContent(chapterId: number | string, body: CompletedContentRequest): Observable<CompletedContentResponse> {
-    return this.http.post<CompletedContentResponse>(`${this.apiUrl}/completed/content/${chapterId}/update`, body);
-  }
+updateProgress(learningContentId: number | string, body: ProgressRequest): Observable<ProgressResponse> {
+  return this.http.post<ProgressResponse>(`${this.apiUrl}/progress/${learningContentId}/update`, body);
+}
 
-  /** Azúcar sintáctico */
-  setCompletedContentDelta(chapterId: number | string, delta: number) {
-    return this.updateCompletedContent(chapterId, { delta });
-  }
+
 
   /**
    * Inscribirse SIN código (curso público y activo)
