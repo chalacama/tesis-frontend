@@ -12,6 +12,21 @@
     <div class="actions">
       <ui-button label="Nueva pregunta" [icon]="{svgPath: 'svg/create.svg'}" severity="primary" (click)="addQuestion()">
       </ui-button>
+      <!-- Collapse/Expand all -->
+  <ui-button
+    [icon]="{svgPath: 'svg/collapse-all.svg'}"
+    severity="info"
+    (click)="collapseAll()"
+    label="Colapsar todo">
+  </ui-button>
+
+  <!-- Settings -->
+  <ui-button
+    (click)="showSetting()"
+    [icon]="{svgPath: 'svg/config.svg'}"
+    severity="info"
+    label="Configuración">
+  </ui-button>
 
       <ui-button [disabled]="form.pristine" (click)="reset()" label="Restablecer"
         [icon]="{svgPath: 'svg/clear-all.svg'}" severity="secondary">
@@ -34,12 +49,35 @@
 
   <!-- Formulario -->
   <form class="questions" [formGroup]="form">
-    <div class="questions-list" formArrayName="questions" cdkDropListGroup>
-      <div class="question-card" *ngFor="let q of qArray.controls; index as i; trackBy: trackByIndex"
-        [formGroupName]="i" [class.submitted]="submitted()">
+    <div class="questions-list"
+     formArrayName="questions"
+     cdkDropList
+     cdkDropListLockAxis="y"
+     [cdkDropListData]="qArray.controls"
+     (cdkDropListDropped)="dropQuestion($event)">
+      <div class="question-card"
+     *ngFor="let q of qArray.controls; index as i; trackBy: trackByControl"
+     [formGroupName]="i"
+     [class.submitted]="submitted()"
+     [class.collapsed]="isCollapsed(i)"
+     cdkDrag
+     cdkDragLockAxis="y"
+     (cdkDragStarted)="isDraggingQuestion.set(true)"
+     (cdkDragEnded)="isDraggingQuestion.set(false)">
 
+
+        <div class="q-drag" cdkDragHandle>
+          <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/drag-horizontal.svg'"></ui-icon>
+        </div>
         <div class="q-head">
-          <div class="badge">P{{ i + 1 }}</div>
+          <div class="badge" (click)="toggleCollapse(i)">
+  <span>P{{ i + 1 }}</span>
+  <span>
+    <ui-icon class="chev" [class.expanded]="!isCollapsed(i)"
+             [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/arrow-right.svg'"></ui-icon>
+  </span>
+          </div>
+
 
           <!-- Enunciado editable -->
           <textarea class="statement-input" placeholder="Escribe el enunciado de la pregunta..."
@@ -56,14 +94,7 @@
               </option>
             </select>
           </div>
-          <!-- <div class="type-chip">
-            <select class="type-select" formControlName="type_questions_id" [compareWith]="comparePrimitive"
-              (change)="onTypeChange(i, $any($event.target).value)">
-              <option class="type-option" *ngFor="let t of typeOptions(); trackBy: trackById" [ngValue]="t.id">
-                {{ t.nombre }}
-              </option>
-            </select>
-          </div> -->
+          
 
         </div>
 
@@ -79,15 +110,9 @@
                 <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/drag.svg'"></ui-icon>
               </span>
 
-              <!-- ÚNICA -->
-              <!-- <ng-container *ngIf="!isMultiple(i); else multipleTpl">
-                <input *ngIf="q.get('type_questions_id')?.value === 2" type="radio"
-                  [checked]="singleCtrl(i).value === j"
-                  (change)="markCorrectSingle(i, j)" />
-              </ng-container> -->
-              <!-- Control de selección -->
+              
               <ng-container *ngIf="!isMultiple(i); else multiBlock">
-
+                
                 <input type="radio" [checked]="singleCtrl(i).value === j" (change)="markCorrectSingle(i, j)" />
               </ng-container>
 
@@ -161,3 +186,63 @@
   [visible]="saved()"
   [mask]="{ type: 'dimmed' }">
 </ui-loading-bar>
+
+  <ui-dialog
+    
+    type="free"
+    [variant]="'filled'"
+    [closeOnMaskClick]="true"
+    [(visible)]="dialogVisible"
+    
+  >
+    <div class="test-settings">
+      <form class="test-settings" [formGroup]="testForm" (ngSubmit)="saveSettingsFromDialog()">
+    <h3>Configuración del test</h3>
+
+    <div class="settings-grid">
+      <label class="switch">
+        <input type="checkbox" formControlName="random" />
+        <span>Orden de preguntas aleatorio</span>
+        <small class="muted">random</small>
+      </label>
+
+      <label class="switch">
+        <input type="checkbox" formControlName="incorrect" />
+        <span>Mostrar preguntas incorrectas al responder</span>
+        <small class="muted">incorrect</small>
+      </label>
+
+      <label class="switch">
+        <input type="checkbox" formControlName="score" />
+        <span>Mostrar puntuación total</span>
+        <small class="muted">score</small>
+      </label>
+
+      <div class="field">
+        <label for="split">Split (1..2)</label>
+        <input id="split" type="number" min="1" max="2" step="1"
+               formControlName="split" (change)="coerceSplit()" />
+        <small class="muted">
+          Si hay 20 preguntas y split=2, se toman 10 por intento (50%).
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="limited">Intentos permitidos (0..2)</label>
+        <input id="limited" type="number" min="0" max="2" step="1"
+               formControlName="limited" (change)="coerceLimited()" />
+        <small class="muted">
+          0 = ilimitado, 1 o 2 = número máximo de intentos.
+        </small>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <ui-button type="submit" severity="primary"
+                 [icon]="{svgPath:'svg/save-outline.svg'}"
+                 label="Guardar configuración">
+      </ui-button>
+    </div>
+  </form>
+    </div>
+  </ui-dialog>

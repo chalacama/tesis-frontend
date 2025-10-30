@@ -8,7 +8,6 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { ButtonComponent } from '../../../../../../../shared/UI/components/button/button/button.component';
@@ -23,10 +22,10 @@ import {
   QuestionUpdateResponse,
 } from '../../../../../../../core/api/chapter/chapter.interface';
 
-// ⚠️ Ajusta estos imports si tu TypeService vive en otra ruta
 import { TypeService } from '../../../../../../../core/api/type/type.service';
 import { TypeQuestionResponse } from '../../../../../../../core/api/type/type.interface';
 import { LoadingBarComponent } from '../../../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
+import { DialogComponent } from '../../../../../../../shared/UI/components/overlay/dialog/dialog.component';
 
 type AnswerForm = FormGroup<{
   id: FormControl<number | null>;
@@ -38,38 +37,49 @@ type QEditForm = FormGroup<{
   id: FormControl<number | null>;
   statement: FormControl<string>;
   type_questions_id: FormControl<number | null>;
-  single: FormControl<number | null>; // índice seleccionado (para ÚNICA)
-  spot: FormControl<number>;        
+  single: FormControl<number | null>; // índice seleccionado (ÚNICA)
+  spot: FormControl<number>;          // puntaje
   answers: FormArray<AnswerForm>;
 }>;
 
 @Component({
   selector: 'app-question',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DragDropModule, ButtonComponent, IconComponent, LoadingBarComponent],
+  imports: [CommonModule, 
+    DialogComponent,
+    ReactiveFormsModule, DragDropModule, ButtonComponent, IconComponent, LoadingBarComponent],
   templateUrl: './question.component.html',
-  styleUrl: './question.component.css',
+  styleUrls: ['./question.component.css'],
 })
 export class QuestionComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly chapterApi = inject(ChapterService);
   private readonly typeApi = inject(TypeService);
   private readonly fb = inject(FormBuilder);
+  dialogVisible = false;
+  expandedState = signal<boolean[]>([]);
   trackById = (_: number, t: TypeQuestionResponse) => t.id;
-comparePrimitive = (a: any, b: any) =>
-  a != null && b != null ? String(a) === String(b) : a === b;
+  comparePrimitive = (a: any, b: any) =>
+    a != null && b != null ? String(a) === String(b) : a === b;
 
   loading = signal<boolean>(false);
   loadingError = signal<string | null>(null);
   submitted = signal<boolean>(false);
   saved = signal<boolean>(false);
-  // Catálogo de tipos de pregunta
+  // estado de arrastre de pregunta
+isDraggingQuestion = signal(false);
+// antes: trackByIndex = (i: number) => i;
+trackByControl = (_: number, ctrl: QEditForm) => ctrl;
+
   typeOptions = signal<TypeQuestionResponse[]>([]);
-
-  // Datos originales por si quieres comparar cambios
   private originalQuestions = signal<Question[]>([]);
-
-  // Form principal
+  testForm = this.fb.group({
+  random: this.fb.control<boolean>(false, { nonNullable: true }),
+  incorrect: this.fb.control<boolean>(true,  { nonNullable: true }),
+  score: this.fb.control<boolean>(false, { nonNullable: true }),
+  split: this.fb.control<number>(1, { nonNullable: true }),   // 1..2
+  limited: this.fb.control<number>(0, { nonNullable: true }), // 0..2 (0 = ilimitado)
+});
   form = this.fb.group({
     questions: this.fb.array<QEditForm>([]),
   });
@@ -81,7 +91,6 @@ comparePrimitive = (a: any, b: any) =>
   total = computed(() => this.qArray.length);
 
   answeredAll = computed(() => {
-    // Reglas mínimas: enunciado no vacío, >= 2 respuestas, al menos 1 correcta
     for (let i = 0; i < this.qArray.length; i++) {
       const qf = this.qArray.at(i);
       const hasStatement = (qf.get('statement')!.value || '').trim().length > 0;
@@ -127,17 +136,47 @@ comparePrimitive = (a: any, b: any) =>
     this.chapterApi
       .getQuestions(chapterId, {
         per_page: 1000,
-        order_by: 'spot',
+        order_by: 'order',      // ← orden por 'order'
         order_dir: 'asc',
         include_correct: true,
       })
       .subscribe({
         next: (res: QuestionResponse) => {
-          const list = res.questions ?? [];
-          this.originalQuestions.set(list);
-          list.forEach(q => this.qArray.push(this.createQForm(q)));
-          this.loading.set(false);
-        },
+  // answers ordenadas
+  const list = (res.questions ?? []).map(q => ({
+    ...q,
+    answers: (q.answers ?? []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+  }));
+
+  // NUEVO: patch settings del test con defaults si no existen
+  const t = res.test ?? {
+    id: 0, chapter_id: 0,
+    random: false, incorrect: true, score: false,
+    split: 1, limited: 0,
+    questions_count: list.length,
+    updated_at: null, created_at: null,
+  };
+  // Coerce split y limited
+  const split = Math.min(2, Math.max(1, Number(t.split ?? 1)));
+  const limited = Math.min(2, Math.max(0, Number(t.limited ?? 0)));
+  this.testForm.patchValue({
+    random: !!t.random,
+    incorrect: !!t.incorrect,
+    score: !!t.score,
+    split,
+    limited,
+  }, { emitEvent: false });
+  this.testForm.markAsPristine();
+
+  this.originalQuestions.set(list);
+  this.qArray.clear();
+  list.forEach(q => this.qArray.push(this.createQForm(q)));
+
+  // NUEVO: todas expandidas por defecto
+  this.expandedState.set(Array.from({ length: this.qArray.length }, () => true));
+
+  this.loading.set(false);
+},
         error: (err) => {
           console.error(err);
           this.loadingError.set('No se pudieron cargar las preguntas.');
@@ -155,55 +194,31 @@ comparePrimitive = (a: any, b: any) =>
     });
   }
 
-  // private createQForm(q?: Partial<Question>): QEditForm {
-  //   const answers = (q?.answers ?? []).map(a => this.createAnswerForm(a));
-  //   const form = this.fb.group({
-  //     id: this.fb.control<number | null>(q?.id ?? null),
-  //     statement: this.fb.control<string>(q?.statement ?? '', { nonNullable: true }),
-  //     type_questions_id: this.fb.control<number | null>(q?.type_questions_id ?? this.defaultTypeId()),
-  //     single: this.fb.control<number | null>(null),
-  //     answers: this.fb.array<AnswerForm>(answers),
-  //   });
-
-  //   // Ajusta selección inicial según tipo
-  //   const qIndex = this.qArray.length; // aún no insertado, pero no dependemos de él
-  //   this.reconcileCorrectness(form);
-
-  //   return form;
-  // }
   private createQForm(q?: Partial<Question>): QEditForm {
-  const typeId = q?.type_questions_id != null
-    ? Number(q.type_questions_id)
-    : this.defaultTypeId();
+    const typeId = q?.type_questions_id != null
+      ? Number(q.type_questions_id)
+      : this.defaultTypeId();
 
-  const answers = (q?.answers ?? []).map(a => this.createAnswerForm(a));
-  const form = this.fb.group({
-    id: this.fb.control<number | null>(q?.id ?? null),
-    statement: this.fb.control<string>(q?.statement ?? '', { nonNullable: true }),
-    type_questions_id: this.fb.control<number | null>(typeId),
-    single: this.fb.control<number | null>(null),
-    spot: this.fb.control<number>(Number.isFinite(q?.spot as any) ? Number(q!.spot) : 1, { nonNullable: true }),
-    answers: this.fb.array<AnswerForm>(answers),
-  });
+    const answers = (q?.answers ?? []).map(a => this.createAnswerForm(a));
+    const form = this.fb.group({
+      id: this.fb.control<number | null>(q?.id ?? null),
+      statement: this.fb.control<string>(q?.statement ?? '', { nonNullable: true }),
+      type_questions_id: this.fb.control<number | null>(typeId),
+      single: this.fb.control<number | null>(null),
+      spot: this.fb.control<number>(Number.isFinite(q?.spot as any) ? Number(q!.spot) : 1, { nonNullable: true }),
+      answers: this.fb.array<AnswerForm>(answers),
+    });
 
-  this.reconcileCorrectness(form);
-  return form;
-}
+    this.reconcileCorrectness(form);
+    return form;
+  }
 
-
-  /* private defaultTypeId(): number | null {
+  private defaultTypeId(): number | null {
     const opts = this.typeOptions();
-    if (!opts.length) return null;
-    // Por defecto: si existe un tipo que NO sea múltiple, usamos ese; sino el primero.
-    const single = opts.find(t => !this.typeIsMultiple(t));
-    return (single ?? opts[0]).id;
-  } */
-private defaultTypeId(): number | null {
-  const opts = this.typeOptions();
-  if (!opts.length) return 1;
-  const prefer1 = opts.find(o => o.id === 1);
-  return (prefer1 ?? opts[0]).id;
-}
+    if (!opts.length) return 1;
+    const prefer1 = opts.find(o => o.id === 1);
+    return (prefer1 ?? opts[0]).id;
+  }
 
   // ====== Helpers de forma ======
   answersArray(i: number): FormArray<AnswerForm> {
@@ -216,44 +231,25 @@ private defaultTypeId(): number | null {
     return this.qArray.at(i).get('single') as FormControl<number | null>;
   }
 
-  // Tipo múltiple según catálogo
+  // Tipos
   private typeIsMultiple(t: TypeQuestionResponse | undefined): boolean {
     if (!t) return false;
     const name = (t.nombre || '').toLowerCase();
     return /múltiple|multiple|checkbox|casilla/.test(name);
   }
-  /* isMultiple(i: number): boolean {
-    const typeId = this.qArray.at(i).get('type_questions_id')!.value;
-    const t = this.typeOptions().find(x => x.id === typeId!);
-    return this.typeIsMultiple(t);
-  } */
 
-  // ====== Eventos UI ======
-  /* onTypeChange(i: number, raw: string | number) {
-    const typeId = typeof raw === 'string' ? Number(raw) : raw;
+  onTypeChange(i: number, raw: string | number) {
+    const typeId = Number(raw);
     this.qArray.at(i).get('type_questions_id')!.setValue(typeId);
     this.reconcileCorrectness(this.qArray.at(i));
-  } */
-//   onTypeChange(i: number, raw: string | number) {
-//   const typeId = typeof raw === 'string' ? Number(raw) : raw;
-//   this.qArray.at(i).get('type_questions_id')!.setValue(typeId);
-//   this.reconcileCorrectness(this.qArray.at(i));
-// }
-onTypeChange(i: number, raw: string | number) {
-  const typeId = Number(raw);
-  this.qArray.at(i).get('type_questions_id')!.setValue(typeId);
-  this.reconcileCorrectness(this.qArray.at(i));
-}
+  }
 
-
-  // Cuando se edita una opción en preguntas de ÚNICA, marcarla como correcta con focus/click
   onAnswerFocusSelectCorrect(i: number, j: number) {
     if (!this.isMultiple(i)) {
       this.markCorrectSingle(i, j);
     }
   }
 
-  // Radio
   markCorrectSingle(i: number, j: number) {
     const qf = this.qArray.at(i);
     this.singleCtrl(i).setValue(j);
@@ -263,60 +259,35 @@ onTypeChange(i: number, raw: string | number) {
     });
   }
 
-  // Checkbox
   toggleCorrectMulti(i: number, j: number, checked: boolean) {
     const a = this.ansCtrl(i, j);
     a.get('is_correct')!.setValue(checked);
     this.form.markAsDirty();
   }
 
-  // Mantiene coherencia entre controles de corrección para el tipo actual
-  /* private reconcileCorrectness(qf: QEditForm) {
-    const answers = qf.get('answers') as FormArray<AnswerForm>;
-    const typeId = qf.get('type_questions_id')!.value;
-    const t = this.typeOptions().find(x => x.id === typeId!);
-    const multiple = this.typeIsMultiple(t);
-
-    if (multiple) {
-      // Dejar flags por respuesta; limpiar índice single
-      qf.get('single')!.setValue(null);
-      // Si ninguna marcada, no forzamos nada (validación lo detecta con answeredAll)
-    } else {
-      // Tomar el primer "is_correct" como índice; si no hay, dejar null
-      let firstIdx = -1;
-      answers.controls.forEach((a, i) => {
-        if (firstIdx === -1 && a.get('is_correct')!.value === true) firstIdx = i;
-      });
-      qf.get('single')!.setValue(firstIdx >= 0 ? firstIdx : null);
-
-      // En única, solo una puede quedar en true
-      answers.controls.forEach((a, i) => {
-        a.get('is_correct')!.setValue(i === firstIdx && firstIdx >= 0);
-      });
-    }
-  } */
-
   // ====== CRUD de preguntas ======
   addQuestion() {
     const qForm = this.createQForm({
-      statement: '',
-      spot: '1',
+      statement: 'Nueva pregunta',
+      spot: 1, // ← número, no string
       answers: [
         { option: 'Opción A', is_correct: 1 } as any,
         { option: 'Opción B', is_correct: 0 } as any,
       ] as Answer[],
     });
     this.qArray.push(qForm);
-    // Si es única, marcar índice 0
     this.reconcileCorrectness(qForm);
     this.form.markAsDirty();
+    this.insertExpandState(this.qArray.length - 1, true);
+
   }
-coerceSpot(i: number) {
-  const ctrl = this.qArray.at(i).get('spot') as FormControl<number>;
-  const n = Math.max(0, Math.trunc(Number(ctrl.value ?? 0)));
-  if (ctrl.value !== n) ctrl.setValue(n);
-  this.form.markAsDirty();
-}
+
+  coerceSpot(i: number) {
+    const ctrl = this.qArray.at(i).get('spot') as FormControl<number>;
+    const n = Math.max(0, Math.trunc(Number(ctrl.value ?? 0)));
+    if (ctrl.value !== n) ctrl.setValue(n);
+    this.form.markAsDirty();
+  }
 
   duplicateQuestion(i: number) {
     const src = this.qArray.at(i);
@@ -332,18 +303,19 @@ coerceSpot(i: number) {
             id: null as any,
             option: a.get('option')!.value,
             is_correct: a.get('is_correct')!.value ? 1 : 0,
-            
           }),
         ),
       ),
     }) as QEditForm;
 
     this.qArray.insert(i + 1, dup);
+    this.insertExpandState(i + 1, this.expandedState()[i] ?? true);
     this.form.markAsDirty();
   }
 
   removeQuestion(i: number) {
     this.qArray.removeAt(i);
+    this.removeExpandState(i);
     this.form.markAsDirty();
   }
 
@@ -351,7 +323,6 @@ coerceSpot(i: number) {
   addAnswer(i: number) {
     const a = this.createAnswerForm({ option: 'Nueva opción', is_correct: 0 });
     this.answersArray(i).push(a);
-    // Si única y no hay seleccionada, seleccionar esta recién agregada como correcta
     if (!this.isMultiple(i) && this.singleCtrl(i).value == null) {
       this.markCorrectSingle(i, this.answersArray(i).length - 1);
     }
@@ -366,7 +337,6 @@ coerceSpot(i: number) {
       is_correct: src.get('is_correct')!.value ? 1 : 0,
     });
     this.answersArray(i).insert(j + 1, dup);
-    // En única, la duplicada no se marca por defecto
     if (!this.isMultiple(i)) dup.get('is_correct')!.setValue(false);
     this.form.markAsDirty();
   }
@@ -384,7 +354,6 @@ coerceSpot(i: number) {
       } else if (current !== null && current! > j) {
         this.singleCtrl(i).setValue(current! - 1);
       }
-      // Garantizar coherencia con flags
       const sel = this.singleCtrl(i).value;
       answers.controls.forEach((a, idx) => a.get('is_correct')!.setValue(sel === idx));
     }
@@ -392,12 +361,10 @@ coerceSpot(i: number) {
     this.form.markAsDirty();
   }
 
-  // ====== Drag & Drop entre opciones ======
-  listId(i: number) {
-    return `answersList-${i}`;
-  }
+  // ====== Drag & Drop de respuestas ======
+  listId(i: number) { return `answersList-${i}`; }
   connectedTo(i: number) {
-    // Todas las listas se conectan entre sí
+    // Permite mover entre preguntas; si la respuesta tiene id y cambia de pregunta, le ponemos id=null
     return Array.from({ length: this.qArray.length }, (_, idx) => this.listId(idx));
   }
   private indexFromListId(id: string): number {
@@ -413,6 +380,14 @@ coerceSpot(i: number) {
     const srcAnswers = this.answersArray(srcIdx);
     const item = srcAnswers.at(prev);
 
+    // Si se mueve a otra pregunta y la respuesta ya existía en BD, forzar creación en destino
+    if (srcIdx !== dstIdx) {
+      const idCtrl = item.get('id')!;
+      if (idCtrl.value !== null && idCtrl.value !== undefined) {
+        idCtrl.setValue(null); // evitar 422 en backend (pertenencia a otra pregunta)
+      }
+    }
+
     // Quitar del origen
     srcAnswers.removeAt(prev);
 
@@ -425,29 +400,24 @@ coerceSpot(i: number) {
       const sel = this.singleCtrl(srcIdx).value;
       if (sel !== null) {
         if (srcIdx === dstIdx) {
-          // Reorden en misma lista
           let newSel = sel;
           if (sel === prev) newSel = curr;
           else if (sel > prev && sel <= curr) newSel = sel - 1;
           else if (sel < prev && sel >= curr) newSel = sel + 1;
           this.singleCtrl(srcIdx).setValue(newSel);
         } else {
-          // Se movió a otra pregunta: limpiar selección si apuntaba al índice removido
           if (sel === prev) this.singleCtrl(srcIdx).setValue(null);
           else if (sel > prev) this.singleCtrl(srcIdx).setValue(sel - 1);
-          // Reconciliar flags
           const selSrc = this.singleCtrl(srcIdx).value;
           this.answersArray(srcIdx).controls.forEach((a, idx) => a.get('is_correct')!.setValue(selSrc === idx));
         }
       }
     }
 
-    // En destino, si es única y el ítem movido estaba en true, seleccionarlo
     if (!this.isMultiple(dstIdx)) {
       if (item.get('is_correct')!.value === true) {
         this.markCorrectSingle(dstIdx, curr);
       } else {
-        // Mantener coherencia
         const selDst = this.singleCtrl(dstIdx).value;
         this.answersArray(dstIdx).controls.forEach((a, idx) => a.get('is_correct')!.setValue(selDst === idx));
       }
@@ -458,92 +428,93 @@ coerceSpot(i: number) {
 
   // ====== Guardar / Reset ======
   submit() {
-  if (!this.answeredAll()) return;
+    if (!this.answeredAll()) return;
 
-  const chapterId = this.getChapterParamFromRoute();
-  if (!chapterId) {
-    this.loadingError.set('No se encontró el ID del capítulo en la ruta.');
-    return;
-  }
+    const chapterId = this.getChapterParamFromRoute();
+    if (!chapterId) {
+      this.loadingError.set('No se encontró el ID del capítulo en la ruta.');
+      return;
+    }
 
-  const payload: QuestionUpdateRequest = this.buildPayload() as QuestionUpdateRequest;
+    const payload: QuestionUpdateRequest = this.buildPayload() as QuestionUpdateRequest;
 
-  this.loading.set(true);
-  this.loadingError.set(null);
-  this.saved.set(true);
+    this.loading.set(true);
+    this.loadingError.set(null);
+    this.saved.set(true);
 
-  this.chapterApi.updateQuestions(chapterId, payload).subscribe({
-    next: (res: QuestionUpdateResponse) => {
-      const list = res.questions ?? [];
+    this.chapterApi.updateQuestions(chapterId, payload).subscribe({
+      next: (res: QuestionUpdateResponse) => {
+       
 
-      // Actualiza el snapshot original
-      this.originalQuestions.set(list);
+        const list = (res.questions ?? []).map(q => ({
+          ...q,
+          answers: (q.answers ?? []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+        }));
 
-      // Reconstruye el FormArray con la data fresca del backend
-      const rebuilt = this.fb.array<QEditForm>([]);
-      list.forEach(q => rebuilt.push(this.createQForm(q)));
-      this.form.setControl('questions', rebuilt);
+        this.originalQuestions.set(list);
 
-      this.submitted.set(true);
-      this.form.markAsPristine();
-      this.form.markAsUntouched();
-      this.loading.set(false);
-      this.saved.set(false);
-    },
-    error: (err) => {
-      console.error(err);
-      this.loadingError.set('No se pudieron guardar los cambios.');
-      this.loading.set(false);
-    },
-  });
-}
+        const rebuilt = this.fb.array<QEditForm>([]);
+        list.forEach(q => rebuilt.push(this.createQForm(q)));
+        this.form.setControl('questions', rebuilt);
 
-
-  /* reset() {
-    this.submitted.set(false);
-    this.form.reset();
-    this.qArray.clear();
-    // Reconstruir desde originales
-    this.originalQuestions().forEach(q => this.qArray.push(this.createQForm(q)));
-    this.form.markAsPristine();
-    
-    
-  } */
- reset() {
-  this.submitted.set(false);
-
-  const rebuilt = this.fb.array<QEditForm>([]);
-  this.originalQuestions().forEach(q => rebuilt.push(this.createQForm(q)));
-
-  this.form.setControl('questions', rebuilt);
-  this.form.markAsPristine();
-  this.form.markAsUntouched();
-  this.form.updateValueAndValidity({ onlySelf: false, emitEvent: false });
-}
-
-
-  // Construye payload ordenado por posición (spot)
-  private buildPayload() {
-    const questions = this.qArray.controls.map((qf, idxQ) => {
-      const typeId = qf.get('type_questions_id')!.value!;
-      const answers = (qf.get('answers') as FormArray<AnswerForm>).controls.map((af, idxA) => ({
-        id: af.get('id')!.value,
-        option: af.get('option')!.value,
-        is_correct: af.get('is_correct')!.value ? 1 : 0,
-        spot: idxA + 1,
-      }));
-
-      return {
-        id: qf.get('id')!.value,
-        statement: qf.get('statement')!.value,
-        type_questions_id: typeId,
-        spot: qf.get('spot')!.value,
-        answers,
-      };
+        this.submitted.set(true);
+        this.form.markAsPristine();
+        this.form.markAsUntouched();
+        this.loading.set(false);
+        this.saved.set(false);
+         this.testForm.markAsPristine();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loadingError.set('No se pudieron guardar los cambios.');
+        this.loading.set(false);
+      },
     });
-
-    return { questions };
   }
+
+  reset() {
+    this.submitted.set(false);
+    const rebuilt = this.fb.array<QEditForm>([]);
+    this.originalQuestions().forEach(q => rebuilt.push(this.createQForm(q)));
+    this.form.setControl('questions', rebuilt);
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+    this.form.updateValueAndValidity({ onlySelf: false, emitEvent: false });
+    this.expandedState.set(Array.from({ length: this.qArray.length }, () => true));
+
+  }
+
+  // Construye payload con orden por índice
+  private buildPayload(): QuestionUpdateRequest {
+  const questions = this.qArray.controls.map((qf, idxQ) => {
+    const typeId = qf.get('type_questions_id')!.value!;
+    const answers = (qf.get('answers') as FormArray<AnswerForm>).controls.map((af, idxA) => ({
+      id: af.get('id')!.value,
+      option: af.get('option')!.value,
+      is_correct: af.get('is_correct')!.value === true,
+      order: idxA + 1,
+    }));
+    return {
+      id: qf.get('id')!.value,
+      statement: qf.get('statement')!.value,
+      type_questions_id: typeId,
+      spot: qf.get('spot')!.value,
+      order: idxQ + 1,
+      answers,
+    };
+  });
+
+  const test = {
+    random: !!this.testForm.value.random,
+    incorrect: !!this.testForm.value.incorrect,
+    score: !!this.testForm.value.score,
+    split: Math.min(2, Math.max(1, Number(this.testForm.value.split ?? 1))),
+    limited: Math.min(2, Math.max(0, Number(this.testForm.value.limited ?? 0))),
+  };
+
+  return { test, questions };
+}
+
 
   // ====== Utilidades ======
   trackByIndex = (i: number) => i;
@@ -558,47 +529,115 @@ coerceSpot(i: number) {
       null
     );
   }
-// ====== Tipos por ID ======
-private isMultipleById = (typeId: number | null) => typeId === 1 || typeId === 2;
 
-isTypeRadioMulti(i: number): boolean {
-  const typeId = this.qArray.at(i).get('type_questions_id')!.value;
-  return typeId === 1; // "Opción múltiple" visual radio pero comportamiento múltiple
-}
-
-isTypeCheckbox(i: number): boolean {
-  const typeId = this.qArray.at(i).get('type_questions_id')!.value;
-  return typeId === 2; // "Casilla de verificación" checkbox nativo
-}
-
-isMultiple(i: number): boolean {
-  const typeId = this.qArray.at(i).get('type_questions_id')!.value;
-  return this.isMultipleById(typeId);
-}
+  // ====== Tipos por ID ======
+  private isMultipleById = (typeId: number | null) => typeId === 1 || typeId === 2;
+  isTypeRadioMulti(i: number): boolean {
+    const typeId = this.qArray.at(i).get('type_questions_id')!.value;
+    return typeId === 1; // Multiple con UI tipo radio
+  }
+  isTypeCheckbox(i: number): boolean {
+    const typeId = this.qArray.at(i).get('type_questions_id')!.value;
+    return typeId === 2; // Checkbox nativo
+  }
+  isMultiple(i: number): boolean {
+    const typeId = this.qArray.at(i).get('type_questions_id')!.value;
+    return this.isMultipleById(typeId);
+  }
 
   private reconcileCorrectness(qf: QEditForm) {
-  const answers = qf.get('answers') as FormArray<AnswerForm>;
-  const typeId = qf.get('type_questions_id')!.value;
-  const multiple = this.isMultipleById(typeId);
+    const answers = qf.get('answers') as FormArray<AnswerForm>;
+    const typeId = qf.get('type_questions_id')!.value;
+    const multiple = this.isMultipleById(typeId);
 
-  if (multiple) {
-    // En múltiple no usamos índice 'single'
-    qf.get('single')!.setValue(null);
-    // No forzamos ninguna en true; la validación 'answeredAll' exige al menos una correcta
-  } else {
-    // Selección única: tomar la primera marcada o dejar null
-    let firstIdx = -1;
-    answers.controls.forEach((a, i) => {
-      if (firstIdx === -1 && a.get('is_correct')!.value === true) firstIdx = i;
-    });
-    qf.get('single')!.setValue(firstIdx >= 0 ? firstIdx : null);
-
-    // En única, solo una en true
-    answers.controls.forEach((a, i) => {
-      a.get('is_correct')!.setValue(i === firstIdx && firstIdx >= 0);
-    });
+    if (multiple) {
+      qf.get('single')!.setValue(null);
+    } else {
+      let firstIdx = -1;
+      answers.controls.forEach((a, i) => {
+        if (firstIdx === -1 && a.get('is_correct')!.value === true) firstIdx = i;
+      });
+      qf.get('single')!.setValue(firstIdx >= 0 ? firstIdx : null);
+      answers.controls.forEach((a, i) => {
+        a.get('is_correct')!.setValue(i === firstIdx && firstIdx >= 0);
+      });
+    }
   }
+  showSetting(){
+    this.dialogVisible = !this.dialogVisible;
+    
+  }
+
+  // ====== Expand/Collapse ======
+toggleCollapse(index: number) {
+  const arr = this.expandedState().slice();
+  arr[index] = !arr[index];
+  this.expandedState.set(arr);
 }
 
-  
+collapseAll() {
+  this.expandedState.set(Array.from({ length: this.qArray.length }, () => false));
+}
+
+expandAll() {
+  this.expandedState.set(Array.from({ length: this.qArray.length }, () => true));
+}
+
+isCollapsed(i: number): boolean {
+  return this.expandedState()[i] === false;
+}
+
+// Si agregas/duplicas/borras preguntas, también ajusta expandedState:
+private insertExpandState(at: number, value = true) {
+  const arr = this.expandedState().slice();
+  arr.splice(at, 0, value);
+  this.expandedState.set(arr);
+}
+private removeExpandState(at: number) {
+  const arr = this.expandedState().slice();
+  arr.splice(at, 1);
+  this.expandedState.set(arr);
+}
+private moveExpandState(from: number, to: number) {
+  if (from === to) return;
+  const arr = this.expandedState().slice();
+  const [it] = arr.splice(from, 1);
+  arr.splice(to, 0, it);
+  this.expandedState.set(arr);
+}
+
+dropQuestion(event: CdkDragDrop<any[]>) {
+  const prev = event.previousIndex;
+  const curr = event.currentIndex;
+  if (prev === curr) return;
+
+  const ctrl = this.qArray.at(prev);
+  this.qArray.removeAt(prev);
+  this.qArray.insert(curr, ctrl);
+
+  // Mueve también el estado expandido
+  this.moveExpandState(prev, curr);
+
+  this.form.markAsDirty(); // para que el botón Guardar se habilite
+}
+
+coerceSplit() {
+  const c = this.testForm.get('split')!;
+  const n = Math.min(2, Math.max(1, Math.trunc(Number(c.value ?? 1))));
+  if (c.value !== n) c.setValue(n);
+}
+coerceLimited() {
+  const c = this.testForm.get('limited')!;
+  const n = Math.min(2, Math.max(0, Math.trunc(Number(c.value ?? 0))));
+  if (c.value !== n) c.setValue(n);
+}
+saveSettingsFromDialog() {
+  // Reutilizamos submit() para persistir test + preguntas
+  if (!this.answeredAll()) {
+    // si no quieres bloquear por validez de preguntas, podrías quitar este check solo para settings
+  }
+  this.submit();
+  this.showSetting();
+}
+
 }

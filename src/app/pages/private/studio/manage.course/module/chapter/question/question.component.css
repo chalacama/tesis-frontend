@@ -1,13 +1,28 @@
 :host {
   display: block;
+  
 }
 
 .test-wrapper {
-  display: grid;
+  display: flex;
   gap: 1rem;
   padding: 1rem;
+  width: 100%;
+  height: 100%;
+  background-color: aliceblue;
+  flex-direction: column;
+  overflow: hidden;
 }
-
+.q-drag{
+  cursor: grab;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  margin-bottom: 10px;
+  padding-top: 5px;
+}
 .test-header {
   display: flex;
   align-items: center;
@@ -73,7 +88,7 @@
   border: 1px solid var(--border-color);
   background: var(--card-bg);
   border-radius: 16px;
-  padding: .9rem .9rem 0 .9rem;
+  padding: 0 .9rem 0 .9rem;
 }
 
 .q-head {
@@ -95,6 +110,7 @@
   background: var(--sev-secondary);
   color: var(--text-color);
   font-weight: 600;
+  cursor: pointer;
 }
 
 .statement-input {
@@ -249,3 +265,75 @@
   padding: .35rem .5rem;
   font: inherit;
 }
+
+/* Oculta el cuerpo y pie cuando está colapsada */
+.question-card.collapsed .q-body,
+.question-card.collapsed .q-footer {
+  display: none;
+}
+
+/* Rotación del chevron según estado */
+.badge .chev {
+  transition: transform .15s ease;
+}
+.badge .chev.expanded {
+  transform: rotate(90deg); /* expandida: flecha hacia abajo */
+}
+
+/* List de preguntas como drop list */
+.questions-list.cdk-drop-list-dragging .question-card {
+  transition: none;
+}
+.question-card.cdk-drag-preview {
+  box-shadow: 0 8px 24px var(--shadow-color);
+  border-radius: 16px;
+}
+.question-card.cdk-drag-placeholder {
+  opacity: .3;
+}
+
+/* Dialog Settings */
+.test-settings {
+  display: grid;
+  gap: 1rem;
+  min-width: 520px;
+  padding: 10px;
+}
+.test-settings h3 {
+  margin: 0 0 .25rem 0;
+}
+.settings-grid {
+  display: grid;
+  gap: .75rem;
+}
+.switch {
+  display: grid;
+  gap: .15rem;
+}
+.switch > span {
+  font-weight: 600;
+}
+.field {
+  display: grid;
+  gap: .25rem;
+}
+.field input[type="number"] {
+  width: 120px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  padding: .35rem .5rem;
+  font: inherit;
+}
+.muted {
+  color: var(--text-color-secondary);
+  font-size: .85rem;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
