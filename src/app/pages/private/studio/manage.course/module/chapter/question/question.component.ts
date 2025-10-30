@@ -70,6 +70,8 @@ export class QuestionComponent implements OnInit {
 isDraggingQuestion = signal(false);
 // antes: trackByIndex = (i: number) => i;
 trackByControl = (_: number, ctrl: QEditForm) => ctrl;
+// agrega esto a tu componente
+trackByAnswerControl = (_: number, ctrl: AnswerForm) => ctrl;
 
   typeOptions = signal<TypeQuestionResponse[]>([]);
   private originalQuestions = signal<Question[]>([]);
@@ -639,5 +641,7 @@ saveSettingsFromDialog() {
   this.submit();
   this.showSetting();
 }
+
+
 
 }

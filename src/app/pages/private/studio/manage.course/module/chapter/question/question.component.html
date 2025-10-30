@@ -102,7 +102,7 @@
           [id]="listId(i)" cdkDropList (cdkDropListDropped)="dropAnswer($event)">
 
           <!-- Opciones -->
-          <div class="option" *ngFor="let a of answersArray(i).controls; index as j" cdkDrag
+          <div class="option" *ngFor="let a of answersArray(i).controls; index as j; trackBy: trackByAnswerControl" cdkDrag
             [class.correct]="a.get('is_correct')!.value === true">
 
             <div class="option-label" [formGroup]="a">
@@ -187,62 +187,98 @@
   [mask]="{ type: 'dimmed' }">
 </ui-loading-bar>
 
-  <ui-dialog
-    
-    type="free"
-    [variant]="'filled'"
-    [closeOnMaskClick]="true"
-    [(visible)]="dialogVisible"
-    
-  >
-    <div class="test-settings">
-      <form class="test-settings" [formGroup]="testForm" (ngSubmit)="saveSettingsFromDialog()">
-    <h3>Configuración del test</h3>
+<ui-dialog
+  type="free"
+  [variant]="'filled'"
+  [closeOnMaskClick]="true"
+  [(visible)]="dialogVisible"
+>
+  <form class="test-settings compact" [formGroup]="testForm" (ngSubmit)="saveSettingsFromDialog()">
+    <header class="settings-head">
+      <h3>Parámetros del test</h3>
+      <p class="muted">Defina criterios de aplicación y de reporte para el instrumento.</p>
+    </header>
 
-    <div class="settings-grid">
-      <label class="switch">
-        <input type="checkbox" formControlName="random" />
-        <span>Orden de preguntas aleatorio</span>
-        <small class="muted">random</small>
-      </label>
-
-      <label class="switch">
-        <input type="checkbox" formControlName="incorrect" />
-        <span>Mostrar preguntas incorrectas al responder</span>
-        <small class="muted">incorrect</small>
-      </label>
-
-      <label class="switch">
-        <input type="checkbox" formControlName="score" />
-        <span>Mostrar puntuación total</span>
-        <small class="muted">score</small>
-      </label>
-
-      <div class="field">
-        <label for="split">Split (1..2)</label>
-        <input id="split" type="number" min="1" max="2" step="1"
-               formControlName="split" (change)="coerceSplit()" />
-        <small class="muted">
-          Si hay 20 preguntas y split=2, se toman 10 por intento (50%).
-        </small>
+    <div class="prefs" role="group" aria-labelledby="settings-title" id="settings-title">
+      <!-- Orden aleatorio -->
+      <div class="pref">
+        <div class="pref-left">
+          <span class="pref-term">Orden aleatorio</span>
+          <small class="pref-def">Permuta la secuencia de reactivos en cada intento.</small>
+        </div>
+        <label class="toggle" title="Activa permutación por intento">
+          <input type="checkbox" formControlName="random" aria-label="Orden aleatorio" />
+          <span class="track"><span class="thumb"></span></span>
+        </label>
       </div>
 
-      <div class="field">
-        <label for="limited">Intentos permitidos (0..2)</label>
-        <input id="limited" type="number" min="0" max="2" step="1"
-               formControlName="limited" (change)="coerceLimited()" />
-        <small class="muted">
-          0 = ilimitado, 1 o 2 = número máximo de intentos.
-        </small>
+      <!-- Retroalimentación inmediata -->
+      <div class="pref">
+        <div class="pref-left">
+          <span class="pref-term">Retroalimentación inmediata</span>
+          <small class="pref-def">Muestra los ítems no acertados al enviar respuestas.</small>
+        </div>
+        <label class="toggle" title="Muestra preguntas incorrectas al responder">
+          <input type="checkbox" formControlName="incorrect" aria-label="Retroalimentación inmediata" />
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+
+      <!-- Informe de puntuación -->
+      <div class="pref">
+        <div class="pref-left">
+          <span class="pref-term">Informe de puntuación</span>
+          <small class="pref-def">Exhibe la calificación global al finalizar el intento.</small>
+        </div>
+        <label class="toggle" title="Mostrar puntuación total">
+          <input type="checkbox" formControlName="score" aria-label="Informe de puntuación" />
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+
+      <!-- Split -->
+      <div class="pref">
+        <div class="pref-left">
+          <label for="split" class="pref-term">Muestreo de ítems (k)</label>
+          <small class="pref-def">Divide el banco en <em>k</em> bloques iguales. 1 = todo el banco; 2 = 50% por intento.</small>
+        </div>
+        <input
+          id="split"
+          class="num"
+          type="number"
+          min="1"
+          max="2"
+          step="1"
+          formControlName="split"
+          (change)="coerceSplit()"
+          aria-describedby="split-help"
+          title="1..2 (enteros)"
+        />
+      </div>
+
+      <!-- Intentos -->
+      <div class="pref">
+        <div class="pref-left">
+          <label for="limited" class="pref-term">Intentos permitidos</label>
+          <small id="split-help" class="pref-def">0 = sin límite; 1..2 = tope de intentos por estudiante.</small>
+        </div>
+        <input
+          id="limited"
+          class="num"
+          type="number"
+          min="0"
+          max="2"
+          step="1"
+          formControlName="limited"
+          (change)="coerceLimited()"
+          title="0..2 (enteros)"
+        />
       </div>
     </div>
 
-    <div class="dialog-actions">
-      <ui-button type="submit" severity="primary"
-                 [icon]="{svgPath:'svg/save-outline.svg'}"
-                 label="Guardar configuración">
-      </ui-button>
-    </div>
+    <footer class="settings-actions">
+      <ui-button type="button" severity="secondary" (click)="dialogVisible = false" label="Cancelar"></ui-button>
+      <ui-button type="submit" severity="primary" [icon]="{svgPath:'svg/save-outline.svg'}" label="Guardar"></ui-button>
+    </footer>
   </form>
-    </div>
-  </ui-dialog>
+</ui-dialog>
