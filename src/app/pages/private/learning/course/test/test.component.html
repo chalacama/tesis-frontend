@@ -1,1 +1,186 @@
-<p>test works!</p>
+<div class="test-shell" [class.loading]="loading() || submitting()">
+  <!-- HEADER -->
+  <header class="test-header">
+    <div class="titles">
+      <h3 class="course" *ngIf="headerCourse() as ct">{{ ct }}</h3>
+      <h1 class="chapter">{{ headerChapter() }}</h1>
+      <p class="muted">
+        Preguntas: <b>{{ questionsCount() }}</b>
+        <span class="sep">•</span>
+        <ng-container *ngIf="limit() === 0; else hasLimit">Intentos ilimitados</ng-container>
+        <ng-template #hasLimit> Límite: {{ limit() }} </ng-template>
+        <span class="sep">•</span>
+        Completados: <b>{{ attemptsCompleted() }}</b>
+      </p>
+      <p class="muted" *ngIf="lastScore() !== null || lastCompletedAt()">
+        <ng-container *ngIf="lastScore() !== null">Último score: <b>{{ lastScore() }}</b></ng-container>
+        <ng-container *ngIf="lastScore() !== null && lastCompletedAt()"> • </ng-container>
+        <ng-container *ngIf="lastCompletedAt()">Completado: <b>{{ lastCompletedAt() | date:'medium' }}</b></ng-container>
+      </p>
+    </div>
+    <div class="meta">
+      <span class="chip" *ngIf="inProgressId()">Intento en progreso #{{ inProgressId() }}</span>
+      <span class="chip" [class.ok]="canRetry()" [class.bad]="!canRetry()">Puede repetir: {{ canRetry() ? 'Sí' : 'No' }}</span>
+      <span class="chip" [class.ok]="canView()" [class.bad]="!canView()">Puede revisar: {{ canView() ? 'Sí' : 'No' }}</span>
+    </div>
+  </header>
+
+  <!-- ACCIONES DE MODO -->
+  <section class="modes" *ngIf="isHub() || isReview()">
+    <!-- Hub: mostrar acciones según flags -->
+    <ng-container *ngIf="isHub()">
+      <!-- Si hay en progreso, el flujo ya entra en Answer automático, esto es fallback -->
+      <ui-button
+        *ngIf="inProgressId()"
+        severity="primary" variant="filled" size="sm"
+        label="Continuar test"
+        (click)="startAnswer()">
+      </ui-button>
+
+      <ui-button
+        *ngIf="!inProgressId() && attemptsCompleted() === 0"
+        severity="primary" variant="filled" size="sm"
+        label="Realizar test"
+        (click)="startAnswer()">
+      </ui-button>
+
+      <ui-button
+        *ngIf="!inProgressId() && attemptsCompleted() > 0 && canRetry()"
+        severity="primary" variant="filled" size="sm"
+        label="Repetir test"
+        (click)="startAnswer()">
+      </ui-button>
+
+      <ui-button
+        *ngIf="!inProgressId() && canView()"
+        severity="info" variant="outlined" size="sm"
+        label="Revisar respuestas"
+        (click)="startReview()">
+      </ui-button>
+    </ng-container>
+
+    <!-- Review: solo repetir (si puede) y volver -->
+    <ng-container *ngIf="isReview()">
+      <ui-button
+        *ngIf="canRetry()"
+        severity="primary" variant="filled" size="sm"
+        label="Repetir test"
+        (click)="startAnswer()">
+      </ui-button>
+      <ui-button
+        severity="secondary" variant="flat" size="sm"
+        label="Volver"
+        (click)="backToHub()">
+      </ui-button>
+    </ng-container>
+  </section>
+
+  <!-- CUESTIONARIO -->
+  <section
+    class="questions"
+    *ngIf="(isAnswer() || isReview()) && questions().length > 0; else emptyBlock">
+
+    <article
+      class="question-card"
+      *ngFor="let q of questions(); trackBy: trackQ"
+      [class.readonly]="isReview()"
+      [class.q-correct]="isReview() && q.is_correct_question === true"
+      [class.q-wrong]="isReview() && q.is_correct_question === false">
+
+      <div class="q-header">
+        <div class="q-order">#{{ q.order }}</div>
+        <div class="q-title">{{ q.prompt }}</div>
+
+        <!-- Score por pregunta (solo review y si hay datos) -->
+        <div class="q-score" *ngIf="isReview() && q.spot !== null && q.correct_spot !== null">
+          {{ q.correct_spot }}/{{ q.spot }}
+        </div>
+      </div>
+
+      <!-- Radios -->
+      <div class="answers" *ngIf="q.type?.key === 'single'; else multipleBlock">
+        <label
+          class="answer"
+          *ngFor="let a of q.answers; trackBy: trackA"
+          [class.sel]="!!a.selected"
+          [class.correct]="isReview() && a.selected && a.selected_is_correct === true"
+          [class.wrong]="isReview() && a.selected && a.selected_is_correct === false"
+        >
+          <input
+            type="radio"
+            [name]="'q-' + q.question_id"
+            [value]="a.id"
+            [checked]="a.selected || false"
+            (change)="onRadioSelect(q, a.id)"
+            [disabled]="loading() || submitting() || isReview()"
+          />
+          <span>{{ a.label }}</span>
+        </label>
+      </div>
+
+      <!-- Checkboxes -->
+      <ng-template #multipleBlock>
+        <div class="answers">
+          <label
+            class="answer"
+            *ngFor="let a of q.answers; trackBy: trackA"
+            [class.sel]="!!a.selected"
+            [class.correct]="isReview() && a.selected && a.selected_is_correct === true"
+            [class.wrong]="isReview() && a.selected && a.selected_is_correct === false"
+          >
+            <input
+              type="checkbox"
+              [checked]="a.selected || false"
+              (change)="onCheckboxToggle(q, a.id, $any($event.target)?.checked || false)"
+              [disabled]="loading() || submitting() || isReview()"
+            />
+            <span>{{ a.label }}</span>
+          </label>
+        </div>
+      </ng-template>
+    </article>
+  </section>
+
+  <ng-template #emptyBlock>
+    <div class="empty" *ngIf="isAnswer() || isReview()">No hay preguntas en esta página.</div>
+  </ng-template>
+
+  <!-- FOOTER -->
+  <footer class="toolbar" *ngIf="isAnswer() || isReview()">
+    <ui-button
+      *ngIf="(pg()?.current_page || 1) > 1"
+      size="sm"
+      [style]="{borderRadius: '20px'}"
+      severity="primary"
+      variant="filled"
+      label="Atrás"
+      (click)="prevPage()"
+      [disabled]="loading() || submitting() || (pg()?.current_page || 1) <= 1">
+    </ui-button>
+
+    <!-- Enviar solo en modo responder y última página -->
+    <ui-button
+      *ngIf="isAnswer() && !loading() && (pg()?.current_page || 1) === (pg()?.last_page || 1)"
+      size="sm"
+      [style]="{borderRadius: '20px'}"
+      severity="primary"
+      variant="filled"
+      label="Enviar"
+      (click)="submit()"
+      [disabled]="loading() || submitting()">
+    </ui-button>
+
+    <ui-button
+      *ngIf="(pg()?.current_page || 1) < (pg()?.last_page || 1)"
+      size="sm"
+      [style]="{borderRadius: '20px'}"
+      severity="primary"
+      variant="filled"
+      label="Siguiente"
+      (click)="nextPage()"
+      [disabled]="loading() || submitting() || (pg()?.current_page || 1) >= (pg()?.last_page || 1)">
+    </ui-button>
+  </footer>
+</div>
+
+<ui-loading-bar [visible]="submitting()"></ui-loading-bar>

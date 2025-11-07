@@ -14,6 +14,7 @@ import {
   CreateCommentDto,
   SingleCommentResponse
 } from './comment.interface';
+import { AutosaveRequestDto, AutosaveResponse, TestIndexResponse, TestPageQuery, TestShowResponse } from './test.interface';
 
 @Injectable({ providedIn: 'root' })
 export class WatchingService {
@@ -96,5 +97,51 @@ export class WatchingService {
    */
   getByLink<T>(absoluteUrl: string): Observable<T> {
     return this.http.get<T>(absoluteUrl);
+  }
+
+
+  /**
+   * GET /watching/test/{chapter}/index
+   * - Modo normal: muestra o crea el intento en curso.
+   * - Modo review_last=true: muestra el último intento completado (si permitido).
+   */
+  // core/api/watching/watching.service.ts
+getTestPage(
+  chapterId: number,
+  params?: TestPageQuery
+): Observable<TestIndexResponse> {
+  let httpParams = new HttpParams();
+  if (params?.page != null)     httpParams = httpParams.set('page', params.page);
+  if (params?.per_page != null) httpParams = httpParams.set('per_page', params.per_page);
+
+  // ⬇️ Solo enviamos review_last si es TRUE (en review)
+  if (params?.review_last === true) httpParams = httpParams.set('review_last', '1');
+
+  const url = `${this.apiUrl}/test/${chapterId}/index`;
+  return this.http.get<TestIndexResponse>(url, { params: httpParams });
+}
+
+
+  /**
+   * GET /watching/test/{chapter}/show
+   * Meta para el componente: títulos, conteos, attempts, flags y estado del usuario.
+   */
+  getTestShow(chapterId: number): Observable<TestShowResponse> {
+    const url = `${this.apiUrl}/test/${chapterId}/show`;
+    return this.http.get<TestShowResponse>(url);
+  }
+
+  /**
+   * Autosave de respuestas (sin evaluar ni revelar correctas).
+   * - Envía el conjunto completo de answer_ids seleccionadas para esa pregunta
+   *   (modo replace).
+   * - El backend valida que el TestView no esté completado.
+   */
+  autosaveAnswer(
+    testViewId: number,
+    payload: AutosaveRequestDto
+  ): Observable<AutosaveResponse> {
+    const url = `${this.apiUrl}/test/${testViewId}/update`;
+    return this.http.post<AutosaveResponse>(url, payload);
   }
 }

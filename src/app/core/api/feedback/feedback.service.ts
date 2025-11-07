@@ -18,6 +18,7 @@ import {
   RegisterCourseResponse,
   SavedRequest, SavedResponse
 } from './feedback.interface';
+import { CompletedTestResponse } from './feedback-test.interface';
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
@@ -94,6 +95,15 @@ updateProgress(learningContentId: number | string, body: ProgressRequest): Obser
 
   enrollPrivate(code: string) {
     return this.registerToCourseByCode({ code });
+  }
+
+  /**
+   * Completa un TestView y retorna el feedback (score y/o detalle según flags del test).
+   * POST /feedback/completed/{testView}/test
+   */
+  completeTest(testViewId: number): Observable<CompletedTestResponse> {
+    const url = `${this.apiUrl}/completed/${testViewId}/test`;
+    return this.http.post<CompletedTestResponse>(url, {});
   }
 
 }
