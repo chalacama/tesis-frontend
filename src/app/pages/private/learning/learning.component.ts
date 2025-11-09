@@ -10,9 +10,13 @@ import { takeUntil, map, first} from 'rxjs/operators';
 import { HostListener } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { SearchComponent } from '../../../shared/UI/components/data/search/search.component';
 @Component({
   selector: 'app-learning',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, 
+
+    SearchComponent
+  ],
   templateUrl: './learning.component.html',
   styleUrl: './learning.component.css'
 })

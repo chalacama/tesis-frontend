@@ -1,0 +1,68 @@
+<div class="search-wrap" role="search">
+  <div class="search-bar" [class.open]="open">
+    <ui-icon class="prefix"
+      [size]="'sm'"
+      [severity]="'contrast'"
+      [svgPath]="'svg/search.svg'">
+    </ui-icon>
+
+    <input
+      #searchInput
+      type="text"
+      class="search-input"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Buscar"
+      [value]="control.value"
+      (input)="control.setValue(searchInput.value)"
+      (focus)="onFocus()"
+      (keydown)="onKeyDown($event)"
+
+      role="combobox"
+      [attr.aria-autocomplete]="'list'"
+      [attr.aria-haspopup]="'listbox'"
+      [attr.aria-expanded]="open"
+      [attr.aria-controls]="listboxId"
+    />
+
+    <button class="clear-btn" *ngIf="control.value" (click)="clear()" aria-label="Limpiar">
+      <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/record.svg'"></ui-icon>
+    </button>
+  </div>
+
+  <!-- Panel de sugerencias -->
+  <div
+    #panel
+    class="suggestions"
+    *ngIf="open"
+    role="listbox"
+    [id]="listboxId"
+    [attr.aria-hidden]="!open"
+  >
+    <div class="loading" *ngIf="loading">Buscando…</div>
+
+    <ng-container *ngIf="!loading && suggestions.length > 0; else noData">
+      <button
+        type="button"
+        class="suggestion-item"
+        *ngFor="let s of suggestions; let i = index; trackBy: trackByText"
+        [class.active]="i === activeIndex"
+        role="option"
+        (mousedown)="select(s)"
+      >
+        <ui-icon
+          [size]="'sm'"
+          [severity]="'contrast'"
+          [svgPath]="s.is_history ? 'svg/record.svg' : 'svg/search.svg'">
+        </ui-icon>
+
+        <span class="text">{{ s.text }}</span>
+        <!-- <span class="badge" *ngIf="s.is_history">Historial</span> -->
+      </button>
+    </ng-container>
+
+    <ng-template #noData>
+      <div class="empty" *ngIf="!loading">Sin sugerencias</div>
+    </ng-template>
+  </div>
+</div>

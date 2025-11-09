@@ -67,9 +67,11 @@ onContainerScroll(): void {
     this.loadCourses();
   }
 }
-viewPortfolio(username: string) {
-    this.router.navigate(['/learning/portfolio/@'+username]);
+viewPortfolio(username?: string | null) {
+  if (!username) return; // guard clause
+  this.router.navigate(['/learning/portfolio/@' + username]);
 }
+
 titleCoursePath (title: string) {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }

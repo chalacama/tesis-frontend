@@ -1,30 +1,35 @@
+// start.interfaces.ts
+
 export interface CourseResponse {
   courses: Course[];
   has_more: boolean;
   current_page: number;
 }
+
 export interface CourseRequest {
-  filter : string;
+  filter: string;
   page: number;
   per_page: number;
+  /** término de búsqueda (opcional) */
+  q?: string;
 }
+
 export interface Course {
   id:                         number;
   title:                      string;
   description:                string;
-  created_at:                 string;
-  // is_certified:               boolean | number;
-  thumbnail_url:              null | string;
-  tutor:                      Tutor;
-  category:                   Category;
+  created_at:                 string | null;
+  thumbnail_url:              string | null;
+  tutor:                      Tutor | null;
+  category:                   Category | null;
   careers:                    Career[];
-  difficulty:                 Category;
+  difficulty:                 Category | null;
   registrations_count:        number;
   saved_courses_count:        number;
   average_rating:             number;
   is_saved:                   boolean;
   is_registered:              boolean;
-  first_learning_content_url: null | string;
+  first_learning_content_url: string | null;
 }
 
 export interface Career {
@@ -38,12 +43,8 @@ export interface Category {
 }
 
 export interface Tutor {
-  id:                  number;
-  name:                string;
-  username:            string;
-  profile_picture_url: null;
-  
+  id:                  number | null;
+  name:                string | null;
+  username:            string | null;
+  profile_picture_url: string | null;
 }
-
-
-

@@ -28,6 +28,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/private/learning/home/home.component').then((c) => c.HomeComponent)
       },
       {
+  path: 'results',
+  loadComponent: () => import('./pages/private/learning/result/result.component').then(c => c.ResultComponent)
+}
+,
+      {
         path: 'path',
         loadComponent: () => import('./pages/private/learning/path/path.component').then((c) => c.PathComponent)
       },

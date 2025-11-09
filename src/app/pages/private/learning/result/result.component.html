@@ -1,0 +1,99 @@
+<div class="results-wrap">
+  <header class="results-header">
+    <h2 *ngIf="q; else allTitle">Resultados para “{{ q }}”</h2>
+    <ng-template #allTitle><h2>Resultados</h2></ng-template>
+    <p class="hint">Mostrando cursos coincidentes por título, categoría, carrera o tutor.</p>
+  </header>
+
+  <section class="results-list">
+    <!-- Items reales -->
+    <article
+      class="result-row"
+      *ngFor="let course of courses"
+      (click)="viewCourse(course)"
+    >
+      <!-- Thumbnail -->
+      <figure class="thumb" [class.thumb-null]="!course.thumbnail_url">
+        <img
+          *ngIf="course.thumbnail_url; else thumbNull"
+          [src]="course.thumbnail_url"
+          alt=""
+          loading="lazy"
+        />
+        <ng-template #thumbNull>
+          <div class="thumb-null-frame">
+            <div class="badge">CURSO</div>
+            <div class="title">{{ course.title }}</div>
+          </div>
+        </ng-template>
+      </figure>
+
+      <!-- Meta -->
+      <div class="meta">
+        <h3 class="title" (click)="$event.stopPropagation(); viewCourse(course)">
+          {{ course.title }}
+        </h3>
+
+        <div class="byline">
+          <div class="tutor" (click)="$event.stopPropagation(); viewPortfolio(course.tutor?.username)">
+            <div class="avatar">
+              <img
+                *ngIf="course.tutor?.profile_picture_url; else avatarFallback"
+                [src]="course.tutor?.profile_picture_url!"
+                alt=""
+                loading="lazy"
+              />
+              <ng-template #avatarFallback>
+                <img
+                  *ngIf="course.tutor?.name; else avatarBuho"
+                  src="img/avatar/default-profile-green.png"
+                  alt=""
+                  loading="lazy"
+                />
+                <ng-template #avatarBuho>
+                  <img src="img/logo/jpg/digi-mentor-solo-buho.jpg" alt="" loading="lazy" />
+                </ng-template>
+              </ng-template>
+            </div>
+            <span class="tutor-name">{{ course.tutor?.name || 'Digi Mentor' }}</span>
+          </div>
+
+          <span class="dot">•</span>
+          <span class="date">{{ course.created_at }}</span>
+        </div>
+
+        <p class="desc">
+          {{ course.description }}
+        </p>
+
+        <div class="badges">
+          <span class="chip" *ngIf="course.category?.name">{{ course.category?.name }}</span>
+          <span class="chip" *ngIf="course.difficulty?.name">{{ course.difficulty?.name }}</span>
+
+          <div class="careers" *ngIf="course.careers.length">
+            <img *ngFor="let c of course.careers" [src]="c.logo_url" alt="" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Skeletons (al cargar) -->
+    <article class="result-row skeleton" *ngFor="let _ of skeletons" [class.show]="loading">
+      <div class="thumb">
+        <div class="sk sk-thumb"></div>
+      </div>
+      <div class="meta">
+        <div class="sk sk-line lg"></div>
+        <div class="sk sk-line md"></div>
+        <div class="sk sk-line sm"></div>
+        <div class="sk sk-chip"></div>
+      </div>
+    </article>
+
+    <!-- Vacío -->
+    <div class="empty" *ngIf="!loading && courses.length === 0">
+      Sin resultados.
+    </div>
+  </section>
+</div>
+

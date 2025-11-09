@@ -1,0 +1,136 @@
+/* Contenedor */
+.search-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+/* Barra */
+.search-bar {
+  display: grid;
+  grid-template-columns: 40px 1fr 36px;
+  align-items: center;
+  gap: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 6px 6px 6px 8px;
+  box-shadow: 0 1px 2px var(--shadow-color);
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.search-bar:hover {
+  border-color: var(--border-color-contrast);
+  background: var(--background-hover);
+}
+
+.search-bar.open {
+  box-shadow: 0 6px 24px var(--shadow-color);
+}
+
+/* Ícono prefix */
+.prefix {
+  display: grid;
+  place-items: center;
+  opacity: .9;
+}
+
+/* Input */
+.search-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--text-color);
+  font: 500 0.95rem/1.2 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+  padding: 6px 0;
+}
+
+.search-input::placeholder {
+  color: var(--text-color-secondary);
+}
+
+/* Botón limpiar */
+.clear-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.clear-btn:hover {
+  background: var(--background-hover);
+}
+
+/* Panel de sugerencias */
+.suggestions {
+  position: absolute;
+  inset-inline: 0;
+  margin-top: 8px;
+  background: var(--dialog-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px var(--shadow-color);
+  max-height: min(50vh, 420px);
+  overflow: auto;
+  padding: 6px;
+  z-index: 10;
+}
+
+.loading,
+.empty {
+  padding: 10px 12px;
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+}
+
+/* Ítems */
+.suggestion-item {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--text-color);
+  text-align: left;
+  transition: background .12s ease;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+  background: var(--background-hover);
+}
+
+.suggestion-item .text {
+  font-size: .95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge */
+.badge {
+  font-size: 0.72rem;
+  color: var(--text-color-contrast);
+  background: var(--sev-secondary);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .search-wrap { max-width: 100%; }
+  .suggestions { border-radius: 12px; }
+}

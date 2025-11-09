@@ -166,8 +166,8 @@
     align-items: center;
     height: 100%;
     /* background-color: blue; */
-    flex: content;
-    
+    flex: 1;
+   
 }
 /* From Uiverse.io by vnuny */ 
 .container {
