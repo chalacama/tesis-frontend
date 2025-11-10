@@ -185,7 +185,10 @@ myPortfolio() {
       }
     });
   }
-    
+  
+  isTutor(): boolean {
+    return this.authService.hasRole('tutor');
+  }
 
 
 

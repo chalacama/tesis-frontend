@@ -86,7 +86,7 @@
                     </div>
                 </div> -->
             
-            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="viewPortfolio(usuario.username)">
+            <label *ngIf="isTutor()"  onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="viewPortfolio(usuario.username)">
 
                 <input name="page" type="radio"
                     [checked]="currentRoute === 'learning/portfolio/@' + usuario.username" />
