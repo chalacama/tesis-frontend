@@ -33,8 +33,22 @@ export const routes: Routes = [
 }
 ,
       {
-        path: 'path',
-        loadComponent: () => import('./pages/private/learning/path/path.component').then((c) => c.PathComponent)
+        path: 'me',
+        loadComponent: () => import('./pages/private/learning/path/path.component').then((c) => c.PathComponent),
+        children: [
+            {
+            path: 'historial',
+            loadComponent: () => import('./pages/private/learning/path/history/history.component').then((c) => c.HistoryComponent)
+            },
+            {
+              path: 'completados',
+              loadComponent: () => import('./pages/private/learning/path/history/history.component').then((c) => c.HistoryComponent)
+            },
+            {
+              path: 'guardados',
+              loadComponent: () => import('./pages/private/learning/path/history/history.component').then((c) => c.HistoryComponent)
+            },
+          ]
       },
       {
         path: 'certification',
@@ -42,7 +56,17 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () => import('./pages/private/learning/profile/profile.component').then((c) => c.ProfileComponent)
+        loadComponent: () => import('./pages/private/learning/profile/profile.component').then((c) => c.ProfileComponent),
+        children: [
+            {
+            path: 'information',
+            loadComponent: () => import('./pages/private/learning/profile/information/information.component').then((c) => c.InformationComponent)
+            },
+            {
+              path: 'education',
+              loadComponent: () => import('./pages/private/learning/profile/education/education.component').then((c) => c.EducationComponent)
+            }
+          ]
       },
       
       {

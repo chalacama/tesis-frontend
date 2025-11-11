@@ -1,0 +1,69 @@
+.path {
+  display: grid;
+  gap: 1rem;
+}
+
+.profile-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1rem;
+  align-items: center;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  position: relative;
+}
+.avatar img, .avatar-initials {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  object-fit: cover;
+  background: var(--background-hover);
+  color: var(--text-color);
+  font-weight: 700;
+  font-size: 1.25rem;
+  border: 1px solid var(--border-color);
+}
+
+.info .welcome {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-color);
+}
+.info .meta {
+  color: var(--text-color-secondary);
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  font-size: .9rem;
+}
+.meta .dot { opacity: .6; }
+
+.tabs {
+  display: flex;
+  gap: .5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.tabs a {
+  padding: .6rem 1rem;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 10px 10px 0 0;
+  color: var(--text-color-secondary);
+  text-decoration: none;
+}
+.tabs a.active {
+  color: var(--text-color);
+  border-color: var(--border-color);
+  border-bottom-color: var(--active-color);
+  background: var(--background-hover);
+}

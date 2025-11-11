@@ -1,0 +1,89 @@
+<section class="history">
+  <!-- Skeleton inicial -->
+  <ng-container *ngIf="loadingInitial(); else contentTpl">
+    <div class="grid">
+      <div class="card skeleton" *ngFor="let i of [0,1,2,3,4,5]">
+        <div class="thumb sk"></div>
+        <div class="body">
+          <div class="line sk w-70"></div>
+          <div class="line sk w-50"></div>
+          <div class="owner">
+            <div class="avatar sk"></div>
+            <div class="line sk w-40"></div>
+          </div>
+          <div class="line sk w-60"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Contenido -->
+  <ng-template #contentTpl>
+    <div class="grid">
+      <article class="card" *ngFor="let c of items()">
+        <div class="thumb">
+          <img *ngIf="c.miniature_url; else noimg" [src]="c.miniature_url!" alt="miniatura" />
+          <ng-template #noimg>
+            <div class="noimg">Sin imagen</div>
+          </ng-template>
+          <div class="badge" *ngIf="c.certificate">🎓 Certificado</div>
+        </div>
+
+        <div class="body">
+          <h3 class="title">{{ c.title }}</h3>
+          <p class="created">Creado: {{ c.created_at | date:'mediumDate' }}</p>
+
+          <div class="owner">
+            <ng-container *ngIf="ownerAvatar(c.owner).url; else ownerIni">
+              <img class="avatar" [src]="ownerAvatar(c.owner).url!" alt="owner" />
+            </ng-container>
+            <ng-template #ownerIni>
+              <div class="avatar initials">{{ ownerAvatar(c.owner).initials }}</div>
+            </ng-template>
+            <span class="owner-name">{{ ownerDisplay(c.owner) }}</span>
+            <span class="owner-username" *ngIf="c.owner.username">&nbsp;{{ '@' + c.owner.username }}</span>
+          </div>
+
+          <div class="progress">
+            <div class="bar"><div class="fill" [style.width.%]="c.completion_percent"></div></div>
+            <span class="pct">{{ c.completion_percent +'%' }}</span>
+          </div>
+
+            <div class="meta">
+            <ng-container *ngIf="c.certificate; else nocert">
+              <div class="cert">Código: {{ c.certificate.code }} • {{ c.certificate.created_at | date:'medium' }}</div>
+            </ng-container>
+            <ng-template #nocert>
+              <div class="cert none">Sin certificado</div>
+            </ng-template>
+
+            <div *ngIf="type() === 'historial' && $any(c)['last_chapter']">
+              Último capítulo: {{ $any(c)['last_chapter']?.title }} · {{ $any(c)['last_seen_at'] | date:'short' }}
+            </div>
+
+            <div *ngIf="type() === 'guardados' && $any(c)['saved_updated_at']">
+              Guardado: {{ $any(c)['saved_updated_at'] | date:'short' }}
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Loader al paginar -->
+    <div class="more" *ngIf="loadingMore()">
+      <div class="dot sk"></div><div class="dot sk"></div><div class="dot sk"></div>
+    </div>
+
+    <!-- Sentinel para IO -->
+    <div #sentinel class="sentinel"></div>
+
+    <!-- Fin -->
+    <div class="end" *ngIf="!loadingMore() && !nextPageUrl && items().length > 0">
+      No hay más cursos
+    </div>
+    <div class="empty" *ngIf="!loadingInitial() && items().length === 0">
+      No hay elementos para mostrar.
+    </div>
+  </ng-template>
+</section>
+

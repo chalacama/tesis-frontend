@@ -48,11 +48,11 @@
                     <span class="label-txt">Home</span>
                 </div>
             </label>
-            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo('learning/path')">
-                <input name="page" type="radio" [checked]="currentRoute === 'learning/path'" />
+            <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo('learning/me/historial')">
+                <input name="page" type="radio" [checked]="currentRoute === 'learning/me/historial' || currentRoute === 'learning/me/guardados' || currentRoute === 'learning/me/completados' " />
                 <div class="icon-navegation">
-                    <svg *ngIf="currentRoute !== 'learning/path'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 19l-5.21 1.737a.6.6 0 0 1-.79-.57V5.433a.6.6 0 0 1 .41-.569L9 3m0 16l6 2m-6-2V3m6 18l5.59-1.863a.6.6 0 0 0 .41-.57V3.832a.6.6 0 0 0-.79-.569L15 5m0 16V5m0 0L9 3"/></svg>
-                    <svg *ngIf="currentRoute === 'learning/path'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <svg *ngIf="currentRoute !== 'learning/me/historial' && currentRoute !== 'learning/me/guardados' && currentRoute !== 'learning/me/completados' " class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 19l-5.21 1.737a.6.6 0 0 1-.79-.57V5.433a.6.6 0 0 1 .41-.569L9 3m0 16l6 2m-6-2V3m6 18l5.59-1.863a.6.6 0 0 0 .41-.57V3.832a.6.6 0 0 0-.79-.569L15 5m0 16V5m0 0L9 3"/></svg>
+                    <svg *ngIf="currentRoute === 'learning/me/historial' || currentRoute === 'learning/me/guardados' || currentRoute === 'learning/me/completados' " class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                         <path fill="inherit" d="m0 3l5-2v12l-5 2zM6 .5l5 3V15l-5-2.5zm6 3l4-3v12l-4 3z" />
                     </svg>
                     <span class="underline"></span>
@@ -176,7 +176,7 @@
                             </div>
                         </div>
                         <div class="dropdown_body">
-                            <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="navigateTo('learning/profile')" class="dropdown_item">
+                            <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="navigateTo('learning/profile/information')" class="dropdown_item">
                                 <div class="dropdown_item_icon">
                                     <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path fill="currentColor" fill-rule="evenodd"
