@@ -1,20 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { HistoryItem, HistoryType, PaginatedResponse } from '../../../../../core/api/history/history.interface'; // ajusta rutas
+import {
+  AfterViewInit, Component, DestroyRef, ElementRef, HostListener,
+  OnDestroy, OnInit, ViewChild, inject, signal
+} from '@angular/core';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { HistoryItem, HistoryType, PaginatedResponse } from '../../../../../core/api/history/history.interface';
 import { HistoryService } from '../../../../../core/api/history/history.service';
+import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
+
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, IconComponent],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.css']
 })
 export class HistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private history = inject(HistoryService);
   private destroyRef = inject(DestroyRef);
+
+  // Imagen por defecto (ponla en assets si puedes)
+  readonly DEFAULT_COVER = 'img/cover/portada-miniature.png';
 
   items = signal<HistoryItem[]>([]);
   type = signal<HistoryType>('historial');
@@ -23,16 +32,17 @@ export class HistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   loadingMore = signal(false);
   nextPageUrl: string | null = null;
 
+  // Menú "más"
+  openMenuId = signal<number | null>(null);
+
   @ViewChild('sentinel', { static: false }) sentinel?: ElementRef<HTMLElement>;
   private io?: IntersectionObserver;
 
   ngOnInit(): void {
-    // Detecta el tipo por la ruta actual (historial|guardados|completados)
     const t = (this.route.snapshot.routeConfig?.path ?? 'historial') as HistoryType;
     this.type.set(t);
     this.fetch(true);
 
-    // Si reusan el mismo componente para otras rutas, escucha cambios:
     this.route.url.subscribe(() => {
       const nt = (this.route.snapshot.routeConfig?.path ?? 'historial') as HistoryType;
       if (nt !== this.type()) {
@@ -43,13 +53,12 @@ export class HistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // IntersectionObserver para scroll infinito
     this.io = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry.isIntersecting && this.nextPageUrl && !this.loadingMore()) {
         this.loadMore();
       }
-    }, { rootMargin: '600px 0px 0px 0px' }); // precarga
+    }, { rootMargin: '600px 0px 0px 0px' });
     if (this.sentinel?.nativeElement) this.io.observe(this.sentinel.nativeElement);
   }
 
@@ -105,5 +114,30 @@ export class HistoryComponent implements OnInit, AfterViewInit, OnDestroy {
     const initials = src.split(/\s+/).filter(Boolean).slice(0, 2).map(s => s[0]?.toUpperCase() ?? '').join('') || 'U';
     return { url, initials };
   }
-}
 
+  // Menú "más"
+  toggleMenu(courseId: number, ev: MouseEvent) {
+    ev.stopPropagation();
+    this.openMenuId.set(this.openMenuId() === courseId ? null : courseId);
+  }
+  closeMenus() { this.openMenuId.set(null); }
+
+  @HostListener('document:click')
+  onDocClick() { this.closeMenus(); }
+
+  // Acciones certificado
+  previewCertificate(code?: string) {
+    if (!code) return;
+    // respeta tu ruta definida literalmente: 'certificate:code'
+    this.router.navigate([`/certificate${code}`]);
+    this.closeMenus();
+  }
+
+  downloadCertificate(code?: string) {
+    if (!code) return;
+    console.log(`Descargando certificado con código: ${code}`);
+  }
+  goToCourse(course: any) {
+    this.router.navigate([`learning/course/${course.title}/${course.id}`]);
+  }
+}

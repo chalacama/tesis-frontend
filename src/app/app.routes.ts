@@ -30,6 +30,10 @@ export const routes: Routes = [
       {
   path: 'results',
   loadComponent: () => import('./pages/private/learning/result/result.component').then(c => c.ResultComponent)
+},
+{
+  path: 'certificate:code',
+  loadComponent: () => import('./pages/private/learning/certificate/certificate.component').then(c => c.CertificateComponent)
 }
 ,
       {
@@ -94,7 +98,24 @@ export const routes: Routes = [
     },
       {
         path: 'portfolio/:username',
-        loadComponent: () => import('./pages/private/learning/portfolio/portfolio.component').then((c) => c.PortfolioComponent)
+        loadComponent: () => import('./pages/private/learning/portfolio/portfolio.component').then((c) => c.PortfolioComponent),
+        children: [
+          {
+      path: '',
+      redirectTo: 'courses',
+      pathMatch: 'full'
+    },
+          {
+            path: 'courses',
+            loadComponent: () => import('./pages/private/learning/portfolio/user-courses/user-courses.component').then((c) => c.UserCoursesComponent),
+            
+          },
+          {
+            path: 'collaborations',
+            loadComponent: () => import('./pages/private/learning/portfolio/user-courses/user-courses.component').then((c) => c.UserCoursesComponent),
+            
+          },
+        ]
 
       },
       ]
@@ -104,6 +125,11 @@ export const routes: Routes = [
         canActivate: [studioGuard],
         loadComponent: () => import('./pages/private/studio/studio.component').then((c) => c.StudioComponent),
         children: [
+          {
+      path: '',
+      redirectTo: 'courses',
+      pathMatch: 'full'
+    },
           {
             path: 'courses',
             loadComponent: () => import('./pages/private/studio/manage.courses/courses/courses.component').then((c) => c.CoursesComponent),

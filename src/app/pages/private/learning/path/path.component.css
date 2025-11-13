@@ -7,12 +7,12 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  /* background: var(--card-bg); */
+  /* border: 1px solid var(--border-color); */
+  /* border-radius: 16px; */
   padding: 1rem;
   align-items: center;
-  box-shadow: 0 4px 12px var(--shadow-color);
+  /* box-shadow: 0 4px 12px var(--shadow-color); */
 }
 
 .avatar {
@@ -55,15 +55,16 @@
 }
 .tabs a {
   padding: .6rem 1rem;
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
   border-bottom: 2px solid transparent;
-  border-radius: 10px 10px 0 0;
+  /* border-radius: 10px 10px 0 0; */
   color: var(--text-color-secondary);
   text-decoration: none;
+  
 }
 .tabs a.active {
   color: var(--text-color);
   border-color: var(--border-color);
   border-bottom-color: var(--active-color);
-  background: var(--background-hover);
+  /* background: var(--background-hover); */
 }
