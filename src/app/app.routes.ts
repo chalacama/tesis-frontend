@@ -189,16 +189,25 @@ export const routes: Routes = [
         {
             path: 'module/:module/chapter/:chapter',
             loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/chapter.component').then((c) => c.ChapterComponent),
-            // children: [
-            //   {
-            //     path: 'content',
-            //     loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component').then((c) => c.ContentLearningComponent)
-            //   },
-            //   {
-            //     path: 'test',
-            //     loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/test/test.component').then((c) => c.TestComponent)
-            //   }
-            // ]
+            children: [
+              {
+                path: '',
+                redirectTo: 'content',
+                pathMatch: 'full'
+              },
+              {
+                path: 'detail',
+                loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/chap-detail/chap-detail.component').then((c) => c.ChapDetailComponent)
+              },
+              {
+                path: 'content',
+                loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component').then((c) => c.ContentLearningComponent)
+              },
+              {
+                path: 'test',
+                loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/question/question.component').then((c) => c.QuestionComponent)
+              }
+            ]
         },
         {
           path: 'analytic',

@@ -1,0 +1,58 @@
+<div class="panel-placeholder">
+  <!-- mensaje de error opcional -->
+  <p *ngIf="error()" class="error-message">
+    {{ error() }}
+  </p>
+
+  <form [formGroup]="detailsForm" class="chapter-details">
+    <ui-input-label
+      formControlName="title"
+      [label]="{ label: 'Título' }"
+      severity="primary"
+      placeholder="Escribe un título claro y único"
+      type="text"
+      variant="outlined"
+      [max]="255"
+      [autoSize]="true"
+      [invalid]="detailsForm.get('title')?.invalid && detailsForm.get('title')?.touched">
+    </ui-input-label>
+
+    <ui-input-label
+      formControlName="description"
+      [label]="{ label: 'Descripción' }"
+      severity="primary"
+      placeholder="Añade una descripción (opcional)"
+      type="textarea"
+      variant="outlined"
+      [max]="1000"
+      [autoSize]="true"
+      [invalid]="detailsForm.get('description')?.invalid && detailsForm.get('description')?.touched">
+    </ui-input-label>
+  </form>
+
+  <div class="chapter-actions">
+    <ui-button
+      [disabled]="detailsForm.pristine || !detailsHasChanges()"
+      (click)="resetDetails()"
+      label="Restablecer"
+      [icon]="{ svgPath: 'svg/clear-all.svg' }"
+      severity="secondary">
+    </ui-button>
+
+    <ui-button
+      [disabled]="detailsForm.invalid || !detailsHasChanges()"
+      (click)="saveDetails()"
+      label="Guardar"
+      [icon]="{ svgPath: 'svg/save-outline.svg' }"
+      severity="primary">
+    </ui-button>
+  </div>
+
+  <ui-loading-bar
+    [visible]="saving()"
+    [mask]="{ type: 'dimmed' }">
+  </ui-loading-bar>
+
+  <ui-toast></ui-toast>
+</div>
+
