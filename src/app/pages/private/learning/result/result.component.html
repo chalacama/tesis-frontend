@@ -66,14 +66,7 @@
           {{ course.description }}
         </p>
 
-        <div class="badges">
-          <span class="chip" *ngIf="course.category?.name">{{ course.category?.name }}</span>
-          <span class="chip" *ngIf="course.difficulty?.name">{{ course.difficulty?.name }}</span>
-
-          <div class="careers" *ngIf="course.careers.length">
-            <img *ngFor="let c of course.careers" [src]="c.logo_url" alt="" loading="lazy" />
-          </div>
-        </div>
+        
       </div>
     </article>
 

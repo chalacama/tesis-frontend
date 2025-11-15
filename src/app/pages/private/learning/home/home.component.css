@@ -48,16 +48,16 @@
     margin: 10px;
     padding: 10px;
     border: none;
-    border-radius: 5px;
-    background-color: var(--sev-contrast);
-    color: var(--text-color-contrast);
+    border-radius: 20px;
+    background-color: var(--sev-secondary);
+    /* color: var(--text-color-contrast); */
     cursor: pointer;
 
     
 }
 .btn-filter_active{
-    background-color: var(--sev-primary);
-    color: var(--text-color);
+    background-color: var(--sev-contrast);
+    color: var(--text-color-contrast);
 }
 /* From Uiverse.io by satyamchaudharydev */ 
 /* this is a recreation of twitter search in css */
@@ -283,6 +283,7 @@ input:-webkit-autofill:active {
 
 .card_content_profile-info{
     margin-left: 10px;
+    flex: 1;
 }
 .card_content{
     width: 100%;
@@ -296,6 +297,100 @@ input:-webkit-autofill:active {
 .card_content_profile_title{
  font-size: 13px;
  font-weight: 600;
+}
+/* Preview tipo GIF (video intro) */
+.card_view_video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 7px;
+  background-color: #000000;
+  display: block;
+}
+
+/* Meta info: fecha + registrados */
+.card_content_meta {
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  gap: 10px;
+  font-size: 11px;
+  /* margin-top: 2px; */
+  color: var(--text-color-secondary);
+  width: 100%;
+}
+
+/* .card_content_date-text {
+  white-space: nowrap;
+}
+
+.card_content_registrations {
+  white-space: nowrap;
+} */
+
+/* SKELETON LOADING */
+.card-skeleton {
+  pointer-events: none; /* que no se pueda hacer click mientras carga */
+}
+
+.card-skeleton .skeleton-box,
+.card-skeleton .skeleton-circle,
+.card-skeleton .skeleton-line {
+  position: relative;
+  overflow: hidden;
+  background: var(--background-skeleton);
+}
+
+/* miniatura skeleton */
+.card-skeleton .skeleton-box {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 7px;
+}
+
+/* avatar skeleton */
+.card-skeleton .skeleton-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/* líneas de texto skeleton */
+.card-skeleton .skeleton-line {
+  height: 10px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.card-skeleton .skeleton-line.short {
+  width: 80%;
+}
+
+.card-skeleton .skeleton-line.shorter {
+  width: 60%;
+}
+
+/* efecto shimmer */
+.card-skeleton .skeleton-box::before,
+.card-skeleton .skeleton-circle::before,
+.card-skeleton .skeleton-line::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 

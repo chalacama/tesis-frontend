@@ -1,15 +1,25 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { PortfolioService } from '../../../../core/api/profile/portfolio.service';
 import { AuthService } from '../../../../core/api/auth/auth.service';
 import { Portfolio } from '../../../../core/api/profile/portfolio.interface';
+import { IconComponent } from '../../../../shared/UI/components/button/icon/icon.component';
+import { PortfolioBridgeService } from '../../../../core/api/profile/portfolio-bridge.service';
 
 @Component({
   selector: 'app-portfolio',
   standalone: true,
-  imports: [CommonModule, DatePipe, NgOptimizedImage],
+  imports: [
+    CommonModule,
+    DatePipe,
+    NgOptimizedImage,
+    IconComponent,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet
+  ],
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.css',
   host: { class: 'portfolio-page' }
@@ -45,14 +55,22 @@ export class PortfolioComponent implements OnInit {
     const p = this.portfolio();
     if (!p) return '';
     const n = `${p.name ?? ''} ${p.lastname ?? ''}`.trim();
-    return n.split(' ').filter(Boolean).slice(0, 2).map(s => s[0]?.toUpperCase() ?? '').join('');
+    return n
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(s => s[0]?.toUpperCase() ?? '')
+      .join('');
   });
+
+  readonly gmailChatUrl = 'https://mail.google.com/chat/u/0/#chat/home';
 
   constructor(
     private router: Router,
     private portfolioService: PortfolioService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private portfolioBridge: PortfolioBridgeService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +110,15 @@ export class PortfolioComponent implements OnInit {
     }
   }
 
-  // Acciones de cabecera simuladas (placeholder)
-  onFollow() { /* TODO: integrar 'seguir' o 'suscribirse' si aplica */ }
-  onJoin() { /* TODO: integrar una acción premium/miembro si aplica */ }
+  /** Enlace directo a redactar correo en Gmail al dueño del portafolio */
+  getGmailComposeUrl(email: string | null | undefined): string {
+    if (!email) return 'https://mail.google.com/';
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+  }
+
+  /** Click en la lupa: por ahora abre un prompt y manda el término al bridge */
+  onSearchClick(): void {
+    const term = window.prompt('Buscar curso por nombre:') ?? '';
+    this.portfolioBridge.setSearchTerm(term.trim());
+  }
 }

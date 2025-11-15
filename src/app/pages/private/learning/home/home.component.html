@@ -1,92 +1,145 @@
-<div #scrollContainer  class="container-home" (scroll)="onContainerScroll()">
-    <div class="container-header">
-
-        
-        
-        <div class="header_btn-filter">
-            <button class="btn-filter" (click)="changeFilter('all')"
-                [class.btn-filter_active]="filter === 'all'">Todos</button>
-            <button class="btn-filter" (click)="changeFilter('recommended')"
-                [class.btn-filter_active]="filter === 'recommended'">Recomendados</button>
-            <button class="btn-filter" (click)="changeFilter('created')"
-                [class.btn-filter_active]="filter === 'created'">Recientes</button>
-            <button class="btn-filter" (click)="changeFilter('best_rated')"
-                [class.btn-filter_active]="filter === 'best_rated'">Mejores valorados</button>
-            <button class="btn-filter" (click)="changeFilter('popular')"
-                [class.btn-filter_active]="filter === 'popular'">Populares</button>
+<div #scrollContainer class="container-home" (scroll)="onContainerScroll()">
+  <div class="container-header">
+    <div class="header_btn-filter">
+      <button class="btn-filter" (click)="changeFilter('all')"
+        [class.btn-filter_active]="filter === 'all'">Todos</button>
+      <button class="btn-filter" (click)="changeFilter('recommended')"
+        [class.btn-filter_active]="filter === 'recommended'">Recomendados</button>
+      <button class="btn-filter" (click)="changeFilter('created')"
+        [class.btn-filter_active]="filter === 'created'">Recientes</button>
+      <button class="btn-filter" (click)="changeFilter('best_rated')"
+        [class.btn-filter_active]="filter === 'best_rated'">Mejores valorados</button>
+      <button class="btn-filter" (click)="changeFilter('popular')"
+        [class.btn-filter_active]="filter === 'popular'">Populares</button>
     </div>
-    </div>
-    <div class="container-body">
-        
-        <div class="container-card">
-            <div class="card" *ngFor="let course of courses">
-                <div (click)="viewCourse(course)"  class="card_view">
-                    <div *ngIf="course.thumbnail_url" class="card_view_img">
-                        <img [src]="course.thumbnail_url" src="" alt="">
-                    </div>
-                    <div *ngIf="course.thumbnail_url === null" class="card_view_img">
+  </div>
 
-                        <img src="img\cover\portada-miniature.png" alt="">
-                        <div class="card_view_data_null">
-                            <p>CURSO</p>
-                            <p>{{ course.title}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card_content">
-                    <div class="card_content_profile">
-                        <div (click)="viewPortfolio(course.tutor?.username)"  *ngIf="course.tutor?.profile_picture_url" class="card_content_profile_img">
-                            <img [src]="course.tutor?.profile_picture_url" alt="">
-                        </div>
-                        <div *ngIf="course.tutor?.profile_picture_url === null  && course.tutor?.name === null "
-                            class="card_content_profile_img">
-                            <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
-                        </div>
-                        <div (click)="viewPortfolio(course.tutor?.username)" *ngIf="course.tutor?.profile_picture_url === null && course.tutor?.name"
-                            class="card_content_profile_img">
-                            <img src="img/avatar/default-profile-green.png" alt="">
-                        </div>
-                        <div class="card_content_profile-info">
-                            <div class="card_content_profile_title">
-                                <p>{{ course.title }}</p>
-                            </div>
-                            <div class="card_content_profile_name">
-                                <p>{{ course.tutor?.name || 'Digi Mentor' }}</p>
-                            </div>
-                            <div class="card_content_date display-none">
-                                <p>{{ course.created_at }}</p>
-                            </div>
-                            <div class="card_view_data display-none">
-                                <div class="card_view_data_career" *ngFor="let career of course.careers">
-                                    <img [src]="career.logo_url" alt="">
-                                </div>
-                            </div>
+  <div class="container-body">
+    <div class="container-card">
 
-                        </div>
-
-
-                    </div>
-                    <div class="card_content_details display-none">
-                        <div class="card_content_details_description">
-                            <p>{{ course.description }}</p>
-                        </div>
-
-                    </div>
-                    <div class="card_content_actions display-none">
-                        <div class="card_content_actions_save">
-
-                        </div>
-                    </div>
-                </div>
+      <!-- SKELETON: carga inicial -->
+      <ng-container *ngIf="loading && courses.length === 0">
+        <div class="card card-skeleton" *ngFor="let _ of skeletonItems">
+          <div class="card_view">
+            <div class="card_view_img">
+              <div class="skeleton-box"></div>
             </div>
+          </div>
+          <div class="card_content">
+            <div class="card_content_profile">
+              <div class="card_content_profile_img">
+                <div class="skeleton-circle"></div>
+              </div>
+              <div class="card_content_profile-info">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- TARJETAS DE CURSO (diseño original, con pequeños extras) -->
+      <div class="card" *ngFor="let course of courses">
+        <div (click)="viewCourse(course)" class="card_view">
+          <!-- Miniatura con preview tipo GIF (video) -->
+          <div *ngIf="course.thumbnail_url"
+               class="card_view_img"
+               (mouseenter)="onThumbnailEnter(course)"
+               (mouseleave)="onThumbnailLeave(course)">
+            <ng-container *ngIf="!isPreviewActive(course); else videoPreview">
+              <img [src]="course.thumbnail_url" alt="">
+            </ng-container>
+            <ng-template #videoPreview>
+              <video
+                class="card_view_video"
+                [src]="course.first_learning_content_url"
+                autoplay
+                muted
+                loop
+                playsinline>
+              </video>
+            </ng-template>
+          </div>
+
+          <div *ngIf="course.thumbnail_url === null" class="card_view_img">
+            <img src="img\cover\portada-miniature.png" alt="">
+            <div class="card_view_data_null">
+              <p>CURSO</p>
+              <p>{{ course.title }}</p>
+            </div>
+          </div>
         </div>
 
+        <div class="card_content">
+          <div class="card_content_profile">
+            <div (click)="viewPortfolio(course.tutor?.username)"
+                 *ngIf="course.tutor?.profile_picture_url"
+                 class="card_content_profile_img">
+              <img [src]="course.tutor?.profile_picture_url" alt="">
+            </div>
+
+            <div *ngIf="course.tutor?.profile_picture_url === null && course.tutor?.name === null"
+                 class="card_content_profile_img">
+              <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
+            </div>
+
+            <div (click)="viewPortfolio(course.tutor?.username)"
+                 *ngIf="course.tutor?.profile_picture_url === null && course.tutor?.name"
+                 class="card_content_profile_img">
+              <img src="img/avatar/default-profile-green.png" alt="">
+            </div>
+
+            <div class="card_content_profile-info">
+              <div class="card_content_profile_title">
+                <p>{{ course.title }}</p>
+              </div>
+              <div class="card_content_profile_name">
+                <p>{{ course.tutor?.name || 'Digi Mentor' }}</p>
+              </div>
+
+              <!-- NUEVA FILA: fecha + registrados -->
+              <div class="card_content_meta">
+                <span class="card_content_registrations">
+                  {{ getRegistrations(course) }} registrados
+                </span>
+                <span class="card_content_date-text">
+                  {{ course.created_at}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card_content_details display-none">
+            <div class="card_content_details_description">
+              <p>{{ course.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SKELETON: al cargar más (scroll) -->
+      <ng-container *ngIf="loading && courses.length > 0">
+        <div class="card card-skeleton" *ngFor="let _ of moreSkeletonItems">
+          <div class="card_view">
+            <div class="card_view_img">
+              <div class="skeleton-box"></div>
+            </div>
+          </div>
+          <div class="card_content">
+            <div class="card_content_profile">
+              <div class="card_content_profile_img">
+                <div class="skeleton-circle"></div>
+              </div>
+              <div class="card_content_profile-info">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
 
     </div>
-
-
-
-
-
-
+  </div>
 </div>

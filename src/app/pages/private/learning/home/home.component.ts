@@ -1,4 +1,4 @@
-import { Component, OnInit,HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Course } from '../../../../core/api/start/start.interfaces';
 import { StartService } from '../../../../core/api/start/start.service';
 import { CommonModule } from '@angular/common';
@@ -11,17 +11,31 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  courses : Course[] = [];
+  courses: Course[] = [];
   filter: string = 'all';
   page: number = 1;
   perPage: number = 9;
   hasMore: boolean = true;
   loading: boolean = false;
+
+  // Skeletons
+  skeletonItems: number[] = [];
+  moreSkeletonItems: number[] = [];
+
+  // Preview tipo GIF (video)
+  previewCourseId: number | null = null;
+
   constructor(private startService: StartService, private router: Router) {}
 
   ngOnInit(): void {
+    // Skeletons (mismo número que perPage)
+    this.skeletonItems = Array.from({ length: this.perPage }, (_, i) => i);
+    // Skeletons pequeños para "cargar más"
+    this.moreSkeletonItems = Array.from({ length: 3 }, (_, i) => i);
+
     this.loadCourses();
   }
+
   loadCourses(): void {
     if (this.loading || !this.hasMore) return;
 
@@ -46,7 +60,7 @@ export class HomeComponent implements OnInit {
   }
 
   changeFilter(newFilter: string): void {
-    if (this.filter === newFilter) return; // evita recarga innecesaria
+    if (this.filter === newFilter) return;
     this.filter = newFilter;
     this.page = 1;
     this.hasMore = true;
@@ -56,26 +70,52 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-onContainerScroll(): void {
-  const container = this.scrollContainer.nativeElement;
-  const scrollThreshold = 100;
+  onContainerScroll(): void {
+    const container = this.scrollContainer.nativeElement;
+    const scrollThreshold = 100;
 
-  const scrollPos = container.scrollTop + container.clientHeight;
-  const scrollHeight = container.scrollHeight;
+    const scrollPos = container.scrollTop + container.clientHeight;
+    const scrollHeight = container.scrollHeight;
 
-  if (scrollHeight - scrollPos < scrollThreshold) {
-    this.loadCourses();
+    if (scrollHeight - scrollPos < scrollThreshold) {
+      this.loadCourses();
+    }
   }
-}
-viewPortfolio(username?: string | null) {
-  if (!username) return; // guard clause
-  this.router.navigate(['/learning/portfolio/@' + username]);
-}
 
-titleCoursePath (title: string) {
+  viewPortfolio(username?: string | null) {
+    if (!username) return;
+    this.router.navigate(['/learning/portfolio/@' + username]);
+  }
+
+  titleCoursePath(title: string) {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-}
-viewCourse(course: any) {
-    this.router.navigate(['/learning/course/'+this.titleCoursePath(course.title)+'/'+course.id]);
-}
+  }
+
+  viewCourse(course: any) {
+    this.router.navigate(['/learning/course/' + this.titleCoursePath(course.title) + '/' + course.id]);
+  }
+
+  /* ==== Preview tipo GIF (video intro) ==== */
+
+  onThumbnailEnter(course: Course): void {
+    if (course.first_learning_content_url) {
+      this.previewCourseId = course.id;
+    }
+  }
+
+  onThumbnailLeave(course: Course): void {
+    if (this.previewCourseId === course.id) {
+      this.previewCourseId = null;
+    }
+  }
+
+  isPreviewActive(course: Course): boolean {
+    return !!course.first_learning_content_url && this.previewCourseId === course.id;
+  }
+
+  /* helper para registros (por si viene undefined) */
+  getRegistrations(course: Course): number {
+    // asegúrate de tener `registrations_count` en la interfaz Course
+    return (course as any).registrations_count ?? 0;
+  }
 }

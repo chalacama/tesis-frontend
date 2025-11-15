@@ -1,1 +1,170 @@
-<p>user-courses works!</p>
+<div class="user-courses">
+  <!-- Filtros de orden -->
+  <div class="filters-row">
+    <button
+      type="button"
+      class="filter-pill"
+      [class.active]="currentFilter() === 'created'"
+      (click)="changeFilter('created')"
+    >
+      Más recientes
+    </button>
+
+    <button
+      type="button"
+      class="filter-pill"
+      [class.active]="currentFilter() === 'popular'"
+      (click)="changeFilter('popular')"
+    >
+      Más populares
+    </button>
+
+    <button
+      type="button"
+      class="filter-pill"
+      [class.active]="currentFilter() === 'best_rated'"
+      (click)="changeFilter('best_rated')"
+    >
+      Mejores valorados
+    </button>
+  </div>
+
+  <!-- Error -->
+  <p class="error" *ngIf="!loading() && error()">{{ error() }}</p>
+
+  <!-- Skeletons: carga inicial -->
+  <div
+    class="courses-grid"
+    *ngIf="loading() && courses().length === 0"
+  >
+    <article class="course-card skeleton" *ngFor="let s of skeletonItems">
+      <div class="thumbnail skeleton-block"></div>
+      <div class="course-body">
+        <div class="title skeleton-line"></div>
+        <div class="title skeleton-line short"></div>
+
+        <div class="meta-row">
+          <div class="avatar skeleton-circle"></div>
+          <div class="meta-col">
+            <div class="meta-line skeleton-line"></div>
+            <div class="meta-line skeleton-line short"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Grid de cursos -->
+  <div
+    class="courses-grid"
+    *ngIf="courses().length > 0 && !loading()"
+  >
+    <article
+      class="course-card"
+      *ngFor="let c of courses()"
+    >
+      <!-- Miniatura -->
+      <div
+        class="thumbnail"
+        (click)="openCourse(c)"
+        tabindex="0"
+        role="button"
+      >
+        <ng-container *ngIf="c.thumbnail_url; else defaultCover">
+          <img
+            [ngSrc]="c.thumbnail_url!"
+            alt="{{ c.title }}"
+            fill
+          />
+        </ng-container>
+
+        <!-- Miniatura por defecto con título encima -->
+        <ng-template #defaultCover>
+          <div class="cover">
+            <img [src]="DEFAULT_COVER" alt="portada por defecto" />
+            <div class="cover-title">
+              <div class="kicker">Curso</div>
+              <div class="title">'{{ c.title }}'</div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Cuerpo del curso -->
+      <div class="course-body">
+        <!-- Tutor / avatar -->
+        <div class="meta-row">
+          <button
+            class="avatar-btn"
+            type="button"
+            *ngIf="c.tutor"
+            (click)="openTutorPortfolio(c)"
+          >
+            <ng-container *ngIf="c.tutor.profile_picture_url; else tutorInitials">
+              <img
+                [src]="c.tutor.profile_picture_url"
+                alt="{{ c.tutor.name }}"
+              />
+            </ng-container>
+            <ng-template #tutorInitials>
+              <div class="avatar-fallback">
+                {{ getTutorInitials(c) }}
+              </div>
+            </ng-template>
+          </button>
+
+          <div class="meta-col" *ngIf="c.tutor">
+            <div class="tutor-name">
+              {{ c.tutor.name }}
+            </div>
+            <div class="tutor-username">
+              {{ '@'+  c.tutor.username }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Título del curso -->
+        <h3
+          class="course-title"
+          (click)="openCourse(c)"
+        >
+          {{ c.title }}
+        </h3>
+
+        <!-- Descripción corta -->
+        <p class="course-description">
+          {{ c.description }}
+        </p>
+
+        <!-- Stats -->
+        <div class="course-stats">
+          <span>{{ c.registrations_count }} inscritos</span>
+          <span class="dot">·</span>
+          <span *ngIf="c.is_saved">Guardado</span>
+          <span *ngIf="!c.is_saved">No guardado</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Sin resultados -->
+  <p
+    class="empty-state"
+    *ngIf="!loading() && courses().length === 0 && !error()"
+  >
+    No se encontraron cursos.
+  </p>
+
+  <!-- Ancla para scroll infinito -->
+  <div
+    #infiniteAnchor
+    class="infinite-anchor"
+    *ngIf="hasMore() && courses().length > 0"
+  ></div>
+
+  <!-- Cargando más -->
+  <div class="loading-more" *ngIf="loadingMore()">
+    Cargando más cursos...
+  </div>
+</div>
+
