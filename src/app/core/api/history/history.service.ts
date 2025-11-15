@@ -11,7 +11,7 @@ import { Observable, map } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class HistoryService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/history`;
+  private readonly apiUrl = `${environment.apiUrl}/profile/history`;
 
   /**
    * Obtiene /history/index por tipo y página.

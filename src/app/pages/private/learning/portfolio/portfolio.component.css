@@ -311,6 +311,30 @@
 .skeleton.header { height: 160px; margin: 16px 0; }
 .skeleton.tabs { height: 44px; margin: 16px 0; }
 .skeleton.card { height: 180px; }
+
+.contact-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.contact-icons .icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background-color .2s, border-color .2s, transform .06s;
+}
+
+.contact-icons .icon-link:hover {
+  background: var(--background-hover);
+  border-color: var(--border-color-contrast);
+}
+
 @keyframes shimmer {
   0% { background-position: 0% 0; }
   100% { background-position: -200% 0; }

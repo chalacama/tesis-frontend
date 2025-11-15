@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class PortfolioService {
 
-  private apiUrl = `${environment.apiUrl}/portfolio`;
+  private apiUrl = `${environment.apiUrl}/profile/portfolio`;
 
   constructor(private http: HttpClient) {}
 
