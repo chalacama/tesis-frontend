@@ -1,1 +1,60 @@
-<p>information works!</p>
+<section class="card tab-card">
+    <header class="card-header">
+        <h3>Información personal</h3>
+        <p class="muted">Provincia, cantón y parroquia</p>
+    </header>
+
+    <div class="card-content">
+        <div class="form grid-2">
+            <!-- Provincia -->
+            <div class="form-row">
+                <label class="label">Provincia</label>
+                <select [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()" class="select">
+          <option value="" disabled selected>Selecciona una provincia</option>
+          <option *ngFor="let p of provincias" [value]="p.id">{{ p.nombre }}</option>
+        </select>
+            </div>
+
+            <!-- Cantón -->
+            <div class="form-row">
+                <label class="label">Cantón</label>
+                <select [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length" class="select">
+          <option value="" disabled selected>Selecciona un cantón</option>
+          <option *ngFor="let c of cantones" [value]="c.id">{{ c.nombre }}</option>
+        </select>
+                <small class="hint" [class.warn]="!cantones.length">
+          {{ !cantones.length ? 'Selecciona una provincia primero.' : '' }}
+        </small>
+            </div>
+
+            <!-- Parroquia -->
+            <div class="form-row span-2">
+                <label class="label">Parroquia</label>
+                <select [(ngModel)]="selectedParishId" [disabled]="!parroquias.length" class="select">
+          <option value="" disabled selected>Selecciona una parroquia</option>
+          <option *ngFor="let parr of parroquias" [value]="parr.id">{{ parr.nombre }}</option>
+        </select>
+                <small class="hint" [class.warn]="!parroquias.length">
+          {{ !parroquias.length ? 'Selecciona un cantón para ver parroquias.' : '' }}
+        </small>
+            </div>
+
+            <div class="divider span-2"></div>
+
+            <!-- Código de país -->
+            <div class="form-row span-2">
+                <label class="label">Código de país</label>
+                <div class="country-codes">
+                    <div class="chip"><span class="chip-key">País</span><span class="chip-val">{{ countries.name }}</span></div>
+                    <div class="chip"><span class="chip-key">ISO</span><span class="chip-val">{{ countries.code }}</span></div>
+                    <div class="chip"><span class="chip-key">Tel</span><span class="chip-val">{{ countries.phoneCode }}</span></div>
+                    <div class="chip flag"><span class="chip-val">{{ countries.flagEmoji }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="card-footer">
+        <button type="button" class="btn btn-primary" (click)="onSubmitPersonal()">Guardar cambios</button>
+    </footer>
+</section>

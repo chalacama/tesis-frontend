@@ -1,1 +1,48 @@
-<p>education works!</p>
+<section class="card tab-card">
+    <header class="card-header">
+        <h3>Información académica</h3>
+        <p class="muted">Unidad educativa / Sede</p>
+    </header>
+
+    <div class="card-content">
+        <div class="form grid-3">
+            <!-- Sede -->
+            <div class="form-row">
+                <label class="label" for="sede">Selecciona una sede</label>
+                <select [(ngModel)]="selectedSedeId" [ngModelOptions]="{ standalone: true }" name="sede" id="sede" required class="select">
+          <option [ngValue]="null" disabled>Selecciona una sede</option>
+          <option *ngFor="let sede of sedes" [ngValue]="sede.id">
+            {{ sede.educational_unit.name }} — {{ sede.province }}, {{ sede.canton }}
+          </option>
+        </select>
+                <small class="hint">Elige la sede asociada a tu unidad educativa.</small>
+            </div>
+
+            <!-- Carrera -->
+            <div class="form-row">
+                <label class="label" for="career">Selecciona una carrera</label>
+                <select [(ngModel)]="selectedCareerId" [ngModelOptions]="{ standalone: true }" name="career" id="career" required class="select">
+          <option [ngValue]="null" disabled>Selecciona una carrera</option>
+          <option *ngFor="let c of careers" [ngValue]="c.id">{{ c.name }}</option>
+        </select>
+                <small class="hint">Una sola carrera por perfil.</small>
+            </div>
+
+            <!-- Nivel -->
+            <div class="form-row">
+                <label class="label" for="level">Selecciona tu nivel</label>
+                <select [(ngModel)]="selectedLevel" (ngModelChange)="selectedEducationalLevelId = $event" [ngModelOptions]="{ standalone: true }" name="level" id="level" required class="select">
+          <option [ngValue]="null" disabled>Selecciona un nivel</option>
+          <option *ngFor="let lv of levels" [ngValue]="lv">Nivel {{ lv }}</option>
+        </select>
+                <small class="hint">Disponibles 10 niveles.</small>
+            </div>
+        </div>
+    </div>
+
+    <footer class="card-footer">
+        <button type="button" class="btn btn-primary" (click)="onSubmitEducational()">
+      Guardar datos académicos
+    </button>
+    </footer>
+</section>
