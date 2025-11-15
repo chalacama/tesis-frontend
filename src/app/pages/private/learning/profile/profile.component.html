@@ -1,105 +1,32 @@
 <div class="profile-page compact">
-    <header class="page-header">
-        <div>
-            <h2>Perfil</h2>
-
+    <!-- HERO -->
+    <section class="profile-hero card">
+        <div class="hero-left">
+            <ng-container *ngIf="(datosUsuario$ | async) as u">
+                <div class="avatar" [class.empty]="!u?.profile_picture_url">
+                    <img *ngIf="u?.profile_picture_url" [src]="u.profile_picture_url" alt="Foto de perfil" />
+                    <span *ngIf="!u?.profile_picture_url">{{ getInitialsFromUser(u) }}</span>
+                </div>
+            </ng-container>
         </div>
 
-    </header>
-
-    <section class="grid">
-        <!-- Card: Información personal -->
-        <article class="card">
-            <div class="card-header">
-                <h3>Información personal</h3>
-                <p class="muted">Provincia, cantón y parroquia</p>
-            </div>
-
-            <div class="card-content">
-                <div class="form">
-                    <div class="form-row">
-                        <label class="label">Provincia</label>
-                        <div class="control">
-                            <select [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()" class="select">
-                <option value="" disabled selected>Selecciona una provincia</option>
-                <option *ngFor="let p of provincias" [value]="p.id">{{ p.nombre }}</option>
-              </select>
-                        </div>
-                        <small class="hint">Cambia la provincia para cargar sus cantones.</small>
-                    </div>
-
-                    <div class="form-row">
-                        <label class="label">Cantón</label>
-                        <div class="control">
-                            <select [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length" class="select">
-                <option value="" disabled selected>Selecciona un cantón</option>
-                <option *ngFor="let c of cantones" [value]="c.id">{{ c.nombre }}</option>
-              </select>
-                        </div>
-                        <small class="hint" [class.warn]="!cantones.length">
-              {{ !cantones.length ? 'Selecciona una provincia primero.' : 'Cambia el cantón para cargar parroquias.' }}
-            </small>
-                    </div>
-
-                    <div class="form-row">
-                        <label class="label">Parroquia</label>
-                        <div class="control">
-                            <select [disabled]="!parroquias.length" class="select">
-                <option value="" disabled selected>Selecciona una parroquia</option>
-                <option *ngFor="let parr of parroquias" [value]="parr.id">{{ parr.nombre }}</option>
-              </select>
-                        </div>
-                        <small class="hint" [class.warn]="!parroquias.length">
-              {{ !parroquias.length ? 'Selecciona un cantón para ver parroquias.' : 'Parroquias disponibles.' }}
-            </small>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="form-row">
-                        <label class="label">Código de país</label>
-                        <div class="country-codes">
-                            <div class="chip"><span class="chip-key">País</span><span class="chip-val">{{ countries.name }}</span></div>
-                            <div class="chip"><span class="chip-key">ISO</span><span class="chip-val">{{ countries.code }}</span></div>
-                            <div class="chip"><span class="chip-key">Tel</span><span class="chip-val">{{ countries.phoneCode }}</span></div>
-                            <div class="chip flag"><span class="chip-val">{{ countries.flagEmoji }}</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" (click)="onSubmitPersonal()">Guardar cambios</button>
-            </div>
-        </article>
-
-        <!-- Card: Información académica -->
-        <article class="card">
-            <div class="card-header">
-                <h3>Información académica</h3>
-                <p class="muted">Unidad educativa / Sede</p>
-            </div>
-
-            <div class="card-content">
-                <div class="form">
-                    <div class="form-row">
-                        <label class="label" for="sede">Selecciona una sede</label>
-                        <div class="control">
-                            <select [(ngModel)]="selectedSedeId" name="sede" id="sede" required class="select">
-                <option value="" disabled selected>Selecciona una sede</option>
-                <option *ngFor="let sede of sedes" [value]="sede.id">
-                  {{ sede.educational_unit.name }} — {{ sede.province }}, {{ sede.canton }}
-                </option>
-              </select>
-                        </div>
-                        <small class="hint">Elige la sede asociada a tu unidad educativa.</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary" (click)="onSubmitEducational()">Guardar datos académicos</button>
-            </div>
-        </article>
+        <div class="hero-right" *ngIf="(datosUsuario$ | async) as u">
+            <h2 class="fullname">{{ getFullName(u) }}</h2>
+            <p class="username">{{'@'+ u.username }}</p>
+            <p class="muted small">Gestiona tu información general y académica.</p>
+        </div>
     </section>
+
+    <!-- TABS (relativos al route actual) -->
+    <nav class="tabs">
+        <a class="tab-btn" routerLink="information" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      Información personal
+    </a>
+
+        <a class="tab-btn" routerLink="education" routerLinkActive="active">
+      Información académica
+    </a>
+    </nav>
+
+    <router-outlet></router-outlet>
 </div>

@@ -55,19 +55,26 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/private/learning/certification/certification.component').then((c) => c.CertificationComponent)
       },
       {
-        path: 'profile',
-        loadComponent: () => import('./pages/private/learning/profile/profile.component').then((c) => c.ProfileComponent),
-        children: [
-            {
-            path: 'information',
-            loadComponent: () => import('./pages/private/learning/profile/information/information.component').then((c) => c.InformationComponent)
-            },
-            {
-              path: 'education',
-              loadComponent: () => import('./pages/private/learning/profile/education/education.component').then((c) => c.EducationComponent)
-            }
-          ]
-      },
+  path: 'profile',
+  loadComponent: () =>
+    import('./pages/private/learning/profile/profile.component').then(c => c.ProfileComponent),
+  children: [
+    { path: '', pathMatch: 'full', redirectTo: 'information' }, // ← default
+    {
+      path: 'information',
+      loadComponent: () =>
+        import('./pages/private/learning/profile/information/information.component')
+          .then(c => c.InformationComponent),
+    },
+    {
+      path: 'education',
+      loadComponent: () =>
+        import('./pages/private/learning/profile/education/education.component')
+          .then(c => c.EducationComponent),
+    },
+  ],
+}
+,
       
       {
       path: 'course/:title/:id/:chapterTitle/:chapterId',

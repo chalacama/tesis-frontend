@@ -1,0 +1,89 @@
+.tab-card .card-header {
+    padding: .6rem .8rem;
+}
+
+.tab-card .card-content {
+    padding: .8rem;
+}
+
+.tab-card .card-footer {
+    padding: .55rem .8rem .8rem;
+}
+
+.form {
+    display: grid;
+    gap: 1rem;
+}
+
+
+/* 3 columnas en desktop, colapsa en responsive */
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: .75rem;
+}
+
+@media (max-width: 1024px) {
+    .grid-3 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-row {
+    display: grid;
+    gap: .45rem;
+    align-content: start;
+}
+
+.label {
+    font-size: .9rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.select {
+    min-height: 36px;
+    padding: .4rem .6rem;
+    border-radius: 10px;
+    font-size: .9rem;
+    background: var(--dialog-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.select:hover {
+    background: var(--background-hover);
+}
+
+.select:focus {
+    border-color: var(--active-color);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--active-color) 25%, transparent);
+}
+
+.hint {
+    font-size: .78rem;
+    color: var(--text-color-secondary);
+}
+
+.btn {
+    padding: .45rem .75rem;
+    border-radius: 10px;
+}
+
+.btn-primary {
+    background: var(--sev-primary);
+    color: var(--text-color-contrast);
+    border: 1px solid color-mix(in oklab, var(--sev-primary) 70%, var(--border-color));
+}
+
+.btn-primary:hover {
+    background: var(--sev-primary-hover);
+}
