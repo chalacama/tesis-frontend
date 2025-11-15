@@ -1,0 +1,2 @@
+// educational-level.interface.ts
+
