@@ -2,7 +2,6 @@
   display: grid;
   gap: 1rem;
   padding: 1rem;
-  
 }
 
 .cl-wrapper.loading {
@@ -40,17 +39,16 @@
 }
 
 .panel {
-  display: grid; gap: .5rem;
-  padding: .75rem; 
-  /* border: 1px dashed var(--border-color); */
-  border-radius: 12px; background: transparent;
+  display: grid;
+  gap: .5rem;
+  padding: .75rem;
+  border-radius: 12px;
+  background: transparent;
   width: 100%;
   height: auto;
-  /* background-color: aliceblue; */
 }
-.panel-file{
-  display: flex ;
-
+.panel-file {
+  display: flex;
   justify-content: center;
 }
 .lbl { font-weight: 600; }
@@ -59,7 +57,8 @@
   padding: .65rem .8rem;
   border-radius: 10px;
   border: 1px solid var(--border-color);
-  background: transparent; color: var(--text-color);
+  background: transparent;
+  color: var(--text-color);
   outline: none;
 }
 .input:focus { border-color: var(--active-color); }
@@ -71,27 +70,165 @@
 .file-info { font-size: .9rem; color: var(--text-color-secondary); }
 
 .actions {
-  display: flex; gap: .5rem; justify-content: end; align-items: center;
+  display: flex;
+  gap: .5rem;
+  justify-content: end;
+  align-items: center;
 }
 
 .current .card {
   margin-top: .4rem;
-  border: 1px solid var(--border-color); border-radius: 10px;
-  padding: .6rem .8rem; background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: .6rem .8rem;
+  background: transparent;
 }
-.current .row { display: flex; gap: .5rem; align-items: baseline; }
-.current .row span { color: var(--text-color-secondary); min-width: 42px; }
-.preview-iframe{
+.current .row {
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+}
+.current .row span {
+  color: var(--text-color-secondary);
+  min-width: 42px;
+}
+
+.preview-iframe {
   width: 60%;
   aspect-ratio: 16 / 9;
 }
-.preview{
+.preview {
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
 }
-.uploader{
-  width: 100%
-  
+.uploader {
+  width: 100%;
+}
+
+/* ====== dropzone archivo ====== */
+.dropzone {
+  position: relative;
+  border-radius: 12px;
+  border: 1px dashed var(--border-color);
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, transform .1s ease;
+}
+.dropzone:hover {
+  border-color: var(--active-color);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+.dropzone.drag-over {
+  border-color: var(--active-color);
+  background-color: rgba(32, 167, 255, 0.08);
+  transform: translateY(-1px);
+}
+.dropzone-inner {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.dropzone-text {
+  display: grid;
+  gap: .1rem;
+}
+.dropzone-title {
+  font-weight: 600;
+  font-size: .95rem;
+}
+.dropzone-subtitle {
+  font-size: .8rem;
+  color: var(--text-color-secondary);
+}
+.dropzone-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ====== tarjeta de archivo tipo Classroom ====== */
+.file-card {
+  margin-top: .75rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: .75rem .9rem;
+  display: grid;
+  gap: .5rem;
+  background: transparent;
+}
+.file-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.file-card-main {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.file-card-info {
+  display: grid;
+  gap: .1rem;
+}
+.file-name {
+  font-weight: 600;
+  font-size: .9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+.file-meta {
+  font-size: .8rem;
+  color: var(--text-color-secondary);
+}
+.file-card-actions {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+.icon-btn {
+  border: none;
+  background: transparent;
+  padding: .15rem;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.file-card-body {
+  margin-top: .25rem;
+}
+.file-preview-img img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+.file-preview-media video,
+.file-preview-media audio {
+  width: 100%;
+  border-radius: 10px;
+}
+.file-preview-pdf iframe {
+  width: 100%;
+  min-height: 260px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+.file-preview-generic {
+  font-size: .85rem;
+  color: var(--text-color-secondary);
+  display: grid;
+  gap: .25rem;
+}
+.file-preview-generic a {
+  font-size: .85rem;
 }

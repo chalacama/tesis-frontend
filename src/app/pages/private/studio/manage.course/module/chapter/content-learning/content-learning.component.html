@@ -48,47 +48,126 @@
       spellcheck="false"
     />
     <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError('youtubeUrl')">
-  Ingresa una URL válida de YouTube.
-</div>
+      Ingresa una URL válida de YouTube.
+    </div>
+
     <div class="preview" *ngIf="isYouTube() && embedSafe()">
-  <iframe
-    class="preview-iframe"
-    [src]="embedSafe()"
-    title="YouTube video"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen>
-  </iframe>
-</div>
+      <iframe
+        class="preview-iframe"
+        [src]="embedSafe()"
+        title="YouTube video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
 
   <!-- Panel Archivo -->
   <div class="panel panel-file" *ngIf="isArchivo()">
-    <div class="uploader">
-      <form [formGroup]="form">
-        <ui-file-upload
-      [formControl]="form.controls.url"
-    [icon]="{svgPath: 'svg/file.svg'}"
-      (fileSelected)="onFileSelected($event)"
-      [style]="{ width: '100%' }"
-      label="Suelta un archivo o selecciona"
-      [types]="['video','document']"
-      [formats]="['mp4' ,'pdf']"
-      variant="outlined"
-      severity="primary"
-      size="sm"
-      [invalid]="false"
-      [max]="1"
-      [maxMb]="100"
-      [maxSecond]="480"
-      [minSecond]="10"
+    <div class="uploader" [formGroup]="form">
 
+      <!-- Zona de arrastrar / soltar + clic -->
+      <div
+        class="dropzone"
+        [class.drag-over]="dragOver()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="openFileDialog(fileInput)"
       >
-    </ui-file-upload>
-      </form>
-      
+        <div class="dropzone-inner">
+          <ui-icon
+            [size]="'sm'"
+            [severity]="'primary'"
+            [svgPath]="'svg/file.svg'">
+          </ui-icon>
+
+          <div class="dropzone-text">
+            <p class="dropzone-title">Suelta un archivo aquí o haz clic para seleccionarlo</p>
+            <p class="dropzone-subtitle">
+              Se permite un solo archivo. Tamaño máximo {{ MAX_FILE_MB }} MB.
+            </p>
+            <p class="dropzone-subtitle">
+              Para videos: mínimo {{ MIN_VIDEO_SECONDS }} s y máximo {{ MAX_VIDEO_SECONDS }} s.
+            </p>
+          </div>
+        </div>
+
+        <input
+          #fileInput
+          type="file"
+          class="dropzone-input"
+          (change)="onFileInputChange($event)"
+        />
+      </div>
+
+      <div class="error" *ngIf="fileError()">
+        {{ fileError() }}
+      </div>
+
+      <!-- Vista previa tipo Classroom -->
+      <div class="file-card" *ngIf="filePreviewType() && filePreviewUrl()">
+        <div class="file-card-header">
+          <div class="file-card-main">
+            <ui-icon
+              [size]="'sm'"
+              [severity]="'primary'"
+              [svgPath]="'svg/file.svg'">
+            </ui-icon>
+
+            <div class="file-card-info">
+              <div class="file-name" [title]="fileName() || ''">
+                {{ fileName() || 'Archivo adjunto' }}
+              </div>
+              <div class="file-meta" *ngIf="fileSizeLabel()">
+                {{ fileSizeLabel() }}
+              </div>
+            </div>
+          </div>
+
+          <div class="file-card-actions">
+            <button type="button" class="icon-btn" (click)="clearFile()">
+              <ui-icon
+                [size]="'sm'"
+                [severity]="'primary'"
+                [svgPath]="'svg/delete.svg'">
+              </ui-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="file-card-body" [ngSwitch]="filePreviewType()">
+          <figure *ngSwitchCase="'image'" class="file-preview-img">
+            <img [src]="filePreviewUrl()!" alt="Vista previa de la imagen" />
+          </figure>
+
+          <div *ngSwitchCase="'video'" class="file-preview-media">
+            <video [src]="filePreviewUrl()!" controls></video>
+          </div>
+
+          <div *ngSwitchCase="'audio'" class="file-preview-media">
+            <audio [src]="filePreviewUrl()!" controls></audio>
+          </div>
+
+          <div *ngSwitchCase="'pdf'" class="file-preview-pdf">
+            <iframe
+              *ngIf="fileSafePreviewUrl()"
+              [src]="fileSafePreviewUrl()!"
+              title="Vista previa de PDF">
+            </iframe>
+          </div>
+
+          <div *ngSwitchDefault class="file-preview-generic">
+            <p>Vista previa no disponible para este tipo de archivo.</p>
+            <a *ngIf="filePreviewUrl()" [href]="filePreviewUrl()!" target="_blank" rel="noopener">
+              Abrir archivo en una nueva pestaña
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
-    
   </div>
 
   <!-- Acciones -->
@@ -99,11 +178,10 @@
       label="Restablecer"
       [icon]="{svgPath: 'svg/clear-all.svg'}"
       severity="secondary">
-      
     </ui-button>
 
     <ui-button
-      [disabled]="sabed"
+      [disabled]="sabed || !!fileError()"
       (click)="save()"
       label="Guardar"
       [icon]="{svgPath: 'svg/save-outline.svg'}"
@@ -112,6 +190,7 @@
   </div>
 
 </div>
+
 <ui-loading-bar
   [visible]="loadbar()"
   [mask]="{ type: 'dimmed' }">

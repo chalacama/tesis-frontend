@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { debounceTime, firstValueFrom } from 'rxjs';
 
-import { FileUploadComponent } from '../../../../../../../shared/UI/components/form/file-upload/file-upload.component';
 import { ButtonComponent } from '../../../../../../../shared/UI/components/button/button/button.component';
 import { IconComponent } from '../../../../../../../shared/UI/components/button/icon/icon.component';
 
@@ -18,7 +17,7 @@ import { LoadingBarComponent } from '../../../../../../../shared/UI/components/o
 @Component({
   selector: 'app-content-learning',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FileUploadComponent, ButtonComponent, IconComponent, LoadingBarComponent],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, IconComponent, LoadingBarComponent],
   templateUrl: './content-learning.component.html',
   styleUrl: './content-learning.component.css'
 })
@@ -36,6 +35,27 @@ export class ContentLearningComponent implements OnInit {
   current = signal<LearingContentResponse | null>(null);
   fileSel = signal<File | null>(null);
   loadbar = signal<boolean>(false);
+
+  // ====== límites de validación ======
+  readonly MAX_FILE_MB = 100;
+  readonly MIN_VIDEO_SECONDS = 10;
+  readonly MAX_VIDEO_SECONDS = 480;
+  private readonly MAX_FILE_BYTES = this.MAX_FILE_MB * 1024 * 1024;
+
+  // ====== estado drag & drop / errores ======
+  dragOver = signal<boolean>(false);
+  fileError = signal<string | null>(null);
+
+  // ====== previsualización del archivo (tipo Classroom) ======
+  filePreviewUrl = signal<string | null>(null); // blob: o url del backend
+  filePreviewType = signal<'image' | 'video' | 'audio' | 'pdf' | 'other' | null>(null);
+  fileName = signal<string | null>(null);
+  fileSizeLabel = signal<string | null>(null);
+
+  fileSafePreviewUrl = computed<SafeResourceUrl | null>(() => {
+    const url = this.filePreviewUrl();
+    return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
+  });
 
   // ⬇️ url ahora acepta string | File | File[] | string[] | null
   form = this.fb.group({
@@ -240,21 +260,34 @@ export class ContentLearningComponent implements OnInit {
 
       this.form.patchValue({
         type_content_id: preTypeId,
-        url: initialUrl
+        url: initialUrl ? initialUrl : null
       }, { emitEvent: true });
 
       this.selectedTypeId.set(this.form.controls.type_content_id.value);
-      this.updateEmbedFromUrl(initialUrl);
+
+      if (name === 'youtube') {
+        this.updateEmbedFromUrl(initialUrl);
+        this.updateFilePreviewFromBackend(null);
+      } else if (name === 'archivo') {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(initialUrl || null);
+      } else {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(null);
+      }
 
       this.form.markAsPristine();
       this.fileSel.set(null);
+      this.fileError.set(null);
     } catch {
       const yt = this.types().find(t => (t.name ?? '').toLowerCase() === 'youtube');
       this.form.patchValue({ type_content_id: yt?.id ?? null, url: '' }, { emitEvent: true });
       this.selectedTypeId.set(this.form.controls.type_content_id.value);
       this.embedUrl.set(null);
+      this.updateFilePreviewFromBackend(null);
       this.form.markAsPristine();
       this.fileSel.set(null);
+      this.fileError.set(null);
     } finally {
       this.loading.set(false);
     }
@@ -270,9 +303,14 @@ export class ContentLearningComponent implements OnInit {
 
     // Limpia todo lo de archivo
     this.fileSel.set(null);
-    this.form.controls.url.setValue('', { emitEvent: true }); // borra previews del file-upload
+    this.fileError.set(null);
+    this.updateFilePreviewFromBackend(null);
+    this.revokePreviewUrl();
+
+    this.form.controls.url.setValue('', { emitEvent: true }); // borra valor del archivo/url
     this.embedUrl.set(null); // y el embed, hasta que escriban una URL
     this.form.markAsDirty();
+    this.sabed = false;
   }
 
   pickArchivo() {
@@ -282,52 +320,255 @@ export class ContentLearningComponent implements OnInit {
     this.form.controls.type_content_id.setValue(id);
     this.selectedTypeId.set(id);
 
-    // Limpia todo lo de youtube
     this.fileSel.set(null);
-    this.form.controls.url.setValue(null, { emitEvent: true }); // ⚠️ ahora null para no dejar string
+    this.fileError.set(null);
     this.embedUrl.set(null);
+
+    // Si lo último guardado era archivo, muestra ese; si no, limpia
+    const lc = this.current();
+    const isFileFromBackend = lc?.learning_content?.type_learning_content?.name?.toLowerCase() === 'archivo';
+    const urlBack = isFileFromBackend ? (lc?.learning_content?.url ?? '') : '';
+
+    this.updateFilePreviewFromBackend(urlBack || null);
+
+    // En el control dejamos la url del backend (o null)
+    this.form.controls.url.setValue(urlBack || null, { emitEvent: true });
     this.form.markAsDirty();
+    this.sabed = false;
   }
 
-  onFileSelected(file: File | null) {
-    this.fileSel.set(file);
-    const id = this.typeIdArchivo();
-    if (id) {
-      this.form.controls.type_content_id.setValue(id);
-      this.selectedTypeId.set(id);
-      this.embedUrl.set(null);
+  // ====== MANEJO DE ARCHIVOS (drag & drop, selección, validación) ======
 
-      // Refleja en el control que ahora hay File[]
-      this.form.controls.url.setValue(file ? [file] : null, { emitEvent: true });
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragOver.set(true);
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragOver.set(false);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragOver.set(false);
+
+    const dt = event.dataTransfer;
+    if (!dt || !dt.files?.length) return;
+    const file = dt.files[0];
+    void this.handleIncomingFile(file);
+  }
+
+  onFileInputChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files && input.files[0] ? input.files[0] : null;
+    if (file) {
+      void this.handleIncomingFile(file);
+    }
+  }
+
+  openFileDialog(input: HTMLInputElement | null) {
+    input?.click();
+  }
+
+  async handleIncomingFile(file: File): Promise<void> {
+    this.fileError.set(null);
+
+    // Tamaño máximo
+    if (file.size > this.MAX_FILE_BYTES) {
+      this.fileError.set(`El archivo supera el tamaño máximo permitido de ${this.MAX_FILE_MB} MB.`);
+      this.clearFileInternal(false);
+      return;
+    }
+
+    // Validación de duración para videos
+    const isVideo = file.type.startsWith('video/');
+    if (isVideo) {
+      const duration = await this.getVideoDuration(file);
+      if (duration == null) {
+        this.fileError.set('No se pudo leer la duración del video. Intenta con otro archivo.');
+        this.clearFileInternal(false);
+        return;
+      }
+      if (duration < this.MIN_VIDEO_SECONDS || duration > this.MAX_VIDEO_SECONDS) {
+        this.fileError.set(
+          `La duración del video debe estar entre ${this.MIN_VIDEO_SECONDS} y ${this.MAX_VIDEO_SECONDS} segundos. ` +
+          `Duración detectada: ${Math.round(duration)} s.`
+        );
+        this.clearFileInternal(false);
+        return;
+      }
+    }
+
+    // Si todo ok: selecciona archivo
+    this.fileSel.set(file);
+    this.form.controls.type_content_id.setValue(this.typeIdArchivo());
+    this.selectedTypeId.set(this.typeIdArchivo());
+    this.form.controls.url.setValue([file], { emitEvent: true });
+
+    this.updateFilePreviewFromFile(file);
+    this.embedUrl.set(null);
+    this.form.markAsDirty();
+    this.sabed = false;
+  }
+
+  private getVideoDuration(file: File): Promise<number | null> {
+    return new Promise<number | null>((resolve) => {
+      const url = URL.createObjectURL(file);
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.src = url;
+
+      video.onloadedmetadata = () => {
+        const duration = video.duration;
+        URL.revokeObjectURL(url);
+        resolve(duration || null);
+      };
+
+      video.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(null);
+      };
+    });
+  }
+
+  private detectPreviewType(name: string, mime?: string): 'image' | 'video' | 'audio' | 'pdf' | 'other' {
+    const ext = name.split('.').pop()?.toLowerCase() ?? '';
+
+    if (mime?.startsWith('image/') || ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'].includes(ext)) {
+      return 'image';
+    }
+    if (mime?.startsWith('video/') || ['mp4', 'webm', 'ogg', 'mkv', 'mov'].includes(ext)) {
+      return 'video';
+    }
+    if (mime?.startsWith('audio/') || ['mp3', 'wav', 'ogg', 'aac', 'flac'].includes(ext)) {
+      return 'audio';
+    }
+    if (ext === 'pdf') return 'pdf';
+
+    return 'other';
+  }
+
+  private updateFilePreviewFromFile(file: File) {
+    this.revokePreviewUrl();
+    const url = URL.createObjectURL(file);
+
+    this.filePreviewUrl.set(url);
+    this.filePreviewType.set(this.detectPreviewType(file.name, file.type));
+    this.fileName.set(file.name);
+    this.fileSizeLabel.set(this.formatBytes(file.size));
+  }
+
+  private updateFilePreviewFromBackend(url: string | null) {
+    this.revokePreviewUrl();
+
+    if (!url) {
+      this.filePreviewUrl.set(null);
+      this.filePreviewType.set(null);
+      this.fileName.set(null);
+      this.fileSizeLabel.set(null);
+      return;
+    }
+
+    const nameFromPath = url.split('/').pop() ?? 'archivo';
+    this.filePreviewUrl.set(url);
+    this.filePreviewType.set(this.detectPreviewType(nameFromPath));
+    this.fileName.set(nameFromPath);
+    this.fileSizeLabel.set(null); // no conocemos el tamaño del backend
+  }
+
+  private revokePreviewUrl() {
+    const current = this.filePreviewUrl();
+    if (current && current.startsWith('blob:')) {
+      URL.revokeObjectURL(current);
+    }
+  }
+
+  private formatBytes(bytes: number): string {
+    if (!bytes) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const value = bytes / Math.pow(k, i);
+    return `${value.toFixed(i === 0 ? 0 : 1)} ${sizes[i]}`;
+  }
+
+  private clearFileInternal(markDelete: boolean) {
+    this.fileSel.set(null);
+    this.revokePreviewUrl();
+    this.filePreviewUrl.set(null);
+    this.filePreviewType.set(null);
+    this.fileName.set(null);
+    this.fileSizeLabel.set(null);
+
+    if (markDelete) {
+      // url = '' → backend puede interpretarlo como borrar archivo
+      this.form.controls.url.setValue('', { emitEvent: true });
+    } else {
+      // Solo limpiar selección local, manteniendo lo último del backend
+      const lc = this.current();
+      const name = lc?.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
+      const urlBack = name === 'archivo' ? (lc?.learning_content?.url ?? '') : '';
+      this.form.controls.url.setValue(urlBack || null, { emitEvent: true });
+    }
+  }
+
+  clearFile() {
+    // El usuario quiere eliminar el archivo (actual o nuevo)
+    this.fileError.set(null);
+    this.clearFileInternal(true);
+    this.form.markAsDirty();
+    this.sabed = false;
+  }
+
+  openPreviewInNewTab() {
+    const url = this.filePreviewUrl();
+    if (url) {
+      window.open(url, '_blank');
     }
   }
 
   reset() {
-  const lc = this.current();
-  const name = lc?.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
+    const lc = this.current();
+    const name = lc?.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
 
-  const typeBack =
-    name === 'archivo' ? this.typeIdArchivo() :
-    name === 'youtube' ? this.typeIdYoutube() : this.typeIdYoutube();
+    const typeBack =
+      name === 'archivo' ? this.typeIdArchivo() :
+      name === 'youtube' ? this.typeIdYoutube() : this.typeIdYoutube();
 
-  const urlBack = lc?.learning_content?.url ?? '';
+    const urlBack = lc?.learning_content?.url ?? '';
 
-  // 👇 si hay url de backend, pásala para que el file-upload cree el preview desde URL
-  const urlForForm = urlBack ? urlBack : null;
+    const urlForForm = urlBack ? urlBack : null;
 
-  this.form.reset({ type_content_id: typeBack, url: urlForForm });
-  this.selectedTypeId.set(typeBack);
-  this.updateEmbedFromUrl(urlBack);
+    this.form.reset({ type_content_id: typeBack, url: urlForForm });
+    this.selectedTypeId.set(typeBack);
 
-  this.form.markAsPristine();
-  this.fileSel.set(null);
-  this.sabed = true;
-}
+    this.fileSel.set(null);
+    this.fileError.set(null);
+    this.dragOver.set(false);
 
+    if (name === 'youtube') {
+      this.updateEmbedFromUrl(urlBack);
+      this.updateFilePreviewFromBackend(null);
+    } else if (name === 'archivo') {
+      this.embedUrl.set(null);
+      this.updateFilePreviewFromBackend(urlBack || null);
+    } else {
+      this.embedUrl.set(null);
+      this.updateFilePreviewFromBackend(null);
+    }
+
+    this.form.markAsPristine();
+    this.sabed = true;
+  }
 
   // Guardar con soporte YouTube/Archivo (prioriza File si existe)
   async save() {
     if (this.saving()) return;
+    if (this.fileError()) return; // no guardamos si hay error de archivo
 
     try {
       this.saving.set(true);
@@ -384,8 +625,20 @@ export class ContentLearningComponent implements OnInit {
 
       this.form.reset({ type_content_id: typeBack, url: nextUrlForForm });
       this.selectedTypeId.set(typeBack);
-      this.updateEmbedFromUrl(urlBack);
+
+      if (name === 'youtube') {
+        this.updateEmbedFromUrl(urlBack);
+        this.updateFilePreviewFromBackend(null);
+      } else if (name === 'archivo') {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(urlBack || null);
+      } else {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(null);
+      }
+
       this.fileSel.set(null);
+      this.fileError.set(null);
       this.form.markAsPristine();
       this.sabed = true;
 
