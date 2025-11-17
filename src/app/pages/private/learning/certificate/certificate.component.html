@@ -23,7 +23,7 @@
   <!-- Contenido real -->
   <ng-template #loaded>
     <ng-container *ngIf="certificate() as cert">
-      <article class="certificate-card">
+      <article class="certificate-card" #certificateCard>
 
         <!-- HEADER -->
         <header class="certificate-header">
@@ -187,24 +187,25 @@
           </div>
 
           <div class="footer-right">
-            <button
-              type="button"
-              class="btn-download"
-              (click)="onDownload()"
-              [disabled]="!cert.can_download || downloading()"
-            >
-              <span *ngIf="!downloading(); else downloadingTpl">
-                Descargar PDF
-              </span>
-              <ng-template #downloadingTpl>
-                Descargando...
-              </ng-template>
-            </button>
+      <button
+        type="button"
+        class="btn-download"
+        (click)="onDownload()"
+        [disabled]="!cert.can_download || downloading()"
+        data-html2canvas-ignore="true"
+      >
+        <span *ngIf="!downloading(); else downloadingTpl">
+          Descargar PDF
+        </span>
+        <ng-template #downloadingTpl>
+          Descargando...
+        </ng-template>
+      </button>
 
-            <p *ngIf="!cert.can_download" class="download-hint">
-              Solo el dueño del certificado o un administrador pueden descargar el PDF.
-            </p>
-          </div>
+      <p *ngIf="!cert.can_download" class="download-hint">
+        Solo el dueño del certificado o un administrador pueden descargar el PDF.
+      </p>
+    </div>
         </footer>
       </article>
     </ng-container>
