@@ -263,8 +263,12 @@ isFirstChapter = (chapterId: number) => this.firstChapterId === chapterId;
 
   /** Icono para el tipo de learning */
   learningIcon(ch: ChapterItem): string | null {
-    if (ch.learningType === 'youtube') return 'svg/youtube.svg';
-    if (ch.learningType === 'archivo')  return 'svg/file.svg';
+    if (ch.format === 'mp4'){
+      return 'svg/youtube.svg';
+    }else {
+      return 'svg/file.svg';
+    }
+    
     return null;
   }
 

@@ -32,7 +32,7 @@ export const routes: Routes = [
   loadComponent: () => import('./pages/private/learning/result/result.component').then(c => c.ResultComponent)
 },
 {
-  path: 'certificate:code',
+  path: 'certificate/:code',
   loadComponent: () => import('./pages/private/learning/certificate/certificate.component').then(c => c.CertificateComponent)
 }
 ,

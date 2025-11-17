@@ -1,1 +1,213 @@
-<p>certificate works!</p>
+<section class="certificate-page">
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error() as err" class="certificate-error">
+    <p>{{ err }}</p>
+  </div>
+
+  <!-- Skeleton de carga -->
+  <div *ngIf="loading(); else loaded" class="certificate-skeleton">
+    <div class="skeleton-header">
+      <div class="skeleton-logo"></div>
+      <div class="skeleton-title"></div>
+      <div class="skeleton-logo small"></div>
+    </div>
+    <div class="skeleton-body">
+      <div class="skeleton-line wide"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line half"></div>
+    </div>
+  </div>
+
+  <!-- Contenido real -->
+  <ng-template #loaded>
+    <ng-container *ngIf="certificate() as cert">
+      <article class="certificate-card">
+
+        <!-- HEADER -->
+        <header class="certificate-header">
+          <div class="header-brand">
+            <img
+              src="/img/logo/png/lefth/digi-mentor-solo-buho.png"
+              alt="DigiMentor"
+              class="logo logo-digimentor"
+            />
+            <div class="brand-text">
+              <h1>DigiMentor</h1>
+              <p>Plataforma de aprendizaje en línea</p>
+            </div>
+          </div>
+
+          <div class="header-institution">
+            <img
+              src="/img\logo\png\espam-mfl-label.png"
+              alt="ESPAM MFL"
+              class="logo logo-espam"
+            />
+            <span class="institution-name">ESPAM MFL</span>
+          </div>
+        </header>
+
+        <!-- CUERPO PRINCIPAL -->
+        <main class="certificate-body">
+          <section class="certificate-title-block">
+            <h2>Certificado de aprovechamiento</h2>
+            <p class="subtitle">
+              Se otorga el presente certificado a
+              <strong>{{ getStudentFullName() }}</strong>
+              por su participación y cumplimiento en el curso:
+            </p>
+            <h3 class="course-title">
+              {{ cert.course.title }}
+            </h3>
+
+            <div class="course-tags">
+              <span *ngIf="cert.course.difficulty" class="tag difficulty">
+                {{ cert.course.difficulty }}
+              </span>
+
+              <span
+                *ngFor="let cat of cert.course.categories"
+                class="tag category"
+              >
+                {{ cat.name }}
+              </span>
+            </div>
+          </section>
+
+          <!-- INFO PERSONAS -->
+          <section class="persons-grid">
+            <!-- Estudiante -->
+            <div class="person-card">
+              <div class="person-header">
+                <div class="avatar">
+                  <img
+                    *ngIf="cert.certificate_owner?.profile_picture_url; else avatarInitialStudent"
+                    [src]="cert.certificate_owner?.profile_picture_url"
+                    alt="Foto estudiante"
+                  />
+                  <ng-template #avatarInitialStudent>
+                    <div class="avatar-initial">
+                      {{ cert.certificate_owner?.name?.[0] || '?' }}
+                    </div>
+                  </ng-template>
+                </div>
+                <div>
+                  <p class="person-role">Estudiante</p>
+                  <p class="person-name">{{ getStudentFullName() }}</p>
+                  <p class="person-username">{{ '@'+ cert.certificate_owner?.username }}</p>
+                </div>
+              </div>
+
+              <!-- Info académica: Sede y carrera -->
+              <div class="academic-info">
+                <h4>Información académica</h4>
+
+                <div *ngIf="cert.academic_information.sede" class="academic-row">
+                  <span class="label">Sede:</span>
+                  <span class="value">
+                    {{ cert.academic_information.sede.province }}
+                    -
+                    {{ cert.academic_information.sede.canton }}
+                  </span>
+                </div>
+
+                <div *ngIf="cert.academic_information.career" class="academic-row career-row">
+                  <span class="label">Carrera:</span>
+                  <div class="value career-value">
+                    <img
+                      *ngIf="cert.academic_information.career.url_logo"
+                      [src]="cert.academic_information.career.url_logo"
+                      alt="Logo carrera"
+                      class="career-logo"
+                    />
+                    <span>{{ cert.academic_information.career.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tutor / dueño del curso -->
+            <div class="person-card">
+              <div class="person-header">
+                <div class="avatar">
+                  <img
+                    *ngIf="cert.course_owner?.profile_picture_url; else avatarInitialTutor"
+                    [src]="cert.course_owner?.profile_picture_url"
+                    alt="Foto tutor"
+                  />
+                  <ng-template #avatarInitialTutor>
+                    <div class="avatar-initial">
+                      {{ cert.course_owner?.name?.[0] || 'T' }}
+                    </div>
+                  </ng-template>
+                </div>
+                <div>
+                  <p class="person-role">Tutor responsable</p>
+                  <p class="person-name">{{ getTutorFullName() }}</p>
+                  <p class="person-username">{{ '@' +cert.course_owner?.username }}</p>
+                </div>
+              </div>
+
+              <div class="course-meta">
+                <div>
+                  <span class="meta-label">Fecha del curso:</span>
+                  <span class="meta-value">
+                    {{ cert.course.created_at | date:'longDate' }}
+                  </span>
+                </div>
+                <div>
+                  <span class="meta-label">Fecha del certificado:</span>
+                  <span class="meta-value">
+                    {{ cert.certificate.date | date:'longDate' }}
+                  </span>
+                </div>
+                <div>
+                  <span class="meta-label">Puntuación obtenida:</span>
+                  <span class="meta-value score">
+                    {{ cert.certificate.total_score | number:'1.0-2' }} pts
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <!-- FOOTER / ACCIONES -->
+        <footer class="certificate-footer">
+          <div class="footer-left">
+            <p class="certificate-code">
+              Código de verificación:
+              <strong>{{ cert.certificate.code }}</strong>
+            </p>
+            <p class="footer-note">
+              Este certificado puede verificarse en DigiMentor usando el código anterior.
+            </p>
+          </div>
+
+          <div class="footer-right">
+            <button
+              type="button"
+              class="btn-download"
+              (click)="onDownload()"
+              [disabled]="!cert.can_download || downloading()"
+            >
+              <span *ngIf="!downloading(); else downloadingTpl">
+                Descargar PDF
+              </span>
+              <ng-template #downloadingTpl>
+                Descargando...
+              </ng-template>
+            </button>
+
+            <p *ngIf="!cert.can_download" class="download-hint">
+              Solo el dueño del certificado o un administrador pueden descargar el PDF.
+            </p>
+          </div>
+        </footer>
+      </article>
+    </ng-container>
+  </ng-template>
+</section>
+

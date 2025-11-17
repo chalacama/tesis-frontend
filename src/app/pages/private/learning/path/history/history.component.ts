@@ -129,7 +129,7 @@ export class HistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   previewCertificate(code?: string) {
     if (!code) return;
     // respeta tu ruta definida literalmente: 'certificate:code'
-    this.router.navigate([`/certificate${code}`]);
+    this.router.navigate([`learning/certificate/${code}`]);
     this.closeMenus();
   }
 
