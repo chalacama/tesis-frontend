@@ -15,6 +15,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/public/landing/landing.component').then((c) => c.LandingComponent)
   },
   {
+  path: 'certificate/:code',
+  loadComponent: () => import('./pages/public/certificate/certificate.component').then(c => c.CertificateComponent)
+  },
+  {
+  path: 'personalize',
+  loadComponent: () => import('./pages/private/personalize/personalize.component').then(c => c.PersonalizeComponent)
+  },
+  {
     path: '',
     canActivate: [authGuard],
     children:[
@@ -30,11 +38,8 @@ export const routes: Routes = [
       {
   path: 'results',
   loadComponent: () => import('./pages/private/learning/result/result.component').then(c => c.ResultComponent)
-},
-{
-  path: 'certificate/:code',
-  loadComponent: () => import('./pages/private/learning/certificate/certificate.component').then(c => c.CertificateComponent)
 }
+
 ,
       {
         path: 'me',

@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { CertificateService } from '../../../../core/api/certificate/certificate.service';
-import { CertificateView } from '../../../../core/api/certificate/certificate.interface';
+import { CertificateService } from '../../../core/api/certificate/certificate.service';
+import { CertificateView } from '../../../core/api/certificate/certificate.interface';
 
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs';

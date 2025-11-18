@@ -126,12 +126,19 @@ export class HistoryComponent implements OnInit, AfterViewInit, OnDestroy {
   onDocClick() { this.closeMenus(); }
 
   // Acciones certificado
+  // ...existing code...
+  // Acciones certificado
   previewCertificate(code?: string) {
     if (!code) return;
-    // respeta tu ruta definida literalmente: 'certificate:code'
-    this.router.navigate([`learning/certificate/${code}`]);
+    // crear la URL interna y convertirla a absoluta para abrir en nueva pestaña
+    const tree = this.router.createUrlTree(['certificate', code]);
+    const url = this.router.serializeUrl(tree);
+    const fullUrl = `${window.location.origin}${url}`;
+    const newWindow = window.open(fullUrl, '_blank');
+    if (newWindow) newWindow.opener = null; // seguridad: evitar acceso al opener
     this.closeMenus();
   }
+// ...existing code...
 
   downloadCertificate(code?: string) {
     if (!code) return;
