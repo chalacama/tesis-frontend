@@ -63,9 +63,7 @@
             </h3>
 
             <div class="course-tags">
-              <span *ngIf="cert.course.difficulty" class="tag difficulty">
-                {{ cert.course.difficulty }}
-              </span>
+              
 
               <span
                 *ngFor="let cat of cert.course.categories"
@@ -83,8 +81,8 @@
               <div class="person-header">
                 <div class="avatar">
                   <img
-                    *ngIf="cert.certificate_owner?.profile_picture_url; else avatarInitialStudent"
-                    [src]="cert.certificate_owner?.profile_picture_url"
+                    *ngIf="getStudentAvatar(cert) as studentAvatar; else avatarInitialStudent"
+                      [src]="studentAvatar"
                     alt="Foto estudiante"
                   />
                   <ng-template #avatarInitialStudent>
@@ -117,11 +115,11 @@
                   <span class="label">Carrera:</span>
                   <div class="value career-value">
                     <img
-                      *ngIf="cert.academic_information.career.url_logo"
-                      [src]="cert.academic_information.career.url_logo"
-                      alt="Logo carrera"
-                      class="career-logo"
-                    />
+    *ngIf="getCareerLogo(cert) as careerLogo"
+    [src]="careerLogo"
+    alt="Logo carrera"
+    class="career-logo"
+  />
                     <span>{{ cert.academic_information.career.name }}</span>
                   </div>
                 </div>
@@ -133,10 +131,10 @@
               <div class="person-header">
                 <div class="avatar">
                   <img
-                    *ngIf="cert.course_owner?.profile_picture_url; else avatarInitialTutor"
-                    [src]="cert.course_owner?.profile_picture_url"
-                    alt="Foto tutor"
-                  />
+    *ngIf="getTutorAvatar(cert) as tutorAvatar; else avatarInitialTutor"
+    [src]="tutorAvatar"
+    alt="Foto tutor"
+  />
                   <ng-template #avatarInitialTutor>
                     <div class="avatar-initial">
                       {{ cert.course_owner?.name?.[0] || 'T' }}

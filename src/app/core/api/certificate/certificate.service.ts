@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import {
   CertificateShowResponse,
   CertificateIndexResponse,
+  CertificateView,
 } from './certificate.interface';
 import { environment } from '../../environment/environment';
 import { Router } from '@angular/router';
@@ -67,6 +68,32 @@ export class CertificateService {
 
     return this.http.get<CertificateIndexResponse>(`${this.apiUrl}/index`, { params });
   }
+
+  getProxiedImage(url?: string | null): string | null {
+    if (!url) return null;
+    return `${this.apiUrl}/image-proxy?url=${encodeURIComponent(url)}`;
+    
+  }
+
+
+getStudentAvatar(cert: CertificateView | null): string | null {
+  return cert?.certificate_owner?.profile_picture_url
+    ? this.getProxiedImage(cert.certificate_owner.profile_picture_url)
+    : null;
+}
+
+getTutorAvatar(cert: CertificateView | null): string | null {
+  return cert?.course_owner?.profile_picture_url
+    ? this.getProxiedImage(cert.course_owner.profile_picture_url)
+    : null;
+}
+
+getCareerLogo(cert: CertificateView | null): string | null {
+  return cert?.academic_information?.career?.url_logo
+    ? this.getProxiedImage(cert.academic_information.career.url_logo)
+    : null;
+}
+
 
   
 }

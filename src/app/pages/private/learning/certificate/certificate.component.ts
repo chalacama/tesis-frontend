@@ -100,27 +100,34 @@ export class CertificateComponent implements OnInit {
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
 
-      // 👇 Aquí "limpiamos" los estilos problemáticos SOLO en el clon
       onclone: (clonedDoc: Document) => {
-        const selectorsToFix = [
-          '.certificate-card',
-          '.certificate-body',
-          '.certificate-error',
-          '.person-card',
-          '.tag'
-        ];
+        // Fondo verde suave del cuerpo del certificado
+        const body = clonedDoc.querySelector<HTMLElement>('.certificate-body');
+        if (body) {
+          body.style.background = '#E6F7F1'; // verde menta similar al original
+          body.style.backgroundImage = 'none';
+        }
 
-        selectorsToFix.forEach(selector => {
-          clonedDoc.querySelectorAll<HTMLElement>(selector).forEach(el => {
-            el.style.background = '#ffffff';     // fondo plano
-            el.style.backgroundImage = 'none';   // sin gradients
-          });
+        // Tarjetas de persona (estudiante / tutor)
+        clonedDoc.querySelectorAll<HTMLElement>('.person-card').forEach(el => {
+          el.style.background = '#FFFFFF';  // blanco tarjeta
         });
 
-        // Opcional: quitar sombras para que el PDF se vea más limpio
-        clonedDoc.querySelectorAll<HTMLElement>('.certificate-card').forEach(el => {
-          el.style.boxShadow = 'none';
-          el.style.border = '1px solid #ddd';
+        // Tags (Beginner / Programación / Tecnología)
+        clonedDoc.querySelectorAll<HTMLElement>('.tag').forEach(el => {
+          if (el.classList.contains('difficulty')) {
+            // dificultad: verde suave
+            el.style.background = '#DCFCE7';
+          } else {
+            // categorías: gris/azul muy claro
+            el.style.background = '#E5F0FF';
+          }
+        });
+
+        // Mensajes de error (por si acaso)
+        clonedDoc.querySelectorAll<HTMLElement>('.certificate-error').forEach(el => {
+          el.style.background = '#FEF2F2';
+          el.style.borderColor = '#FCA5A5';
         });
       }
     });
@@ -153,5 +160,29 @@ export class CertificateComponent implements OnInit {
     this.downloading.set(false);
   }
 }
+
+  // ==== NUEVOS MÉTODOS PARA AVATARES / LOGO ====
+
+  getStudentAvatar(cert: CertificateView | null): string | null {
+    if (!cert?.certificate_owner?.profile_picture_url) return null;
+    return this.certificateService.getProxiedImage(
+      cert.certificate_owner.profile_picture_url
+    );
+  }
+
+  getTutorAvatar(cert: CertificateView | null): string | null {
+    if (!cert?.course_owner?.profile_picture_url) return null;
+    return this.certificateService.getProxiedImage(
+      cert.course_owner.profile_picture_url
+    );
+  }
+
+  getCareerLogo(cert: CertificateView | null): string | null {
+    if (!cert?.academic_information?.career?.url_logo) return null;
+    return this.certificateService.getProxiedImage(
+      cert.academic_information.career.url_logo
+    );
+  }
+
 
 }
