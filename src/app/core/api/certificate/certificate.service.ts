@@ -94,6 +94,28 @@ getCareerLogo(cert: CertificateView | null): string | null {
     : null;
 }
 
+  /**
+   * Abrir vista pública del certificado en una pestaña nueva.
+   */
+  openPublicView(code: string): void {
+    const urlTree = this.router.createUrlTree(['/certificate', code]);
+    const url = this.router.serializeUrl(urlTree);
+    window.open(url, '_blank');
+  }
+
+  /**
+   * Descargar el certificado.
+   * Reutiliza la misma vista con el queryParam ?print=1
+   * (tu componente certificate.component ya sabe qué hacer con eso).
+   */
+  download(code: string): void {
+    const urlTree = this.router.createUrlTree(['/certificate', code], {
+      queryParams: { print: 1 }
+    });
+    const url = this.router.serializeUrl(urlTree);
+    window.open(url, '_blank');
+  }
+
 
   
 }

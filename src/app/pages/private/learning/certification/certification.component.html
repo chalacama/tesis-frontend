@@ -1,1 +1,291 @@
-<p>certification works!</p>
+<div class="certification-page">
+  <!-- INTRO + CAROUSEL -->
+  <section class="intro-section">
+    <div class="intro-text">
+      <h1>Mis certificados</h1>
+      <p>
+        Aquí encontrarás todos los certificados obtenidos en DigiMentor.
+        Puedes filtrarlos, verlos en detalle y descargar la versión en PDF
+        cuando lo necesites.
+      </p>
+    </div>
+
+    <div class="carousel">
+      <button type="button" class="carousel-arrow left" (click)="prevSlide()">
+        ‹
+      </button>
+
+      <div class="carousel-window">
+        <div
+          class="carousel-track"
+          [style.transform]="'translateX(-' + currentSlide * 100 + '%)'"
+        >
+          <div
+            class="carousel-slide"
+            *ngFor="let img of carouselImages"
+          >
+            <img [src]="img" alt="Portada de certificados" />
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="carousel-arrow right" (click)="nextSlide()">
+        ›
+      </button>
+
+      <div class="carousel-dots">
+        <button
+          type="button"
+          *ngFor="let img of carouselImages; index as i"
+          [class.active]="i === currentSlide"
+          (click)="goToSlide(i)"
+        ></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTROS -->
+  <section class="filters-section">
+    <form class="filters-form" (ngSubmit)="applyFilters()">
+      <div class="filter-item">
+        <label for="search">Buscar</label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Curso, código, tutor..."
+          [(ngModel)]="search"
+          name="search"
+        />
+      </div>
+
+      <div class="filter-item">
+        <label for="fromDate">Desde</label>
+        <input
+          id="fromDate"
+          type="date"
+          [(ngModel)]="fromDate"
+          name="fromDate"
+        />
+      </div>
+
+      <div class="filter-item">
+        <label for="toDate">Hasta</label>
+        <input
+          id="toDate"
+          type="date"
+          [(ngModel)]="toDate"
+          name="toDate"
+        />
+      </div>
+
+      <div class="filter-actions">
+        <button type="submit" class="btn-primary">
+          Aplicar filtros
+        </button>
+        <button type="button" class="btn-secondary" (click)="clearFilters()">
+          Limpiar
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- LISTA DE CERTIFICADOS / SKELETON -->
+  <section class="list-section">
+    <!-- Skeleton inicial -->
+    <ng-container *ngIf="initialLoading; else certificateList">
+      <div
+        class="certificate-card skeleton"
+        *ngFor="let _ of skeletonItems"
+      >
+        <div class="certificate-preview skeleton-box"></div>
+        <div class="certificate-info">
+          <div class="skeleton-box skeleton-line w-40"></div>
+          <div class="skeleton-box skeleton-line w-60"></div>
+          <div class="skeleton-box skeleton-line w-80"></div>
+          <div class="skeleton-box skeleton-line w-50"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #certificateList>
+      <div *ngIf="certificates.length === 0 && !loading" class="empty-state">
+        <p>No se encontraron certificados con los filtros seleccionados.</p>
+      </div>
+
+      <div
+        class="certificate-card"
+        *ngFor="let cert of certificates"
+      >
+        <!-- PREVISUALIZACIÓN (click abre el certificado completo) -->
+        <button
+          type="button"
+          class="certificate-preview"
+          (click)="openCertificate(cert)"
+        >
+          <div class="preview-header">
+            <span class="preview-brand">DigiMentor</span>
+            <span class="preview-tag">Certificado</span>
+          </div>
+
+          <div class="preview-body">
+            <p class="preview-title">
+              {{ cert.course.title }}
+            </p>
+            <p class="preview-subtitle">
+              Otorgado a
+              <strong>
+                {{ cert.certificate_owner?.name }}
+                {{ cert.certificate_owner?.lastname }}
+              </strong>
+            </p>
+            <p class="preview-subtext">
+              Código: {{ cert.certificate.code }}
+            </p>
+          </div>
+
+          <div class="preview-footer">
+            <span class="preview-date">
+              {{ cert.certificate.date | date: 'longDate' }}
+            </span>
+            <span class="preview-score">
+              {{ cert.certificate.total_score }} pts
+            </span>
+          </div>
+        </button>
+
+        <!-- INFORMACIÓN DETALLADA -->
+        <div class="certificate-info">
+          <div class="info-header">
+            <div class="course-data">
+              <h2>{{ cert.course.title }}</h2>
+              <div class="chip-row">
+                <span
+                  class="chip"
+                  *ngFor="let cat of cert.course.categories"
+                >
+                  {{ cat.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-main">
+            <!-- Estudiante -->
+            <!-- <div class="info-column">
+              <h3>Estudiante</h3>
+              <div class="user-row">
+                <img
+                  *ngIf="getStudentAvatar(cert) as avatar"
+                  [src]="avatar"
+                  alt="Avatar estudiante"
+                  class="avatar"
+                />
+                <div>
+                  <p class="user-name">
+                    {{ cert.certificate_owner?.name }}
+                    {{ cert.certificate_owner?.lastname }}
+                  </p>
+                  <p class="user-username">
+                    {{ '@' + cert.certificate_owner?.username }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Sede:</span>
+                <span class="detail-value">
+                  {{
+                    cert.academic_information.sede
+                      ? (cert.academic_information.sede.province + ' - ' +
+                         cert.academic_information.sede.canton)
+                      : 'N/A'
+                  }}
+                </span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Carrera:</span>
+                <span class="detail-value">
+                  {{ cert.academic_information.career?.name || 'N/A' }}
+                </span>
+              </div>
+            </div> -->
+
+            <!-- Tutor -->
+            <div class="info-column">
+              <h3>Tutor responsable</h3>
+              <div class="user-row">
+                <img
+                  *ngIf="getTutorAvatar(cert) as tutorAvatar"
+                  [src]="tutorAvatar"
+                  alt="Avatar tutor"
+                  class="avatar"
+                />
+                <div>
+                  <p class="user-name">
+                    {{ cert.course_owner?.name }}
+                    {{ cert.course_owner?.lastname }}
+                  </p>
+                  <p class="user-username">
+                    {{ '@' + cert.course_owner?.username }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Fecha del certificado:</span>
+                <span class="detail-value">
+                  {{ cert.certificate.date | date: 'longDate' }}
+                </span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Puntaje obtenido:</span>
+                <span class="detail-value highlight">
+                  {{ cert.certificate.total_score }} pts
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-footer">
+            <div class="code-wrapper">
+              <span class="code-label">Código de verificación:</span>
+              <span class="code-value">
+                {{ cert.certificate.code }}
+              </span>
+            </div>
+
+            <div class="actions">
+              <button
+                type="button"
+                class="btn-secondary-outline"
+                (click)="openCertificate(cert)"
+              >
+                <ui-icon [size]="'sm'" [svgPath]="'svg/eye.svg'"></ui-icon>
+                <span>Ver certificado</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn-primary"
+                [class.btn-disabled]="!cert.can_download"
+                [disabled]="!cert.can_download"
+                (click)="downloadCertificate(cert)"
+              >
+                <ui-icon [size]="'sm'" [svgPath]="'svg/download.svg'"></ui-icon>
+                <span>Descargar PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loader cuando se está trayendo más páginas -->
+      <div class="loading-more" *ngIf="loading && hasMore">
+        Cargando más certificados...
+      </div>
+    </ng-template>
+  </section>
+</div>
+
