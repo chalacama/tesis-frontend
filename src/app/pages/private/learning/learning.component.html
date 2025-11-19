@@ -9,9 +9,7 @@
                 <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
             </div>
             <div class="content-logo-label" [class.content-logo-label-collapsed]="isSidebarCollapsed">
-                <!-- <div>
-                    <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />
-                </div> -->
+                
 
                 <div class="content-digimentor-label">
                     <img class="digimentor-label" src="img\logo\png\digi-mentor-label.png" alt="DigiMentor" />
@@ -150,6 +148,15 @@
             <app-search></app-search>
         </div>
         <div class="nav-right">
+
+            <div class="explore-nav">
+                
+            </div>
+
+            <div class="noti-content">
+
+            </div>
+
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" 
                 style="position: relative;">
                 <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="toggleProfileMenu()" class="profile-panel-avatar">
