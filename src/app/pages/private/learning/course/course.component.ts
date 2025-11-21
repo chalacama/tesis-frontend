@@ -15,6 +15,7 @@ import { CommentComponent } from './comment/comment.component';
 import { DetailComponent } from './detail/detail.component';
 import { CourseBridge } from '../../../../core/api/watching/course-bridge.service';
 import { filter } from 'rxjs';
+import { ToastComponent } from '../../../../shared/UI/components/overlay/toast/toast.component';
 
 type ChapterItem = {
   id: number;
@@ -41,7 +42,8 @@ type ModuleItem = {
     ButtonComponent,
     RouterOutlet,
     CommentComponent,
-    DetailComponent
+    DetailComponent,
+    
   ],
   templateUrl: './course.component.html',
   styleUrl: './course.component.css'

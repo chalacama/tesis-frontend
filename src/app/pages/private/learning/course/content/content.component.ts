@@ -25,6 +25,9 @@ import { FeedbackService } from '../../../../../core/api/feedback/feedback.servi
 import { LikeResponse, SavedResponse } from '../../../../../core/api/feedback/feedback.interface';
 import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
 import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
+import { UiToastService } from '../../../../../shared/services/ui-toast.service';
+import { NotificationBridgeService } from '../../../../../core/api/notification/notification-bridge.service';
+import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
 
 declare global {
   interface Window { onYouTubeIframeAPIReady?: () => void; YT?: any; }
@@ -33,7 +36,7 @@ declare global {
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent , DialogComponent],
+  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent , DialogComponent , ToastComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.css'
 })
@@ -45,6 +48,8 @@ export class ContentComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly feedbackSvc = inject(FeedbackService);
    private readonly bridge = inject(CourseBridge);
+   private readonly notificationBridge = inject(NotificationBridgeService); // 👈 NUEVO
+  private readonly toast = inject(UiToastService);                       
   @ViewChild('ytFrame') ytFrame?: ElementRef<HTMLIFrameElement>;
   
   // state
@@ -567,6 +572,18 @@ private reportCompletedDelta(currentSec: number) {
         console.log(`Chapter ${chapterId} completed!`);
           this.bridge.markChapterCompleted(chapterId);
         }
+        // 👇 Curso completado → se emitió certificado
+      if (res?.data?.certificate_issued) {
+        this.notificationBridge.increment(1); // sube el badge
+
+        this.toast.add({
+          severity: 'primary',
+          summary: '🎓 ¡Curso completado!',
+          message: 'Se ha emitido tu certificado. Revísalo en tus notificaciones o en la sección de certificados.',
+          position: 'top-right',
+          lifetime: 5000
+        });
+      }
     },
     error: () => {
       // Silencioso: no interrumpimos la UX por un fallo puntual de red

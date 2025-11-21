@@ -13,6 +13,7 @@ import {
 } from '../../../../../core/api/notification/notification.interface';
 import { NotificationService } from '../../../../../core/api/notification/notification.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotificationBridgeService } from '../../../../../core/api/notification/notification-bridge.service';
 
 @Component({
   selector: 'app-notification',
@@ -30,12 +31,14 @@ export class NotificationComponent {
   readonly open = signal(false);
   readonly loading = signal(false);
   readonly notifications = signal<ApiNotification[]>([]);
-  readonly unreadCount = signal(0);
+  /* readonly unreadCount = signal(0); */
   readonly page = signal(1);
   readonly hasMore = signal(true);
   readonly initialized = signal(false);
   readonly error = signal<string | null>(null);
+  private readonly bridge = inject(NotificationBridgeService);
 
+  readonly unreadCount = this.bridge.unreadCount;
   // solo para skeletons
   readonly skeletonItems = Array.from({ length: 4 });
 
@@ -51,7 +54,7 @@ export class NotificationComponent {
       .subscribe({
         next: (res) => {
           if (res?.ok) {
-            this.unreadCount.set(res.count ?? 0);
+            this.bridge.setCount(res.count ?? 0);
           }
         },
         error: () => {
@@ -134,7 +137,8 @@ export class NotificationComponent {
                   : n
               )
             );
-            this.unreadCount.update((c) => Math.max(0, c - 1));
+            this.bridge.decrement(1);
+            
           },
           error: () => {
             // si falla, no rompemos el flujo
@@ -166,7 +170,7 @@ export class NotificationComponent {
                 read_at: n.read_at ?? nowIso,
               }))
             );
-            this.unreadCount.set(0);
+            this.bridge.clear();
           }
         },
         error: () => {
