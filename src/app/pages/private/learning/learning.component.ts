@@ -11,11 +11,12 @@ import { HostListener } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SearchComponent } from '../../../shared/UI/components/data/search/search.component';
+import { NotificationComponent } from '../../../shared/UI/components/data/notification/notification.component';
 @Component({
   selector: 'app-learning',
   imports: [RouterOutlet, CommonModule, 
 
-    SearchComponent
+    SearchComponent, NotificationComponent
   ],
   templateUrl: './learning.component.html',
   styleUrl: './learning.component.css'

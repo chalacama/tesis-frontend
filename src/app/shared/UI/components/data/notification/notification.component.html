@@ -1,1 +1,121 @@
-<p>notification works!</p>
+<div class="notification-wrapper">
+  <!-- Botón campanita -->
+  <button
+    type="button"
+    class="notification-button"
+    (click)="toggleOpen()"
+    aria-label="Notificaciones"
+  >
+    <ui-icon
+      [size]="'sm'"
+      [svgPath]="'svg/notification.svg'"
+    ></ui-icon>
+
+    <span
+      class="notification-badge"
+      *ngIf="unreadCount() > 0"
+    >
+      {{ unreadCount() > 9 ? '9+' : unreadCount() }}
+    </span>
+  </button>
+
+  <!-- Panel -->
+  <div
+    class="notification-panel"
+    *ngIf="open()"
+  >
+    <div class="notification-header">
+      <span class="notification-title-main">Notificaciones</span>
+
+      <button
+        *ngIf="unreadCount() > 0"
+        type="button"
+        class="notification-mark-all"
+        (click)="onMarkAllAsRead($event)"
+      >
+        Marcar todas como leídas
+      </button>
+    </div>
+
+    <div class="notification-body">
+      <!-- Error -->
+      <div
+        *ngIf="error()"
+        class="notification-error"
+      >
+        {{ error() }}
+      </div>
+
+      <!-- Skeleton inicial -->
+      <div
+        *ngIf="loading() && notifications().length === 0"
+        class="notification-skeleton-list"
+      >
+        <div
+          class="notification-skeleton-item"
+          *ngFor="let _ of skeletonItems"
+        ></div>
+      </div>
+
+      <!-- Sin notificaciones -->
+      <div
+        *ngIf="!loading() && notifications().length === 0 && !error()"
+        class="notification-empty"
+      >
+        <p>Sin notificaciones por ahora.</p>
+      </div>
+
+      <!-- Lista -->
+      <ul
+        *ngIf="notifications().length > 0"
+        class="notification-list"
+      >
+        <li
+          *ngFor="let n of notifications(); trackBy: trackById"
+          class="notification-list-item"
+          [class.notification-unread]="!n.read_at"
+        >
+          <button
+            type="button"
+            class="notification-item"
+            (click)="onNotificationClick(n, $event)"
+          >
+            <div class="notification-item-header">
+              <span class="notification-item-title">
+                {{ n.data.title }}
+              </span>
+            </div>
+
+            <div class="notification-item-message">
+              {{ n.data.message }}
+            </div>
+
+            <div class="notification-item-meta">
+              <span class="notification-item-time">
+                {{ n.created_at | date : 'short' }}
+              </span>
+            </div>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Botón "ver más" -->
+      <button
+        *ngIf="hasMore() && !loading() && notifications().length > 0"
+        type="button"
+        class="notification-load-more"
+        (click)="loadMore($event)"
+      >
+        Ver más
+      </button>
+
+      <!-- Cargando más -->
+      <div
+        *ngIf="loading() && notifications().length > 0"
+        class="notification-loading-more"
+      >
+        Cargando…
+      </div>
+    </div>
+  </div>
+</div>

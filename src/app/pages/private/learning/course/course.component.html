@@ -1,77 +1,142 @@
 <div [class.content-course-relative]="!visibleModule" class="content-course">
-  <div class="module-drawer" *ngIf="!visibleModule">
-    <div class="module-drawer-left">
-      <ui-button (click)="showModule()" type="button" size="lg"
-        [style]="{borderRadius: '10px' , width: '50px', height: '50px' , padding: '0px'}" severity="contrast"
-        variant="flat" [icon]="{svgPath: 'svg/nav-list.svg'}">
-      </ui-button>
-    </div>
-    <div class="module-drawer-right">
-      <div class="module-drawer-module">
-        Modulo 1
-      </div>
-      <div class="module-drawer-chapter">
-        capitulo 1
-      </div>
-    </div>
-  </div>
+  <!-- PANEL IZQUIERDO: MÓDULOS -->
   <div [class.modules-small]="smallModule" *ngIf="visibleModule" class="modules">
-
     <div class="modules-header">
-      <ui-button (click)="sizeModule()" type="button" size="lg"
-        [style]="{borderRadius: '10px' , width: '50px', height: '50px' , padding: '0px'}" severity="contrast"
-        variant="flat" [icon]="{svgPath: 'svg/nav-list.svg'}">
+      <ui-button
+        (click)="sizeModule()"
+        type="button"
+        size="lg"
+        [style]="{
+          borderRadius: '10px',
+          width: '50px',
+          height: '50px',
+          padding: '0px'
+        }"
+        severity="contrast"
+        variant="flat"
+        [icon]="{ svgPath: 'svg/nav-list.svg' }"
+      >
       </ui-button>
       <span *ngIf="!smallModule">
-        <ui-button (click)="showModule()" type="button" size="lg"
-          [style]="{borderRadius: '50%' , width: '40px', height: '40px', padding: '0px'}" severity="contrast"
-          variant="flat" [icon]="{svgPath: 'svg/x.svg'}">
+        <ui-button
+          (click)="showModule()"
+          type="button"
+          size="lg"
+          [style]="{
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            padding: '0px'
+          }"
+          severity="contrast"
+          variant="flat"
+          [icon]="{ svgPath: 'svg/x.svg' }"
+        >
         </ui-button>
       </span>
-
     </div>
 
-    <!-- Loading / error -->
-    <div *ngIf="loading()" class="loading">Cargando…</div>
-    <div *ngIf="!loading() && error()" class="error">{{ error() }}</div>
+    <!-- SKELETON -->
+    <div *ngIf="loading()" class="modules-skeleton">
+      <div class="skeleton-module" *ngFor="let _ of skeletonModules">
+        <div class="skeleton-module-header">
+          <span class="skeleton-line skeleton-module-title"></span>
+          <span class="skeleton-circle skeleton-module-chevron"></span>
+        </div>
+        <ul class="skeleton-chapters">
+          <li *ngFor="let __ of skeletonChapters">
+            <div class="skeleton-chapter-row">
+              <span class="skeleton-circle skeleton-chapter-status"></span>
+              <span class="skeleton-line skeleton-chapter-title"></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
 
+    <!-- ERROR -->
+    <div *ngIf="!loading() && error()" class="error">
+      {{ error() }}
+    </div>
+
+    <!-- CONTENIDO REAL -->
     <ng-container *ngIf="!loading() && !error()">
-      <div class="accordion" *ngFor="let m of modules(); let modIndex = index; trackBy: trackByModule">
-        <button class="acc-header" type="button" (click)="toggle(m.id)" [attr.aria-expanded]="isOpen(m.id)"
-          [attr.aria-controls]="'panel-' + m.id">
-
+      <div
+        class="accordion"
+        *ngFor="let m of modules(); let modIndex = index; trackBy: trackByModule"
+      >
+        <button
+          class="acc-header"
+          type="button"
+          (click)="toggle(m.id)"
+          [attr.aria-expanded]="isOpen(m.id)"
+          [attr.aria-controls]="'panel-' + m.id"
+        >
           <div class="acc-title">
-            <span class="mod-name" *ngIf="!smallModule">{{ m.name }}</span>
+            <span class="mod-name" *ngIf="!smallModule">
+              {{ m.name }}
+            </span>
             <span class="mod-name-small" *ngIf="smallModule">
               M{{ modIndex + 1 }}
             </span>
           </div>
-          <ui-icon class="chevron" [class.open]="isOpen(m.id)" [size]="'lg'" [severity]="'primary'"
-            [svgPath]="'svg/arrow-down.svg'">
+          <ui-icon
+            class="chevron"
+            [class.open]="isOpen(m.id)"
+            [size]="'lg'"
+            [severity]="'primary'"
+            [svgPath]="'svg/arrow-down.svg'"
+          >
           </ui-icon>
         </button>
 
         <div class="acc-panel" [class.open]="isOpen(m.id)" [id]="'panel-' + m.id">
           <div class="panel-inner">
             <ul class="chapters">
-              <li class="chapter-item" *ngFor="let c of m.chapters; let chapIndex = index; trackBy: trackByChapter">
-                <button [disabled]="!isFirstChapter(c.id) && !bridge.isRegistered()" class="chapter-btn" type="button"
-                  (click)="selectChapter(c)">
+              <li
+                class="chapter-item"
+                *ngFor="
+                  let c of m.chapters;
+                  let chapIndex = index;
+                  trackBy: trackByChapter
+                "
+              >
+                <button
+                  [disabled]="!isFirstChapter(c.id) && !bridge.isRegistered()"
+                  class="chapter-btn"
+                  type="button"
+                  (click)="selectChapter(c)"
+                >
                   <div class="chapter-btn-content">
-
-                    <span class="chapter-underline"
-                      [class.chapter-underline-active]="isActiveChapter(c.id)"></span>
-                    <span class="chapter-lock" *ngIf="!isFirstChapter(c.id) && !bridge.isRegistered()" >
-                          <ui-icon class="chevron" [class.open]="isOpen(m.id)" [size]="'md'" [severity]="'primary'"
-                            [svgPath]="'svg/padlock.svg'">
-                          </ui-icon>
+                    <span
+                      class="chapter-underline"
+                      [class.chapter-underline-active]="isActiveChapter(c.id)"
+                    >
                     </span>
+
+                    <span
+                      class="chapter-lock"
+                      *ngIf="!isFirstChapter(c.id) && !bridge.isRegistered()"
+                    >
+                      <ui-icon
+                        class="chevron"
+                        [size]="'md'"
+                        [severity]="'primary'"
+                        [svgPath]="'svg/padlock.svg'"
+                      >
+                      </ui-icon>
+                    </span>
+
                     <div class="chapter-content">
                       <div class="chapter-header">
-                        <span [class.status-active]="c.completed" class="status"></span>
-                       
+                        <span
+                          [class.status-active]="c.completed"
+                          class="status"
+                        ></span>
 
-                        <span class="chapter-title" *ngIf="!smallModule">{{ c.title }}</span>
+                        <span class="chapter-title" *ngIf="!smallModule">
+                          {{ c.title }}
+                        </span>
 
                         <span class="chapter-title-small" *ngIf="smallModule">
                           C{{ chapIndex + 1 }}
@@ -80,26 +145,126 @@
 
                       <div class="chapter-meta" *ngIf="!smallModule">
                         <span class="icon-slot" *ngIf="learningIcon(c) as iconPath">
-                          <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="iconPath"></ui-icon>
+                          <ui-icon
+                            [size]="'sm'"
+                            [severity]="'primary'"
+                            [svgPath]="iconPath"
+                          ></ui-icon>
                         </span>
-                        <span class="questions">{{ c.questions }} preguntas</span>
+                        <span class="questions">
+                          {{ c.questions }} preguntas
+                        </span>
                       </div>
                     </div>
                   </div>
                 </button>
               </li>
-
             </ul>
           </div>
         </div>
       </div>
     </ng-container>
-
   </div>
 
-  <!-- La vista derecha queda tal cual (tu diseño actual) -->
+  <!-- VISTA DERECHA -->
   <div class="view">
+    <!-- DRAWER SUPERIOR CUANDO EL PANEL DE MÓDULOS ESTÁ OCULTO -->
+    <div class="module-drawer" *ngIf="!visibleModule">
+      <div class="module-drawer-left">
+        <ui-button
+          (click)="showModule()"
+          type="button"
+          size="lg"
+          [style]="{
+            borderRadius: '10px',
+            width: '50px',
+            height: '50px',
+            padding: '0px'
+          }"
+          severity="contrast"
+          variant="flat"
+          [icon]="{ svgPath: 'svg/nav-list.svg' }"
+        >
+        </ui-button>
+      </div>
+
+      <div class="module-drawer-right">
+        <!-- Skeleton del drawer -->
+        <ng-container *ngIf="loading(); else drawerContent">
+          <div class="module-drawer-skeleton">
+            <span class="skeleton-line skeleton-drawer-module"></span>
+            <span class="skeleton-line skeleton-drawer-chapter"></span>
+          </div>
+        </ng-container>
+
+        <ng-template #drawerContent>
+          <ng-container *ngIf="!error() && activeContext() as ctx">
+            <!-- Texto: en qué módulo y capítulo estoy -->
+            <div class="module-drawer-info">
+              <span class="module-drawer-module">
+                M{{ ctx.moduleIndex + 1 }} · {{ ctx.module.name }}
+              </span>
+              <span class="module-drawer-chapter">
+                C{{ ctx.chapterIndex + 1 }} · {{ ctx.chapter.title }}
+              </span>
+            </div>
+
+            <!-- Navegación horizontal (tipo acordeón horizontal) -->
+            <div class="module-drawer-horizontal">
+              <!-- Chips de módulos -->
+              <div class="module-drawer-modules">
+                <button
+                  *ngFor="
+                    let m of modules();
+                    let modIndex = index;
+                    trackBy: trackByModule
+                  "
+                  type="button"
+                  class="module-chip"
+                  [class.module-chip-active]="ctx.module.id === m.id"
+                  (click)="selectModuleFromDrawer(m)"
+                >
+                  <span
+                    class="module-chip-dot"
+                    [class.module-chip-dot-active]="ctx.module.id === m.id"
+                  ></span>
+                  <span class="module-chip-label">
+                    M{{ modIndex + 1 }} · {{ m.name }}
+                  </span>
+                </button>
+              </div>
+
+              <!-- Chips de capítulos del módulo activo -->
+              <div class="module-drawer-chapters-row">
+                <button
+                  *ngFor="
+                    let c of ctx.module.chapters;
+                    let chapIndex = index;
+                    trackBy: trackByChapter
+                  "
+                  type="button"
+                  class="chapter-pill"
+                  [class.chapter-pill-active]="isActiveChapter(c.id)"
+                  (click)="selectChapter(c)"
+                  [disabled]="!isFirstChapter(c.id) && !bridge.isRegistered()"
+                >
+                  <span
+                    class="chapter-pill-status"
+                    [class.chapter-pill-status-done]="c.completed"
+                  ></span>
+                  <span class="chapter-pill-text">
+                    C{{ chapIndex + 1 }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </ng-template>
+      </div>
+    </div>
+
     <router-outlet></router-outlet>
+
     <div class="detail" *ngIf="isContentView()">
       <app-detail></app-detail>
     </div>
@@ -107,5 +272,4 @@
       <app-comment></app-comment>
     </div>
   </div>
-
 </div>

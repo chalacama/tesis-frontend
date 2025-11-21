@@ -52,28 +52,20 @@
 .module-drawer{
   width: 100%;
   height: auto;
-  border-color: var(--sev-contrast); 
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    background: color-mix(in oklab, var(--sev-contrast) 10%, transparent);
-  
   display: flex;
   align-items: center;
-  
 
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 100;
   padding: 10px;
   gap: 20px;
   
 }
 .module-drawer-right{
   flex: 1;
+  display: flex;
+  justify-content: left;
 }
 .module-drawer-module{
-width: 100%;
+/* width: 100%; */
 font-weight: 600;
 font-size: .95rem;
 line-height: 1.2;
@@ -351,9 +343,246 @@ padding-left: 5px;
 
 
 
+/* === SKELETON PARA MÓDULOS === */
+
+.modules-skeleton {
+  padding: 8px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-module {
+  padding: 10px 8px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--card-bg) 80%, transparent);
+}
+
+.skeleton-module-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.skeleton-chapters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.skeleton-chapter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skeleton-line {
+  display: block;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--background-skeleton);
+  animation: skeletonPulse 1.2s ease-in-out infinite;
+}
+
+.skeleton-circle {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--background-skeleton);
+  animation: skeletonPulse 1.2s ease-in-out infinite;
+}
+
+.skeleton-module-title {
+  width: 65%;
+}
+
+.skeleton-module-chevron {
+  width: 16px;
+}
+
+.skeleton-chapter-status {
+  width: 10px;
+  height: 10px;
+}
+
+.skeleton-chapter-title {
+  width: 80%;
+}
+
+/* Skeleton del drawer superior */
+.module-drawer-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.skeleton-drawer-module {
+  width: 55%;
+  height: 9px;
+}
+
+.skeleton-drawer-chapter {
+  width: 40%;
+  height: 8px;
+}
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* === DRAWER SUPERIOR (HORIZONTAL) === */
+
+.module-drawer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--background-color);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.module-drawer-left {
+  flex-shrink: 0;
+}
+
+.module-drawer-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.module-drawer-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  font-size: 0.8rem;
+}
+
+.module-drawer-module {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.module-drawer-chapter {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.module-drawer-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.module-drawer-modules,
+.module-drawer-chapters-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+/* Chips de módulos y capítulos (acordeón horizontal) */
+
+.module-chip,
+.chapter-pill {
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  background: var(--sidebar-bg);
+  color: var(--text-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+}
+
+.module-chip:hover,
+.chapter-pill:hover {
+  background: var(--background-hover);
+}
+
+.module-chip-active {
+  background: var(--sev-primary);
+  color: var(--text-color-contrast);
+}
+
+.module-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border-color);
+}
+
+.module-chip-dot-active {
+  background: var(--text-color-contrast);
+}
+
+.chapter-pill {
+  background: var(--card-bg);
+}
+
+.chapter-pill[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.chapter-pill-active {
+  background: var(--sev-primary);
+  color: var(--text-color-contrast);
+}
+
+.chapter-pill-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border-color);
+}
+
+.chapter-pill-status-done {
+  background: var(--sev-primary);
+}
+
+.chapter-pill-text {
+  font-weight: 500;
+}
+
+/* (el resto de tus estilos se queda tal cual) */
 
 
 /* Responsivo */
 @media (max-width: 1100px) {
   
 }
+
+
