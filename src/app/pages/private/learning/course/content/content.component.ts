@@ -28,6 +28,7 @@ import { DialogComponent } from '../../../../../shared/UI/components/overlay/dia
 import { UiToastService } from '../../../../../shared/services/ui-toast.service';
 import { NotificationBridgeService } from '../../../../../core/api/notification/notification-bridge.service';
 import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
+import { TextComponent } from '../../../../../shared/UI/components/data/text/text.component';
 
 declare global {
   interface Window { onYouTubeIframeAPIReady?: () => void; YT?: any; }
@@ -36,7 +37,9 @@ declare global {
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent , DialogComponent , ToastComponent],
+  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent , DialogComponent , ToastComponent
+    , TextComponent
+  ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.css'
 })

@@ -1,1 +1,44 @@
-<p>text works!</p>
+<div class="description-wrapper">
+  <!-- Botón con ícono para abrir el diálogo -->
+  <button
+    type="button"
+    class="description-button"
+    (click)="openDialog()"
+    aria-label="Ver descripción completa"
+  >
+    <ui-icon
+      [size]="'lg'"
+      [svgPath]="'svg/description-remix.svg'"
+    ></ui-icon>
+
+    <span *ngIf="showLabel" class="description-button__label">
+      Ver descripción
+    </span>
+  </button>
+
+  <!-- Preview corto (2 líneas) opcional -->
+  <p *ngIf="showPreview" class="description-preview">
+    <span
+      class="description-preview__content"
+      [innerHTML]="description"
+    ></span>
+  </p>
+</div>
+
+<!-- Diálogo con el texto completo y scroll -->
+<ui-dialog
+  type="free"
+  [variant]="'filled'"
+  [closeOnMaskClick]="true"
+  [(visible)]="dialogTextShow"
+>
+  <div class="dialog-body">
+    <header class="dialog-header" *ngIf="title">
+      <h3>{{ title }}</h3>
+    </header>
+
+    <div class="description-scroll">
+      <div class="description-content" [innerHTML]="description"></div>
+    </div>
+  </div>
+</ui-dialog>

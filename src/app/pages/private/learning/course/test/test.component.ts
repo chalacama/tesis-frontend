@@ -247,7 +247,7 @@ export class TestComponent {
         if (completed && chapterId) {
           this.bridge.markChapterCompleted(chapterId);
         }
-        if (res?.data?.certificate_issued) {
+        if (res.data?.certificate_issued) {
         this.notificationBridge.increment(1);
 
         this.toast.add({

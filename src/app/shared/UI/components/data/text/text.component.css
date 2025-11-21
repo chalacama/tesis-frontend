@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+/* contenedor principal: botón + pequeño preview */
+.description-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* botón con icono */
+.description-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--text-color-secondary);
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.description-button:hover {
+  background-color: var(--background-hover);
+}
+
+.description-button:active {
+  transform: scale(0.97);
+}
+
+.description-button__label {
+  font-weight: 500;
+}
+
+/* preview corto, 2 líneas con "..." */
+.description-preview {
+  margin: 0;
+  flex: 1 1 auto;
+  max-height: 3.6em; /* aprox 2 líneas */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: var(--text-color);
+}
+
+.description-preview__content {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* cuerpo del diálogo */
+.dialog-body {
+  max-width: min(720px, 90vw);
+  padding: 20px;
+}
+
+/* header del diálogo */
+.dialog-header {
+  margin-bottom: 0.75rem;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* área scrollable del texto largo */
+.description-scroll {
+  max-height: 60vh;
+  padding-right: 0.5rem;
+  overflow-y: auto;
+}
+
+/* estilos de texto */
+.description-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* enlaces en azul que se noten como clickeables */
+.description-link,
+.description-content a,
+.description-preview a {
+  color: #3b82f6; /* azul */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.description-link:hover,
+.description-content a:hover,
+.description-preview a:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
+
+/* scrollbars un poquito más finos (opcional) */
+.description-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.description-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 999px;
+}

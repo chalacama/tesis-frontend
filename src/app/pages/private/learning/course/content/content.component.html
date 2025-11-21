@@ -79,6 +79,7 @@
       
 
       <div class="actions">
+        
         <ui-button
         
           *ngIf="!isRegistered()"
@@ -86,7 +87,12 @@
           severity="info"
           (click)="onRegister(d.course.private)">
         </ui-button>
-
+        <app-text
+          [description]="d.chapter.description"
+          [title]="'Descripción del capitulo'"
+          [showPreview]="false"
+          [showLabel]="false">
+      </app-text>
         <!-- Like -->
         <button class="icon-btn" (click)="toggleLike()" [attr.aria-label]="d.user_state.liked_chapter ? 'Quitar like' : 'Dar like'">
           <ui-icon

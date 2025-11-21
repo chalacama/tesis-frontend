@@ -158,6 +158,7 @@
     justify-content: right;
     align-items: center;
     height: 100%;
+    gap: 20px;
 }
 .nav-center{
     /* width: 40%; */
