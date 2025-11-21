@@ -51,7 +51,7 @@ export class CourseComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly watchingSvc = inject(WatchingService);
   readonly bridge = inject(CourseBridge);
-
+  
   private firstChapterId: number | null = null;
 
   // UI state
@@ -183,7 +183,7 @@ export class CourseComponent implements OnInit {
       }
     });
 
-    effect(() => {
+    /* effect(() => {
       const completed = this.bridge.completed();
       if (!completed) return;
 
@@ -195,7 +195,7 @@ export class CourseComponent implements OnInit {
         })
       }));
       this.modules.set(next);
-    });
+    }); */
   }
 
   isFirstChapter = (chapterId: number) => this.firstChapterId === chapterId;

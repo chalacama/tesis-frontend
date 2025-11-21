@@ -130,9 +130,10 @@
                     <div class="chapter-content">
                       <div class="chapter-header">
                         <span
-                          [class.status-active]="c.completed"
-                          class="status"
-                        ></span>
+  class="chapter-pill-status"
+  [class.chapter-pill-status-done]="c.completed || bridge.isChapterCompleted(c.id)"
+></span>
+
 
                         <span class="chapter-title" *ngIf="!smallModule">
                           {{ c.title }}

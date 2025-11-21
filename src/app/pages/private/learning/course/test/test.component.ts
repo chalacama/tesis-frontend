@@ -18,6 +18,7 @@ import {
   TestShowResponse,
   TestShowData
 } from '../../../../../core/api/watching/test.interface';
+import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
 
 @Component({
   selector: 'app-test',
@@ -31,7 +32,7 @@ export class TestComponent {
   private readonly watchingApi = inject(WatchingService);
   private readonly feedbackApi = inject(FeedbackService);
   private readonly destroyRef = inject(DestroyRef);
-
+   private readonly bridge = inject(CourseBridge);
   // ---- state base ----
   loading    = signal<boolean>(false);
   submitting = signal<boolean>(false);
@@ -226,14 +227,23 @@ export class TestComponent {
   }
 
   // ---- enviar (finalizar intento) ----
-  submit() {
+   submit() {
     const tvId = this.testViewId();
+    const chapterId = this.chapterId();
     if (!tvId) return;
+
     this.submitting.set(true);
     this.feedbackApi.completeTest(tvId).subscribe({
-      next: () => {
-        // Volver al hub y refrescar meta (score, attempts, flags)
+      next: (res) => {
         this.submitting.set(false);
+
+        // ⚠️ Ajusta esta parte a la estructura real de tu respuesta
+        const completed = res?.data?.chapter_completed ?? true; // si tu API ya controla el aprobado
+        if (completed && chapterId) {
+          this.bridge.markChapterCompleted(chapterId);
+        }
+
+        // Volver al hub y refrescar meta (score, attempts, flags)
         this.backToHub();
       },
       error: (err) => {

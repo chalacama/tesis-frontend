@@ -535,28 +535,7 @@ private getHtml5Duration(): number {
   return typeof d === 'number' && Number.isFinite(d) ? d : 0;
 }
 
-// private reportCompletedDelta(currentSec: number) {
-//   const d = this.data(); 
-//   if (!d) return;
 
-//   const chapterId = d.chapter.id;
-
-//   // Duración
-//   let total = 0;
-//   if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
-//   else total = this.getHtml5Duration();
-//   if (!total || total <= 0) return;
-
-//   // % actual y delta a reportar
-//   const percent = Math.min(100, (currentSec / total) * 100);
-//   const delta = Math.max(0, percent - this.lastPercentReported);
-//   if (delta < this.minDeltaPercent) return;
-
-//   this.lastPercentReported = percent;
-
-//   // POST al backend (update progreso del contenido)
-//   // this.bridge.markChapterCompleted(chapterId);
-// }
 /** Calcula y envía delta de progreso (%) a /feedback/progress/{learningContent}/update */
 private reportCompletedDelta(currentSec: number) {
   const d = this.data();
@@ -585,6 +564,7 @@ private reportCompletedDelta(currentSec: number) {
     next: (res) => {
       // Opcional: si quieres reaccionar cuando el capítulo queda completado:
        if (res?.data?.chapter_completed) { 
+        console.log(`Chapter ${chapterId} completed!`);
           this.bridge.markChapterCompleted(chapterId);
         }
     },
