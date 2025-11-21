@@ -1,4 +1,13 @@
-import { Component, inject, OnInit, signal, computed, DestroyRef, ViewChild,  ViewChildren, ElementRef, QueryList } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  computed,
+  DestroyRef,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -17,8 +26,8 @@ import {
   filter,
   map,
   switchMap,
-  tap,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from '../../../../../core/api/feedback/feedback.service';
@@ -37,8 +46,14 @@ declare global {
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [CommonModule, IconComponent, ButtonComponent, AvatarComponent , DialogComponent , ToastComponent
-    , TextComponent
+  imports: [
+    CommonModule,
+    IconComponent,
+    ButtonComponent,
+    AvatarComponent,
+    DialogComponent,
+    ToastComponent,
+    TextComponent
   ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.css'
@@ -50,18 +65,23 @@ export class ContentComponent implements OnInit {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroyRef = inject(DestroyRef);
   private readonly feedbackSvc = inject(FeedbackService);
-   private readonly bridge = inject(CourseBridge);
-   private readonly notificationBridge = inject(NotificationBridgeService); // 👈 NUEVO
-  private readonly toast = inject(UiToastService);                       
+  private readonly bridge = inject(CourseBridge);
+  private readonly notificationBridge = inject(NotificationBridgeService);
+  private readonly toast = inject(UiToastService);
+
   @ViewChild('ytFrame') ytFrame?: ElementRef<HTMLIFrameElement>;
-  
+  @ViewChild('codeInput') codeInput?: ElementRef<HTMLInputElement>;
+
   // state
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly data = signal<ContentResponse | null>(null);
   readonly liking = signal(false);
   readonly saving = signal(false);
-   dialogCodeShow = false
+
+  dialogCodeShow = false;
+  dialogPdfShow = false;
+
   // YouTube embed cache (no re-render en likes/saves)
   readonly ytEmbedRaw = signal<string | null>(null);
   readonly ytSafeSrc = computed<SafeResourceUrl | null>(() => {
@@ -69,10 +89,47 @@ export class ContentComponent implements OnInit {
     return raw ? this.sanitizer.bypassSecurityTrustResourceUrl(raw) : null;
   });
 
-  // helpers
-  readonly isYouTube = computed(() => (this.data()?.learning_meta?.type || '').toLowerCase() === 'youtube');
-  readonly isArchive = computed(() => ['archivo','archive','file'].includes((this.data()?.learning_meta?.type || '').toLowerCase()));
-  readonly isVideoFile = computed(() => ['mp4','webm','ogg','mov','m4v'].includes((this.data()?.learning_meta?.format || '').toLowerCase()));
+  // helpers tipo de contenido
+  readonly isYouTube = computed(
+    () => (this.data()?.learning_meta?.type || '').toLowerCase() === 'youtube'
+  );
+
+  readonly isArchive = computed(() =>
+    ['archivo', 'archive', 'file'].includes(
+      (this.data()?.learning_meta?.type || '').toLowerCase()
+    )
+  );
+
+  readonly isVideoFile = computed(() =>
+    ['mp4', 'webm', 'ogg', 'mov', 'm4v'].includes(
+      (this.data()?.learning_meta?.format || '').toLowerCase()
+    )
+  );
+
+  readonly isPdf = computed(() =>
+    this.isArchive() &&
+    (this.data()?.learning_meta?.format || '').toLowerCase() === 'pdf'
+  );
+
+  readonly isImageFile = computed(() =>
+    this.isArchive() &&
+    ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'].includes(
+      (this.data()?.learning_meta?.format || '').toLowerCase()
+    )
+  );
+
+  readonly isTmpFile = computed(() =>
+    this.isArchive() &&
+    (this.data()?.learning_meta?.format || '').toLowerCase() === 'tmp'
+  );
+
+  readonly pdfSafeSrc = computed<SafeResourceUrl | null>(() => {
+    const d = this.data();
+    const format = (d?.learning_meta?.format || '').toLowerCase();
+    const url = d?.learning_content?.url;
+    if (format !== 'pdf' || !url) return null;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
 
   // ---- Progreso en tiempo real ----
   private progress$ = new Subject<number>(); // segundos en vivo
@@ -84,21 +141,30 @@ export class ContentComponent implements OnInit {
   private lastYtTime = 0;    // último segundo visto en YouTube
 
   // ---- Completed Chapter (progreso %)
-private lastPercentReported = 0;     // último % reportado al backend
-private readonly minDeltaPercent = 0.5; // evita spam: no mandar deltas < 0.5%
-  // ---- Registro (OTP) ----
-readonly otpLength = 7;
-readonly otp = signal<string[]>(Array.from({ length: 7 }, () => ''));
-readonly enrolling = signal(false);
-readonly codeError = signal<string | null>(null);
-@ViewChildren('otpBox') otpBoxes?: QueryList<ElementRef<HTMLInputElement>>;
+  private lastPercentReported = 0;       // último % reportado al backend
+  private readonly minDeltaPercent = 0.5; // evita spam: no mandar deltas < 0.5%
+
+  // ---- Registro (código de acceso) ----
+  readonly codeLength = 7;
+  readonly code = signal<string>('');
+  readonly enrolling = signal(false);
+  readonly codeError = signal<string | null>(null);
 
   // ---------- Local backup ----------
-  private resumeKey(lcId: number | string) { return `resume:${lcId}`; }
-  private saveResumeLocal(lcId: number | string, sec: number) {
-    try { localStorage.setItem(this.resumeKey(lcId), JSON.stringify({ sec: Math.floor(sec), ts: Date.now() })); } catch {}
+  private resumeKey(lcId: number | string) {
+    return `resume:${lcId}`;
   }
-  private readResumeLocal(lcId: number | string): { sec: number, ts: number } | null {
+  private saveResumeLocal(lcId: number | string, sec: number) {
+    try {
+      localStorage.setItem(
+        this.resumeKey(lcId),
+        JSON.stringify({ sec: Math.floor(sec), ts: Date.now() })
+      );
+    } catch {}
+  }
+  private readResumeLocal(
+    lcId: number | string
+  ): { sec: number; ts: number } | null {
     try {
       const raw = localStorage.getItem(this.resumeKey(lcId));
       if (!raw) return null;
@@ -107,9 +173,10 @@ readonly codeError = signal<string | null>(null);
     } catch {}
     return null;
   }
+
   isRegistered = computed(() => this.bridge.isRegistered());
+
   ngOnInit(): void {
-     
     // a) Canal de progreso con throttling 4s
     this.progress$
       .pipe(
@@ -124,32 +191,47 @@ readonly codeError = signal<string | null>(null);
     // b) Cargar contenido por capítulo
     const parent = this.route.parent ?? this.route;
 
-    parent.paramMap.pipe(
-      map(pm => pm.get('chapterId')),
-      filter((id): id is string => !!id),
-      distinctUntilChanged(),
-      tap(() => { this.loading.set(true); this.error.set(null); }),
-      switchMap((chapterId) =>
-        this.watchingSvc.getChapterContent(chapterId).pipe(
-          catchError(err => {
-            this.error.set(err?.error?.message || 'No se pudo cargar el contenido.');
-            return of(null);
-          })
-        )
-      ),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(res => {
-      if (res) this.setDataAndPreparePlayers(res);
-      this.loading.set(false);
-    });
+    parent.paramMap
+      .pipe(
+        map((pm) => pm.get('chapterId')),
+        filter((id): id is string => !!id),
+        distinctUntilChanged(),
+        tap(() => {
+          this.loading.set(true);
+          this.error.set(null);
+        }),
+        switchMap((chapterId) =>
+          this.watchingSvc.getChapterContent(chapterId).pipe(
+            catchError((err) => {
+              this.error.set(
+                err?.error?.message || 'No se pudo cargar el contenido.'
+              );
+              return of(null);
+            })
+          )
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((res) => {
+        if (res) this.setDataAndPreparePlayers(res);
+        this.loading.set(false);
+      });
 
     // c) Primera carga por snapshot
     const initialId = parent.snapshot.paramMap.get('chapterId');
     if (initialId) {
       this.loading.set(true);
       this.watchingSvc.getChapterContent(initialId).subscribe({
-        next: (res) => { this.setDataAndPreparePlayers(res); this.loading.set(false); },
-        error: (err) => { this.error.set(err?.error?.message || 'No se pudo cargar el contenido.'); this.loading.set(false); }
+        next: (res) => {
+          this.setDataAndPreparePlayers(res);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.error.set(
+            err?.error?.message || 'No se pudo cargar el contenido.'
+          );
+          this.loading.set(false);
+        }
       });
     }
 
@@ -160,7 +242,10 @@ readonly codeError = signal<string | null>(null);
     window.addEventListener('beforeunload', onBeforeUnload);
 
     this.router.events
-      .pipe(filter(ev => ev instanceof NavigationStart), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        filter((ev) => ev instanceof NavigationStart),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => this.flushNowFromCurrentPlayer());
 
     this.destroyRef.onDestroy(() => {
@@ -186,11 +271,21 @@ readonly codeError = signal<string | null>(null);
     if (lcId != null) {
       const local = this.readResumeLocal(lcId);
       if (local && local.sec >= 0) {
-        // si el local es más "nuevo" (por ts) o mayor segundo, úsalo como start y sinc al backend
-        const useLocal = local.ts > (res?.last_view?.updated_at ? new Date(res.last_view.updated_at).getTime() : 0) || local.sec > serverSec;
+        const useLocal =
+          local.ts >
+            (res?.last_view?.updated_at
+              ? new Date(res.last_view.updated_at).getTime()
+              : 0) || local.sec > serverSec;
+
         if (useLocal) {
-          // “fake” update solo para el start visual; y dispara un POST para sincronizar
-          res = { ...res, last_view: { ...res.last_view, second_seen: local.sec, updated_at: new Date(local.ts).toISOString() } as any };
+          res = {
+            ...res,
+            last_view: {
+              ...res.last_view,
+              second_seen: local.sec,
+              updated_at: new Date(local.ts).toISOString()
+            } as any
+          };
           this.sendProgress(local.sec).subscribe();
         }
       }
@@ -208,7 +303,11 @@ readonly codeError = signal<string | null>(null);
 
   /** Calcula y fija el embed URL de YouTube con enablejsapi y start */
   private updateYouTubeEmbedFromResponse(res: ContentResponse | null): void {
-    if (res && (res.learning_meta?.type || '').toLowerCase() === 'youtube' && res.learning_content?.url) {
+    if (
+      res &&
+      (res.learning_meta?.type || '').toLowerCase() === 'youtube' &&
+      res.learning_content?.url
+    ) {
       const start = res.last_view?.second_seen || 0;
       const embed = this.buildYouTubeEmbed(res.learning_content.url, start);
       this.ytEmbedRaw.set(embed);
@@ -219,7 +318,8 @@ readonly codeError = signal<string | null>(null);
 
   // ---- UI Actions (optimistic) ----
   toggleLike(): void {
-    const d = this.data(); if (!d) return;
+    const d = this.data();
+    if (!d) return;
 
     const chapterId = d.chapter.id;
     const prevLiked = d.user_state.liked_chapter;
@@ -235,7 +335,8 @@ readonly codeError = signal<string | null>(null);
     this.liking.set(true);
     this.feedbackSvc.setLiked(chapterId, nextLiked).subscribe({
       next: (res: LikeResponse) => {
-        const cur = this.data(); if (!cur) return;
+        const cur = this.data();
+        if (!cur) return;
         if (res.liked !== cur.user_state.liked_chapter) {
           const likes = cur.likes_total ?? 0;
           this.data.set({
@@ -247,7 +348,8 @@ readonly codeError = signal<string | null>(null);
         this.liking.set(false);
       },
       error: () => {
-        const cur = this.data(); if (!cur) return;
+        const cur = this.data();
+        if (!cur) return;
         this.data.set({
           ...cur,
           user_state: { ...cur.user_state, liked_chapter: prevLiked },
@@ -259,7 +361,8 @@ readonly codeError = signal<string | null>(null);
   }
 
   toggleSaved(): void {
-    const d = this.data(); if (!d) return;
+    const d = this.data();
+    if (!d) return;
 
     const routeCourseId = this.route.parent?.snapshot.paramMap.get('id');
     if (!routeCourseId) return;
@@ -267,55 +370,65 @@ readonly codeError = signal<string | null>(null);
     const prevSaved = d.user_state.is_saved;
     const nextSaved = !prevSaved;
 
-    this.data.set({ ...d, user_state: { ...d.user_state, is_saved: nextSaved } });
+    this.data.set({
+      ...d,
+      user_state: { ...d.user_state, is_saved: nextSaved }
+    });
 
     this.saving.set(true);
     this.feedbackSvc.setSaved(routeCourseId, nextSaved).subscribe({
       next: (res: SavedResponse) => {
-        const cur = this.data(); if (!cur) return;
+        const cur = this.data();
+        if (!cur) return;
         if (res.saved !== cur.user_state.is_saved) {
-          this.data.set({ ...cur, user_state: { ...cur.user_state, is_saved: res.saved } });
+          this.data.set({
+            ...cur,
+            user_state: { ...cur.user_state, is_saved: res.saved }
+          });
         }
         this.saving.set(false);
       },
       error: () => {
-        const cur = this.data(); if (!cur) return;
-        this.data.set({ ...cur, user_state: { ...cur.user_state, is_saved: prevSaved } });
+        const cur = this.data();
+        if (!cur) return;
+        this.data.set({
+          ...cur,
+          user_state: { ...cur.user_state, is_saved: prevSaved }
+        });
         this.saving.set(false);
       }
     });
   }
 
   onRegister(isPrivate: boolean): void {
-  const courseId = this.courseId;
-  if (!courseId) return;
+    const courseId = this.courseId;
+    if (!courseId) return;
 
-  // Curso público → registro directo
-  if (!isPrivate) {
-    
-    this.enrolling.set(true);
-    this.feedbackSvc.enrollPublic(courseId).subscribe({
-      next: () => {
-        this.bridge.setRegistered(true);
-        this.enrolling.set(false);
-      },
-      error: (err) => {
-        this.codeError.set(err?.error?.message || 'No se pudo registrar.');
-        this.enrolling.set(false);
-      }
-    });
-    return;
+    // Curso público → registro directo
+    if (!isPrivate) {
+      this.enrolling.set(true);
+      this.feedbackSvc.enrollPublic(courseId).subscribe({
+        next: () => {
+          this.bridge.setRegistered(true);
+          this.enrolling.set(false);
+        },
+        error: (err) => {
+          this.codeError.set(
+            err?.error?.message || 'No se pudo registrar.'
+          );
+          this.enrolling.set(false);
+        }
+      });
+      return;
+    }
+
+    // Curso privado → abrir diálogo de código
+    this.codeError.set(null);
+    this.code.set('');
+    this.dialogCodeShow = true;
+
+    setTimeout(() => this.focusCodeInput(), 50);
   }
-
-  // Curso privado → abrir diálogo de código
-  this.codeError.set(null);
-  this.clearOtp();
-  this.dialogCodeShow = true;
-
-  // Focus primera casilla al abrir el diálogo
-  setTimeout(() => this.focusOtp(0), 50);
-}
-
 
   // -----------------------------
   // HTML5 video events (archivo)
@@ -343,8 +456,8 @@ readonly codeError = signal<string | null>(null);
 
   onVideoSeeked(video: HTMLVideoElement): void {
     const t = video.currentTime || 0;
-    this.lastHtml5Time = t;  // sincroniza
-    this.flushProgress(t);   // flush instantáneo
+    this.lastHtml5Time = t; // sincroniza
+    this.flushProgress(t);  // flush instantáneo
   }
 
   onVideoPause(video: HTMLVideoElement): void {
@@ -352,7 +465,9 @@ readonly codeError = signal<string | null>(null);
   }
 
   onVideoEnded(video: HTMLVideoElement): void {
-    const endSec = Number.isFinite(video.duration) ? video.duration : video.currentTime;
+    const endSec = Number.isFinite(video.duration)
+      ? video.duration
+      : video.currentTime;
     this.flushProgress(endSec);
   }
 
@@ -365,16 +480,17 @@ readonly codeError = signal<string | null>(null);
 
   /** Encola el progreso (pasa por throttling de 4s) */
   private sendProgress(sec: number) {
-    
     const lcId = this.learningContentId;
     if (lcId == null) return of(null);
+
     const s = Math.max(0, Math.floor(sec));
     if (s === this.lastSentSecond) return of(null); // evita duplicados
     this.lastSentSecond = s;
-    
+
     // respaldo local por si el usuario recarga muy rápido
     this.saveResumeLocal(lcId, s);
     this.reportCompletedDelta(s);
+
     return this.feedbackSvc.setContent(lcId, s).pipe(
       catchError(() => of(null))
     );
@@ -393,7 +509,8 @@ readonly codeError = signal<string | null>(null);
       this.flushProgress(sec);
       return;
     }
-    const videoEl = document.querySelector<HTMLVideoElement>('video.video-player');
+    const videoEl =
+      document.querySelector<HTMLVideoElement>('video.video-player');
     if (videoEl) this.flushProgress(videoEl.currentTime || 0);
   }
 
@@ -413,7 +530,9 @@ readonly codeError = signal<string | null>(null);
         onReady: (e: any) => {
           const start = this.data()?.last_view?.second_seen || 0;
           if (start > 0) {
-            try { e.target.seekTo(start, true); } catch {}
+            try {
+              e.target.seekTo(start, true);
+            } catch {}
           }
         },
         onStateChange: (e: any) => this.onYouTubeStateChange(e)
@@ -429,10 +548,7 @@ readonly codeError = signal<string | null>(null);
       // Polling 1s → progress$ + detección de saltos
       this.ytTickStop$.next();
       interval(1000)
-        .pipe(
-          takeUntil(this.ytTickStop$),
-          takeUntilDestroyed(this.destroyRef)
-        )
+        .pipe(takeUntil(this.ytTickStop$), takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           const t = this.safeGetTimeFromYT();
           if (t == null) return;
@@ -449,19 +565,21 @@ readonly codeError = signal<string | null>(null);
       const t = this.safeGetTimeFromYT();
       if (t != null) this.flushProgress(t);
     } else if (e.data === YT.PlayerState.BUFFERING) {
-      // Suele ocurrir al hacer seek: flushea
       const t = this.safeGetTimeFromYT();
       if (t != null) this.flushProgress(t);
     } else if (e.data === YT.PlayerState.ENDED) {
       this.ytTickStop$.next();
-      const t = this.safeGetDurationFromYT() ?? this.safeGetTimeFromYT() ?? 0;
+      const t =
+        this.safeGetDurationFromYT() ?? this.safeGetTimeFromYT() ?? 0;
       this.flushProgress(t);
     }
   }
 
   private destroyYouTubePlayer() {
     this.ytTickStop$.next();
-    try { this.ytPlayer?.destroy?.(); } catch {}
+    try {
+      this.ytPlayer?.destroy?.();
+    } catch {}
     this.ytPlayer = null;
   }
 
@@ -469,23 +587,33 @@ readonly codeError = signal<string | null>(null);
     try {
       const t = this.ytPlayer?.getCurrentTime?.();
       return typeof t === 'number' && Number.isFinite(t) ? t : null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
   private safeGetDurationFromYT(): number | null {
     try {
       const d = this.ytPlayer?.getDuration?.();
       return typeof d === 'number' && Number.isFinite(d) ? d : null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
   /** Carga el IFrame API una sola vez */
   private ensureYouTubeApi(): Promise<void> {
     return new Promise<void>((resolve) => {
-      if (window.YT?.Player) { resolve(); return; }
+      if (window.YT?.Player) {
+        resolve();
+        return;
+      }
 
-      const existing = document.querySelector('script[data-youtube-api]');
+      const existing = document.querySelector(
+        'script[data-youtube-api]'
+      ) as HTMLScriptElement | null;
       if (existing) {
-        const check = () => window.YT?.Player ? resolve() : setTimeout(check, 50);
+        const check = () =>
+          window.YT?.Player ? resolve() : setTimeout(check, 50);
         check();
         return;
       }
@@ -524,200 +652,195 @@ readonly codeError = signal<string | null>(null);
   private extractYouTubeId(url: string): string | null {
     try {
       const u = new URL(url);
-      if (u.hostname.includes('youtu.be')) return u.pathname.replace('/', '') || null;
+      if (u.hostname.includes('youtu.be'))
+        return u.pathname.replace('/', '') || null;
       if (u.searchParams.get('v')) return u.searchParams.get('v');
-      const path = u.pathname.split('/'); const i = path.indexOf('embed');
-      return i !== -1 && path[i+1] ? path[i+1] : null;
+      const path = u.pathname.split('/');
+      const i = path.indexOf('embed');
+      return i !== -1 && path[i + 1] ? path[i + 1] : null;
     } catch {
-      const m = url.match(/(?:v=|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+      const m = url.match(
+        /(?:v=|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/
+      );
       return m?.[1] || null;
     }
   }
+
   goToPortfolio(username: string) {
-  this.router.navigate(['learning/portfolio', '@' + username]);
-}
+    this.router.navigate(['learning/portfolio', '@' + username]);
+  }
 
-private getHtml5Duration(): number {
-  const videoEl = document.querySelector<HTMLVideoElement>('video.video-player');
-  const d = videoEl?.duration;
-  return typeof d === 'number' && Number.isFinite(d) ? d : 0;
-}
+  private getHtml5Duration(): number {
+    const videoEl =
+      document.querySelector<HTMLVideoElement>('video.video-player');
+    const d = videoEl?.duration;
+    return typeof d === 'number' && Number.isFinite(d) ? d : 0;
+  }
 
+  /** Calcula y envía delta de progreso (%) desde un player de tiempo */
+  private reportCompletedDelta(currentSec: number) {
+    const d = this.data();
+    if (!d) return;
 
-/** Calcula y envía delta de progreso (%) a /feedback/progress/{learningContent}/update */
-private reportCompletedDelta(currentSec: number) {
-  const d = this.data();
-  if (!d) return;
+    const lcId = d.learning_content?.id;
+    const chapterId = d.chapter.id;
+    if (lcId == null) return;
 
-  const lcId = d.learning_content?.id;
-  const chapterId = d.chapter.id;
-  if (lcId == null) return;
+    // 1) Duración total según player activo
+    let total = 0;
+    if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
+    else total = this.getHtml5Duration();
 
-  // 1) Duración total según player activo
-  let total = 0;
-  if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
-  else total = this.getHtml5Duration();
+    if (!total || total <= 0) return; // aún no hay duración fiable
 
-  if (!total || total <= 0) return; // aún no hay duración fiable
+    // 2) Porcentaje actual y DELTA a reportar (incremental)
+    const percent = Math.min(100, (currentSec / total) * 100);
+    const delta = +Math.max(0, percent - this.lastPercentReported).toFixed(2);
+    if (delta < this.minDeltaPercent) return; // anti-spam
 
-  // 2) Porcentaje actual y DELTA a reportar (incremental)
-  const percent = Math.min(100, (currentSec / total) * 100);
-  const delta = +(Math.max(0, percent - this.lastPercentReported).toFixed(2));
-  if (delta < this.minDeltaPercent) return; // anti-spam (< 0.5%)
+    this.sendProgressDelta(lcId, chapterId, delta, percent);
+  }
 
-  // 3) Avanza el puntero local y envía al backend
-  this.lastPercentReported = percent;
+  /** Envía el delta de progreso calculado al backend */
+  private sendProgressDelta(
+    lcId: number | string,
+    chapterId: number,
+    delta: number,
+    newPercent: number
+  ) {
+    if (delta <= 0) return;
 
-  this.feedbackSvc.updateProgress(lcId, { progress: delta }).subscribe({
-    next: (res) => {
-      // Opcional: si quieres reaccionar cuando el capítulo queda completado:
-       if (res?.data?.chapter_completed) { 
-        console.log(`Chapter ${chapterId} completed!`);
+    this.lastPercentReported = newPercent;
+
+    this.feedbackSvc.updateProgress(lcId, { progress: delta }).subscribe({
+      next: (res) => {
+        if (res?.data?.chapter_completed) {
+          console.log(`Chapter ${chapterId} completed!`);
           this.bridge.markChapterCompleted(chapterId);
         }
-        // 👇 Curso completado → se emitió certificado
-      if (res?.data?.certificate_issued) {
-        this.notificationBridge.increment(1); // sube el badge
+        if (res?.data?.certificate_issued) {
+          this.notificationBridge.increment(1);
 
-        this.toast.add({
-          severity: 'primary',
-          summary: '🎓 ¡Curso completado!',
-          message: 'Se ha emitido tu certificado. Revísalo en tus notificaciones o en la sección de certificados.',
-          position: 'top-right',
-          lifetime: 5000
-        });
+          this.toast.add({
+            severity: 'primary',
+            summary: '🎓 ¡Curso completado!',
+            message:
+              'Se ha emitido tu certificado. Revísalo en tus notificaciones o en la sección de certificados.',
+            position: 'top-right',
+            lifetime: 5000
+          });
+        }
+      },
+      error: () => {
+        // silencioso
       }
-    },
-    error: () => {
-      // Silencioso: no interrumpimos la UX por un fallo puntual de red
+    });
+  }
+
+  /** Marca como 100% completado un contenido sin duración (PDF, TMP, imagen) */
+  private markNonTimeContentCompleted() {
+    const d = this.data();
+    if (!d) return;
+
+    const lcId = d.learning_content?.id;
+    const chapterId = d.chapter.id;
+    if (lcId == null) return;
+
+    // 1) Asegurar registro de vista
+    this.feedbackSvc
+      .setContent(lcId, 1)
+      .pipe(catchError(() => of(null)))
+      .subscribe();
+
+    // 2) Mandar solo el delta que falta hasta 100
+    const delta = +Math.max(0, 100 - this.lastPercentReported).toFixed(2);
+    if (delta <= 0) return;
+
+    this.sendProgressDelta(lcId, chapterId, delta, 100);
+  }
+
+  private get courseId(): string | null {
+    return this.route.parent?.snapshot.paramMap.get('id') ?? null;
+  }
+
+  // ---- Código de acceso (input grande) ----
+  private focusCodeInput() {
+    const el = this.codeInput?.nativeElement;
+    if (el) {
+      el.focus();
+      el.select?.();
     }
-  });
-}
-
-private get courseId(): string | null {
-  return this.route.parent?.snapshot.paramMap.get('id') ?? null;
-}
-
-private otpValue(): string {
-  return this.otp().join('');
-}
-
-private clearOtp() {
-  this.otp.set(Array.from({ length: this.otpLength }, () => ''));
-}
-private focusOtp(i: number) {
-  const el = this.otpBoxes?.get(i)?.nativeElement;
-  if (el) {
-    el.focus();
-    el.select?.();
-  }
-}
-
-private allowedChar(c: string): boolean {
-  // Mismo set que genera el backend: 23456789ABCDEFGHJKLMNPQRSTUVWXYZ (sin 0,O,1,I,L)
-  return /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]$/.test(c);
-}
-
-onOtpInput(ev: Event, index: number) {
-  const input = ev.target as HTMLInputElement;
-  let v = (input.value || '').toUpperCase();
-
-  // Si el usuario pega 2+ chars aquí, lo tratamos como paste:
-  if (v.length > 1) {
-    const data = v.toUpperCase().replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
-    this.fillOtpFrom(0, data);
-    if (this.otpValue().length === this.otpLength) this.submitOtp();
-    return;
   }
 
-  // Solo 1 char
-  if (v && !this.allowedChar(v)) v = '';
-  const arr = [...this.otp()];
-  arr[index] = v;
-  this.otp.set(arr);
+  private allowedChar(c: string): boolean {
+    // Mismo set que genera el backend: 23456789ABCDEFGHJKLMNPQRSTUVWXYZ (sin 0,O,1,I,L)
+    return /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]$/.test(c);
+  }
 
-  if (v && index < this.otpLength - 1) this.focusOtp(index + 1);
-  if (this.otpValue().length === this.otpLength) this.submitOtp();
-}
+  onCodeInput(ev: Event) {
+    const input = ev.target as HTMLInputElement;
+    let value = (input.value || '').toUpperCase();
 
-onOtpKeyDown(ev: KeyboardEvent, index: number) {
-  const key = ev.key;
-  if (key === 'Backspace') {
-    ev.preventDefault();
-    const arr = [...this.otp()];
-    if (arr[index]) {
-      arr[index] = '';
-      this.otp.set(arr);
-      return;
+    value = value.replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
+    if (value.length > this.codeLength) value = value.slice(0, this.codeLength);
+
+    this.code.set(value);
+
+    if (input.value !== value) {
+      input.value = value;
     }
-    if (index > 0) {
-      arr[index - 1] = '';
-      this.otp.set(arr);
-      this.focusOtp(index - 1);
-    }
-    return;
   }
 
-  if (key === 'ArrowLeft' && index > 0) {
-    ev.preventDefault();
-    this.focusOtp(index - 1);
-  }
-  if (key === 'ArrowRight' && index < this.otpLength - 1) {
-    ev.preventDefault();
-    this.focusOtp(index + 1);
-  }
-  if (key === 'Enter' && this.otpValue().length === this.otpLength) {
-    ev.preventDefault();
-    this.submitOtp();
-  }
-}
+  submitCode() {
+    const code = this.code();
+    if (code.length !== this.codeLength) return;
 
-onOtpPaste(ev: ClipboardEvent) {
-  ev.preventDefault();
-  const data = (ev.clipboardData?.getData('text') || '')
-    .toUpperCase()
-    .replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
-  if (!data) return;
-  this.fillOtpFrom(0, data);
-  if (this.otpValue().length === this.otpLength) this.submitOtp();
-}
+    this.enrolling.set(true);
+    this.codeError.set(null);
 
-private fillOtpFrom(start: number, data: string) {
-  const arr = [...this.otp()];
-  let j = start;
-  for (let i = 0; i < data.length && j < this.otpLength; i++, j++) {
-    arr[j] = data[i];
-  }
-  this.otp.set(arr);
-  const next = Math.min(start + data.length, this.otpLength - 1);
-  this.focusOtp(next);
-}
-
-submitOtp() {
-  const code = this.otpValue();
-  if (code.length !== this.otpLength) return;
-  this.enrolling.set(true);
-  this.codeError.set(null);
-
-  this.feedbackSvc.enrollPrivate(code).subscribe({
-    next: () => {
-      this.bridge.setRegistered(true);
-      this.enrolling.set(false);
-      this.dialogCodeShow = false;
-      this.clearOtp();
-    },
-    error: (err) => {
-      this.codeError.set(err?.error?.message || 'Código inválido o curso no disponible.');
-      this.enrolling.set(false);
-      // Selecciona todo para volver a intentar rápido
-      this.focusOtp(0);
-    }
-  });
-}
-
-toTest() {
-  this.router.navigate([ 'test'], { relativeTo: this.route.parent });
-
+    this.feedbackSvc.enrollPrivate(code).subscribe({
+      next: () => {
+        this.bridge.setRegistered(true);
+        this.enrolling.set(false);
+        this.dialogCodeShow = false;
+        this.code.set('');
+      },
+      error: (err) => {
+        this.codeError.set(
+          err?.error?.message || 'Código inválido o curso no disponible.'
+        );
+        this.enrolling.set(false);
+        this.focusCodeInput();
+      }
+    });
   }
 
+  // ---- Acciones de documentos/archivos ----
+  openPdfViewer() {
+    this.markNonTimeContentCompleted();
+    this.dialogPdfShow = true;
+  }
+
+  downloadFile(url: string) {
+    if (!url) return;
+    this.markNonTimeContentCompleted();
+
+    try {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {}
+  }
+
+  onImageLoaded() {
+    this.markNonTimeContentCompleted();
+  }
+
+  toTest() {
+    this.router.navigate(['test'], { relativeTo: this.route.parent });
+  }
 }

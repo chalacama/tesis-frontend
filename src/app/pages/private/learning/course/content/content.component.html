@@ -1,151 +1,289 @@
 <div class="content">
-  <!-- Loading / Error -->
-  <div class="loading" *ngIf="loading()">Cargando contenido…</div>
-  <div class="error" *ngIf="!loading() && error()">{{ error() }}</div>
-
-  <div class="view" *ngIf="!loading() && !error() && data() as d">
-
-    <!-- Archivo (video/documento) -->
-    <div class="archive" *ngIf="isArchive() && d.learning_content as lc">
-      <!-- VIDEO -->
-      <div class="video player-card" *ngIf="isVideoFile(); else documentPlaceholder">
-        <video
-    #player
-    class="video-player"
-    controls
-    preload="metadata"
-    (loadedmetadata)="onVideoLoadedMetadata(player)"
-    (timeupdate)="onVideoTimeUpdate(player)"
-    (seeked)="onVideoSeeked(player)"
-    (pause)="onVideoPause(player)"
-    (ended)="onVideoEnded(player)"
-  >
-    <source [src]="lc.url" [type]="'video/' + (d.learning_meta.format || 'mp4')" />
-    Tu navegador no soporta el elemento de video.
-  </video>
-        <!-- <div class="video-meta">
-          <span class="pill">Formato: {{ d.learning_meta.format.toUpperCase() || 'MP4' }}</span>
-          <span class="pill">Capítulo #{{ d.chapter.order }}</span>
-        </div> -->
+  <!-- Skeleton de carga -->
+  <ng-container *ngIf="loading(); else loadedContent">
+    <div class="skeleton-view">
+      <div class="player-card">
+        <div class="skeleton skeleton-video"></div>
       </div>
 
-      <!-- DOCUMENTO (aún no implementado) -->
-      <ng-template #documentPlaceholder>
-        <div class="document player-card">
-          <p>Documento (próximamente) • Formato: {{ d.learning_meta.format.toUpperCase() || '—' }}</p>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- YouTube -->
-    <div class="youtube player-card" *ngIf="isYouTube()">
-      <div class="iframe-wrapper">
-        <iframe
-      #ytFrame
-      *ngIf="ytSafeSrc() as ySrc"
-      [src]="ySrc"
-      title="YouTube player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-      referrerpolicy="strict-origin-when-cross-origin">
-    </iframe>
-      </div>
-      <!-- <div class="video-meta">
-        <span class="pill">YouTube</span>
-        <span class="pill">Capítulo #{{ d.chapter.order }}</span>
-      </div> -->
-    </div>
-
-    <!-- Metadatos / acciones -->
-    <div class="watch-metadata">
+      <div class="watch-metadata skeleton-meta">
         <div class="meta-text">
-        <h4 class="title">{{ d.course.title }}</h4>
-        <small class="course">{{ d.chapter.title }}</small>
-      </div>
-      <div class="metadata-body">
-        <div class="meta-avatar">
-            <ui-avatar
-            (click)="goToPortfolio(d.owner.username)"
-        [src]="d.owner.profile_picture_url || ''"
-        [name]="(d.owner.name || '') + ' ' + (d.owner.lastname || '')"
-        severity="primary"
-        size="md">
-      </ui-avatar>
-        <span>{{ d.owner.name }} {{ d.owner.lastname }}</span>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-subtitle"></div>
         </div>
-        
-
-      
-
-      <div class="actions">
-        
-        <ui-button
-        
-          *ngIf="!isRegistered()"
-          label="Registrarme"
-          severity="info"
-          (click)="onRegister(d.course.private)">
-        </ui-button>
-        <app-text
-          [description]="d.chapter.description"
-          [title]="'Descripción del capitulo'"
-          [showPreview]="false"
-          [showLabel]="false">
-      </app-text>
-        <!-- Like -->
-        <button class="icon-btn" (click)="toggleLike()" [attr.aria-label]="d.user_state.liked_chapter ? 'Quitar like' : 'Dar like'">
-          <ui-icon
-            [size]="'lg'"
-            [severity]="'contrast'"
-            [svgPath]="d.user_state.liked_chapter ? 'svg/I-like-bold.svg' : 'svg/I-like-outline.svg'">
-          </ui-icon>
-          <span class="count">{{ d.likes_total }}</span>
-        </button>
-
-        <!-- Guardar -->
-        <button class="icon-btn" (click)="toggleSaved()" [attr.aria-label]="d.user_state.is_saved ? 'Quitar de guardados' : 'Guardar curso'">
-          <ui-icon
-            [size]="'lg'"
-            [severity]="'contrast'"
-            [svgPath]="d.user_state.is_saved ? 'svg/bookmark-bold.svg' : 'svg/bookmark-outline.svg'">
-          </ui-icon>
-        </button>
-
-        <!-- Preguntas -->
-        <span  (click)="toTest()" class="pill btn-pill" *ngIf="d.user_state.has_questions">Contiene preguntas</span>
+        <div class="metadata-body">
+          <div class="meta-avatar">
+            <div class="skeleton skeleton-avatar"></div>
+            <div class="skeleton skeleton-name"></div>
+          </div>
+          <div class="skeleton skeleton-actions"></div>
+        </div>
       </div>
-      </div>
-      
     </div>
+  </ng-container>
 
-  </div>
+  <!-- Contenido / error -->
+  <ng-template #loadedContent>
+    <div class="error" *ngIf="error()">{{ error() }}</div>
+
+    <div class="view" *ngIf="!error() && data() as d">
+      <!-- Archivo (video / documento / imagen / raw) -->
+      <div class="archive" *ngIf="isArchive() && d.learning_content as lc">
+        <!-- VIDEO -->
+        <div class="video player-card" *ngIf="isVideoFile(); else nonVideoArchive">
+          <video
+            #player
+            class="video-player"
+            controls
+            preload="metadata"
+            (loadedmetadata)="onVideoLoadedMetadata(player)"
+            (timeupdate)="onVideoTimeUpdate(player)"
+            (seeked)="onVideoSeeked(player)"
+            (pause)="onVideoPause(player)"
+            (ended)="onVideoEnded(player)"
+          >
+            <source
+              [src]="lc.url"
+              [type]="'video/' + (d.learning_meta.format || 'mp4')"
+            />
+            Tu navegador no soporta el elemento de video.
+          </video>
+        </div>
+
+        <!-- NO VIDEO → PDF / IMAGEN / RAW -->
+        <ng-template #nonVideoArchive>
+          <!-- PDF -->
+          <div class="document player-card" *ngIf="isPdf(); else imageOrRaw">
+            <div class="doc-header">
+              <div class="doc-info">
+                <div class="doc-icon"></div>
+                <div>
+                  <p class="doc-title">{{ d.chapter.title }}</p>
+                  <small class="doc-meta">
+                    Documento PDF • {{ d.learning_meta.format.toUpperCase() || 'PDF' }}
+                  </small>
+                </div>
+              </div>
+              <div class="doc-actions">
+                <ui-button
+                  label="Ver documento"
+                  severity="primary"
+                  (click)="openPdfViewer()"
+                >
+                </ui-button>
+
+                <ui-button
+                  label="Descargar"
+                  severity="secondary"
+                  (click)="downloadFile(lc.url)"
+                >
+                </ui-button>
+              </div>
+            </div>
+          </div>
+
+          <!-- IMAGEN o RAW -->
+          <ng-template #imageOrRaw>
+            <!-- IMAGEN -->
+            <div class="image player-card" *ngIf="isImageFile(); else rawFile">
+              <img
+                class="image-doc"
+                [src]="lc.url"
+                alt="Recurso del capítulo"
+                loading="lazy"
+                (load)="onImageLoaded()"
+              />
+            </div>
+
+            <!-- RAW / TMP -->
+            <ng-template #rawFile>
+              <div class="raw player-card">
+                <div class="raw-info">
+                  <div class="raw-icon"></div>
+                  <div>
+                    <p class="raw-title">{{ d.chapter.title }}</p>
+                    <small class="raw-subtitle">
+                      Archivo {{ d.learning_meta.format.toUpperCase() || 'TMP' }}
+                    </small>
+                  </div>
+                </div>
+
+                <ui-button
+                  label="Descargar archivo"
+                  severity="primary"
+                  (click)="downloadFile(lc.url)"
+                >
+                </ui-button>
+              </div>
+            </ng-template>
+          </ng-template>
+        </ng-template>
+      </div>
+
+      <!-- YouTube -->
+      <div class="youtube player-card" *ngIf="isYouTube()">
+        <div class="iframe-wrapper">
+          <iframe
+            #ytFrame
+            *ngIf="ytSafeSrc() as ySrc"
+            [src]="ySrc"
+            title="YouTube player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+          >
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Metadatos / acciones -->
+      <div class="watch-metadata" *ngIf="data() as d2">
+        <div class="meta-text">
+          <h4 class="title">{{ d2.course.title }}</h4>
+          <small class="course">{{ d2.chapter.title }}</small>
+        </div>
+
+        <div class="metadata-body">
+          <div class="meta-avatar">
+            <ui-avatar
+              (click)="goToPortfolio(d2.owner.username)"
+              [src]="d2.owner.profile_picture_url || ''"
+              [name]="(d2.owner.name || '') + ' ' + (d2.owner.lastname || '')"
+              severity="primary"
+              size="md"
+            >
+            </ui-avatar>
+            <div class="meta-avatar-text">
+            <span class="meta-avatar-name">{{ d2.owner.name }} {{ d2.owner.lastname }}</span>
+            <span class="meta-avatar-username">{{ '@' + d2.owner.username }}</span>
+            </div>
+            
+          </div>
+
+          <div class="actions">
+            <ui-button
+              *ngIf="!isRegistered()"
+              label="Registrarme"
+              severity="info"
+              (click)="onRegister(d2.course.private)"
+            >
+            </ui-button>
+
+            <app-text
+              [description]="d2.chapter.description"
+              [title]="'Descripción del capitulo'"
+              [showPreview]="false"
+              [showLabel]="false"
+            >
+            </app-text>
+
+            <!-- Like -->
+            <button
+              class="icon-btn"
+              (click)="toggleLike()"
+              [attr.aria-label]="
+                d2.user_state.liked_chapter ? 'Quitar like' : 'Dar like'
+              "
+            >
+              <ui-icon
+                [size]="'lg'"
+                [severity]="'contrast'"
+                [svgPath]="
+                  d2.user_state.liked_chapter
+                    ? 'svg/I-like-bold.svg'
+                    : 'svg/I-like-outline.svg'
+                "
+              >
+              </ui-icon>
+              <span class="count">{{ d2.likes_total }}</span>
+            </button>
+
+            <!-- Guardar -->
+            <button
+              class="icon-btn"
+              (click)="toggleSaved()"
+              [attr.aria-label]="
+                d2.user_state.is_saved
+                  ? 'Quitar de guardados'
+                  : 'Guardar curso'
+              "
+            >
+              <ui-icon
+                [size]="'lg'"
+                [severity]="'contrast'"
+                [svgPath]="
+                  d2.user_state.is_saved
+                    ? 'svg/bookmark-bold.svg'
+                    : 'svg/bookmark-outline.svg'
+                "
+              >
+              </ui-icon>
+            </button>
+
+            <!-- Preguntas -->
+            <span
+              (click)="toTest()"
+              class="pill btn-pill"
+              *ngIf="d2.user_state.has_questions"
+              >Contiene preguntas</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </div>
-  <ui-dialog
-   
-    type="free"
-    [variant]="'filled'"
-    [closeOnMaskClick]="true"
-    [(visible)]="dialogCodeShow"
-    
-  >
-<div class="content-code">
 
+<!-- Dialogo visor PDF -->
+<ui-dialog
+  type="free"
+  [variant]="'filled'"
+  [closeOnMaskClick]="true"
+  [(visible)]="dialogPdfShow"
+>
+  <div class="pdf-dialog">
+    <h3 class="pdf-dialog-title">Vista previa del documento</h3>
+    <div class="pdf-frame-wrapper">
+      <iframe
+        *ngIf="pdfSafeSrc() as pdfSrc"
+        class="pdf-frame"
+        [src]="pdfSrc"
+        title="Documento PDF"
+      ></iframe>
+    </div>
+  </div>
+</ui-dialog>
+
+<!-- Diálogo código de acceso (input grande) -->
+<ui-dialog
+  type="free"
+  [variant]="'filled'"
+  [closeOnMaskClick]="true"
+  [(visible)]="dialogCodeShow"
+>
+  <div class="content-code">
     <h3 class="code-title">Código de acceso</h3>
-    <p class="code-subtitle">Ingresa el código de 7 caracteres para unirte al curso privado.</p>
+    <p class="code-subtitle">
+      Ingresa el código de {{ codeLength }} caracteres para unirte al curso
+      privado.
+    </p>
 
-    <div class="otp-group" (paste)="onOtpPaste($event)">
+    <div class="code-input-wrapper">
       <input
-        *ngFor="let _ of otp(); index as i"
-        #otpBox
-        class="otp-input"
-        maxlength="1"
+        #codeInput
+        class="code-input"
+        [maxLength]="codeLength"
         autocomplete="one-time-code"
         inputmode="text"
-        [value]="otp()[i]"
-        (input)="onOtpInput($event, i)"
-        (keydown)="onOtpKeyDown($event, i)">
+        [value]="code()"
+        (input)="onCodeInput($event)"
+        (keydown.enter)="submitCode()"
+      />
     </div>
+    <p class="code-helper">
+      Solo letras mayúsculas y números (sin 0/O ni 1/I).
+    </p>
 
     <div class="code-error" *ngIf="codeError()">{{ codeError() }}</div>
 
@@ -153,19 +291,19 @@
       <ui-button
         label="Cancelar"
         severity="secondary"
-        (click)="dialogCodeShow = false">
+        (click)="dialogCodeShow = false"
+      >
       </ui-button>
 
       <ui-button
         label="Confirmar"
         severity="primary"
-        [disabled]="otp().join('').length !== otpLength"
-        
-        (click)="submitOtp()">
+        [disabled]="code().length !== codeLength || enrolling()"
+        (click)="submitCode()"
+      >
       </ui-button>
     </div>
   </div>
-    
-  </ui-dialog>
+</ui-dialog>
 
 <ui-toast></ui-toast>
