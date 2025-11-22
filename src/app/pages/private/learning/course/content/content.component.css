@@ -325,8 +325,8 @@
 
 /* DIALOG PDF */
 .pdf-dialog {
-  width: min(960px, 95vw);
-  max-height: 90vh;
+  width: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -339,7 +339,7 @@
 
 .pdf-frame-wrapper {
   flex: 1;
-  min-height: 60vh;
+  height: 100%;;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   overflow: hidden;
@@ -347,7 +347,7 @@
 }
 
 .pdf-frame {
-  width: 100%;
+  /* width: 300px; */
   height: 100%;
   border: none;
 }

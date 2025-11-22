@@ -12,11 +12,13 @@ import { ViewChild, ElementRef } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SearchComponent } from '../../../shared/UI/components/data/search/search.component';
 import { NotificationComponent } from '../../../shared/UI/components/data/notification/notification.component';
+import { AvatarComponent } from '../../../shared/UI/components/media/avatar/avatar.component';
+import { ExploreComponent } from '../../../shared/UI/components/data/explore/explore.component';
 @Component({
   selector: 'app-learning',
   imports: [RouterOutlet, CommonModule, 
 
-    SearchComponent, NotificationComponent
+    SearchComponent, NotificationComponent , AvatarComponent, ExploreComponent
   ],
   templateUrl: './learning.component.html',
   styleUrl: './learning.component.css'

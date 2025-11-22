@@ -54,7 +54,9 @@ export interface RegisterCourseResponse {
   message: string;
   data: {
     registration_id: number;
+
     course_id: number;
+    course_title: string;
     user_id: number;
   };
 }

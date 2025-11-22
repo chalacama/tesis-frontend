@@ -150,7 +150,7 @@
         <div class="nav-right">
 
             <div class="explore-nav">
-                
+                <app-explore>   </app-explore>
             </div>
 
             <div class="noti-content">
@@ -159,12 +159,9 @@
 
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" 
                 style="position: relative;">
-                <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="toggleProfileMenu()" class="profile-panel-avatar">
-                    <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">
-                    <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">
-                        <label>{{ usuario.name.charAt(0) | uppercase }}</label>
-                    </div>
-                </div>
+                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
+                    >
+                </ui-avatar>
 
                 <div *ngIf="isProfileMenuOpen" class="profile-dropdown">
                     <div>

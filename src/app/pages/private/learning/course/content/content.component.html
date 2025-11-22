@@ -238,20 +238,18 @@
 <!-- Dialogo visor PDF -->
 <ui-dialog
   type="free"
-  [variant]="'filled'"
+  [variant]="'flat'"
   [closeOnMaskClick]="true"
   [(visible)]="dialogPdfShow"
 >
   <div class="pdf-dialog">
-    <h3 class="pdf-dialog-title">Vista previa del documento</h3>
-    <div class="pdf-frame-wrapper">
-      <iframe
-        *ngIf="pdfSafeSrc() as pdfSrc"
-        class="pdf-frame"
-        [src]="pdfSrc"
-        title="Documento PDF"
-      ></iframe>
-    </div>
+    
+    <iframe
+      *ngIf="pdfSafeSrc() as pdfSrc"
+      class="pdf-frame"
+      [src]="pdfSrc"
+      title="Documento PDF"
+    ></iframe>
   </div>
 </ui-dialog>
 

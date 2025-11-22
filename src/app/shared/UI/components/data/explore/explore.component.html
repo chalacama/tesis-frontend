@@ -1,1 +1,118 @@
-<p>explore works!</p>
+<!-- Botón principal -->
+<button class="explore-trigger" type="button" (click)="openDialog()">
+  <ui-icon
+    [size]="'lg'"
+    [svgPath]="'svg/create.svg'">
+  </ui-icon>
+  <!-- <span>Explorar</span> -->
+</button>
+
+<!-- Diálogo -->
+<ui-dialog
+  type="free"
+  [variant]="'filled'"
+  [closeOnMaskClick]="true"
+  [(visible)]="dialogShow">
+
+  <div class="explore-dialog">
+    <h2 class="dialog-title">Explorar</h2>
+
+    <!-- Tabs -->
+    <div class="explore-tabs">
+      <button
+        type="button"
+        class="explore-tab"
+        [class.active]="selectedOption === 'course'"
+        (click)="changeOption('course')">
+        Unirme a un curso
+      </button>
+
+      <button
+        type="button"
+        class="explore-tab"
+        [class.active]="selectedOption === 'certificate'"
+        (click)="changeOption('certificate')">
+        Buscar certificado
+      </button>
+    </div>
+
+    <!-- Formulario: Unirme a curso -->
+    <div *ngIf="selectedOption === 'course'" class="explore-panel">
+      <label class="field-label" for="courseCode">
+        Código del curso
+      </label>
+
+      <input
+        id="courseCode"
+        type="text"
+        class="field-input"
+        [(ngModel)]="courseCode"
+        (keyup.enter)="joinCourse()"
+        placeholder="Ingresa el código del curso" />
+
+      <p class="field-hint">
+        Usa el código que te compartió tu tutor para inscribirte.
+      </p>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeDialog()"
+          [disabled]="loading">
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="joinCourse()"
+          [disabled]="loading || !courseCode.trim()">
+          {{ loading ? 'Uniendo...' : 'Unirse' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulario: Buscar certificado -->
+    <div *ngIf="selectedOption === 'certificate'" class="explore-panel">
+      <label class="field-label" for="certificateCode">
+        Código del certificado
+      </label>
+
+      <input
+        id="certificateCode"
+        type="text"
+        class="field-input"
+        [(ngModel)]="certificateCode"
+        (keyup.enter)="searchCertificate()"
+        placeholder="Ingresa el código del certificado" />
+
+      <p class="field-hint">
+        El certificado se abrirá en una nueva pestaña.
+      </p>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeDialog()"
+          [disabled]="loading">
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="searchCertificate()"
+          [disabled]="loading || !certificateCode.trim()">
+          {{ loading ? 'Buscando...' : 'Buscar' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <p *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </p>
+  </div>
+</ui-dialog>
