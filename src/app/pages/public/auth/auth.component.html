@@ -1,72 +1,119 @@
-<main class="context">
-  <div class="login-container">
-  <div class="login-card">
-    <div class="logo-wrapper">
-      <img src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" alt="Logo" class="logo" />
-    </div>
-    <h2 style="color: black;">Iniciar sesión en Digimentor</h2>
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <label for="email">Email o nombre de usuario</label>
-      <input formControlName="email" type="text" id="email" placeholder="ejemplo@gmail.com" />
-
-      <label for="password">Contraseña</label>
-      <input
-        formControlName="password"
-        [type]="showPassword ? 'text' : 'password'"
-        id="password"
-        placeholder="*****"
+<div class="auth-page">
+  <div class="auth-card">
+    <!-- Panel de portada -->
+    <div class="auth-illustration">
+      <img
+        src="/img/cover/portada-auth.png"
+        alt="Portada DigiMentor"
+        class="auth-image"
       />
+    </div>
 
-      <div class="options">
-        <label>
-          <input type="checkbox" (change)="togglePasswordVisibility()" />
-          Mostrar contraseña
-        </label>
+    <!-- Panel de formulario -->
+    <div class="auth-form-wrapper">
+      <div class="auth-form-header">
+        <h2>Inicia sesión</h2>
+        <p>Usa tu correo y contraseña o continúa con Google.</p>
       </div>
 
-      <button type="submit" class="btn-signin" [disabled]="isLoading">
-        {{ isLoading ? 'Cargando...' : 'Iniciar sesión' }}
-      </button>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-field">
+          <label for="email">Correo electrónico</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="ejemplo@correo.com"
+            [class.invalid]="email.invalid && (email.dirty || email.touched)"
+          />
+          <div
+            class="field-error"
+            *ngIf="email.invalid && (email.dirty || email.touched)"
+          >
+            <span *ngIf="email.errors?.['required']">
+              El correo es obligatorio.
+            </span>
+            <span *ngIf="email.errors?.['email']">
+              Ingresa un correo válido.
+            </span>
+          </div>
+        </div>
 
-      <div class="divider">o</div>
+        <div class="form-field">
+          <label for="password">Contraseña</label>
+          <div class="password-wrapper">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+              [class.invalid]="
+                password.invalid && (password.dirty || password.touched)
+              "
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="togglePasswordVisibility()"
+              aria-label="Mostrar u ocultar contraseña"
+            >
+              <span *ngIf="!showPassword"><svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9.005a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 1.5a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 0 0-5ZM12 5.5c4.613 0 8.596 3.15 9.701 7.564a.75.75 0 1 1-1.455.365a8.504 8.504 0 0 0-16.493.004a.75.75 0 0 1-1.456-.363A10.003 10.003 0 0 1 12 5.5Z"/></svg></span>
+              <span *ngIf="showPassword"><svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 16 16"><path fill="currentColor" d="M1.48 1.48a.5.5 0 0 0-.049.65l.049.057l2.69 2.69A6.657 6.657 0 0 0 1.533 8.71a.5.5 0 0 0 .97.242a5.66 5.66 0 0 1 2.386-3.356l1.207 1.207a2.667 2.667 0 0 0 3.771 3.771l3.946 3.946a.5.5 0 0 0 .756-.65l-.049-.057l-4.075-4.076v-.001l-.8-.799l-1.913-1.913h.001l-1.92-1.919v-.001l-.755-.754l-2.871-2.87a.5.5 0 0 0-.707 0Zm5.323 6.03l2.356 2.357A1.667 1.667 0 0 1 6.802 7.51ZM8 3.667c-.667 0-1.314.098-1.926.283l.825.824a5.669 5.669 0 0 1 6.6 4.181a.5.5 0 0 0 .97-.242A6.669 6.669 0 0 0 8 3.667Zm.13 2.34l2.534 2.533A2.668 2.668 0 0 0 8.13 6.006Z"/></svg></span>
+            </button>
+          </div>
+          <div
+            class="field-error"
+            *ngIf="password.invalid && (password.dirty || password.touched)"
+          >
+            <span *ngIf="password.errors?.['required']">
+              La contraseña es obligatoria.
+            </span>
+            <span *ngIf="password.errors?.['minlength']">
+              Mínimo 6 caracteres.
+            </span>
+          </div>
+        </div>
 
-      <div style="display: flex; justify-content: center; width: 100%;" class="inputBox">
-                <button class="oauthButton">
-                  <svg class="icon" viewBox="0 0 24 24">
-                    <path
-                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                      fill="#4285F4"></path>
-                    <path
-                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                      fill="#34A853"></path>
-                    <path
-                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                      fill="#FBBC05"></path>
-                    <path
-                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                      fill="#EA4335"></path>
-                    <path d="M1 1h22v22H1z" fill="none"></path>
-                  </svg>
-                  Continue with Google
-                </button>
-              </div>
-    </form>
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="isLoading || loginForm.invalid"
+        >
+          <span *ngIf="!isLoading">Ingresar</span>
+          <span *ngIf="isLoading" class="loader"></span>
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span></span>
+        <p>o continúa con</p>
+        <span></span>
+      </div>
+
+      <!-- Botón de Google (inspirado en tu ejemplo, pero usando el botón oficial) -->
+      <div
+        class="google-button-wrapper"
+        [class.google-loading]="isGoogleLoading"
+      >
+        <asl-google-signin-button
+            type="standard"
+            size="large"
+            shape="pill"
+            text="continue_with"
+            theme="outline"
+            logo_alignment="left"
+            style="width: 100%;"
+          ></asl-google-signin-button>
+      </div>
+
+      <p class="auth-helper-text">
+        Al continuar aceptas nuestras políticas de uso y privacidad.
+      </p>
+
+      <div class="auth-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </div>
   </div>
-</div>
-</main>
-<div class="area">
-  <ul class="circles">
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-  </ul>
 </div>
 

@@ -1,831 +1,335 @@
-.context {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 10;
+.auth-page {
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top left,
+      rgba(0, 87, 70, 0.16),
+      var(--background-color));
 }
 
-.area {
-    background: linear-gradient(to left, #038c75, #0c7303);
-    width: 100%;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+.auth-card {
+  width: 100%;
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: 0 24px 70px var(--shadow-color);
 }
 
-.circles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    list-style: none;
+/* Panel portada */
+.auth-illustration {
+  /* position: relative; */
+  overflow: hidden;
+  background-color: #000000;
+  width: 100%;
+  height: 100%;
 }
 
-.circles li {
-    position: absolute;
-    display: block;
-    width: 20px;
-    height: 20px;
-    background: #ffffff33;
-    animation: animate 25s linear infinite;
-    bottom: -150px;
-}
-
-
-/* Circle animations remain the same */
-
-.circles li:nth-child(1) {
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
-}
-
-.circles li:nth-child(2) {
-    left: 10%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
-}
-
-.circles li:nth-child(3) {
-    left: 70%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 4s;
-}
-
-.circles li:nth-child(4) {
-    left: 40%;
-    width: 60px;
-    height: 60px;
-    animation-delay: 0s;
-    animation-duration: 18s;
-}
-
-.circles li:nth-child(5) {
-    left: 65%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 0s;
-}
-
-.circles li:nth-child(6) {
-    left: 75%;
-    width: 110px;
-    height: 110px;
-    animation-delay: 3s;
-}
-
-.circles li:nth-child(7) {
-    left: 35%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 7s;
-}
-
-.circles li:nth-child(8) {
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    animation-delay: 15s;
-    animation-duration: 45s;
-}
-
-.circles li:nth-child(9) {
-    left: 20%;
-    width: 15px;
-    height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
-}
-
-.circles li:nth-child(10) {
-    left: 85%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-    animation-duration: 11s;
-}
-
-@keyframes animate {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-        border-radius: 0;
-    }
-    100% {
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-        border-radius: 50%;
-    }
-}
-
-.form {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.login {
-    color: #000000;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: bold;
-    font-size: x-large;
-    text-align: center;
+.auth-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 
-/* From Uiverse.io by Luciefer0981 */
 
-.brutalist-button {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    width: 169px;
-    height: 60px;
-    background-color: #ffffff;
-    color: #000;
-    text-decoration: none;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    border: 3px solid #fff;
-    outline: 3px solid #000;
-    box-shadow: 6px 6px 0 #00ef77;
-    transition: all 0.1s ease-out;
-    padding: 0;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
+.auth-illustration-overlay .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(205, 223, 68, 0.18);
+  border: 1px solid rgba(205, 223, 68, 0.7);
 }
 
-.brutalist-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient( 90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-    z-index: 1;
-    transition: none;
-    /* Initially hide the pseudo-element */
-    opacity: 0;
+.auth-illustration-overlay h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-@keyframes slide {
-    0% {
-        left: -100%;
-    }
-    100% {
-        left: 100%;
-    }
+.auth-illustration-overlay p {
+  font-size: 0.9rem;
+  opacity: 0.92;
 }
 
-.brutalist-button:hover::before {
-    /* Show the pseudo-element on hover */
-    opacity: 1;
-    animation: slide 2s infinite;
+/* Panel formulario */
+.auth-form-wrapper {
+  padding: 2.25rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.brutalist-button:hover {
-    transform: translate(-4px, -4px);
-    box-shadow: 10px 10px 0 #000;
-    background-color: #000;
-    color: #fff;
+.auth-form-header h2 {
+  font-size: 1.4rem;
+  margin: 0 0 0.25rem;
 }
 
-@keyframes slide {
-    0% {
-        left: -100%;
-    }
-    100% {
-        left: 100%;
-    }
+.auth-form-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
 }
 
-.brutalist-button:active {
-    transform: translate(4px, 4px);
-    box-shadow: 0px 0px 0 #00a4ef;
-    background-color: #fff;
-    color: #000;
-    border-color: #000;
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-
-/* Rest of the CSS remains the same */
-
-.ms-logo {
-    display: flex;
-    align-items: center;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    flex-shrink: 0;
-    transition: transform 0.2s ease-out;
-    position: relative;
-    z-index: 1;
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
-.content-panel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.form-field label {
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.form-field input {
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  background: var(--background-color);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 
-.content-logo {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: end;
-    position: fixed;
-    margin-top: 20px;
+.form-field input:focus {
+  border-color: var(--sev-primary);
+  box-shadow: 0 0 0 1px rgba(0, 87, 70, 0.25);
 }
 
-.brutalist-button:hover .ms-logo {
-    transform: rotate(-10deg) scale(1.1);
+.form-field input.invalid {
+  border-color: var(--sev-danger);
 }
 
-.brutalist-button:active .ms-logo {
-    transform: rotate(10deg) scale(0.9);
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.ms-logo-square {
-    width: 100%;
-    height: 100%;
+.password-wrapper input {
+  width: 100%;
 }
 
-.ms-logo-square:nth-child(1) {
-    background-color: #f25022;
+.toggle-password {
+  position: absolute;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.95rem;
 }
 
-.ms-logo-square:nth-child(2) {
-    background-color: #7fba00;
+.field-error {
+  font-size: 0.75rem;
+  color: var(--sev-danger);
 }
 
-.ms-logo-square:nth-child(3) {
-    background-color: #00a4ef;
+/* Botón principal */
+.btn-primary {
+  margin-top: 0.3rem;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--sev-primary);
+  color: var(--text-color-contrast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: background-color 0.15s ease, transform 0.1s ease,
+    box-shadow 0.1s ease;
+  box-shadow: 0 10px 24px rgba(0, 87, 70, 0.3);
 }
 
-.ms-logo-square:nth-child(4) {
-    background-color: #ffb900;
+.btn-primary:hover:not(:disabled) {
+  background: var(--sev-primary-hover);
+  transform: translateY(-1px);
 }
 
-.button-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-    transition: transform 0.2s ease-out;
-    position: relative;
-    z-index: 1;
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: default;
+  box-shadow: none;
 }
 
-.brutalist-button:hover .button-text {
-    transform: skew(-5deg);
+.loader {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
 }
 
-.brutalist-button:active .button-text {
-    transform: skew(5deg);
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.button-text span:first-child {
-    font-size: 11px;
-    text-transform: uppercase;
+/* Separador */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  margin-top: 0.5rem;
 }
 
-.button-text span:last-child {
-    font-size: 16px;
-    text-transform: uppercase;
+.auth-divider span {
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
 }
 
-.card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    width: 300px;
-    flex-direction: column;
-    gap: 35px;
-    padding: 20px;
+/* Botón Google (inspirado en tu ejemplo) */
+.google-button-wrapper {
+  margin-top: 0.3rem;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding: 2px;
+  border-radius: 35px;
+  /* border: 2px solid #000; */
+  overflow: hidden;
 }
 
-.inputBox {
-    position: relative;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* margin-bottom: 1em; */
+/* animación de "olas" ligera */
+.google-button-wrapper::before,
+.google-button-wrapper::after {
+  content: '';
+  position: absolute;
+  border-radius: 300px;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.inputBox input {
-    width: 100%;
-    padding: 10px;
-    outline: none;
-    border: none;
-    color: #000;
-    font-size: 1em;
-    background: transparent;
-    border-left: 2px solid #000;
-    border-bottom: 2px solid #000;
-    transition: border 0.3s ease;
-    border-bottom-left-radius: 8px;
+.google-button-wrapper:hover::before {
+  animation: googleWave1 2.2s ease-in-out forwards;
 }
 
-.inputBox label {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 10px;
-    padding: 10px;
-    pointer-events: none;
-    font-size: 12px;
-    color: #000;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    letter-spacing: 3px;
+.google-button-wrapper:hover::after {
+  animation: googleWave2 2.2s ease-in-out forwards;
 }
 
-.inputBox input:valid~label,
-.inputBox input:focus~label {
-    transform: translateX(150px) translateY(-30px);
-    font-size: 0.8em;
-    padding: 5px 10px;
-    background: #000;
-    color: #fff;
-    border-radius: 8px;
-    font-size: 5px;
-}
-
-.inputBox input:valid,
-.inputBox input:focus {
-    border: 2px solid #000;
-    border-radius: 8px;
-}
-
-.enter {
-    height: 45px;
-    width: 100px;
-    border-radius: 5px;
-    border: 2px solid #000;
-    cursor: pointer;
-    background-color: transparent;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 2px;
-    margin-bottom: 1em;
-    color: #000000;
-}
-
-.enter:hover {
-    background-color: #000;
-    color: white;
-}
-
-.e-card {
-    margin: 100px auto;
-    background: transparent;
-    box-shadow: 0px 8px 28px -9px rgba(0, 0, 0, 0.669);
-    position: relative;
-    width: 300px;
-    min-height: 400px;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: .4s ease-in-out;
-    background-color: #ffffff67;
-}
-
-.e-card:hover {
-    transform: scale(1.05);
-}
-
-.wave {
-    position: absolute;
-    width: 450px;
-    height: 410px;
-    opacity: 0.6;
-    left: 100px;
-    top: 700px;
-    margin-left: 30px;
-    margin-top: 100px;
-    background: linear-gradient(744deg, #00ff80, #00ce45 60%, #00cc44);
-}
-
-.wave:nth-child(2),
-.wave:nth-child(3) {
-    top: 50%;
-}
-
-.playing .wave {
-    border-radius: 40%;
-    animation: wave 3000ms infinite linear;
-}
-
-.wave {
-    border-radius: 10%;
-    animation: wave 55s infinite linear;
-}
-
-.playing .wave:nth-child(2) {
-    animation-duration: 4000ms;
-}
-
-.wave:nth-child(2) {
-    animation-duration: 50s;
-}
-
-.playing .wave:nth-child(3) {
-    animation-duration: 5000ms;
-}
-
-.wave:nth-child(3) {
-    animation-duration: 45s;
-}
-
-@keyframes wave {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-@media (max-width: 768px) {
-    .e-card {
-        width: 90%;
-        max-width: 300px;
-        min-height: 350px;
-    }
-    .card {
-        width: 100%;
-        padding: 15px;
-    }
-    .inputBox {
-        width: 100%;
-    }
-}
-
-.enter {
-    height: 45px;
-    width: 100px;
-    border-radius: 5px;
-    border: 2px solid #000;
-    cursor: pointer;
-    background-color: transparent;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 2px;
-    margin-bottom: 1em;
-}
-
-.oauthButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    /* margin: 50px auto 0 auto; */
-    padding: auto 15px 15px auto;
-    width: 250px;
-    height: 40px;
-    border-radius: 5px;
-    background-color: #d2dad3;
-    box-shadow: 4px 4px var(--main-color);
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--font-color);
-    cursor: pointer;
-    transition: all 250ms;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    margin-bottom: 1em;
-    border: 2px solid #000;
-    color: #000000;
-}
-
-.oauthButton::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
+/* @keyframes googleWave1 {
+  0% {
+    background: #eb4335;
     width: 0;
-    background-color: #212121;
-    z-index: -1;
-    -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
-    box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
-    transition: all 250ms;
-}
-
-.oauthButton:hover {
-    color: #e8e8e8;
-}
-
-.oauthButton:hover::before {
-    width: 100%;
-}
-
-.icon {
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-
-/* From Uiverse.io by catraco */
-
-
-/*------ Settings ------*/
-
-.container-eye {
-    --color: #000000;
-    --size: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: var(--size);
-    user-select: none;
-    fill: var(--color);
-    position: absolute;
-    z-index: 100;
-    /* width: 10px;
-  height: 10px; */
-    margin-left: 200px;
-    margin-bottom: 37px;
-}
-
-.container-eye .eye {
-    position: absolute;
-    animation: keyframes-fill .5s;
-}
-
-.container-eye .eye-slash {
-    position: absolute;
-    animation: keyframes-fill .5s;
-    display: none;
-}
-
-
-/* ------ On check event ------ */
-
-.container-eye input:checked~.eye {
-    display: none;
-}
-
-.container-eye input:checked~.eye-slash {
-    display: block;
-}
-
-
-/* ------ Hide the default checkbox ------ */
-
-.container-eye input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
     height: 0;
-    width: 0;
-}
-
-
-/* ------ Animation ------ */
-
-@keyframes keyframes-fill {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2);
-    }
-}
-
-body,
-html {
-    /* margin: 0;
-    padding: 0; */
-    /* font-family: Arial, sans-serif; */
-    color: #000000;
-    background: linear-gradient(to bottom, #ffffff, #fff5e1);
-    /* height: 100%; */
-    background-color: #ffffff;
-}
-
-
-/* .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
-    background: linear-gradient(135deg, #2e7d32 0%, #60ad5e 100%);
+    opacity: 1;
+  }
+  25% {
+    background: #eb4335;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  100% {
+    background: #34a853;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
 } */
 
-.login-card {
-    background-color: #ffffffaf;
-    padding: 2rem;
-    width: 100%;
-    max-width: 380px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+/* @keyframes googleWave2 {
+  0% {
+    background: #fbbc05;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  40% {
+    background: #fbbc05;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  100% {
+    background: #4285f4;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+} */
+
+/* El botón oficial que inserta Google dentro del wrapper */
+.google-button-wrapper asl-google-signin-button,
+.google-button-wrapper .g_id_signin {
+  position: relative;
+  z-index: 2;
 }
 
-.logo-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
+/* Estado cargando Google */
+.google-button-wrapper.google-loading {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
-.logo {
-    width: 80px;
+/* Texto auxiliar y error */
+.auth-helper-text {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 24px;
-    font-size: 20px;
-    font-weight: bold;
-    /* <- Negrita */
+.auth-error {
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  background-color: rgba(220, 38, 38, 0.08);
+  color: var(--sev-danger);
+  font-size: 0.8rem;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-illustration {
+    height: 220px;
+  }
+
+  .auth-form-wrapper {
+    padding: 1.75rem 1.5rem 2rem;
+  }
 }
 
-label {
-    font-family: 'Poppins', sans-serif;
-    /* o 'Roboto' */
-    font-size: 14px;
-    color: #333;
-    text-align: left;
-}
+@media (max-width: 600px) {
+  .auth-page {
+    padding: 1rem;
+  }
 
-input[type="text"],
-input[type="password"] {
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    color: #333;
-    font-weight: 400;
-}
-
-input::placeholder {
-    color: #999;
-    font-weight: 300;
-}
-
-.options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-}
-
-.btn-signin {
-    background-color: #2e7d32;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-google {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.google-icon {
-    width: 18px;
-    height: 18px;
-}
-
-.divider {
-    margin: 12px 0;
-    color: #999;
-    text-align: center;
-}
-
-
-/* Responsivo */
-
-@media screen and (max-width: 480px) {
-    .login-card {
-        padding: 1.5rem;
-        width: 100%;
-    }
-    .btn-google,
-    .btn-signin {
-        font-size: 13px;
-    }
-    input[type="text"],
-    input[type="password"] {
-        font-size: 13px;
-    }
-    h2 {
-        font-size: 18px;
-        color: #000;
-    }
-}
-
-
-/* ... lo que ya tienes arriba ... */
-
-
-/* Input con borde verde al enfocar */
-
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border: 2px solid #2e7d32;
-    outline: none;
-}
-
-
-/* Divider con líneas a los lados y la "o" centrada */
-
-.divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #121212;
-    font-size: 14px;
-    margin: 16px 0;
-}
-
-.divider::before,
-.divider::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid #131313;
-    margin: 0 10px;
-}
-
-input[type="text"],
-input[type="password"] {
-    background-color: white;
-    color: black;
-    /* Para asegurar que el texto sea visible */
-}
-
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: white;
-    /* Fondo claro */
-    border: 2px solid #333;
-    /* Borde visible */
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    /* Bordes redondeados (opcional) */
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-input[type="checkbox"]:checked::before {
-    content: "✔";
-    /* Icono check personalizado */
-    position: absolute;
-    top: -2px;
-    left: 2px;
-    font-size: 12px;
-    color: #2e7d32;
-    /* Color del check (verde en este caso) */
-    font-weight: bold;
+  .auth-illustration-overlay h1 {
+    font-size: 1.3rem;
+  }
 }
