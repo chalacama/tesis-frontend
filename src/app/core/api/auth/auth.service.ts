@@ -73,6 +73,7 @@ export class AuthService {
     // Fusionamos user + flags de la raíz para que SIEMPRE tengas los 3 campos
     const userWithFlags: User = {
       ...response.user,
+      can_update_username: response.can_update_username,
       has_user_information:
         response.has_user_information ?? response.user.has_user_information,
       has_educational_user:
@@ -152,4 +153,25 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
+    // --- NUEVO ---
+  /**
+   * Actualiza el usuario actual en memoria y en localStorage
+   * sin necesidad de hacer login otra vez.
+   */
+  updateCurrentUser(partialUser: Partial<User>): void {
+    const current = this.currentUserSubject.value;
+
+    if (!current || !this.isBrowser) {
+      return;
+    }
+
+    const updatedUser: User = {
+      ...current,
+      ...partialUser,
+    };
+
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    this.currentUserSubject.next(updatedUser);
+  }
+
 }

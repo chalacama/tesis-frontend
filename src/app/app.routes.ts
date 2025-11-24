@@ -18,14 +18,31 @@ export const routes: Routes = [
   path: 'certificate/:code',
   loadComponent: () => import('./pages/public/certificate/certificate.component').then(c => c.CertificateComponent)
   },
-  {
-  path: 'personalize',
-  loadComponent: () => import('./pages/private/personalize/personalize.component').then(c => c.PersonalizeComponent)
-  },
+
   {
     path: '',
     canActivate: [authGuard],
+    
     children:[
+        {
+  path: 'personalize',
+  loadComponent: () => import('./pages/private/personalize/personalize.component').then(c => c.PersonalizeComponent),
+  children:[
+    {
+      path: 'infomation',
+      loadComponent: () => import('./pages/private/personalize/stepper-info/stepper-info.component').then(c => c.StepperInfoComponent)
+    },
+    {
+      path: 'education',
+      loadComponent: () => import('./pages/private/personalize/stepper-edu/stepper-edu.component').then(c => c.StepperEduComponent)
+    },
+    {
+      path: 'interest',
+      loadComponent: () => import('./pages/private/personalize/stepper-inte/stepper-inte.component').then(c => c.StepperInteComponent)
+    }
+
+  ]
+  },
       {
       path: 'learning',
       /* canActivate: [authGuard], */

@@ -6,23 +6,38 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AuthService } from '../api/auth/auth.service';
 
-export const authGuard: CanActivateFn = (): Observable<boolean | UrlTree> => {
+export const authGuard: CanActivateFn = (
+  route,
+  state
+): Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Usamos el observable currentUser que ya tienes en tu servicio
   return authService.currentUser.pipe(
-    // take(1) asegura que la suscripción se complete después de la primera emisión
     take(1),
     map(user => {
-      // Si el usuario existe (no es null), está autenticado
-      if (user) {
-        return true; // Permitir acceso
+      // 1) Si NO hay usuario → redirigir a /auth
+      if (!user) {
+        return router.createUrlTree(['/auth']);
       }
-      
-      // Si no hay usuario, redirigir a la página de login
-      // Usar createUrlTree es la forma recomendada en guards funcionales
-      return router.createUrlTree(['/auth']);
+
+      // 2) Verificar si el perfil está COMPLETO
+      const hasUserInfo = !!user.has_user_information;
+      const hasEducational = !!user.has_educational_user;
+      const hasCategoryInterest = !!user.has_user_category_interest;
+
+      const needsPersonalize =
+        !hasUserInfo || !hasEducational || !hasCategoryInterest;
+
+      const targetUrl = state.url || '';
+
+      // 3) Si necesita personalizar y NO está ya en /personalize → redirigir
+      if (needsPersonalize && !targetUrl.startsWith('/personalize')) {
+        return router.createUrlTree(['/personalize']);
+      }
+
+      // 4) Si todo bien → permitir acceso
+      return true;
     })
   );
 };

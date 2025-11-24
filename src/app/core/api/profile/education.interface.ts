@@ -48,6 +48,7 @@ export interface EducationalLevel {
 
 export interface Sede {
     id:                  number;
+    contry:              string;
     province:            string;
     canton:              string;
     educational_unit_id: number;

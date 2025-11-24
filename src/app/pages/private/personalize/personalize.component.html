@@ -1,1 +1,42 @@
-<p>personalize works!</p>
+<!-- src/app/pages/private/personalize/personalize.component.html -->
+
+<section class="personalize" *ngIf="!isLoadingUser">
+  <header class="personalize__header">
+    <h1>Configura tu perfil</h1>
+    <p class="personalize__subtitle">
+      Completa estos pasos para personalizar tu experiencia en DigiMentor.
+    </p>
+  </header>
+
+  <ol class="stepper" aria-label="Pasos para completar el perfil">
+    <li
+      *ngFor="let step of steps; let i = index"
+      class="step"
+      [class.step--active]="i === activeStepIndex"
+      [class.step--completed]="step.completed"
+    >
+      <div class="step__icon">
+        <span *ngIf="!step.completed; else checkTpl">{{ i + 1 }}</span>
+        <ng-template #checkTpl>
+          <span class="step__check">✓</span>
+        </ng-template>
+      </div>
+      <div class="step__content">
+        <div class="step__title">{{ step.label }}</div>
+        <div class="step__status">
+          {{ step.completed ? 'Completado' : 'Pendiente' }}
+        </div>
+      </div>
+    </li>
+  </ol>
+
+  <div class="personalize__outlet">
+    <router-outlet></router-outlet>
+  </div>
+</section>
+
+<!-- Pequeño skeleton mientras se carga el usuario -->
+<section class="personalize-loading" *ngIf="isLoadingUser">
+  <div class="skeleton-header"></div>
+  <div class="skeleton-step" *ngFor="let i of [1, 2, 3]"></div>
+</section>

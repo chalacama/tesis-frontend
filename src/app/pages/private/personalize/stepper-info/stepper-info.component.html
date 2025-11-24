@@ -1,0 +1,222 @@
+<!-- Barra de carga global para los submits -->
+<ui-loading-bar
+  [visible]="saving()"
+  [mask]="{ type: 'dimmed' }">
+</ui-loading-bar>
+
+<div class="stepper-info">
+
+  <h2 class="title">Información personal</h2>
+
+  <!-- SKELETON -->
+  <div *ngIf="isLoading(); else contentTpl" class="skeleton-wrapper">
+    <div class="skeleton-row" *ngFor="let r of skeletonRows"></div>
+  </div>
+
+  <ng-template #contentTpl>
+
+    <!-- SECCIÓN USERNAME -->
+    <section class="username-section">
+      <h3>Nombre de usuario</h3>
+      <p class="hint">
+        Tu nombre de usuario actual es <strong>{{ currentUsername }}</strong>.
+      </p>
+
+      <ng-container *ngIf="canUpdateUsername; else cannotUpdateTpl">
+
+        <form [formGroup]="usernameForm" (ngSubmit)="onSubmitUsername()">
+          <div class="field">
+            <label for="username">Nuevo username</label>
+            <input
+              id="username"
+              type="text"
+              formControlName="username"
+              (blur)="onValidateUsername()"
+              placeholder="ej: jandry.dev">
+            <small class="hint"
+              *ngIf="
+                usernameForm.get('username')?.valid &&
+                usernameAvailable === true
+              ">
+              ✅ Nombre de usuario disponible
+            </small>
+            <small class="error" *ngIf="usernameError">
+              {{ usernameError }}
+            </small>
+          </div>
+
+          <div class="actions">
+            <button
+              type="submit"
+              [disabled]="usernameForm.invalid || saving() || usernameAvailable === false">
+              Guardar username
+            </button>
+          </div>
+        </form>
+
+      </ng-container>
+
+      <ng-template #cannotUpdateTpl>
+        <p class="hint">
+          Ya has actualizado tu nombre de usuario previamente.  
+          Por políticas de la plataforma, esta acción sólo se permite una vez.
+        </p>
+      </ng-template>
+    </section>
+    <hr class="divider" />
+    <!-- FORMULARIO INFORMACIÓN PERSONAL -->
+    <form [formGroup]="infoForm" (ngSubmit)="onSubmitInfo()" class="info-form">
+
+      <div class="fields-grid">
+
+        <!-- Fecha de nacimiento -->
+        <div class="field">
+          <label for="birthdate">Fecha de nacimiento</label>
+          <input
+            id="birthdate"
+            type="date"
+            formControlName="birthdate">
+        </div>
+
+        
+        <!-- Teléfono -->
+<div class="field">
+  <label for="phone_local">Teléfono</label>
+  <div class="phone-wrapper">
+    <button type="button" class="phone-code">
+      {{ selectedCountryCode.flagEmoji }} {{ selectedCountryCode.phoneCode }}
+    </button>
+    <input
+      id="phone_local"
+      type="tel"
+      inputmode="numeric"
+      autocomplete="tel"
+      formControlName="phone_local"
+      placeholder="99 162 2884"
+      (input)="onPhoneInput($event)">
+  </div>
+  <small class="error" *ngIf="phoneError">
+    {{ phoneError }}
+  </small>
+</div>
+
+
+        <!-- Provincia -->
+        <div class="field">
+          <label for="provinceId">Provincia</label>
+          <select
+            id="provinceId"
+            formControlName="provinceId"
+            (change)="onProvinceChange()">
+            <option value="">Selecciona una provincia</option>
+            <option *ngFor="let prov of provincias" [value]="prov.id">
+              {{ prov.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Cantón -->
+        <div class="field">
+          <label for="cantonId">Cantón</label>
+          <select
+            id="cantonId"
+            formControlName="cantonId"
+            (change)="onCantonChange()"
+            [disabled]="cantones.length === 0">
+            <option value="">Selecciona un cantón</option>
+            <option *ngFor="let canton of cantones" [value]="canton.id">
+              {{ canton.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Parroquia -->
+        <div class="field">
+          <label for="parishId">Parroquia</label>
+          <select
+            id="parishId"
+            formControlName="parishId"
+            [disabled]="parroquias.length === 0">
+            <option value="">Selecciona una parroquia</option>
+            <option *ngFor="let parr of parroquias" [value]="parr.id">
+              {{ parr.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Sexo -->
+        <div class="field">
+          <label for="sexo">Sexo</label>
+          <select id="sexo" formControlName="sexo">
+            <option value="">Selecciona una opción</option>
+            <option *ngFor="let opt of sexoOptions" [value]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Estado civil -->
+        <div class="field">
+          <label for="estado_civil">Estado civil</label>
+          <select id="estado_civil" formControlName="estado_civil">
+            <option value="">Selecciona una opción</option>
+            <option *ngFor="let opt of estadoCivilOptions" [value]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Discapacidad -->
+        <div class="field">
+          <label for="discapacidad">¿Tiene discapacidad?</label>
+          <select id="discapacidad" formControlName="discapacidad">
+            <option value="">Selecciona una opción</option>
+            <option *ngFor="let opt of discapacidadOptions" [value]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Tipo de discapacidad -->
+        <div class="field" *ngIf="infoForm.get('discapacidad')?.value === 'si'">
+          <label for="discapacidad_permanente">Tipo de discapacidad</label>
+          <select id="discapacidad_permanente" formControlName="discapacidad_permanente">
+            <option value="">Selecciona una opción</option>
+            <option *ngFor="let opt of discapacidadPermanenteOptions" [value]="opt">
+              {{ opt }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Asistencia a establecimiento -->
+        <div class="field" *ngIf="infoForm.get('discapacidad')?.value === 'si'">
+          <label for="asistencia_establecimiento_discapacidad">
+            ¿Asiste a algún establecimiento de discapacidad?
+          </label>
+          <select
+            id="asistencia_establecimiento_discapacidad"
+            formControlName="asistencia_establecimiento_discapacidad">
+            <option value="">Selecciona una opción</option>
+            <option *ngFor="let opt of asistenciaDiscOptions" [value]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button type="submit" [disabled]="infoForm.invalid || saving()">
+          Guardar información
+        </button>
+      </div>
+
+    </form>
+
+    
+
+    
+
+  </ng-template>
+
+</div>

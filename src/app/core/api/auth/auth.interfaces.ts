@@ -16,6 +16,7 @@ export interface User {
 
   // Flags que vienen tanto dentro de user (si los tienes como accessors)
   // como en la raíz de la respuesta de Laravel
+  can_update_username: boolean;
   has_user_information: boolean;
   has_educational_user: boolean;
   has_user_category_interest: boolean;
@@ -47,6 +48,7 @@ export interface AuthResponse {
   role: string;
 
   // Flags también a nivel raíz (los marcaste como NUEVOS CAMPOS / FLAGS en Laravel)
+  can_update_username: boolean;
   has_user_information?: boolean;
   has_educational_user?: boolean;
   has_user_category_interest?: boolean;

@@ -1,0 +1,157 @@
+.stepper-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* GRID responsive */
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+/* Campos */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.field input,
+.field select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: 2px solid var(--active-color);
+  outline-offset: 1px;
+}
+
+/* Teléfono */
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.phone-code {
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-hover);
+  color: var(--text-color);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  cursor: default;
+}
+
+/* Acciones */
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.actions button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.4rem;
+  background-color: var(--sev-primary);
+  color: var(--text-color-contrast);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 6px var(--shadow-color);
+}
+
+.actions button:hover:not(:disabled) {
+  background-color: var(--sev-primary-hover);
+}
+
+.actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Skeleton */
+.skeleton-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.skeleton-row {
+  height: 2.6rem;
+  border-radius: 0.75rem;
+  background-color: var(--background-skeleton);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  animation: skeleton-shimmer 1.2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Mensajes */
+.error {
+  color: var(--danger-500);
+  font-size: 0.75rem;
+}
+
+.hint {
+  color: var(--text-color-secondary);
+  font-size: 0.8rem;
+}
+
+/* Username */
+.username-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.username-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1.25rem 0;
+}
