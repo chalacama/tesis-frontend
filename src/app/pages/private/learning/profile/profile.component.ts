@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../../core/api/auth/auth.service';
 import { User } from '../../../../core/api/auth/auth.interfaces';
+import { IconComponent } from '../../../../shared/UI/components/button/icon/icon.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, IconComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })

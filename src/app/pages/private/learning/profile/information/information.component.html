@@ -11,7 +11,12 @@
                 <label class="label">Provincia</label>
                 <select [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()" class="select">
           <option value="" disabled selected>Selecciona una provincia</option>
-          <option *ngFor="let p of provincias" [value]="p.id">{{ p.nombre }}</option>
+          <option
+            *ngFor="let p of provincias; trackBy: trackById"
+            [value]="p.id"
+          >
+            {{ p.nombre }}
+          </option>
         </select>
             </div>
 
@@ -20,7 +25,12 @@
                 <label class="label">Cantón</label>
                 <select [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length" class="select">
           <option value="" disabled selected>Selecciona un cantón</option>
-          <option *ngFor="let c of cantones" [value]="c.id">{{ c.nombre }}</option>
+          <option
+            *ngFor="let c of cantones; trackBy: trackById"
+            [value]="c.id"
+          >
+            {{ c.nombre }}
+          </option>
         </select>
                 <small class="hint" [class.warn]="!cantones.length">
           {{ !cantones.length ? 'Selecciona una provincia primero.' : '' }}
@@ -32,7 +42,12 @@
                 <label class="label">Parroquia</label>
                 <select [(ngModel)]="selectedParishId" [disabled]="!parroquias.length" class="select">
           <option value="" disabled selected>Selecciona una parroquia</option>
-          <option *ngFor="let parr of parroquias" [value]="parr.id">{{ parr.nombre }}</option>
+          <option
+            *ngFor="let parr of parroquias; trackBy: trackById"
+            [value]="parr.id"
+          >
+            {{ parr.nombre }}
+          </option>
         </select>
                 <small class="hint" [class.warn]="!parroquias.length">
           {{ !parroquias.length ? 'Selecciona un cantón para ver parroquias.' : '' }}
@@ -41,20 +56,30 @@
 
             <div class="divider span-2"></div>
 
-            <!-- Código de país -->
-            <div class="form-row span-2">
-                <label class="label">Código de país</label>
-                <div class="country-codes">
-                    <div class="chip"><span class="chip-key">País</span><span class="chip-val">{{ countries.name }}</span></div>
-                    <div class="chip"><span class="chip-key">ISO</span><span class="chip-val">{{ countries.code }}</span></div>
-                    <div class="chip"><span class="chip-key">Tel</span><span class="chip-val">{{ countries.phoneCode }}</span></div>
-                    <div class="chip flag"><span class="chip-val">{{ countries.flagEmoji }}</span></div>
+            <!-- Fecha de nacimiento -->
+            <div class="form-row">
+                <label class="label">Fecha de nacimiento</label>
+                <input type="date" class="select date" [max]="today" [(ngModel)]="viewBirthdate" />
+
+            </div>
+
+            <!-- Número telefónico (+593 fijo a la izquierda) -->
+            <div class="form-row">
+                <label class="label">Número telefónico</label>
+                <div class="phone-input">
+                    <span class="prefix-chip">EC&nbsp;<b>+593</b></span>
+                    <input type="tel" inputmode="numeric" class="phone" placeholder="0999998888" [(ngModel)]="viewPhone" (input)="onPhoneInput()" maxlength="10" />
                 </div>
+                <small class="hint">
+          Solo números. Se enviará como: <b>+593</b> + tu número (sin el 0 inicial).
+        </small>
             </div>
         </div>
     </div>
 
     <footer class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="onSubmitPersonal()">Guardar cambios</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmitPersonal()">
+      Guardar cambios
+    </button>
     </footer>
 </section>

@@ -12,7 +12,10 @@
 
         <div class="hero-right" *ngIf="(datosUsuario$ | async) as u">
             <h2 class="fullname">{{ getFullName(u) }}</h2>
-            <p class="username">{{'@'+ u.username }}</p>
+            <p class="username">{{'@'+ u.username }}
+                <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="'svg/rename.svg'">
+                </ui-icon>
+            </p>
             <p class="muted small">Gestiona tu información general y académica.</p>
         </div>
     </section>
