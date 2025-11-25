@@ -209,6 +209,11 @@ export const routes: Routes = [
         
         },
         {
+          path: 'collaborators',
+        loadComponent: () => import('./pages/private/studio/manage.course/invitation/invitation.component').then((c) => c.InvitationComponent),
+        
+        },
+        {
             path: 'module/:module/chapter/:chapter',
             loadComponent: () => import('./pages/private/studio/manage.course/module/chapter/chapter.component').then((c) => c.ChapterComponent),
             children: [
