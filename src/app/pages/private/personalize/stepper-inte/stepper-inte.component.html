@@ -1,1 +1,71 @@
-<p>stepper-inte works!</p>
+<ui-loading-bar [visible]="saving()" [mask]="{ type: 'dimmed' }">
+</ui-loading-bar>
+
+<div class="stepper-inte-container">
+
+    <header class="stepper-inte-header">
+        <h1>Tus intereses</h1>
+        <p>
+            Elige las categorías que más te representan para recomendarte cursos, actividades y contenidos dentro de DigiMentor.
+        </p>
+    </header>
+
+    <!-- SKELETON -->
+    <ng-container *ngIf="isLoading(); else interestsTpl">
+        <div class="inte-skeleton-card" *ngFor="let row of skeletonRows">
+            <div class="skeleton-header skeleton-box"></div>
+
+            <div class="chip-skeleton-row">
+                <div class="chip-skeleton skeleton-box"></div>
+                <div class="chip-skeleton skeleton-box"></div>
+                <div class="chip-skeleton skeleton-box"></div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- CONTENIDO REAL -->
+    <ng-template #interestsTpl>
+        <section class="inte-card">
+            <div class="card-header">
+                <h2>Categorías disponibles</h2>
+                <p>
+                    Toca las categorías para seleccionarlas. Puedes elegir
+                    <strong>{{ maxSelections }}</strong> en total.
+                </p>
+            </div>
+
+            <div class="chips-info-row">
+                <span class="chips-counter">
+          Has seleccionado
+          <strong>{{ selectedCategoryIds.length }}</strong>
+          de <strong>{{ maxSelections }}</strong> categorías.
+        </span>
+            </div>
+
+            <div class="chips-grid">
+                <button type="button" class="chip" *ngFor="let cat of categories" (click)="toggleCategory(cat)" [class.chip-selected]="isSelected(cat.id)">
+          <span class="chip-dot"></span>
+          <span class="chip-label">{{ cat.name }}</span>
+        </button>
+            </div>
+
+            <div class="chips-helper">
+                <p class="chips-helper-text">
+                    Intenta combinar intereses generales (por ejemplo, "Tecnología") con intereses más específicos (por ejemplo, "Programación", "Robótica", "IoT").
+                </p>
+            </div>
+
+            <div class="error-row" *ngIf="errorMessage">
+                <span class="error-text">
+          {{ errorMessage }}
+        </span>
+            </div>
+
+            <div class="inte-actions">
+                <button type="button" class="btn-primary" (click)="onSubmitInterests()" [disabled]="saving()">
+          Guardar y finalizar
+        </button>
+            </div>
+        </section>
+    </ng-template>
+</div>
