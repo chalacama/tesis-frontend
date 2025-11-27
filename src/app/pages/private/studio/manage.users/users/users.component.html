@@ -1,1 +1,220 @@
-<p>users works!</p>
+<!-- Barra de carga para operaciones de cambio de rol -->
+<ui-loading-bar
+  [visible]="savingRole"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<!-- Toast global -->
+<ui-toast></ui-toast>
+
+<div class="users-page">
+  <div class="users-header">
+    <h2 class="users-title">Gestión de usuarios</h2>
+    <p class="users-subtitle">
+      Administra los usuarios de la plataforma, filtra por rol y cambia sus
+      permisos.
+    </p>
+  </div>
+
+  <!-- Filtros -->
+  <div class="users-filters">
+    <div class="filter-group search">
+      <label for="search">Buscar</label>
+      <input
+        id="search"
+        type="text"
+        placeholder="Nombre, apellido o correo..."
+        [(ngModel)]="search"
+        (keyup.enter)="onApplyFilters()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="roleFilter">Rol</label>
+      <select
+        id="roleFilter"
+        [ngModel]="selectedRoleFilter"
+        (ngModelChange)="onChangeRoleFilter($event)"
+      >
+        <option value="all">Todos</option>
+        <option *ngFor="let role of roles" [value]="role.id">
+          {{ role.name | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sort">Ordenar por</label>
+      <select
+        id="sort"
+        [ngModel]="sort"
+        (ngModelChange)="onChangeSort($event)"
+      >
+        <option value="alpha_asc">Alfabético (A-Z)</option>
+        <option value="alpha_desc">Alfabético (Z-A)</option>
+        <option value="recent">Más recientes</option>
+        <option value="oldest">Más antiguos</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="perPage">Por página</label>
+      <select
+        id="perPage"
+        [(ngModel)]="perPage"
+        (ngModelChange)="onChangePerPage()"
+      >
+        <option [value]="10">10</option>
+        <option [value]="15">15</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+
+    <button class="btn btn-secondary" (click)="onApplyFilters()">
+      Aplicar
+    </button>
+  </div>
+
+  <!-- Contenedor de tabla -->
+  <div class="users-card">
+    <!-- Skeleton de carga -->
+    <div *ngIf="loadingUsers" class="table-skeleton">
+      <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-40"></div>
+        </div>
+        <div class="skeleton-line w-30 hide-on-mobile"></div>
+        <div class="skeleton-line w-30 hide-on-mobile"></div>
+      </div>
+    </div>
+
+    <!-- Tabla real -->
+    <ng-container *ngIf="!loadingUsers">
+      <div *ngIf="users.length > 0; else emptyState" class="table-wrapper">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th class="hide-on-mobile">Username</th>
+              <th class="hide-on-mobile">Correo</th>
+              <th>Rol</th>
+              <th class="actions-col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>
+                <div class="user-cell">
+                  <ui-avatar
+                    [style]="{ cursor: 'pointer' }"
+                    [src]="user.profile_picture_url || ''"
+                    [name]="user.name + ' ' + user.lastname"
+                    severity="primary"
+                    size="sm"
+                  >
+                  </ui-avatar>
+                  <div class="user-info">
+                    <span class="user-name">
+                      {{ user.name }} {{ user.lastname }}
+                    </span>
+                    <span class="user-email">{{ user.email }}</span>
+                  </div>
+                </div>
+              </td>
+
+              <td class="hide-on-mobile">
+                <span class="badge badge-muted">
+                  {{ '@' + user.username }}
+                </span>
+              </td>
+
+              <td class="hide-on-mobile">
+                <span>{{ user.email }}</span>
+              </td>
+
+              <td>
+                <select
+                  class="role-select"
+                  [ngModel]="user.role_id"
+                  (ngModelChange)="onRoleSelectChange(user, $event)"
+                >
+                  <option
+                    *ngFor="let role of roles"
+                    [value]="role.id"
+                  >
+                    {{ role.name | titlecase }}
+                  </option>
+                </select>
+              </td>
+
+              <td class="actions-col">
+                <span class="current-role">
+                  {{ user.rol ? (user.rol | titlecase) : 'Sin rol' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <div class="pagination">
+          <button
+            class="btn btn-ghost"
+            [disabled]="currentPage <= 1"
+            (click)="goToPage(currentPage - 1)"
+          >
+            ← Anterior
+          </button>
+
+          <span class="pagination-info">
+            Página {{ getTotalPagesText() }} · {{ totalItems }} registros
+          </span>
+
+          <button
+            class="btn btn-ghost"
+            [disabled]="currentPage >= lastPage"
+            (click)="goToPage(currentPage + 1)"
+          >
+            Siguiente →
+          </button>
+        </div>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <p>No se encontraron usuarios con los filtros actuales.</p>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+
+  <!-- Modal de confirmación de cambio de rol -->
+  <div class="modal-backdrop" *ngIf="showConfirmModal">
+    <div class="modal">
+      <h3>Confirmar cambio de rol</h3>
+      <p>
+        ¿Seguro que deseas cambiar el rol de
+        <strong>
+          {{ roleChangeUser?.name }} {{ roleChangeUser?.lastname }}
+        </strong>
+        a
+        <strong>
+          {{ getRoleName(roleChangeNewRoleId) | titlecase }}
+        </strong>
+        ?
+      </p>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="onCancelRoleChange()">
+          Cancelar
+        </button>
+        <button class="btn btn-primary" (click)="onConfirmRoleChange()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
