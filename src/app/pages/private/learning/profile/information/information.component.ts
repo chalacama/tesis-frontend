@@ -5,9 +5,7 @@ import { FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ProvincesService } from '../../../../../core/services/provinces/provinces.service';
 import { Provincia, Canton, Parroquia } from '../../../../../core/services/provinces/provinces.interface';
 import { InformationService } from '../../../../../core/api/profile/information.service';
-import { CountryCode } from '../../../../../core/services/code-country/code.country';
 
-// 👇 importa las interfaces para tipar/localmente (opcional pero recomendado)
 import {
   InformationRequest,
   UserInformation
@@ -23,6 +21,7 @@ import {
 export class InformationComponent implements OnInit {
   personalForm!: FormGroup;
 
+  // Ubicación
   provincias: Provincia[] = [];
   cantones: Canton[] = [];
   parroquias: Parroquia[] = [];
@@ -31,25 +30,63 @@ export class InformationComponent implements OnInit {
   selectedCantonId = '';
   selectedParishId = '';
 
-  // Estado de vista extra
+  // Fecha / Teléfono
   viewPhone = '';
   viewBirthdate: string | null = null;
-  today = new Date().toISOString().slice(0,10);
+  today = new Date().toISOString().slice(0, 10);
 
-  // Guardamos lo que vino del backend para re-enviarlo
+  // Datos previos
   private lastInfo: UserInformation | null = null;
 
-  // Defaults válidos para el tipo (por si es la 1ª vez y no hay datos en backend)
+  // Campos extra (selects)
+  sexo = '';
+  estadoCivil = '';
+  discapacidad = '';
+  discapacidadPermanente: string | null = null;
+  asistenciaDisc: string | null = null;
+
+  // Mensaje de error visual
+  submitError: string | null = null;
+
+  // Opciones
+  sexoOptions = [
+    { value: 'masculino', label: 'Masculino' },
+    { value: 'femenino', label: 'Femenino' },
+  ];
+
+  estadoCivilOptions = [
+    { value: 'casado/a', label: 'Casado/a' },
+    { value: 'unido/a', label: 'Unido/a' },
+    { value: 'separado/a', label: 'Separado/a' },
+    { value: 'divorciado/a', label: 'Divorciado/a' },
+    { value: 'viudo/a', label: 'Viudo/a' },
+    { value: 'soltero/a', label: 'Soltero/a' },
+  ];
+
+  discapacidadOptions = [
+    { value: 'si', label: 'Sí' },
+    { value: 'no', label: 'No' },
+  ];
+
+  discapacidadPermanenteOptions: string[] = [
+    'intelectual (retraso mental)',
+    'físico-motora (parálisis y amputaciones)',
+    'visual (ceguera)',
+    'auditiva (sordera)',
+    'mental (enfermedades psiquiátricas)',
+    'otro tipo',
+  ];
+
+  asistenciaDiscOptions = [
+    { value: 'si', label: 'Sí' },
+    { value: 'no', label: 'No' },
+  ];
+
+  // Defaults para primera vez
   private readonly DEFAULTS = {
     sexo: 'masculino' as 'masculino',
     estado_civil: 'soltero/a' as 'soltero/a',
     discapacidad: 'no' as 'no',
-    discapacidad_permanente: null as string | null,
-    asistencia_establecimiento_discapacidad: null as string | null,
-  };
-
-  countries: CountryCode = {
-    name: 'Ecuador', code: 'EC', phoneCode: '+593', flagEmoji: '🇪🇨'
   };
 
   constructor(
@@ -65,6 +102,7 @@ export class InformationComponent implements OnInit {
   }
 
   private initForm(): void {
+    // mantenemos el form por compatibilidad
     this.personalForm = this.fb.group({
       birthdate: [null],
       phone_number: [null, [Validators.maxLength(20)]],
@@ -74,70 +112,70 @@ export class InformationComponent implements OnInit {
     });
   }
 
+  // ---------- Carga inicial ----------
   private loadProvinces(): void {
     this.provincesService.getProvincias().subscribe(prov => this.provincias = prov);
   }
 
   private loadUserInformation(): void {
     this.informationService.getUserProfile().subscribe(data => {
-      // Guarda última info para reusar campos obligatorios
       this.lastInfo = data;
 
-      // Rellena form
-      this.personalForm.patchValue(data);
+      // Preselección por NOMBRE (lo que devuelve tu API)
+      const prov = this.provincias.find(p => p.nombre === data.province);
+      if (prov) {
+        this.selectedProvinciaId = prov.id;
+        this.cantones = prov.cantones;
+        const canton = prov.cantones.find(c => c.nombre === data.canton);
+        if (canton) {
+          this.selectedCantonId = canton.id;
+          this.parroquias = canton.parroquias;
+          const parish = canton.parroquias.find(pq => pq.nombre === data.parish);
+          if (parish) this.selectedParishId = parish.id;
+        }
+      }
 
-      // Selects en cascada
-      this.selectedProvinciaId = (data.province as any) || '';
-      this.updateCantones();
+      // Fecha (tu backend usa 'YYYY-MM-DD')
+      this.viewBirthdate = data.birthdate ?? null;
 
-      this.selectedCantonId = (data.canton as any) || '';
-      this.updateParroquias();
-
-      this.selectedParishId = (data.parish as any) || '';
-
-      // Fecha
-      this.viewBirthdate = (data as any)?.birthdate ?? null;
-
-      // Teléfono: si viene +593XXXX, mostrar 0XXXX
-      const apiPhone = (data as any)?.phone_number as string | null;
-      if (apiPhone?.startsWith('+593')) {
+      // Teléfono: mostrar con 0 si corresponde
+      const apiPhone = data.phone_number || '';
+      if (apiPhone.startsWith('+593')) {
         const local = apiPhone.replace('+593', '').trim();
         this.viewPhone = local.startsWith('9') ? '0' + local : local;
       } else {
         this.viewPhone = apiPhone ?? '';
       }
+
+      // Campos extra
+      this.sexo = data.sexo || '';
+      this.estadoCivil = data.estado_civil || '';
+      this.discapacidad = data.discapacidad || '';
+      this.discapacidadPermanente = data.discapacidad_permanente;
+      this.asistenciaDisc = data.asistencia_establecimiento_discapacidad;
     });
   }
 
-  // Cascada provincia/cantón/parroquia
+  // ---------- Cascada ubicación ----------
   onProvinciaChange(): void {
-    this.updateCantones();
+    const provincia = this.provincias.find(p => p.id === this.selectedProvinciaId);
+    this.cantones = provincia?.cantones || [];
     this.selectedCantonId = '';
     this.parroquias = [];
     this.selectedParishId = '';
   }
 
   onCantonChange(): void {
-    this.updateParroquias();
+    const canton = this.cantones.find(c => c.id === this.selectedCantonId);
+    this.parroquias = canton?.parroquias || [];
     this.selectedParishId = '';
   }
 
-  private updateCantones(): void {
-    const provincia = this.provincias.find(p => p.id === this.selectedProvinciaId);
-    this.cantones = provincia?.cantones || [];
-  }
-
-  private updateParroquias(): void {
-    const canton = this.cantones.find(c => c.id === this.selectedCantonId);
-    this.parroquias = canton?.parroquias || [];
-  }
-
-  // Sanitiza teléfono (solo dígitos, máx 10)
+  // ---------- Teléfono ----------
   onPhoneInput(): void {
     this.viewPhone = (this.viewPhone || '').replace(/\D+/g, '').slice(0, 10);
   }
 
-  // Normaliza a formato API: +593 + sin 0 inicial
   private normalizePhoneForApi(view: string): string | null {
     const digits = (view || '').replace(/\D+/g, '');
     if (!digits) return null;
@@ -145,33 +183,88 @@ export class InformationComponent implements OnInit {
     return `+593${noZero}`;
   }
 
-  onSubmitPersonal(): void {
-    if (this.personalForm.invalid) return;
+  // ---------- Discapacidad ----------
+  onDiscapacidadChange(): void {
+    if (this.discapacidad !== 'si') {
+      this.discapacidadPermanente = null;
+      this.asistenciaDisc = null;
+    }
+  }
 
-    // Reusar lo que ya existía o defaults
-    const L = this.lastInfo;
+  // ---------- Guardar ----------
+  onSubmitPersonal(): void {
+    this.submitError = null;
+
+    // Validaciones previas (coinciden con tu backend)
+    if (!this.viewBirthdate) {
+      this.submitError = 'La fecha de nacimiento es obligatoria.';
+      alert(this.submitError); return;
+    }
+
+    const phone = this.normalizePhoneForApi(this.viewPhone);
+    if (!phone || !/^\+593[0-9]{9}$/.test(phone)) {
+      this.submitError = 'El número telefónico debe tener el formato +593XXXXXXXXX.';
+      alert(this.submitError); return;
+    }
+
+    const provinceName = this.provincias.find(p => p.id === this.selectedProvinciaId)?.nombre ?? null;
+    const cantonName   = this.cantones.find(c => c.id === this.selectedCantonId)?.nombre ?? null;
+    const parishName   = this.parroquias.find(pq => pq.id === this.selectedParishId)?.nombre ?? null;
+
+    if (!provinceName) { alert('Selecciona una provincia.'); return; }
+    if (!cantonName)   { alert('Selecciona un cantón.'); return; }
+    if (!parishName)   { alert('Selecciona una parroquia.'); return; }
+
+    const sexo = this.sexo || this.lastInfo?.sexo || this.DEFAULTS.sexo;
+    const estadoCivil = this.estadoCivil || this.lastInfo?.estado_civil || this.DEFAULTS.estado_civil;
+    const discapacidad = this.discapacidad || this.lastInfo?.discapacidad || this.DEFAULTS.discapacidad;
+
+    if (!sexo)         { alert('Selecciona sexo.'); return; }
+    if (!estadoCivil)  { alert('Selecciona estado civil.'); return; }
+    if (!discapacidad) { alert('Selecciona si tiene discapacidad.'); return; }
+
+    // Condicionales de discapacidad
+    let discPerm: string | null = null;
+    let asisteDisc: string | null = null;
+    if (discapacidad === 'si') {
+      if (!this.discapacidadPermanente) {
+        alert('Selecciona el tipo de discapacidad.'); return;
+      }
+      if (!this.asistenciaDisc) {
+        alert('Indica si asiste a un establecimiento de discapacidad.'); return;
+      }
+      discPerm = this.discapacidadPermanente;
+      asisteDisc = this.asistenciaDisc;
+    }
 
     const payload: InformationRequest = {
-      province: this.selectedProvinciaId || null,
-      canton:   this.selectedCantonId   || null,
-      parish:   this.selectedParishId   || null,
-      birthdate: this.viewBirthdate || null,
-      phone_number: this.normalizePhoneForApi(this.viewPhone),
-
-      // Campos obligatorios del tipo que no editas aquí:
-      sexo: L?.sexo ?? this.DEFAULTS.sexo,
-      estado_civil: L?.estado_civil ?? this.DEFAULTS.estado_civil,
-      discapacidad: L?.discapacidad ?? this.DEFAULTS.discapacidad,
-      discapacidad_permanente:
-        L?.discapacidad_permanente ?? this.DEFAULTS.discapacidad_permanente,
-      asistencia_establecimiento_discapacidad:
-        L?.asistencia_establecimiento_discapacidad ??
-        this.DEFAULTS.asistencia_establecimiento_discapacidad,
+      birthdate: this.viewBirthdate,
+      phone_number: phone,
+      province: provinceName,
+      canton: cantonName,
+      parish: parishName,
+      sexo,
+      estado_civil: estadoCivil,
+      discapacidad,
+      discapacidad_permanente: discPerm,
+      asistencia_establecimiento_discapacidad: asisteDisc,
     };
 
     this.informationService.updateUserProfile(payload).subscribe({
-      next: () => alert('✅ Información personal actualizada'),
-      error: err => alert(err.message)
+      next: () => {
+        alert('✅ Información personal actualizada');
+      },
+      error: (err) => {
+        // Muestra el primer error devuelto por Laravel si es 422
+        const e = err?.error;
+        if (e?.errors) {
+          const firstKey = Object.keys(e.errors)[0];
+          const firstMsg = e.errors[firstKey]?.[0] || e.message;
+          alert(firstMsg || 'Error al actualizar la información del perfil');
+        } else {
+          alert(e?.message || err.message || 'Error al actualizar la información del perfil');
+        }
+      }
     });
   }
 

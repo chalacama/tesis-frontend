@@ -6,15 +6,15 @@
 
     <div class="card-content">
         <div class="form grid-2">
+
             <!-- Provincia -->
             <div class="form-row">
                 <label class="label">Provincia</label>
-                <select [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()" class="select">
+                <select class="select" [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()">
           <option value="" disabled selected>Selecciona una provincia</option>
           <option
             *ngFor="let p of provincias; trackBy: trackById"
-            [value]="p.id"
-          >
+            [value]="p.id">
             {{ p.nombre }}
           </option>
         </select>
@@ -23,12 +23,11 @@
             <!-- Cantón -->
             <div class="form-row">
                 <label class="label">Cantón</label>
-                <select [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length" class="select">
+                <select class="select" [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length">
           <option value="" disabled selected>Selecciona un cantón</option>
           <option
             *ngFor="let c of cantones; trackBy: trackById"
-            [value]="c.id"
-          >
+            [value]="c.id">
             {{ c.nombre }}
           </option>
         </select>
@@ -40,12 +39,11 @@
             <!-- Parroquia -->
             <div class="form-row span-2">
                 <label class="label">Parroquia</label>
-                <select [(ngModel)]="selectedParishId" [disabled]="!parroquias.length" class="select">
+                <select class="select" [(ngModel)]="selectedParishId" [disabled]="!parroquias.length">
           <option value="" disabled selected>Selecciona una parroquia</option>
           <option
             *ngFor="let parr of parroquias; trackBy: trackById"
-            [value]="parr.id"
-          >
+            [value]="parr.id">
             {{ parr.nombre }}
           </option>
         </select>
@@ -60,7 +58,6 @@
             <div class="form-row">
                 <label class="label">Fecha de nacimiento</label>
                 <input type="date" class="select date" [max]="today" [(ngModel)]="viewBirthdate" />
-
             </div>
 
             <!-- Número telefónico (+593 fijo a la izquierda) -->
@@ -74,6 +71,67 @@
           Solo números. Se enviará como: <b>+593</b> + tu número (sin el 0 inicial).
         </small>
             </div>
+
+            <div class="divider span-2"></div>
+
+            <!-- Sexo -->
+            <div class="form-row">
+                <label class="label">Sexo</label>
+                <select class="select" [(ngModel)]="sexo">
+          <option value="" selected>Selecciona una opción</option>
+          <option *ngFor="let opt of sexoOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+            </div>
+
+            <!-- Estado civil -->
+            <div class="form-row">
+                <label class="label">Estado civil</label>
+                <select class="select" [(ngModel)]="estadoCivil">
+          <option value="" selected>Selecciona una opción</option>
+          <option *ngFor="let opt of estadoCivilOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+            </div>
+
+            <!-- Discapacidad -->
+            <div class="form-row">
+                <label class="label">¿Tiene discapacidad?</label>
+                <select class="select" [(ngModel)]="discapacidad" (change)="onDiscapacidadChange()">
+          <option value="" selected>Selecciona una opción</option>
+          <option *ngFor="let opt of discapacidadOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+            </div>
+
+            <!-- Bloque dependiente: solo cuando discapacidad === 'si' -->
+            <ng-container *ngIf="discapacidad === 'si'">
+                <!-- Tipo de discapacidad -->
+                <div class="form-row">
+                    <label class="label">Tipo de discapacidad</label>
+                    <select class="select" [(ngModel)]="discapacidadPermanente">
+            <option value="" selected>Selecciona una opción</option>
+            <option *ngFor="let opt of discapacidadPermanenteOptions" [value]="opt">
+              {{ opt }}
+            </option>
+          </select>
+                </div>
+
+                <!-- Asistencia a establecimiento -->
+                <div class="form-row span-2">
+                    <label class="label">¿Asiste a algún establecimiento de discapacidad?</label>
+                    <select class="select" [(ngModel)]="asistenciaDisc">
+            <option value="" selected>Selecciona una opción</option>
+            <option *ngFor="let opt of asistenciaDiscOptions" [value]="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
+                </div>
+            </ng-container>
+
         </div>
     </div>
 
