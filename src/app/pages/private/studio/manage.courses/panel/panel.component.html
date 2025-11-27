@@ -1,1 +1,134 @@
-<p>panel works!</p>
+<!-- panel.component.html -->
+<div class="panel-wrapper">
+  <header class="panel-header">
+    <div>
+      <h2 class="panel-title">Panel general</h2>
+      <p class="panel-subtitle" *ngIf="panel() as p">
+        Vista {{ p.scope === 'admin' ? 'de administrador' : 'de tutor' }}
+      </p>
+    </div>
+
+    <div class="panel-summary" *ngIf="panel() as p">
+      <span class="summary-label">Cursos activos</span>
+      <span class="summary-value">{{ p.courses_count }}</span>
+    </div>
+  </header>
+
+  <!-- Error -->
+  <p class="panel-error" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <!-- Skeleton mientras carga -->
+  <ng-container *ngIf="loading(); else panelLoaded">
+    <div class="panel-grid">
+      <div class="stat-card skeleton-card"></div>
+      <div class="stat-card skeleton-card"></div>
+      <div class="stat-card skeleton-card"></div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card skeleton-chart"></div>
+      <div class="chart-card skeleton-chart"></div>
+      <div class="chart-card skeleton-chart"></div>
+      <div class="chart-card skeleton-chart"></div>
+    </div>
+  </ng-container>
+
+  <!-- Contenido real -->
+  <ng-template #panelLoaded>
+    <div *ngIf="panel() as p; else emptyState">
+      <div class="panel-grid">
+        <div class="stat-card">
+          <span class="stat-label">Cursos</span>
+          <span class="stat-value">{{ p.courses_count }}</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Promedio rating</span>
+          <span class="stat-value">
+            {{ p.metrics.course_ratings.average | number:'1.1-2' }} ★
+          </span>
+          <span class="stat-help">
+            {{ p.metrics.course_ratings.total_ratings }} calificaciones
+          </span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">Total vistas de contenidos</span>
+          <span class="stat-value">
+            {{ p.metrics.content_completion.total_views }}
+          </span>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <!-- Finalización de contenidos -->
+        <section class="chart-card">
+          <header class="chart-header">
+            <h3>Finalización de contenidos</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="contentCompletionOptions()">
+          </div>
+        </section>
+
+        <!-- Rendimiento por evaluación -->
+        <section class="chart-card">
+          <header class="chart-header">
+            <h3>Rendimiento por evaluación</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="testPerformanceOptions()">
+          </div>
+        </section>
+
+        <!-- Popularidad de cursos -->
+        <section class="chart-card">
+          <header class="chart-header">
+            <h3>Inscripciones por mes</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="coursePopularityOptions()">
+          </div>
+        </section>
+
+        <!-- Ratings e intereses -->
+        <section class="chart-card">
+          <header class="chart-header">
+            <h3>Distribución de ratings</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="ratingDistributionOptions()">
+          </div>
+        </section>
+
+        <section class="chart-card">
+          <header class="chart-header">
+            <h3>Intereses por categoría</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="categoryInterestOptions()">
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <p>No hay datos para mostrar en el panel.</p>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
+

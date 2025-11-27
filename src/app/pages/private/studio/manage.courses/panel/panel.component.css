@@ -1,0 +1,163 @@
+/* panel.component.css */
+
+.panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.panel-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.panel-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+}
+
+.panel-summary {
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+.summary-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.panel-error {
+  color: var(--danger-500);
+  font-size: 0.9rem;
+}
+
+/* Grid de cards */
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 20px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Tarjetas */
+.stat-card,
+.chart-card {
+  background: var(--card-bg);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px var(--shadow-color);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.stat-help {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+.chart-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 0.5rem;
+}
+
+.chart-container {
+  flex: 1;
+  min-height: 220px;
+}
+
+/* Skeletons */
+.skeleton-card,
+.skeleton-chart {
+  position: relative;
+  overflow: hidden;
+  background: var(--background-skeleton);
+  border-radius: 1rem;
+}
+
+.skeleton-card {
+  height: 90px;
+}
+
+.skeleton-chart {
+  height: 260px;
+}
+
+/* efecto shimmer */
+.skeleton-card::after,
+.skeleton-chart::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  animation: skeleton-loading 1.3s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Empty state */
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-color-secondary);
+  background: var(--card-bg);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}

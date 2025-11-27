@@ -22,10 +22,36 @@ const googleLoginOptions: GoogleInitOptions = {
   oneTapEnabled: false,
   scopes: 'profile email'
 };
+import * as echarts from 'echarts/core';
+import {
+  BarChart,
+  LineChart,
+  PieChart
+} from 'echarts/charts';
+import {
+  GridComponent,
+  LegendComponent,
+  TooltipComponent,
+  TitleComponent
+} from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
+import { provideEchartsCore } from 'ngx-echarts';
 
+// Registrar solo lo que vayas a usar
+echarts.use([
+  BarChart,
+  LineChart,
+  PieChart,
+  GridComponent,
+  LegendComponent,
+  TooltipComponent,
+  TitleComponent,
+  CanvasRenderer
+]);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideEchartsCore({ echarts }),
     provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideClientHydration(withEventReplay()),
