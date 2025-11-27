@@ -1,249 +1,513 @@
 <div class="container-courses">
-    <div class="container-table">
-        <div class="table_toolbar">
-            <div class="table_toolbar_start">
-                <button (click)="createCourse()" class="create-botton">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                        <path d="M12 19v-7m0 0V5m0 7H5m7 0h7"></path>
+  <div class="container-table">
+    <div class="table_toolbar">
+      <div class="table_toolbar_start">
+        <button (click)="createCourse()" class="create-botton">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="15px"
+            height="15px"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          >
+            <path d="M12 19v-7m0 0V5m0 7H5m7 0h7"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 🔍 Filtros -->
+      <div class="table_toolbar_end">
+        <div class="filters-wrapper">
+          
+
+          <!-- Dificultad -->
+          <div class="filter-select">
+            <select
+              class="filter-control"
+              [ngModel]="filterDifficultyId()"
+              (ngModelChange)="onFilterDifficultyChange($event)"
+            >
+              <option class="select_option" [ngValue]="null">Dificultad</option>
+              <option class="select_option" *ngFor="let d of difficulties()" [ngValue]="d.id">
+                {{ d.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Categoría -->
+          <div class="filter-select">
+            <select
+              class="filter-control"
+              [ngModel]="filterCategoryId()"
+              (ngModelChange)="onFilterCategoryChange($event)"
+            >
+              <option class="select_option" [ngValue]="null">Categoría</option>
+              <option class="select_option" *ngFor="let c of categories()" [ngValue]="c.id">
+                {{ c.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Carrera -->
+          <div class="filter-select">
+            <select
+              class="filter-control"
+              [ngModel]="filterCareerId()"
+              (ngModelChange)="onFilterCareerChange($event)"
+            >
+              <option class="select_option" [ngValue]="null">Carrera</option>
+              <option class="select_option" *ngFor="let c of careers()" [ngValue]="c.id">
+                {{ c.name }}
+              </option>
+            </select>
+          </div>
+
+          
+
+          <button
+            class="btn-clear-filters"
+            (click)="clearFilters()"
+            [disabled]="!hasActiveFilters() && !searchTerm()"
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table_content">
+      <div class="table_content_caption">
+        <!-- Búsqueda -->
+          <div class="filter-search">
+            <input
+              type="text"
+              class="input-search"
+              placeholder="Buscar por título o descripción..."
+              [value]="searchTerm()"
+              (input)="onSearch($any($event.target).value)"
+            />
+          </div>
+          <!-- Colaborador -->
+          <div class="filter-collaborator">
+            <input
+              type="text"
+              class="input-search"
+              placeholder="Colaborador (nombre o usuario)"
+              [value]="filterCollaborator()"
+              (input)="onFilterCollaboratorChange($any($event.target).value)"
+            />
+          </div>
+      </div>
+
+      <div class="table_content_header content-padding">
+        
+
+        <div class="header_cell-miniature cell-display">
+          <th>Miniature</th>
+        </div>
+        <div class="header_cell-title cell-display cell-border">
+          <th>Title</th>
+        </div>
+        <div class="header_cell-active cell-display">
+          <th>Active</th>
+        </div>
+        <div class="header_cell-creator cell-display">
+          <th>Creador</th>
+        </div>
+        <div class="header_cell-private cell-display">
+          <th>Privado</th>
+        </div>
+        <div class="header_cell-code cell-display">
+          <th>Code</th>
+        </div>
+      </div>
+
+      <div class="table_content_body-scroll">
+        <!-- 🦴 Skeleton mientras carga -->
+        <ng-container *ngIf="loading(); else tableRows">
+          <div
+            *ngFor="let _ of skeletonRowsArray"
+            class="table_content_body content-padding skeleton-row"
+          >
+            
+
+            <div class="body_cell-miniature cell-display">
+              <div class="skeleton-avatar"></div>
+            </div>
+
+            <div
+              class="body_cell-title cell-border cell-display skeleton-title-wrapper"
+            >
+              <div class="skeleton-box skeleton-title"></div>
+              <div class="skeleton-box skeleton-subtitle"></div>
+            </div>
+
+            <div class="body_cell-active cell-display">
+              <div class="skeleton-pill"></div>
+            </div>
+
+            <div class="body_cell-creator cell-display">
+              <div class="skeleton-box skeleton-small"></div>
+            </div>
+
+            <div class="body_cell-private cell-display">
+              <div class="skeleton-pill"></div>
+            </div>
+
+            <div class="body_cell-code cell-display">
+              <div class="skeleton-box skeleton-small"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- 🧾 Filas normales -->
+        <ng-template #tableRows>
+          <ng-container *ngIf="courses().length > 0; else emptyState">
+            <div
+              *ngFor="let course of courses()"
+              class="table_content_body content-padding"
+              [ngClass]="{ 'highlighted-row': highlightedCourseId() === course.id }"
+            >
+             
+
+              <div class="body_cell-miniature cell-display">
+                <div>
+                  <td class="cell_miniature">
+                    <ui-preview
+                      [style]="{ borderRadius: '5px', width: '100%' }"
+                      [src]="course.miniature === null ? '' : course.miniature.url"
+                      [types]="'image'"
+                      [overlay]="false"
+                      [showMask]="true"
+                      [severity]="'primary'"
+                      [size]="'sm'"
+                      [variant]="'outlined'"
+                      [mask]="{ type: 'blur' }"
+                    >
+                      <ui-button
+                        variant="flat"
+                        [style]="{
+                          borderRadius: '15px',
+                          width: '30px',
+                          height: '30px'
+                        }"
+                        severity="primary"
+                        [icon]="{ svgPath: 'svg/search.svg' }"
+                      >
+                      </ui-button>
+                    </ui-preview>
+                  </td>
+                </div>
+              </div>
+
+              <div class="body_cell-title cell-border cell-display">
+                <div class="cell_label-title">
+                  <td>{{ course.title }}</td>
+                </div>
+                <div class="cell_label-description">
+                  <td>{{ course.description }}</td>
+                </div>
+                <div *ngIf="!course.deleted_at" class="cell-actions">
+                  <button
+                    (click)="goToEditCourse(course.id)"
+                    class="btn-edit btn-action"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10px"
+                      height="10px"
+                      viewBox="0 0 384 384"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M0 304L236 68l80 80L80 384H0v-80zM378 86l-39 39l-80-80l39-39q6-6 15-6t15 6l50 50q6 6 6 15t-6 15z"
+                      />
                     </svg>
-                </button>
-            </div>
-            <div class="table_toolbar_end">
+                  </button>
+                  <button class="btn-delete btn-action">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10px"
+                      height="10px"
+                      viewBox="0 0 304 384"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M21 341V85h256v256q0 18-12.5 30.5T235 384H64q-18 0-30.5-12.5T21 341zM299 21v43H0V21h75L96 0h107l21 21h75z"
+                      />
+                    </svg>
+                  </button>
+                  <button class="btn-analytics btn-action">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10px"
+                      height="10px"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6zm10 2a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0V8zm-4 3a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0v-5zm8 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
 
-            </div>
-        </div>
-        <div class="table_content">
-            <div class="table_content_caption">
+              <div class="body_cell-active cell-display">
+                <td>
+                  {{ course.enabled ? 'Sí' : 'No' }}
+                </td>
+              </div>
 
-            </div>
-            <div class="table_content_header content-padding">
-                <div class="header_cell-checkbox cell-display">
-                    <th>
-                        <input type="checkbox" [checked]="allCoursesSelected()"
-                            [indeterminate]="hasSelectedCourses() && !allCoursesSelected()"
-                            (change)="toggleAllCoursesSelection()">
-                    </th>
-                </div>
-                <!-- <div class="header_cell-id cell-display">
-                    <th>Id</th>
-                </div> -->
-                <div class="header_cell-miniature cell-display">
-                    <th>Miniature</th>
-                </div>
-                <div class="header_cell-title cell-display cell-border">
-                    <th>Title</th>
-                </div>
-                <div class="header_cell-active cell-display">
-                    <th>Active</th>
-                </div>
-                <div class="header_cell-creator cell-display">
-                    <th>Creador</th>
-                </div>
-                <div class="header_cell-private cell-display">
-                    <th>Privado</th>
-                </div>
-                <div class="header_cell-code cell-display">
-                    <th>Code</th>
-                </div>
-            </div>
-            <div class="table_content_body-scroll">
-                <div *ngFor="let course of courses()" class="table_content_body content-padding"
-                    [ngClass]="{ 'highlighted-row': highlightedCourseId() === course.id }">
-                    <div class="body_cell-checkbox cell-display">
-                        <td>
-                            <input [class.checked-archived]="course.deleted_at" type="checkbox"
-                                [checked]="isCourseSelected(course.id)" (change)="toggleCourseSelection(course.id)">
-                        </td>
-                    </div>
-                    <!-- <div class="body_cell-id cell-display">
-                    <td>{{course.id}}</td>
-                </div> -->
-                    <div class="body_cell-miniature cell-display">
+              <div class="body_cell-creator cell-display">
+                <td *ngIf="course.creador; else noOwnerTd">
+                  {{ course.creador.name }} {{ course.creador.lastname }}
+                  <span class="creator-username">
+                    {{ '@' + course.creador.username }}
+                  </span>
+                </td>
+                <ng-template #noOwnerTd>
+                  <td class="text-muted">Sin dueño</td>
+                </ng-template>
+              </div>
 
-                        <div>
-                            <td class="cell_miniature">
-                                <ui-preview [style]="{borderRadius: '5px' , width:'100%'}" [src]="course.miniature === null ? '' : course.miniature.url"
-                                    [types]="'image'" [overlay]="false" [showMask]="true" [severity]="'primary'"
-                                    [size]="'sm'" [variant]="'outlined'" [mask]="{ type: 'blur' }">
+              <div class="body_cell-private cell-display">
+                <td>
+                  {{ course.private ? 'Sí' : 'No' }}
+                </td>
+              </div>
 
-                                    <ui-button variant="flat"
-                                        [style]="{borderRadius: '15px', width: '30px', height: '30px'}"
-                                        severity="primary" [icon]="{svgPath: 'svg/search.svg'}">
-                                    </ui-button>
-                                </ui-preview>
-                               
-                            </td>
-
-                        </div>
-                    </div>
-                    <div class="body_cell-title cell-border cell-display">
-                        <div class="cell_label-title">
-                            <td>{{course.title}}</td>
-                        </div>
-                        <div class="cell_label-description">
-                            <td>{{course.description}}</td>
-                        </div>
-                        <div *ngIf="!course.deleted_at" class="cell-actions">
-                            <button (click)="goToEditCourse(course.id)" class="btn-edit btn-action">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
-                                    viewBox="0 0 384 384">
-                                    <path fill="currentColor"
-                                        d="M0 304L236 68l80 80L80 384H0v-80zM378 86l-39 39l-80-80l39-39q6-6 15-6t15 6l50 50q6 6 6 15t-6 15z" />
-                                </svg>
-                            </button>
-                            <button class="btn-delete btn-action">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
-                                    viewBox="0 0 304 384">
-                                    <path fill="currentColor"
-                                        d="M21 341V85h256v256q0 18-12.5 30.5T235 384H64q-18 0-30.5-12.5T21 341zM299 21v43H0V21h75L96 0h107l21 21h75z" />
-                                </svg>
-                            </button>
-                            <button class="btn-analytics btn-action">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24">
-                                    <path fill="currentColor" fill-rule="evenodd"
-                                        d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6zm10 2a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0V8zm-4 3a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0v-5zm8 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="body_cell-active cell-display">
-                        <td>{{course.enabled}}</td>
-                    </div>
-                    <div class="body_cell-creator cell-display">
-                        <td>{{course.creador}}</td>
-                    </div>
-                    <div class="body_cell-private cell-display">
-                        <td>{{course.private}}</td>
-                    </div>
-                    <div class="body_cell-code cell-display">
-                        <td>{{course.code}}</td>
-                    </div>
-                </div>
+              <div class="body_cell-code cell-display">
+                <td>{{ course.code }}</td>
+              </div>
             </div>
+          </ng-container>
 
-            <div class="table_content_footer" *ngIf="pagination() && courses().length > 0">
-                <div class="table_content_footer_left">
-                    <p>Filas por página:</p>
-                    <select class="footer_select" name="" id="" [value]="perPage()"
-                        (change)="onPerPageChange(+$any($event.target).value)">
-                        <option *ngFor="let option of perPageOptions" class="select_option" [value]="option">{{ option
-                            }}</option>
-                    </select>
-                </div>
-                <div class="table_content_footer_center">
-                    <p>{{ (pagination()!.current_page - 1) * pagination()!.per_page + 1 }}</p>
-                    <p>a</p>
-                    <p>{{ pagination()!.current_page * pagination()!.per_page }}</p>
-                    <p>de</p>
-                    <p>aproximadamente</p>
-                    <p>{{ pagination()!.total }}</p>
-                </div>
-                <div class="table_content_footer_right">
-                    <button (click)="onPageChange(1)" [disabled]="pagination()!.current_page === 1" class="btn-footer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M7 18q-.425 0-.713-.288T6 17V7q0-.425.288-.713T7 6q.425 0 .713.288T8 7v10q0 .425-.288.713T7 18Zm6.8-6l3.9 3.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-4.6-4.6q-.15-.15-.212-.325T11.425 12q0-.2.063-.375t.212-.325l4.6-4.6q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.8 12Z" />
-                        </svg>
-                    </button>
-                    <button (click)="onPageChange(pagination()!.current_page - 1)"
-                        [disabled]="pagination()!.current_page === 1" class="btn-footer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24">
-                            <path fill="none" stroke="currentColor" stroke-width="2" d="M17 2L7 12l10 10" />
-                        </svg>
-                    </button>
-                    <button (click)="onPageChange(pagination()!.current_page + 1)"
-                        [disabled]="pagination()!.current_page === pagination()!.last_page" class="btn-footer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 42 42">
-                            <path fill="currentColor" fill-rule="evenodd"
-                                d="M11 38.32L28.609 21L11 3.68L13.72 1L34 21.01L13.72 41z" />
-                        </svg>
-                    </button>
-                    <button (click)="onPageChange(pagination()!.last_page)"
-                        [disabled]="pagination()!.current_page === pagination()!.last_page" class="btn-footer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M10.2 12L6.3 8.1q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375q0 .2-.062.375t-.213.325l-4.6 4.6q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l3.9-3.9ZM17 6q.425 0 .713.288T18 7v10q0 .425-.288.713T17 18q-.425 0-.713-.288T16 17V7q0-.425.288-.713T17 6Z" />
-                        </svg>
-                    </button>
-                </div>
+          <ng-template #emptyState>
+            <div class="empty-state">
+              <p *ngIf="!error()">No se encontraron cursos.</p>
+              <p *ngIf="error()" class="error-text">{{ error() }}</p>
             </div>
+          </ng-template>
+        </ng-template>
+      </div>
+
+      <div
+        class="table_content_footer"
+        *ngIf="pagination() && courses().length > 0"
+      >
+        <div class="table_content_footer_left">
+          <p>Filas por página:</p>
+          <select
+            class="footer_select"
+            [value]="perPage()"
+            (change)="onPerPageChange(+$any($event.target).value)"
+          >
+            <option
+              *ngFor="let option of perPageOptions"
+              class="select_option"
+              [value]="option"
+            >
+              {{ option }}
+            </option>
+          </select>
         </div>
 
+        <div class="table_content_footer_center">
+          <p>{{ (pagination()!.current_page - 1) * pagination()!.per_page + 1 }}</p>
+          <p>a</p>
+          <p>{{ pagination()!.current_page * pagination()!.per_page }}</p>
+          <p>de</p>
+          <p>aproximadamente</p>
+          <p>{{ pagination()!.total }}</p>
+        </div>
+
+        <div class="table_content_footer_right">
+          <button
+            (click)="onPageChange(1)"
+            [disabled]="pagination()!.current_page === 1"
+            class="btn-footer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="10px"
+              height="10px"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M7 18q-.425 0-.713-.288T6 17V7q0-.425.288-.713T7 6q.425 0 .713.288T8 7v10q0 .425-.288.713T7 18Zm6.8-6l3.9 3.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275l-4.6-4.6q-.15-.15-.212-.325T11.425 12q0-.2.063-.375t.212-.325l4.6-4.6q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.8 12Z"
+              />
+            </svg>
+          </button>
+
+          <button
+            (click)="onPageChange(pagination()!.current_page - 1)"
+            [disabled]="pagination()!.current_page === 1"
+            class="btn-footer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="10px"
+              height="10px"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                d="M17 2L7 12l10 10"
+              />
+            </svg>
+          </button>
+
+          <button
+            (click)="onPageChange(pagination()!.current_page + 1)"
+            [disabled]="pagination()!.current_page === pagination()!.last_page"
+            class="btn-footer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="10px"
+              height="10px"
+              viewBox="0 0 42 42"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M11 38.32L28.609 21L11 3.68L13.72 1L34 21.01L13.72 41z"
+              />
+            </svg>
+          </button>
+
+          <button
+            (click)="onPageChange(pagination()!.last_page)"
+            [disabled]="pagination()!.current_page === pagination()!.last_page"
+            class="btn-footer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="10px"
+              height="10px"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M10.2 12L6.3 8.1q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375q0 .2-.062.375t-.213.325l-4.6 4.6q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l3.9-3.9ZM17 6q.425 0 .713.288T18 7v10q0 .425-.288.713T17 18q-.425 0-.713-.288T16 17V7q0-.425.288-.713T17 6Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-<!-- <div class="overlay-mask" *ngIf="showModalCreate" (click)="closeModalCreate()">
-    
-</div> -->
-<ui-dialog size="lg" type="free" [closeOnMaskClick]="true" [(visible)]="showModalCreate"
-    (maskClick)="closeModalCreate()">
-    <div class="modal-create-content">
-        <div class="modal-create-header">
-            <h4>Crear nuevo curso</h4>
-        </div>
 
-        <form [formGroup]="formCreate" class="modal-create-body">
-
-
-            <div class="input-group">
-                <!-- <label for="title">Título del curso</label>
-        <input id="title" formControlName="title" placeholder="Ej: Introducción a Valorant" /> -->
-                <ui-input-label formControlName="title" [label]="{label:'Título (obligatorio)'}" severity="primary"
-                    placeholder="Escribe un título claro y único" type="text" variant="outlined" [max]="100"
-                    [autoSize]="true"
-                    [invalid]="formCreate.get('title')?.invalid && formCreate.get('title')?.touched"></ui-input-label>
-            </div>
-
-
-            <div class="input-group">
-                <!-- <label for="description">Descripción</label>
-        <textarea id="description" formControlName="description" placeholder="Describe el curso..."></textarea> -->
-                <ui-input-label formControlName="description" [label]="{label:'Descripción'}" severity="primary"
-                    placeholder="Describe el curso" type="textarea" variant="outlined" [max]="300" [autoSize]="true"
-                    [invalid]="formCreate.get('description')?.invalid && formCreate.get('description')?.touched"></ui-input-label>
-            </div>
-
-
-            <div class="input-group">
-                <label for="difficulty_id">Dificultad</label>
-                <!-- <select id="difficulty_id" formControlName="difficulty_id">
-                    <option value="" disabled selected>Seleccione una dificultad</option>
-                    <option *ngFor="let d of difficulties()" [value]="d.id">{{ d.name }}</option>
-                </select> -->
-                <ui-select-button
-                    [invalid]="formCreate.get('difficulty_id')?.invalid && formCreate.get('difficulty_id')?.touched"
-                    formControlName="difficulty_id" [options]="difficulties()" [optionLabel]="'name'"
-                    [optionValue]="'id'" orientation="horizontal" variant="outlined" severity="primary" size="sm"
-                    [multiple]="false" (selectionChange)="onSelectDifficulty($event)">
-                </ui-select-button>
-            </div>
-
-
-
-
-            <div class="input-group">
-                <div class="checkbox-privacy">
-                    
-                <ui-checkbox [style]="{margin: '0px 0px 8px 0px'}"  formControlName="private" size="sm" type="row"
-                    ariaLabel="Privacidad del curso"></ui-checkbox>
-                    <span>Generar codido de acceso</span>
-                </div>
-                
-            </div>
-
-            <div class="modal-create-footer">
-                <ui-button (click)="closeModalCreate()" label="Cancelar" severity="danger">
-                </ui-button>
-                <ui-button (click)="submitCourse()"  [disabled]="formCreate.invalid || formCreate.pristine" label="Crear curso"
-                    severity="primary">
-                </ui-button>
-
-            </div>
-        </form>
+<!-- Modal creación curso -->
+<ui-dialog
+  size="lg"
+  type="free"
+  [closeOnMaskClick]="true"
+  [(visible)]="showModalCreate"
+  (maskClick)="closeModalCreate()"
+>
+  <div class="modal-create-content">
+    <div class="modal-create-header">
+      <h4>Crear nuevo curso</h4>
     </div>
+
+    <form [formGroup]="formCreate" class="modal-create-body">
+      <div class="input-group">
+        <ui-input-label
+          formControlName="title"
+          [label]="{ label: 'Título (obligatorio)' }"
+          severity="primary"
+          placeholder="Escribe un título claro y único"
+          type="text"
+          variant="outlined"
+          [max]="100"
+          [autoSize]="true"
+          [invalid]="
+            formCreate.get('title')?.invalid &&
+            formCreate.get('title')?.touched
+          "
+        ></ui-input-label>
+      </div>
+
+      <div class="input-group">
+        <ui-input-label
+          formControlName="description"
+          [label]="{ label: 'Descripción' }"
+          severity="primary"
+          placeholder="Describe el curso"
+          type="textarea"
+          variant="outlined"
+          [max]="300"
+          [autoSize]="true"
+          [invalid]="
+            formCreate.get('description')?.invalid &&
+            formCreate.get('description')?.touched
+          "
+        ></ui-input-label>
+      </div>
+
+      <div class="input-group">
+        <label for="difficulty_id">Dificultad</label>
+        <ui-select-button
+          [invalid]="
+            formCreate.get('difficulty_id')?.invalid &&
+            formCreate.get('difficulty_id')?.touched
+          "
+          formControlName="difficulty_id"
+          [options]="difficulties()"
+          [optionLabel]="'name'"
+          [optionValue]="'id'"
+          orientation="horizontal"
+          variant="outlined"
+          severity="primary"
+          size="sm"
+          [multiple]="false"
+          (selectionChange)="onSelectDifficulty($event)"
+        >
+        </ui-select-button>
+      </div>
+
+      <div class="input-group">
+        <div class="checkbox-privacy">
+          <ui-checkbox
+            [style]="{ margin: '0px 0px 8px 0px' }"
+            formControlName="private"
+            size="sm"
+            type="row"
+            ariaLabel="Privacidad del curso"
+          ></ui-checkbox>
+          <span>Generar código de acceso</span>
+        </div>
+      </div>
+
+      <div class="modal-create-footer">
+        <ui-button (click)="closeModalCreate()" label="Cancelar" severity="danger">
+        </ui-button>
+        <ui-button
+          (click)="submitCourse()"
+          [disabled]="formCreate.invalid || formCreate.pristine"
+          label="Crear curso"
+          severity="primary"
+        >
+        </ui-button>
+      </div>
+    </form>
+  </div>
 </ui-dialog>
+
+<!-- Loading para guardar -->
 <ui-loading-bar
   [visible]="saved()"
-  [mask]="{ type: 'dimmed' }">
-</ui-loading-bar>
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>

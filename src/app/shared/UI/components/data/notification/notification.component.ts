@@ -119,39 +119,57 @@ export class NotificationComponent {
 
   /** Click en una notificación */
   onNotificationClick(notification: ApiNotification, event: MouseEvent): void {
-    event.stopPropagation();
+  event.stopPropagation();
 
-    const wasUnread = !notification.read_at;
+  const wasUnread = !notification.read_at;
 
-    if (wasUnread) {
-      this.notificationService
-        .markAsRead(notification.id)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            // actualizar localmente
-            this.notifications.update((list) =>
-              list.map((n) =>
-                n.id === notification.id
-                  ? { ...n, read_at: new Date().toISOString() }
-                  : n
-              )
-            );
-            this.bridge.decrement(1);
-            
-          },
-          error: () => {
-            // si falla, no rompemos el flujo
-          },
-        });
-    }
+  if (wasUnread) {
+    this.notificationService
+      .markAsRead(notification.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.notifications.update((list) =>
+            list.map((n) =>
+              n.id === notification.id
+                ? { ...n, read_at: new Date().toISOString() }
+                : n
+            )
+          );
+          this.bridge.decrement(1);
+        },
+        error: () => {
+          // si falla, no rompemos el flujo
+        },
+      });
+  }
 
-    const url = notification.data?.url;
-    if (url) {
-      this.open.set(false);
+  const data = notification.data;
+
+  // 🔹 CASO ESPECIAL: invitación a curso
+  if (data?.key === 'course.invitation' && data.token) {
+    this.open.set(false);
+    this.router.navigate(['/invitation/accept'], {
+      queryParams: { token: String(data.token) },
+    });
+    return;
+  }
+
+  // 🔹 Comportamiento genérico para otras notificaciones
+  const url = data?.url;
+  if (url) {
+    this.open.set(false);
+
+    // Si es ruta relativa de Angular ("/curso/xyz")
+    if (!url.startsWith('http')) {
       this.router.navigateByUrl(url);
+    } else {
+      // Si algún día mandas URL absoluta
+      window.location.href = url;
     }
   }
+}
+
 
   /** Marcar todas como leídas */
   onMarkAllAsRead(event: MouseEvent): void {
