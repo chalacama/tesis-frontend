@@ -44,7 +44,11 @@
 .avatar {
   width: 52px;
   height: 52px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .user-meta {

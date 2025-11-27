@@ -313,5 +313,9 @@ export class StudioComponent implements OnInit {
       }
     });
   }
+
+  goToCourse(course: any) {
+    this.router.navigate([`learning/course/${course.title}/${course.id}`]);
+  }
    
 }

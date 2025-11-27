@@ -16,7 +16,11 @@ export interface NotificationData {
   message: string;
   url?: string;
 
-  // Campos extra según cada notificación
+  // 🔹 NUEVO: para invitaciones de curso
+  token?: string;
+  invitation_id?: number;
+
+  // Extras de curso, etc.
   course_id?: number;
   course_title?: string;
   chapter_id?: number;
@@ -28,9 +32,9 @@ export interface NotificationData {
   reply_snippet?: string;
   type_content?: string;
 
-  // Permite otros campos sin romper el tipado
   [key: string]: unknown;
 }
+
 
 export interface ApiNotification {
   id: string;

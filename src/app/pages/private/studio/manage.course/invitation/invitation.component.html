@@ -46,10 +46,12 @@
 
           <ng-container *ngIf="info.owner; else noOwner">
             <div class="user-row">
-              <img
-                class="avatar"
-                [src]="info.owner.profile_picture_url || '/assets/img/avatar-placeholder.svg'"
-                alt="avatar dueño" />
+              <div class="avatar">
+                <ui-avatar [style]="{width : '100%', height : '100%'}" [src]="info.owner.profile_picture_url || ''" [name]="info.owner.name + ' ' + info.owner.lastname" severity="primary" size="lg"
+                    >
+                </ui-avatar>
+              </div>
+              
               <div class="user-meta">
                 <div class="user-name">
                   {{ info.owner.name }} {{ info.owner.lastname }}
@@ -65,7 +67,7 @@
             <div class="actions-row">
               <!-- Solo admin puede quitar al dueño -->
               <button
-                *ngIf="isAdmin"
+                *ngIf="isAdmin && !isOwner"
                 type="button"
                 class="btn btn-danger-outline"
                 (click)="openConfirm('deleteOwner')">
@@ -74,7 +76,7 @@
 
               <!-- Dueño puede salir del curso -->
               <button
-                *ngIf="isOwner"
+                *ngIf="isOwner && hasRealCollaborator"
                 type="button"
                 class="btn btn-warn-outline"
                 (click)="openConfirm('leave')">

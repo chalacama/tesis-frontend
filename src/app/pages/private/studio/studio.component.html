@@ -225,6 +225,7 @@
                                 [size]="'sm'" [variant]="'outlined'" [mask]="{ type: 'blur' }">
 
                                 <ui-button variant="flat"
+                                    (click)="goToCourse(miniatureData?.course)"
                                     [style]="{borderRadius: '15px', width: '30px', height: '30px'}" severity="primary"
                                     [icon]="{svgPath: 'svg/search.svg'}">
                                 </ui-button>

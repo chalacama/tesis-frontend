@@ -1,0 +1,191 @@
+<div class="accept-page">
+  <div class="accept-card">
+    <!-- ESTADO: CARGANDO (SKELETON) -->
+    <ng-container *ngIf="state() === 'loading'">
+      <div class="skeleton-header">
+        <div class="skeleton-title"></div>
+        <div class="skeleton-subtitle"></div>
+      </div>
+
+      <div class="skeleton-course"></div>
+
+      <div class="skeleton-users">
+        <div class="skeleton-user"></div>
+        <div class="skeleton-user"></div>
+      </div>
+
+      <div class="skeleton-footer"></div>
+    </ng-container>
+
+    <!-- ESTADO: ERROR -->
+    <ng-container *ngIf="state() === 'error'">
+      <h1 class="accept-title">Invitación no válida</h1>
+      <p class="accept-message">
+        {{ message() }}
+      </p>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="goBack()"
+      >
+        Volver
+      </button>
+    </ng-container>
+
+    <!-- ESTADO: USER NOT FOUND -->
+    <ng-container *ngIf="state() === 'user_not_found'">
+      <h1 class="accept-title">Usuario no encontrado</h1>
+      <p class="accept-message">
+        {{ message() }}
+      </p>
+
+      <p class="accept-hint">
+        Correo invitado:
+        <strong>{{ userNotFoundEmail() }}</strong>
+      </p>
+
+      <p class="accept-hint">
+        Por favor, regístrate o inicia sesión con este correo para poder
+        colaborar en el curso.
+      </p>
+
+      <div class="accept-actions">
+        <button
+          type="button"
+          class="btn btn-primary"
+          routerLink="/auth"
+        >
+          Ir a iniciar sesión / registro
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goBack()"
+        >
+          Volver
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ESTADO: ÉXITO -->
+    <ng-container *ngIf="state() === 'success' && data() as d">
+      <h1 class="accept-title">
+        ¡Invitación aceptada!
+      </h1>
+
+      <p class="accept-message">
+        {{ message() }}
+      </p>
+
+      <!-- CURSO -->
+      <div
+        class="course-card"
+        (click)="goToCourse()"
+      >
+        <div class="course-thumb-wrapper">
+          <img
+            class="course-thumb"
+            [src]="getMiniatureUrl()"
+            alt="Miniatura del curso"
+          />
+
+          <!-- Título sobre la imagen si NO hay miniatura real -->
+          <div
+            class="course-thumb-overlay"
+            *ngIf="!hasMiniature()"
+          >
+            <span class="course-title-overlay">
+              {{ d.course.title }}
+            </span>
+          </div>
+        </div>
+
+        <div class="course-info">
+          <h2 class="course-title">
+            {{ d.course.title }}
+          </h2>
+          <p class="course-subtitle">
+            Ahora formas parte del equipo de tutores colaboradores.
+          </p>
+        </div>
+      </div>
+
+      <!-- USUARIOS -->
+      <div class="users-row">
+
+        <!-- Quien invitó -->
+        <div
+          class="user-column"
+          *ngIf="d.inviter_user as inviter"
+        >
+          <div class="user-label">Te envió la invitación</div>
+          <button
+            type="button"
+            class="user-avatar-btn"
+            (click)="goToInviterPortfolio(inviter)"
+          >
+            <ui-avatar
+              [style]="{ width: '64px', height: '64px' }"
+              [src]="inviter.profile_picture_url || ''"
+              [name]="inviter.name + ' ' + inviter.lastname"
+              severity="primary"
+              size="lg"
+            ></ui-avatar>
+          </button>
+          <div class="user-name">
+            {{ inviter.name }} {{ inviter.lastname }}
+          </div>
+          <div class="user-username">
+            {{ '@' + inviter.username }}
+          </div>
+        </div>
+
+        <!-- Quien acepta -->
+        <div
+          class="user-column"
+          *ngIf="d.invited_user as invited"
+        >
+          <div class="user-label">Colaborador</div>
+          <button
+            type="button"
+            class="user-avatar-btn"
+            (click)="goToInvitedPortfolio(invited)"
+          >
+            <ui-avatar
+              [style]="{ width: '64px', height: '64px' }"
+              [src]="invited.profile_picture_url || ''"
+              [name]="invited.name + ' ' + invited.lastname"
+              severity="primary"
+              size="lg"
+            ></ui-avatar>
+          </button>
+          <div class="user-name">
+            {{ invited.name }} {{ invited.lastname }}
+          </div>
+          <div class="user-username">
+            {{ '@' + invited.username }}
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCIONES FINALES -->
+      <div class="accept-actions">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="goToCourse()"
+        >
+          Ir al curso
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goBack()"
+        >
+          Volver
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -400,6 +400,12 @@ export class InvitationComponent implements OnInit {
   isMe(userId: number | undefined | null): boolean {
     return !!this.currentUser && !!userId && this.currentUser.id === userId;
   }
+
+  get hasRealCollaborator(): boolean {
+  const slot = this.collaboratorSlot;
+  return !!slot && !slot.is_invitation;
+}
+
 }
 
 

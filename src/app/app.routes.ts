@@ -18,6 +18,10 @@ export const routes: Routes = [
   path: 'certificate/:code',
   loadComponent: () => import('./pages/public/certificate/certificate.component').then(c => c.CertificateComponent)
   },
+  {
+  path: 'invitation/accept',
+  loadComponent: () => import('./pages/public/accept/accept.component').then(c => c.AcceptComponent)
+  },
 
   {
     path: '',

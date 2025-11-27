@@ -86,6 +86,11 @@ export interface ChangeRolesResponse extends ApiMessageResponse {
   owner: BasicUser | null;
   collaborator: BasicUser | null;
 }
+export interface AcceptInvitationCourse {
+  id: number;
+  title: string;
+  miniature_url: string | null;
+}
 
 // POST /invitation/accept (pública)
 export interface AcceptInvitationUserNotFoundResponse {
@@ -94,13 +99,20 @@ export interface AcceptInvitationUserNotFoundResponse {
   email: string;
 }
 
-export interface AcceptInvitationSuccessResponse {
-  message: string;
+export interface AcceptInvitationSuccessResponse extends ApiMessageResponse {
+  course: AcceptInvitationCourse;
+  invited_user: BasicUser;
+  inviter_user: BasicUser | null;
 }
+
+
+
 
 export type AcceptInvitationResponse =
   | AcceptInvitationUserNotFoundResponse
   | AcceptInvitationSuccessResponse;
+
+
 
 
 
