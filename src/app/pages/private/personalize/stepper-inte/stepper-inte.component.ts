@@ -156,7 +156,7 @@ export class StepperInteComponent implements OnInit {
         });
 
         // Aquí ya terminaste el stepper, redirige donde quieras
-        this.router.navigate(['/']);
+        this.router.navigate(['/learning']);
       },
       error: (error) => {
         this.saving.set(false);

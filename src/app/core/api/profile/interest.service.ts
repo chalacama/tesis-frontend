@@ -15,20 +15,22 @@ import {
 })
 export class InterestService {
   private readonly http = inject(HttpClient);
-  // Base: .../api/interest
-  private readonly apiUrl = `${environment.apiUrl}/interest`;
+
+  // 🔴 ANTES:
+  // private readonly apiUrl = `${environment.apiUrl}/interest`;
+
+  // ✅ AHORA: respeta el prefix 'profile/interest' de Laravel
+  private readonly apiUrl = `${environment.apiUrl}/profile/interest`;
 
   /**
-   * GET /interest/show
-   * Obtiene las categorías de interés del usuario autenticado.
+   * GET /profile/interest/show
    */
   show(): Observable<InterestResponse> {
     return this.http.get<InterestResponse>(`${this.apiUrl}/show`);
   }
 
   /**
-   * PUT /interest/update
-   * Actualiza las 4 categorías de interés del usuario.
+   * PUT /profile/interest/update
    */
   update(payload: InterestUpdateRequest): Observable<InterestResponse> {
     return this.http.put<InterestResponse>(`${this.apiUrl}/update`, payload);
