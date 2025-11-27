@@ -18,6 +18,10 @@ export const routes: Routes = [
   path: 'certificate/:code',
   loadComponent: () => import('./pages/public/certificate/certificate.component').then(c => c.CertificateComponent)
   },
+  {
+  path: 'invitation/accept',
+  loadComponent: () => import('./pages/public/accept/accept.component').then(c => c.AcceptComponent)
+  },
 
   {
     path: '',
@@ -206,6 +210,11 @@ export const routes: Routes = [
         {
           path: 'modules',
         loadComponent: () => import('./pages/private/studio/manage.course/module/module.component').then((c) => c.ModuleComponent),
+        
+        },
+        {
+          path: 'collaborators',
+        loadComponent: () => import('./pages/private/studio/manage.course/invitation/invitation.component').then((c) => c.InvitationComponent),
         
         },
         {

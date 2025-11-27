@@ -1,1 +1,170 @@
-<p>analytic works!</p>
+<div class="analytic-wrapper">
+
+  <!-- Header -->
+  <ng-container *ngIf="!loading(); else headerSkeleton">
+    <header class="analytic-header" *ngIf="analytics() as data">
+      <div>
+        <h2 class="analytic-title">{{ data.course.title }}</h2>
+        <p class="analytic-subtitle">
+          Analítica del curso · ID {{ data.course.id }}
+        </p>
+      </div>
+
+      <div class="filters-pill">
+        <span class="filters-label">Rango de fechas</span>
+        <span class="filters-value">
+          {{ data.filters.date_from || 'Inicio' }}
+          &nbsp;–&nbsp;
+          {{ data.filters.date_to || 'Hoy' }}
+        </span>
+      </div>
+    </header>
+  </ng-container>
+
+  <ng-template #headerSkeleton>
+    <div class="analytic-header skeleton-header"></div>
+  </ng-template>
+
+  <!-- Error -->
+  <p class="analytic-error" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <!-- Skeleton general mientras carga -->
+  <ng-container *ngIf="loading(); else analyticsLoaded">
+    <div class="analytic-charts-grid">
+      <div class="analytic-card skeleton-card"></div>
+      <div class="analytic-card skeleton-card"></div>
+      <div class="analytic-card skeleton-card"></div>
+      <div class="analytic-card skeleton-card"></div>
+    </div>
+
+    <div class="analytic-card skeleton-list"></div>
+  </ng-container>
+
+  <!-- Contenido real -->
+  <ng-template #analyticsLoaded>
+    <ng-container *ngIf="analytics() as a; else emptyState">
+
+      <div class="analytic-charts-grid">
+        <!-- Embudo de retención -->
+        <section class="analytic-card">
+          <header class="analytic-card-header">
+            <h3>Embudo de retención por módulo</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="retentionFunnelOptions()">
+          </div>
+        </section>
+
+        <!-- Tasa de certificación -->
+        <section class="analytic-card">
+          <header class="analytic-card-header">
+            <h3>Tasa de certificación</h3>
+          </header>
+
+          <div class="certification-summary">
+            <div class="cert-item">
+              <span class="cert-label">Inscritos</span>
+              <span class="cert-value">
+                {{ a.metrics.certification.registrations }}
+              </span>
+            </div>
+            <div class="cert-item">
+              <span class="cert-label">Certificados</span>
+              <span class="cert-value">
+                {{ a.metrics.certification.certificates }}
+              </span>
+            </div>
+            <div class="cert-item">
+              <span class="cert-label">Tasa</span>
+              <span class="cert-value">
+                {{ a.metrics.certification.rate | number:'1.0-1' }}%
+              </span>
+            </div>
+          </div>
+
+          <div
+            echarts
+            class="chart-container chart-small"
+            [options]="certificationOptions()">
+          </div>
+        </section>
+
+        <!-- Distribución de progreso -->
+        <section class="analytic-card">
+          <header class="analytic-card-header">
+            <h3>Distribución de progreso</h3>
+            <p class="card-caption">
+              Total estudiantes: {{ a.metrics.progress_distribution.total_students }}
+            </p>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="progressDistributionOptions()">
+          </div>
+        </section>
+
+        <!-- Top 5 preguntas difíciles -->
+        <section class="analytic-card">
+          <header class="analytic-card-header">
+            <h3>Top 5 preguntas más difíciles</h3>
+          </header>
+          <div
+            echarts
+            class="chart-container"
+            [options]="difficultQuestionsOptions()">
+          </div>
+        </section>
+      </div>
+
+      <!-- Feedback reciente -->
+      <section class="analytic-card feedback-card">
+        <header class="analytic-card-header">
+          <h3>Feedback reciente</h3>
+        </header>
+
+        <ul class="feedback-list" *ngIf="a.metrics.recent_feedback.length; else noFeedback">
+          <li class="feedback-item" *ngFor="let fb of a.metrics.recent_feedback">
+            <div class="feedback-header">
+              <span class="feedback-user">{{ fb.user_name }}</span>
+              <span class="feedback-date">
+                {{ fb.created_at | date:'short' }}
+              </span>
+            </div>
+
+            <div class="feedback-stars" *ngIf="fb.stars !== null">
+              <span
+                *ngFor="let s of [1,2,3,4,5]"
+                class="star"
+                [class.filled]="s <= fb.stars">
+                ★
+              </span>
+            </div>
+
+            <p class="feedback-text">
+              {{ fb.text }}
+            </p>
+          </li>
+        </ul>
+
+        <ng-template #noFeedback>
+          <p class="no-feedback">
+            No hay comentarios recientes en este curso.
+          </p>
+        </ng-template>
+      </section>
+
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        No hay datos de analítica para este curso.
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
+
