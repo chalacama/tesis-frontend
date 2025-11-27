@@ -27,8 +27,17 @@
             </div>
         </div>
         <div class="nav-center">
+            <app-search></app-search>
+            
         </div>
         <div class="nav-right">
+            <div class="explore-nav">
+                <app-explore>   </app-explore>
+            </div>
+
+            <div class="noti-content">
+                <app-notification />
+            </div>
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel">
 
                 <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}"

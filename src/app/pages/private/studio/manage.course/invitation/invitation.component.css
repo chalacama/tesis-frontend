@@ -1,0 +1,356 @@
+.invitation-page {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.invitation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .invitation-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px var(--shadow-color);
+  padding: 1.25rem 1.5rem;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: var(--text-color);
+}
+
+/* USER ROW */
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.user-name {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.user-username {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.role-label {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--sev-info);
+  color: var(--text-color-contrast);
+}
+
+.role-label.pending {
+  background: var(--sev-warn);
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--sev-secondary);
+  color: var(--text-color);
+}
+
+/* Hints & actions */
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  margin: 0.4rem 0 0.75rem 0;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Buttons básicos */
+
+.btn {
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.btn-primary {
+  background: var(--sev-primary);
+  color: var(--text-color-contrast);
+  border-color: var(--sev-primary);
+}
+
+.btn-primary:hover {
+  background: var(--sev-primary-hover);
+  border-color: var(--sev-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--sev-secondary);
+  color: var(--text-color);
+  border-color: var(--sev-secondary);
+}
+
+.btn-secondary:hover {
+  background: var(--sev-secondary-hover);
+  border-color: var(--sev-secondary-hover);
+}
+
+.btn-primary-outline {
+  background: transparent;
+  color: var(--sev-primary);
+  border-color: var(--sev-primary);
+}
+
+.btn-primary-outline:hover {
+  background: var(--sev-primary-hover);
+  color: var(--text-color-contrast);
+}
+
+.btn-warn-outline {
+  background: transparent;
+  color: var(--sev-warn);
+  border-color: var(--sev-warn);
+}
+
+.btn-warn-outline:hover {
+  background: var(--sev-warn-hover);
+  color: var(--text-color-contrast);
+}
+
+.btn-danger-outline {
+  background: transparent;
+  color: var(--sev-danger);
+  border-color: var(--sev-danger);
+}
+
+.btn-danger-outline:hover {
+  background: var(--sev-danger-hover);
+  color: var(--text-color-contrast);
+}
+
+/* INVITE PANEL */
+
+.invite-panel {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.input {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.8rem;
+  background: var(--background-color);
+  color: var(--text-color);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--active-color);
+}
+
+.search-status {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.4rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.6rem;
+  background: var(--background-hover);
+}
+
+.result-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.result-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.result-username {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.result-email {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+/* SKELETONS */
+
+.skeleton-card {
+  background: var(--background-skeleton);
+  border-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.skeleton-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--background-hover);
+}
+
+.skeleton-lines {
+  flex: 1;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--background-hover);
+}
+
+.w-60 { width: 60%; }
+.w-40 { width: 40%; }
+.w-80 { width: 80%; }
+.w-50 { width: 50%; }
+.w-90 { width: 90%; }
+.w-70 { width: 70%; }
+.w-30 { width: 30%; }
+.mt-8 { margin-top: 0.8rem; }
+.mt-4 { margin-top: 0.4rem; }
+
+.skeleton-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* MODAL */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: var(--dialog-bg);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 18px 40px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+.modal-title {
+  margin: 0 0 0.8rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modal-message {
+  margin: 0 0 1.1rem 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

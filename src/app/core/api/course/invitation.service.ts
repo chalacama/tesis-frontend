@@ -1,122 +1,198 @@
 // core/api/invitation/invitation.service.ts
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams
+} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../environment/environment';
 import {
   AcceptInvitationResponse,
   ApiMessageResponse,
-  InvitationCreateResponse,
-  InvitationValidateResponse
+  ChangeRolesResponse,
+  CollaboratorShowResponse,
+  DeleteOwnerResponse,
+  InviteCollaboratorResponse,
+  LeaveCourseResponse,
+  ValidateInvitationResponse
 } from './invitation.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvitationService {
-
   private readonly http = inject(HttpClient);
+
+  /** Rutas backend:
+   *  - /collaborator/... (protegidas)
+   *  - /invitation/accept (pública)
+   */
+  private readonly collaboratorUrl = `${environment.apiUrl}/collaborator`;
   private readonly apiUrl = `${environment.apiUrl}/invitation`;
 
-  /**
-   * Buscar usuarios (tutores/admin) para invitarlos.
-   * GET /invitation/validate?query=
-   */
-  validateUser(query: string): Observable<InvitationValidateResponse> {
-    const params = new HttpParams().set('query', query.trim());
+  // ======================
+  // COLLABORATOR / SHOW
+  // ======================
 
+  /**
+   * GET /collaborator/{course}/show
+   * Devuelve dueño, colaborador/invitación y flags de permisos.
+   */
+  getCollaboratorInfo(courseId: number): Observable<CollaboratorShowResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/show`;
     return this.http
-      .get<InvitationValidateResponse>(`${this.apiUrl}/validate`, { params })
+      .get<CollaboratorShowResponse>(url)
       .pipe(catchError(this.handleError));
   }
 
+  // ======================
+  // VALIDAR USUARIO INVITABLE
+  // ======================
+
   /**
-   * Invitar COLABORADOR a un curso.
-   * POST /invitation/{course}/store
+   * GET /collaborator/validate?query=...
+   * Busca usuarios por email/username/nombre/apellido (solo tutores/admin).
+   */
+  validateUser(query: string): Observable<ValidateInvitationResponse> {
+    const url = `${this.collaboratorUrl}/validate`;
+    const params = new HttpParams().set('query', query);
+    return this.http
+      .get<ValidateInvitationResponse>(url, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  // ======================
+  // INVITAR COLABORADOR
+  // ======================
+
+  /**
+   * POST /collaborator/{course}/store
+   * Body: { email }
    */
   inviteCollaborator(
-    courseId: number | string,
+    courseId: number,
     email: string
-  ): Observable<InvitationCreateResponse> {
+  ): Observable<InviteCollaboratorResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/store`;
     return this.http
-      .post<InvitationCreateResponse>(`${this.apiUrl}/${courseId}/store`, { email })
+      .post<InviteCollaboratorResponse>(url, { email })
       .pipe(catchError(this.handleError));
   }
 
-  /**
-   * Invitar NUEVO DUEÑO del curso.
-   * POST /invitation/{course}/owner
-   */
-  inviteOwner(
-    courseId: number | string,
-    email: string
-  ): Observable<InvitationCreateResponse> {
-    return this.http
-      .post<InvitationCreateResponse>(`${this.apiUrl}/${courseId}/owner`, { email })
-      .pipe(catchError(this.handleError));
-  }
+  // ======================
+  // ELIMINAR COLABORADOR
+  // ======================
 
   /**
-   * Archivar (eliminar lógicamente) un tutor del curso.
-   * DELETE /invitation/{course}/tutor/{tutor}
+   * DELETE /collaborator/{course}/delete/{user}
    */
-  archiveTutor(
-    courseId: number | string,
-    tutorId: number | string
+  deleteCollaborator(
+    courseId: number,
+    userId: number
   ): Observable<ApiMessageResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/delete/${userId}`;
     return this.http
-      .delete<ApiMessageResponse>(`${this.apiUrl}/${courseId}/tutor/${tutorId}`)
+      .delete<ApiMessageResponse>(url)
       .pipe(catchError(this.handleError));
   }
+
+  // ======================
+  // ELIMINAR DUEÑO (ADMIN)
+  // ======================
 
   /**
-   * Aceptar invitación por token.
-   * POST /invitation/accept
+   * DELETE /collaborator/{course}/delete-owner/{user}
+   * El admin quita al dueño y pasa a ser el nuevo dueño.
    */
-  acceptInvitation(token: string): Observable<AcceptInvitationResponse> {
+  deleteOwner(
+    courseId: number,
+    userId: number
+  ): Observable<DeleteOwnerResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/delete-owner/${userId}`;
     return this.http
-      .post<AcceptInvitationResponse>(`${this.apiUrl}/accept`, { token })
+      .delete<DeleteOwnerResponse>(url)
       .pipe(catchError(this.handleError));
   }
 
-  // Manejo de errores similar al de CourseService
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Ha ocurrido un error inesperado';
+  // ======================
+  // LEAVE: SALIR DEL CURSO
+  // ======================
 
-    if (error.error instanceof ErrorEvent) {
-      // Error de red
-      errorMessage = `Error de red: ${error.error.message}`;
-    } else {
-      switch (error.status) {
-        case 400:
-          errorMessage = 'Solicitud inválida. Verifica los datos enviados.';
-          break;
-        case 401:
-          errorMessage = 'No estás autenticado o tu sesión ha expirado.';
-          break;
-        case 403:
-          errorMessage = 'No tienes permisos para realizar esta acción.';
-          break;
-        case 404:
-          errorMessage = 'Recurso no encontrado o token inválido.';
-          break;
-        case 422:
-          errorMessage = error.error?.message || 'Datos de entrada inválidos.';
-          break;
-        default:
-          errorMessage =
-            error.error?.message ||
-            `Error ${error.status}: ${error.statusText || 'Error desconocido'}`;
-      }
-    }
+  /**
+   * DELETE /collaborator/{course}/leave
+   * Si es colaborador: sale normal.
+   * Si es dueño: solo si hay colaborador, al que se le transfiere el curso.
+   */
+  leaveCourse(courseId: number): Observable<LeaveCourseResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/leave`;
+    return this.http
+      .delete<LeaveCourseResponse>(url)
+      .pipe(catchError(this.handleError));
+  }
 
-    console.error('InvitationService Error:', {
-      status: error.status,
-      message: errorMessage,
-      url: error.url,
-      timestamp: new Date().toISOString()
-    });
+  // ======================
+  // CHANGE: INTERCAMBIAR ROLES
+  // ======================
 
-    return throwError(() => new Error(errorMessage));
+  /**
+   * PUT /collaborator/{course}/change
+   * Intercambia dueño <-> colaborador.
+   */
+  swapOwnerWithCollaborator(
+    courseId: number
+  ): Observable<ChangeRolesResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/change`;
+    return this.http
+      .put<ChangeRolesResponse>(url, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  // ======================
+  // CANCEL: CANCELAR INVITACIÓN
+  // ======================
+
+  /**
+   * DELETE /collaborator/{course}/cancel/{invitation}
+   * Marca la invitación como "expired".
+   */
+  cancelInvitation(
+    courseId: number,
+    invitationId: number
+  ): Observable<ApiMessageResponse> {
+    const url = `${this.collaboratorUrl}/${courseId}/cancel/${invitationId}`;
+    return this.http
+      .delete<ApiMessageResponse>(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  // ======================
+  // ACEPTAR INVITACIÓN (PÚBLICA)
+  // ======================
+
+  /**
+   * POST /invitation/accept
+   * Body: { token }
+   * No requiere autenticación.
+   */
+  acceptInvitation(
+    token: string
+  ): Observable<AcceptInvitationResponse> {
+    const url = `${this.apiUrl}/accept`;
+    return this.http
+      .post<AcceptInvitationResponse>(url, { token })
+      .pipe(catchError(this.handleError));
+  }
+
+  // ======================
+  // MANEJO DE ERRORES
+  // ======================
+
+  private handleError(error: HttpErrorResponse) {
+    // Aquí puedes personalizar logs o mapping de errores
+    console.error('Invitation API error:', error);
+    return throwError(() => error);
   }
 }
+

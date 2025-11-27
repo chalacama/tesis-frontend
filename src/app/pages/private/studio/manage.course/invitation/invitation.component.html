@@ -1,1 +1,271 @@
-<p>invitation works!</p>
+<ui-loading-bar
+  [visible]="saving()"
+  [mask]="{ type: 'dimmed' }">
+</ui-loading-bar>
+
+<div class="invitation-page">
+
+  <!-- Skeleton mientras carga -->
+  <ng-container *ngIf="loading(); else loaded">
+    <div class="invitation-grid">
+      <section class="card skeleton-card">
+        <div class="skeleton-header">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line w-60"></div>
+            <div class="skeleton-line w-40"></div>
+          </div>
+        </div>
+        <div class="skeleton-line w-80 mt-8"></div>
+        <div class="skeleton-line w-50 mt-4"></div>
+      </section>
+
+      <section class="card skeleton-card">
+        <div class="skeleton-header">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line w-70"></div>
+            <div class="skeleton-line w-30"></div>
+          </div>
+        </div>
+        <div class="skeleton-line w-90 mt-8"></div>
+        <div class="skeleton-line w-60 mt-4"></div>
+      </section>
+    </div>
+  </ng-container>
+
+  <!-- Contenido real -->
+  <ng-template #loaded>
+    <ng-container *ngIf="vm() as info">
+
+      <div class="invitation-grid">
+
+        <!-- OWNER CARD -->
+        <section class="card">
+          <h2 class="card-title">Dueño del curso</h2>
+
+          <ng-container *ngIf="info.owner; else noOwner">
+            <div class="user-row">
+              <img
+                class="avatar"
+                [src]="info.owner.profile_picture_url || '/assets/img/avatar-placeholder.svg'"
+                alt="avatar dueño" />
+              <div class="user-meta">
+                <div class="user-name">
+                  {{ info.owner.name }} {{ info.owner.lastname }}
+                  <span class="badge" *ngIf="isMe(info.owner.id)">Tú</span>
+                </div>
+                <div class="user-username">{{ '@' + info.owner.username }}</div>
+                <div class="user-email">{{ info.owner.email }}</div>
+              </div>
+            </div>
+
+            <p class="hint">Solo el dueño y el admin pueden invitar colaboradores o modificar la estructura del curso.</p>
+
+            <div class="actions-row">
+              <!-- Solo admin puede quitar al dueño -->
+              <button
+                *ngIf="isAdmin"
+                type="button"
+                class="btn btn-danger-outline"
+                (click)="openConfirm('deleteOwner')">
+                Quitar dueño (admin)
+              </button>
+
+              <!-- Dueño puede salir del curso -->
+              <button
+                *ngIf="isOwner"
+                type="button"
+                class="btn btn-warn-outline"
+                (click)="openConfirm('leave')">
+                Salir del curso
+              </button>
+            </div>
+          </ng-container>
+
+          <ng-template #noOwner>
+            <p class="hint">Este curso aún no tiene un dueño asignado.</p>
+          </ng-template>
+        </section>
+
+        <!-- COLLABORATOR / INVITATION CARD -->
+        <section class="card">
+          <h2 class="card-title">Colaborador</h2>
+
+          <!-- SLOT OCUPADO POR COLABORADOR -->
+          <ng-container *ngIf="collaboratorSlot as slot">
+            <ng-container *ngIf="!slot.is_invitation; else invitationSlot">
+              <!-- Colaborador real -->
+              <div class="user-row">
+                <div class="avatar">
+                  <ui-avatar [style]="{width : '100%', height : '100%'}" [src]="slot.user.profile_picture_url || ''" [name]="slot.user.name + ' ' + slot.user.lastname" severity="primary" size="lg"
+                    >
+                  </ui-avatar>
+                </div>
+                
+                <div class="user-meta">
+                  <div class="user-name">
+                    {{ slot.user.name }} {{ slot.user.lastname }}
+                    <span class="badge" *ngIf="isMe(slot.user.id)">Tú</span>
+                  </div>
+                  <div class="user-username">{{ '@' + slot.user.username }}</div>
+                  <div class="user-email">{{ slot.user.email }}</div>
+                  <div class="role-label">Colaborador</div>
+                </div>
+              </div>
+
+              <div class="actions-row">
+                <!-- Colaborador puede salir -->
+                <button
+                  *ngIf="isCollaborator"
+                  type="button"
+                  class="btn btn-warn-outline"
+                  (click)="openConfirm('leave')">
+                  Salir del curso
+                </button>
+
+                <!-- Dueño/admin pueden cambiar roles -->
+                <button
+                  *ngIf="canEdit"
+                  type="button"
+                  class="btn btn-primary-outline"
+                  (click)="openConfirm('change')">
+                  Convertir en dueño
+                </button>
+
+                <!-- Dueño/admin pueden quitar colaborador -->
+                <button
+                  *ngIf="canEdit"
+                  type="button"
+                  class="btn btn-danger-outline"
+                  (click)="openConfirm('deleteCollaborator')">
+                  Quitar colaborador
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- SLOT COMO INVITACIÓN -->
+              <ng-template #invitationSlot>
+              <div class="user-row">
+                <img
+                  class="avatar"
+                  [src]="$any(slot).invitation?.user?.profile_picture_url || '/assets/img/avatar-placeholder.svg'"
+                  alt="avatar invitado" />
+                <div class="user-meta">
+                  <div class="user-name">
+                    {{ $any(slot).invitation?.user?.name || 'Usuario invitado' }}
+                    {{ $any(slot).invitation?.user?.lastname || '' }}
+                  </div>
+                  <div class="user-username" *ngIf="$any(slot).invitation?.user">
+                    {{ '@'+ $any(slot).invitation?.user?.username }}
+                  </div>
+                  <div class="user-email">{{ $any(slot).invitation?.email }}</div>
+                  <div class="role-label pending">Invitación pendiente</div>
+                </div>
+              </div>
+
+              <p class="hint">
+                Se ha enviado una invitación a este usuario para colaborar en el curso. Mientras no acepte, el cupo de colaborador está reservado.
+              </p>
+
+              <div class="actions-row">
+                <button
+                  *ngIf="canEdit"
+                  type="button"
+                  class="btn btn-danger-outline"
+                  (click)="openConfirm('cancelInvitation')">
+                  Cancelar invitación
+                </button>
+              </div>
+            </ng-template>
+          </ng-container>
+
+          <!-- SIN COLABORADOR NI INVITACIÓN -->
+          <ng-container *ngIf="!collaboratorSlot">
+            <p class="hint">
+              Este curso aún no tiene colaborador ni invitación pendiente.
+            </p>
+
+            <!-- Solo dueño/admin pueden invitar -->
+            <div *ngIf="canInvite" class="invite-panel">
+              <label class="field-label">Buscar usuario para invitar</label>
+              <input
+                type="text"
+                class="input"
+                [value]="searchQuery()"
+                (input)="onSearchChange($any($event.target).value)"
+                placeholder="Buscar por nombre, apellido, usuario o email..." />
+
+              <div class="search-status" *ngIf="searching()">
+                Buscando usuarios...
+              </div>
+
+              <ul class="results-list" *ngIf="!searching() && searchResults.length">
+                <li
+                  class="result-item"
+                  *ngFor="let u of searchResults">
+                  <div class="result-main">
+                    <div class="result-name">
+                      {{ u.name }} {{ u.lastname }}
+                    </div>
+                    <div class="result-username">{{ '@' + u.username }}</div>
+                    <div class="result-email">{{ u.email }}</div>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-primary-outline btn-sm"
+                    (click)="inviteUser(u)">
+                    Invitar
+                  </button>
+                </li>
+              </ul>
+
+              <div
+                class="search-status"
+                *ngIf="!searching() && searchQuery().length >= 2 && !searchResults.length">
+                No se encontraron usuarios con ese criterio.
+              </div>
+            </div>
+          </ng-container>
+        </section>
+      </div>
+
+      <!-- BOTÓN GLOBAL DE SALIR PARA COLABORADOR (en caso de que quieras repetir) -->
+      <!--
+      <div class="global-actions" *ngIf="isCollaborator && !collaboratorSlot?.is_invitation">
+        <button
+          type="button"
+          class="btn btn-warn-outline"
+          (click)="openConfirm('leave')">
+          Salir del curso
+        </button>
+      </div>
+      -->
+
+    </ng-container>
+  </ng-template>
+
+  <!-- MODAL DE CONFIRMACIÓN -->
+  <div class="modal-backdrop" *ngIf="confirmState() as state">
+    <div class="modal">
+      <h3 class="modal-title">Confirmación</h3>
+      <p class="modal-message">
+        {{ getConfirmMessage() }}
+      </p>
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="performConfirm()">
+          Confirmar
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeConfirm()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

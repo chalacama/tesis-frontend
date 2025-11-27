@@ -16,10 +16,13 @@ import { PreviewComponent } from '../../../shared/UI/components/media/preview/pr
 import { ButtonComponent } from '../../../shared/UI/components/button/button/button.component';
 import { AvatarComponent } from '../../../shared/UI/components/media/avatar/avatar.component';
 import { Portfolio } from '../../../core/api/profile/portfolio.interface';
+import { SearchComponent } from '../../../shared/UI/components/data/search/search.component';
+import { NotificationComponent } from '../../../shared/UI/components/data/notification/notification.component';
+import { ExploreComponent } from '../../../shared/UI/components/data/explore/explore.component';
 
 @Component({
   selector: 'app-studio',
-  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent, AvatarComponent],
+  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent, AvatarComponent , SearchComponent , NotificationComponent , ExploreComponent],
   templateUrl: './studio.component.html',
   styleUrl: './studio.component.css'
 })
