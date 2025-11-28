@@ -190,7 +190,7 @@ myPortfolio() {
   }
   
   isTutor(): boolean {
-    return this.authService.hasRole('tutor');
+    return this.authService.hasRole('tutor') || this.authService.hasRole('admin');
   }
 
 

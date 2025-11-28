@@ -178,6 +178,21 @@ export const routes: Routes = [
             canActivate: [adminGuard],
             loadComponent: () => import('./pages/private/studio/manage.users/users/users.component').then((c) => c.UsersComponent)
           },
+          {
+            path: 'categories',
+            canActivate: [adminGuard],
+            loadComponent: () => import('./pages/private/studio/manage.setting/category/category.component').then((c) => c.CategoryComponent)
+          },
+          {
+            path: 'careers',
+            canActivate: [adminGuard],
+            loadComponent: () => import('./pages/private/studio/manage.setting/career/career.component').then((c) => c.CareerComponent)
+          },
+          {
+            path: 'sedes',
+            canActivate: [adminGuard],
+            loadComponent: () => import('./pages/private/studio/manage.setting/sede/sede.component').then((c) => c.SedeComponent)
+          },
         ]
       },
       {

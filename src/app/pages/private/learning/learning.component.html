@@ -159,7 +159,7 @@
 
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" 
                 style="position: relative;">
-                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
+                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url || ''" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
                     >
                 </ui-avatar>
 
@@ -167,7 +167,8 @@
                     <div>
                         <div class="dropdown_header">
                             <div  class="dropdown_header_left">
-                                <img onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="navigateTo('learning/profile')" class="dropdown-avatar" [src]="usuario.profile_picture_url" alt="profile">
+                                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url || ''" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="sm">
+                                </ui-avatar>
                             </div>
                             <div class="dropdown_header_right">
                                 <div class="dropdown_header_right_name">

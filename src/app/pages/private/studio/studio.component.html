@@ -246,7 +246,7 @@
             </div>
 
             <div class="content-navegation">
-                <div *ngIf="!hasExternalCourse">
+                <div class="content-navegation-overlay" *ngIf="!hasExternalCourse">
                     <div class="content-navegation-item">
                         <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
                             class="navegation-route" (click)="navigateTo('panel')">
@@ -291,6 +291,7 @@
                             </div>
                         </label>
                     </div>
+                    
                     <div *ngIf="isAdmin()" class="content-navegation-item">
                         <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
                             class="navegation-route" (click)="navigateTo('users')">
@@ -313,7 +314,48 @@
                             </div>
                         </label>
                     </div>
-
+                    <div *ngIf="isAdmin()" class="content-navegation-item">
+                        <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
+                            class="navegation-route" (click)="navigateTo('categories')">
+                            <input name="page" type="radio" [checked]="currentRoute === 'studio/categories'" />
+                            <div class="icon-navegation">
+                                <svg *ngIf="currentRoute !== 'studio/categories'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M8.275 11q-.575 0-.875-.513t.025-1.012L11.15 3.4q.3-.475.85-.475t.85.475l3.725 6.075q.325.5.025 1.013t-.875.512h-7.45ZM17.5 22q-1.875 0-3.188-1.313T13 17.5q0-1.875 1.313-3.188T17.5 13q1.875 0 3.188 1.313T22 17.5q0 1.875-1.313 3.188T17.5 22ZM4 21.5q-.425 0-.713-.288T3 20.5v-6q0-.425.288-.713T4 13.5h6q.425 0 .713.288T11 14.5v6q0 .425-.288.713T10 21.5H4ZM17.5 20q1.05 0 1.775-.725T20 17.5q0-1.05-.725-1.775T17.5 15q-1.05 0-1.775.725T15 17.5q0 1.05.725 1.775T17.5 20ZM5 19.5h4v-4H5v4ZM10.05 9h3.9L12 5.85L10.05 9ZM12 9Zm-3 6.5Zm8.5 2Z"/></svg>
+                                <svg *ngIf="currentRoute === 'studio/categories'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M8.275 11q-.575 0-.863-.513t.013-1.012L11.15 3.4q.3-.475.85-.475t.85.475l3.725 6.075q.3.5.013 1.013t-.863.512h-7.45ZM17.5 22q-1.875 0-3.188-1.313T13 17.5q0-1.875 1.313-3.188T17.5 13q1.875 0 3.188 1.313T22 17.5q0 1.875-1.313 3.188T17.5 22ZM4 21.5q-.425 0-.713-.288T3 20.5v-6q0-.425.288-.713T4 13.5h6q.425 0 .713.288T11 14.5v6q0 .425-.288.713T10 21.5H4Z"/></svg>
+                                <span class="underline"></span>
+                            </div>
+                            <div class="label-navegation">
+                                <span class="label-txt">Categorias</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div *ngIf="isAdmin()" class="content-navegation-item">
+                        <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
+                            class="navegation-route" (click)="navigateTo('sedes')">
+                            <input name="page" type="radio" [checked]="currentRoute === 'studio/sedes'" />
+                            <div class="icon-navegation">
+                                <svg  *ngIf="currentRoute === 'studio/sedes'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="currentColor" d="M6.72 16.64a1 1 0 0 1 .56 1.92c-.5.146-.86.3-1.091.44c.238.143.614.303 1.136.452C8.48 19.782 10.133 20 12 20s3.52-.218 4.675-.548c.523-.149.898-.309 1.136-.452c-.23-.14-.59-.294-1.09-.44a1 1 0 0 1 .559-1.92c.668.195 1.28.445 1.75.766c.435.299.97.82.97 1.594c0 .783-.548 1.308-.99 1.607c-.478.322-1.103.573-1.786.768C15.846 21.77 14 22 12 22s-3.846-.23-5.224-.625c-.683-.195-1.308-.446-1.786-.768c-.442-.3-.99-.824-.99-1.607c0-.774.535-1.295.97-1.594c.47-.321 1.082-.571 1.75-.766ZM12 2a7.5 7.5 0 0 1 7.5 7.5c0 2.568-1.4 4.656-2.85 6.14a16.402 16.402 0 0 1-1.853 1.615c-.594.446-1.952 1.282-1.952 1.282a1.71 1.71 0 0 1-1.69 0a20.736 20.736 0 0 1-1.952-1.282A16.29 16.29 0 0 1 7.35 15.64C5.9 14.156 4.5 12.068 4.5 9.5A7.5 7.5 0 0 1 12 2Zm0 5.5a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z"/></g></svg>
+                                <svg *ngIf="currentRoute !== 'studio/sedes'"  xmlns="http://www.w3.org/2000/svg" class="sng-icon" viewBox="0 0 24 24" fill="currentColor"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="currentColor" d="M6.72 16.64a1 1 0 0 1 .56 1.92c-.5.146-.86.3-1.091.44c.238.143.614.303 1.136.452C8.48 19.782 10.133 20 12 20s3.52-.218 4.675-.548c.523-.149.898-.309 1.136-.452c-.23-.14-.59-.294-1.09-.44a1 1 0 0 1 .559-1.92c.668.195 1.28.445 1.75.766c.435.299.97.82.97 1.594c0 .783-.548 1.308-.99 1.607c-.478.322-1.103.573-1.786.768C15.846 21.77 14 22 12 22s-3.846-.23-5.224-.625c-.683-.195-1.308-.446-1.786-.768c-.442-.3-.99-.824-.99-1.607c0-.774.535-1.295.97-1.594c.47-.321 1.082-.571 1.75-.766ZM12 2a7.5 7.5 0 0 1 7.5 7.5c0 2.568-1.4 4.656-2.85 6.14a16.402 16.402 0 0 1-1.853 1.615c-.594.446-1.952 1.282-1.952 1.282a1.71 1.71 0 0 1-1.69 0a20.736 20.736 0 0 1-1.952-1.282A16.29 16.29 0 0 1 7.35 15.64C5.9 14.156 4.5 12.068 4.5 9.5A7.5 7.5 0 0 1 12 2Zm0 2a5.5 5.5 0 0 0-5.5 5.5c0 1.816.996 3.428 2.28 4.74c.966.988 2.03 1.74 2.767 2.202l.453.274l.453-.274c.736-.462 1.801-1.214 2.767-2.201c1.284-1.313 2.28-2.925 2.28-4.741A5.5 5.5 0 0 0 12 4Zm0 2.5a3 3 0 1 1 0 6a3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2a1 1 0 0 0 0-2Z"/></g></svg>
+                                <span class="underline"></span>
+                            </div>
+                            <div class="label-navegation">
+                                <span class="label-txt">Sedes</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div *ngIf="isAdmin()" class="content-navegation-item">
+                        <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
+                            class="navegation-route" (click)="navigateTo('careers')">
+                            <input name="page" type="radio" [checked]="currentRoute === 'studio/careers'" />
+                            <div class="icon-navegation">
+                                <svg *ngIf="currentRoute === 'studio/careers'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M18.386 4.685a4.5 4.5 0 0 0-4.772 0L2.518 11.623A1 1 0 0 0 2 12.5V21a1 1 0 1 0 2 0v-6.693l9.614 6.012a4.5 4.5 0 0 0 4.772 0l11.144-6.97a1 1 0 0 0 0-1.695zm.795 16.906L25 17.95v5.599a1 1 0 0 1-.273.686A11.97 11.97 0 0 1 16 28c-3.438 0-6.54-1.448-8.727-3.764A1 1 0 0 1 7 23.55v-5.598l5.819 3.638a6 6 0 0 0 6.362 0"/></svg>
+                                <svg *ngIf="currentRoute !== 'studio/careers'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M17.326 6.38a2.5 2.5 0 0 0-2.652 0l-9.788 6.122l9.789 6.121a2.5 2.5 0 0 0 2.65 0l9.789-6.121zm-3.712-1.695a4.5 4.5 0 0 1 4.772 0l11.144 6.969a1 1 0 0 1 0 1.696L25 16.183v7.367a1 1 0 0 1-.273.686A11.97 11.97 0 0 1 16 28a11.97 11.97 0 0 1-8.727-3.764A1 1 0 0 1 7 23.55v-7.367l-3-1.876V21a1 1 0 1 1-2 0v-8.5a1 1 0 0 1 .518-.877zm4.772 15.634a4.5 4.5 0 0 1-4.772 0L9 17.433v5.708A9.96 9.96 0 0 0 16 26a9.96 9.96 0 0 0 7-2.859v-5.708z"/></svg>
+                                <span class="underline"></span>
+                            </div>
+                            <div class="label-navegation">
+                                <span class="label-txt">Carreras</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
                 <div *ngIf="hasExternalCourse">
                     <div class="content-navegation-item">

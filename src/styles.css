@@ -77,7 +77,56 @@
   --switcher-active-icon: light-dark(var(--surface-50), var(--surface-950));
 
 }
+/* === ESTILO DE SCROLLBAR "FANTASMA" (Semistransparente) === */
 
+/* --- Para Firefox --- */
+* {
+  /* Hacemos la barra delgada */
+  scrollbar-width: thin;
+  
+  /* * Color del pulgar (thumb) y color del fondo (track).
+   * Usamos light-dark() para que sea un gris oscuro semitransparente 
+   * en modo claro, y un gris claro semitransparente en modo oscuro.
+   * El 'transparent' hace que el fondo del scroll no se vea.
+   */
+  scrollbar-color: light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.2)) transparent;
+}
+
+/* --- Para Chrome, Safari, Edge y Opera --- */
+
+/* 1. Definimos el ancho (vertical) y alto (horizontal) de la barra */
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* 2. Ocultamos las flechas de dirección */
+*::-webkit-scrollbar-button {
+  display: none !important;
+
+}
+
+/* 3. Ocultamos el fondo (track) */
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 4. Ocultamos la esquina que aparece en áreas de texto */
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 5. Estilizamos la barra (thumb) */
+*::-webkit-scrollbar-thumb {
+  background-color: light-dark(rgba(0, 0, 0, 0.25), rgba(255, 255, 255, 0.2));
+  border-radius: 10px; /* Bordes redondeados */
+  border: none; /* Sin bordes */
+}
+
+/* 6. Hacemos la barra un poco más visible al pasar el mouse */
+*::-webkit-scrollbar-thumb:hover {
+  background-color: light-dark(rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.35));
+}
 body {
   font-family: "Open Sans", sans-serif;
   font-optical-sizing: auto;

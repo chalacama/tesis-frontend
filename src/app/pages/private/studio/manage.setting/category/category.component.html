@@ -1,0 +1,191 @@
+<!-- Barra de carga global (acciones de guardar/eliminar) -->
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<!-- Toast global -->
+<ui-toast></ui-toast>
+
+<div class="category-page">
+  <!-- Header -->
+  <header class="category-header">
+    <div class="header-text">
+      <h2>Categorías</h2>
+      <p class="subtitle">
+        Gestiona las categorías que se usan en tus cursos.
+      </p>
+    </div>
+
+    <button
+      class="btn-primary"
+      type="button"
+      (click)="openCreateDialog()"
+    >
+      <span class="btn-label">Nueva categoría</span>
+    </button>
+  </header>
+
+  <!-- Toolbar (Búsqueda) -->
+  <section class="category-toolbar">
+    <div class="search-wrapper">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar por nombre de categoría..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilter()"
+      />
+    </div>
+  </section>
+
+  <!-- Tabla de categorías -->
+  <section class="category-table-wrapper">
+    <!-- Skeleton de carga -->
+    <ng-container *ngIf="loading; else tableContent">
+      <div class="skeleton-card" *ngFor="let row of skeletonRows">
+        <div class="skeleton-line w-40"></div>
+        <div class="skeleton-line w-20"></div>
+      </div>
+    </ng-container>
+
+    <!-- Contenido real -->
+    <ng-template #tableContent>
+      <ng-container *ngIf="filteredCategories.length; else emptyState">
+        <table class="category-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th class="th-actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cat of filteredCategories">
+              <td>
+                <span class="cat-name">{{ cat.name }}</span>
+              </td>
+              <td class="td-actions">
+                <button
+                  type="button"
+                  class="icon-btn"
+                  (click)="openRenameDialog(cat)"
+                  title="Renombrar categoría"
+                >
+                  <ui-icon
+                    [size]="'sm'"
+                    [severity]="'primary'"
+                    [svgPath]="'svg/rename.svg'"
+                  >
+                  </ui-icon>
+                </button>
+
+                <button
+                  type="button"
+                  class="icon-btn danger"
+                  (click)="openDeleteDialog(cat)"
+                  title="Eliminar categoría"
+                >
+                  <ui-icon
+                    [size]="'sm'"
+                    [severity]="'danger'"
+                    [svgPath]="'svg/delete.svg'"
+                  >
+                  </ui-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <p>No se encontraron categorías.</p>
+          <button
+            type="button"
+            class="btn-ghost"
+            (click)="openCreateDialog()"
+          >
+            Crear la primera categoría
+          </button>
+        </div>
+      </ng-template>
+    </ng-template>
+  </section>
+
+  <!-- Dialogo Renombrar / Crear -->
+  <div class="dialog-backdrop" *ngIf="renameDialogOpen">
+    <div class="dialog">
+      <h3 class="dialog-title">
+        {{ editingCategory ? 'Renombrar categoría' : 'Nueva categoría' }}
+      </h3>
+      <p class="dialog-text">
+        {{
+          editingCategory
+            ? 'Actualiza el nombre de la categoría.'
+            : 'Ingresa el nombre de la nueva categoría.'
+        }}
+      </p>
+
+      <div class="dialog-body">
+        <label class="field-label" for="catName">Nombre</label>
+        <input
+          id="catName"
+          type="text"
+          class="dialog-input"
+          [(ngModel)]="renameName"
+          placeholder="Ej. Programación, Matemáticas..."
+          (keyup.enter)="saveRename()"
+        />
+      </div>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          class="btn-ghost"
+          (click)="closeRenameDialog()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="saveRename()"
+        >
+          {{ editingCategory ? 'Guardar cambios' : 'Crear' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialogo Eliminar -->
+  <div class="dialog-backdrop" *ngIf="deleteDialogOpen">
+    <div class="dialog">
+      <h3 class="dialog-title danger">
+        Eliminar categoría
+      </h3>
+      <p class="dialog-text">
+        ¿Estás seguro de eliminar la categoría
+        <strong>{{ deletingCategory?.name }}</strong>?
+        Esta acción no se puede deshacer.
+      </p>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          class="btn-ghost"
+          (click)="closeDeleteDialog()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn-danger"
+          (click)="confirmDelete()"
+        >
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
