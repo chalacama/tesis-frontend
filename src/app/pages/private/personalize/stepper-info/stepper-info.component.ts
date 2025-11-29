@@ -7,13 +7,13 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidatorFn,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
 
 import { LoadingBarComponent } from '../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
-
 
 import {
   InformationRequest,
@@ -21,14 +21,6 @@ import {
 } from '../../../../core/api/profile/information.interface';
 import { InformationService } from '../../../../core/api/profile/information.service';
 
-import {
-  Provincia,
-  Canton,
-  Parroquia
-} from '../../../../core/services/provinces/provinces.interface';
-import { ProvincesService } from '../../../../core/services/provinces/provinces.service';
-
-// Solo usamos la interfaz, ya no el servicio
 import { CountryCode } from '../../../../core/services/code-country/code.country';
 
 import { UserService } from '../../../../core/api/profile/user.service';
@@ -36,6 +28,11 @@ import { AuthService } from '../../../../core/api/auth/auth.service';
 import { User } from '../../../../core/api/auth/auth.interfaces';
 
 import { forkJoin, of, catchError } from 'rxjs';
+
+import { LocationService } from '../../../../core/api/location/location.service';
+import { LocationItem } from '../../../../core/api/location/location.interfaces';
+
+import { PersonalizeComponent } from '../personalize.component';
 
 @Component({
   selector: 'app-stepper-info',
@@ -57,10 +54,10 @@ export class StepperInfoComponent implements OnInit {
   infoForm!: FormGroup;
   usernameForm!: FormGroup;
 
-  // Datos auxiliares
-  provincias: Provincia[] = [];
-  cantones: Canton[] = [];
-  parroquias: Parroquia[] = [];
+  // Datos auxiliares de ubicación (nuevo servicio)
+  provinces: LocationItem[] = [];
+  cantons: LocationItem[] = [];
+  parishes: LocationItem[] = [];
 
   // Fijo a Ecuador 🇪🇨
   selectedCountryCode: CountryCode = {
@@ -70,8 +67,7 @@ export class StepperInfoComponent implements OnInit {
     flagEmoji: '🇪🇨'
   };
 
-  // Control de errores UI
-  phoneError: string | null = null;
+  // Control de errores UI username
   usernameError: string | null = null;
   usernameAvailable: boolean | null = null;
 
@@ -114,19 +110,18 @@ export class StepperInfoComponent implements OnInit {
     { value: 'no', label: 'No' },
   ];
 
-    constructor(
+  constructor(
     private fb: FormBuilder,
     private informationService: InformationService,
-    private provincesService: ProvincesService,
+    private locationService: LocationService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
+    private personalize: PersonalizeComponent
   ) {}
-
 
   ngOnInit(): void {
     this.buildForms();
+    this.handleDiscapacidadChanges();
     this.loadInitialData();
   }
 
@@ -136,17 +131,18 @@ export class StepperInfoComponent implements OnInit {
   private buildForms(): void {
     this.infoForm = this.fb.group({
       birthdate: ['', Validators.required],
-      phone_local: ['', [Validators.required]],
+      phone_local: ['', [Validators.required, this.ecPhoneValidator()]],
 
-      provinceId: ['', Validators.required],
-      cantonId: ['', Validators.required],
-      parishId: ['', Validators.required],
+      // IDs de ubicación (string en el form, number al enviar)
+      province_id: [null, Validators.required],
+      canton_id: [null, Validators.required],
+      parish_id: [null, Validators.required],
 
-      sexo: ['', Validators.required],
-      estado_civil: ['', Validators.required],
-      discapacidad: ['', Validators.required],
-      discapacidad_permanente: [''],
-      asistencia_establecimiento_discapacidad: [''],
+      sexo: [null, Validators.required],
+      estado_civil: [null, Validators.required],
+      discapacidad: ['no', Validators.required],
+      discapacidad_permanente: [null],
+      asistencia_establecimiento_discapacidad: [null],
     });
 
     this.currentUser = this.authService.getCurrentUser();
@@ -164,180 +160,227 @@ export class StepperInfoComponent implements OnInit {
         ],
       ],
     });
+  }
 
-    // Si cambia "discapacidad" a "no", limpiamos campos dependientes
-    this.infoForm.get('discapacidad')?.valueChanges.subscribe(value => {
-      if (value === 'no') {
-        this.infoForm.patchValue({
-          discapacidad_permanente: null,
-          asistencia_establecimiento_discapacidad: null
-        });
+  private handleDiscapacidadChanges(): void {
+    const discCtrl = this.infoForm.get('discapacidad');
+    const discPermCtrl = this.infoForm.get('discapacidad_permanente');
+    const asistCtrl = this.infoForm.get('asistencia_establecimiento_discapacidad');
+
+    discCtrl?.valueChanges.subscribe((value: 'si' | 'no') => {
+      if (!discPermCtrl || !asistCtrl) return;
+
+      if (value === 'si') {
+        discPermCtrl.setValidators([Validators.required]);
+        asistCtrl.setValidators([Validators.required]);
+      } else {
+        discPermCtrl.clearValidators();
+        asistCtrl.clearValidators();
+        discPermCtrl.setValue(null);
+        asistCtrl.setValue(null);
       }
+
+      discPermCtrl.updateValueAndValidity();
+      asistCtrl.updateValueAndValidity();
     });
   }
 
   // ------------------------
   // Carga inicial (skeleton)
   // ------------------------
-    private loadInitialData(): void {
-  this.isLoading.set(true);
+  private loadInitialData(): void {
+    this.isLoading.set(true);
 
-  const provincias$ = this.provincesService.getProvincias();
-  const userInfo$ = this.informationService.getUserProfile().pipe(
-    catchError(err => {
-      console.warn('No hay información previa de usuario o hubo error:', err);
-      // Devolvemos null para que forkJoin no falle
-      return of(null);
-    })
-  );
+    const provinces$ = this.locationService.getProvinces();
+    const userInfo$ = this.informationService.show().pipe(
+      catchError(err => {
+        console.warn('No hay información previa de usuario o hubo error:', err);
+        return of(null);
+      })
+    );
 
-  forkJoin({
-    provincias: provincias$,
-    userInfo: userInfo$,
-  }).subscribe({
-    next: ({ provincias, userInfo }) => {
-      this.provincias = provincias;
+    forkJoin({
+      provinces: provinces$,
+      userInfo: userInfo$,
+    }).subscribe({
+      next: ({ provinces, userInfo }) => {
+        this.provinces = provinces;
 
-      // Solo llenamos el formulario si hay datos
-      this.fillInfoForm(userInfo);
+        const info: UserInformation | null =
+          userInfo && userInfo.userInformation ? userInfo.userInformation : null;
 
-      this.isLoading.set(false);
-    },
-    error: (error) => {
-      console.error('Error cargando datos iniciales', error);
-      this.isLoading.set(false);
-    },
-  });
-}
-
-
+        this.fillInfoForm(info);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error cargando datos iniciales', error);
+        this.isLoading.set(false);
+      },
+    });
+  }
 
   private fillInfoForm(info: UserInformation | null): void {
     if (!info) return;
 
-    // Fecha a formato input[type="date"]
+    // Fecha al formato YYYY-MM-DD para el input date
     const birthdate = this.toDateInput(info.birthdate);
 
-    // Extraer parte local del teléfono (sin +593 y espacios)
-    const phoneLocal = this.extractLocalPhone(info.phone_number || '');
+    // Teléfono local formateado 096 385 6048
+    const phoneLocal = this.backendPhoneToLocalFormatted(info.phone_number);
 
-    // Preseleccionar provincia / cantón / parroquia por NOMBRE
-    const prov = this.provincias.find(p => p.nombre === info.province);
-    if (prov) {
-      this.cantones = prov.cantones;
-      const canton = prov.cantones.find(c => c.nombre === info.canton);
-      if (canton) {
-        this.parroquias = canton.parroquias;
-      }
+    // IDs como string en el formulario
+    const provinceId = info.province_id != null ? String(info.province_id) : null;
+    const cantonId = info.canton_id != null ? String(info.canton_id) : null;
+    const parishId = info.parish_id != null ? String(info.parish_id) : null;
 
-      this.infoForm.patchValue({
-        provinceId: prov.id,
-        cantonId: canton?.id ?? '',
-        parishId:
-          canton?.parroquias.find(parr => parr.nombre === info.parish)?.id ?? '',
+    this.infoForm.patchValue(
+      {
+        birthdate,
+        phone_local: phoneLocal,
+        province_id: provinceId,
+        canton_id: cantonId,
+        parish_id: parishId,
+        sexo: info.sexo,
+        estado_civil: info.estado_civil,
+        discapacidad: info.discapacidad,
+        discapacidad_permanente: info.discapacidad_permanente,
+        asistencia_establecimiento_discapacidad:
+          info.asistencia_establecimiento_discapacidad,
+      },
+      { emitEvent: false }
+    );
+
+    // Cargar combos dependientes
+    if (info.province_id) {
+      this.locationService.getCantons(info.province_id).subscribe({
+        next: (cantons) => {
+          this.cantons = cantons;
+
+          this.infoForm.patchValue(
+            { canton_id: cantonId },
+            { emitEvent: false }
+          );
+
+          if (info.canton_id) {
+            this.locationService
+              .getParishes(info.province_id, info.canton_id)
+              .subscribe({
+                next: (parishes) => {
+                  this.parishes = parishes;
+                  this.infoForm.patchValue(
+                    { parish_id: parishId },
+                    { emitEvent: false }
+                  );
+                },
+              });
+          }
+        },
       });
     }
-
-    this.infoForm.patchValue({
-      birthdate,
-      phone_local: phoneLocal,
-      sexo: info.sexo,
-      estado_civil: info.estado_civil,
-      discapacidad: info.discapacidad,
-      discapacidad_permanente: info.discapacidad_permanente,
-      asistencia_establecimiento_discapacidad: info.asistencia_establecimiento_discapacidad,
-    });
   }
 
   // ------------------------
   // Selects dependientes ubicación
   // ------------------------
   onProvinceChange(): void {
-    const provId = this.infoForm.value.provinceId;
-    const prov = this.provincias.find(p => p.id === provId);
+    const provinceId = this.infoForm.get('province_id')?.value;
 
-    this.cantones = prov?.cantones ?? [];
-    this.parroquias = [];
+    if (!provinceId) {
+      this.cantons = [];
+      this.parishes = [];
+      this.infoForm.patchValue({
+        canton_id: null,
+        parish_id: null,
+      });
+      return;
+    }
 
-    this.infoForm.patchValue({
-      cantonId: '',
-      parishId: '',
+    this.locationService.getCantons(provinceId).subscribe({
+      next: (cantons) => {
+        this.cantons = cantons;
+        this.parishes = [];
+        this.infoForm.patchValue({
+          canton_id: null,
+          parish_id: null,
+        });
+      },
+      error: () => {
+        this.cantons = [];
+        this.parishes = [];
+      },
     });
   }
 
   onCantonChange(): void {
-    const provId = this.infoForm.value.provinceId;
-    const cantonId = this.infoForm.value.cantonId;
+    const provinceId = this.infoForm.get('province_id')?.value;
+    const cantonId = this.infoForm.get('canton_id')?.value;
 
-    const prov = this.provincias.find(p => p.id === provId);
-    const canton = prov?.cantones.find(c => c.id === cantonId);
+    if (!provinceId || !cantonId) {
+      this.parishes = [];
+      this.infoForm.patchValue({
+        parish_id: null,
+      });
+      return;
+    }
 
-    this.parroquias = canton?.parroquias ?? [];
-
-    this.infoForm.patchValue({
-      parishId: '',
+    this.locationService.getParishes(provinceId, cantonId).subscribe({
+      next: (parishes) => {
+        this.parishes = parishes;
+        this.infoForm.patchValue({
+          parish_id: null,
+        });
+      },
+      error: () => {
+        this.parishes = [];
+      },
     });
   }
 
   // ------------------------
   // Submit información personal
   // ------------------------
-    onSubmitInfo(): void {
+  onSubmitInfo(): void {
     if (this.infoForm.invalid) {
       this.infoForm.markAllAsTouched();
       return;
     }
 
-    const fullPhone = this.formatFullPhone();
-    if (!fullPhone) {
-      return; // phoneError ya seteado
-    }
-
-    const provinceName = this.getProvinceNameById(this.infoForm.value.provinceId);
-    const cantonName = this.getCantonNameById(
-      this.infoForm.value.provinceId,
-      this.infoForm.value.cantonId
-    );
-    const parishName = this.getParishNameById(
-      this.infoForm.value.provinceId,
-      this.infoForm.value.cantonId,
-      this.infoForm.value.parishId
-    );
+    const value = this.infoForm.value;
 
     const payload: InformationRequest = {
-      birthdate: this.infoForm.value.birthdate,
-      phone_number: fullPhone,
-      province: provinceName,
-      canton: cantonName,
-      parish: parishName,
-      sexo: this.infoForm.value.sexo,
-      estado_civil: this.infoForm.value.estado_civil,
-      discapacidad: this.infoForm.value.discapacidad,
+      birthdate: value.birthdate,
+      phone_number: this.localToBackendPhone(value.phone_local),
+
+      province_id: Number(value.province_id),
+      canton_id: Number(value.canton_id),
+      parish_id: Number(value.parish_id),
+
+      sexo: value.sexo,
+      estado_civil: value.estado_civil,
+      discapacidad: value.discapacidad,
       discapacidad_permanente:
-        this.infoForm.value.discapacidad === 'si'
-          ? this.infoForm.value.discapacidad_permanente
+        value.discapacidad === 'si'
+          ? value.discapacidad_permanente ?? null
           : null,
       asistencia_establecimiento_discapacidad:
-        this.infoForm.value.discapacidad === 'si'
-          ? this.infoForm.value.asistencia_establecimiento_discapacidad
+        value.discapacidad === 'si'
+          ? value.asistencia_establecimiento_discapacidad ?? null
           : null,
     };
 
     this.saving.set(true);
-    this.informationService.updateUserProfile(payload).subscribe({
-      next: (updated: UserInformation) => {
+
+    this.informationService.update(payload).subscribe({
+      next: (res) => {
         this.saving.set(false);
-        console.log('Información actualizada', updated);
 
-        // 🔹 Marcar flag en el usuario actual
+        // marcar flag en el usuario actual (para el stepper padre)
         this.authService.updateCurrentUser({
-          has_user_information: true
+          has_user_information: true,
         });
 
-        // 🔹 Avanzar automáticamente al siguiente paso (education)
-        this.router.navigate(['/personalize/education'], {
-          relativeTo: this.route
-        });
+        // avisar al componente padre que el paso "info" se completó
+        this.personalize.onStepCompleted('info');
       },
       error: (error) => {
         this.saving.set(false);
@@ -345,7 +388,6 @@ export class StepperInfoComponent implements OnInit {
       },
     });
   }
-
 
   // ------------------------
   // Username: validar y actualizar
@@ -372,12 +414,14 @@ export class StepperInfoComponent implements OnInit {
       next: (res) => {
         this.usernameAvailable = res.is_available;
         if (!res.is_available) {
-          this.usernameError = res.message || 'El nombre de usuario no está disponible.';
+          this.usernameError =
+            res.message || 'El nombre de usuario no está disponible.';
         }
       },
       error: (err) => {
         this.usernameAvailable = null;
-        this.usernameError = err.message || 'No se pudo validar el username.';
+        this.usernameError =
+          err.message || 'No se pudo validar el username.';
       },
     });
   }
@@ -409,115 +453,93 @@ export class StepperInfoComponent implements OnInit {
       next: (res) => {
         this.saving.set(false);
         this.currentUsername = res.username;
-        this.canUpdateUsername = false; // ya no se puede volver a cambiar
+        this.canUpdateUsername = false;
         this.usernameAvailable = null;
       },
       error: (err) => {
         this.saving.set(false);
-        this.usernameError = err.message || 'No se pudo actualizar el username.';
+        this.usernameError =
+          err.message || 'No se pudo actualizar el username.';
       },
     });
   }
 
   // ------------------------
-  // Helpers
+  // Helpers fecha y teléfono
   // ------------------------
-  private toDateInput(date: string | Date): string {
-  if (!date) return '';
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = `${d.getMonth() + 1}`.padStart(2, '0');
-  const day = `${d.getDate()}`.padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-
-    private extractLocalPhone(full: string): string {
-    if (!full) return '';
-
-    // Nos quedamos solo con dígitos
-    let digits = full.replace(/\D/g, '');
-
-    // Si viene con prefijo 593, lo quitamos
-    if (digits.startsWith('593')) {
-      digits = digits.slice(3);
-    }
-
-    // Si vienen 10 dígitos y empieza en 0 => quitamos el 0
-    if (digits.length === 10 && digits.startsWith('0')) {
-      digits = digits.slice(1);
-    }
-
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 5) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-    return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
+  private toDateInput(date: string | Date | null | undefined): string {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const year = d.getFullYear();
+    const month = `${d.getMonth() + 1}`.padStart(2, '0');
+    const day = `${d.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
+  // Validador de teléfono local ecuatoriano: 10 dígitos, empieza en 0
+  private ecPhoneValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const raw = (control.value || '').toString();
+      const digits = raw.replace(/\D/g, '');
 
-    private formatFullPhone(): string | null {
-    this.phoneError = null;
+      if (!digits) return { ecPhone: true };
 
-    const rawLocal = (this.infoForm.value.phone_local || '').toString();
-    // Solo números
-    let digits = rawLocal.replace(/\D/g, '');
+      // 10 dígitos, empezando en 0 (ej: 0963856048)
+      if (digits.length !== 10 || !digits.startsWith('0')) {
+        return { ecPhone: true };
+      }
 
-    // 10 dígitos con 0 delante => quitamos el 0
-    if (digits.length === 10 && digits.startsWith('0')) {
-      digits = digits.slice(1);
-    }
-
-    if (digits.length !== 9) {
-      this.phoneError = 'Ingresa un número de 9 dígitos (por ejemplo: 991622884).';
       return null;
-    }
-
-    // Solo Ecuador +593
-    if (this.selectedCountryCode.phoneCode !== '+593') {
-      this.phoneError = 'Sólo se admite código +593 para Ecuador.';
-      return null;
-    }
-
-    // Lo que mandamos al backend (sin espacios):
-    // +593991622884 → cumple regex /^\+593[0-9]{9}$/
-    return `+593${digits}`;
+    };
   }
 
-
-  private getProvinceNameById(id: string): string {
-    return this.provincias.find(p => p.id === id)?.nombre ?? '';
+  get phoneLocalControl(): AbstractControl | null {
+    return this.infoForm.get('phone_local');
   }
 
-  private getCantonNameById(provId: string, cantonId: string): string {
-    const prov = this.provincias.find(p => p.id === provId);
-    return prov?.cantones.find(c => c.id === cantonId)?.nombre ?? '';
-  }
-
-  private getParishNameById(provId: string, cantonId: string, parishId: string): string {
-    const prov = this.provincias.find(p => p.id === provId);
-    const canton = prov?.cantones.find(c => c.id === cantonId);
-    return canton?.parroquias.find(pq => pq.id === parishId)?.nombre ?? '';
-  }
-    onPhoneInput(event: Event): void {
+  // formatea mientras el usuario escribe → 096 385 6048
+  onPhoneInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    // Solo dígitos
-    let digits = input.value.replace(/\D/g, '');
+    const digits = input.value.replace(/\D/g, '').slice(0, 10); // máx 10 dígitos
+    const formatted = this.formatLocalPhone(digits);
 
-    // Máximo 10 (por si ponen 0 + 9 dígitos)
-    if (digits.length > 10) {
-      digits = digits.slice(0, 10);
-    }
-
-    let display = '';
-    if (digits.length <= 2) {
-      display = digits;
-    } else if (digits.length <= 5) {
-      display = `${digits.slice(0, 2)} ${digits.slice(2)}`;
-    } else {
-      display = `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
-    }
-
-    // Actualizamos el form sin disparar valueChanges
-    this.infoForm.patchValue({ phone_local: display }, { emitEvent: false });
+    this.infoForm.patchValue(
+      { phone_local: formatted },
+      { emitEvent: false }
+    );
   }
 
+  private formatLocalPhone(digits: string): string {
+    if (!digits) return '';
+
+    const part1 = digits.slice(0, 3);
+    const part2 = digits.slice(3, 6);
+    const part3 = digits.slice(6, 10);
+
+    if (digits.length <= 3) return part1;
+    if (digits.length <= 6) return `${part1} ${part2}`;
+    return `${part1} ${part2} ${part3}`;
+  }
+
+  private backendPhoneToLocalFormatted(phone: string | null): string {
+    if (!phone) return '';
+
+    // ejemplo esperado: +593963856048
+    const match = phone.match(/^\+593(\d{9})$/);
+    if (!match) return '';
+
+    const withoutPrefix = match[1]; // '963856048'
+    const local = '0' + withoutPrefix; // '0963856048'
+    return this.formatLocalPhone(local);
+  }
+
+  private localToBackendPhone(localFormatted: string): string {
+    const digits = localFormatted.replace(/\D/g, '');
+    if (digits.length !== 10 || !digits.startsWith('0')) {
+      return '';
+    }
+    const withoutZero = digits.slice(1);
+    return `+593${withoutZero}`;
+  }
 }

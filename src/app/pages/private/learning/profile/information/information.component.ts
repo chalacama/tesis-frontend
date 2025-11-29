@@ -1,273 +1,436 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidatorFn,
+} from '@angular/forms';
 
-import { ProvincesService } from '../../../../../core/services/provinces/provinces.service';
-import { Provincia, Canton, Parroquia } from '../../../../../core/services/provinces/provinces.interface';
-import { InformationService } from '../../../../../core/api/profile/information.service';
+import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
+import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
+import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 
 import {
+  InformationService,
+} from '../../../../../core/api/profile/information.service';
+import {
   InformationRequest,
-  UserInformation
+  UserInformation,
 } from '../../../../../core/api/profile/information.interface';
+
+import {
+  LocationService,
+} from '../../../../../core/api/location/location.service';
+import {
+  LocationItem,
+} from '../../../../../core/api/location/location.interfaces';
 
 @Component({
   selector: 'app-information',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, ToastComponent, LoadingBarComponent],
   templateUrl: './information.component.html',
   styleUrl: './information.component.css'
 })
 export class InformationComponent implements OnInit {
-  personalForm!: FormGroup;
 
-  // Ubicación
-  provincias: Provincia[] = [];
-  cantones: Canton[] = [];
-  parroquias: Parroquia[] = [];
+  // Barra de carga al guardar
+  save = false;
 
-  selectedProvinciaId = '';
-  selectedCantonId = '';
-  selectedParishId = '';
+  // Carga inicial (skeletor)
+  loading = true;
 
-  // Fecha / Teléfono
-  viewPhone = '';
-  viewBirthdate: string | null = null;
-  today = new Date().toISOString().slice(0, 10);
+  // Modo edición / vista
+  isEditing = false;
 
-  // Datos previos
-  private lastInfo: UserInformation | null = null;
+  // Modal de confirmación
+  confirmVisible = false;
 
-  // Campos extra (selects)
-  sexo = '';
-  estadoCivil = '';
-  discapacidad = '';
-  discapacidadPermanente: string | null = null;
-  asistenciaDisc: string | null = null;
+  // Datos actuales del backend
+  info: UserInformation | null = null;
 
-  // Mensaje de error visual
-  submitError: string | null = null;
+  // Formulario reactivo
+  form!: FormGroup;
 
-  // Opciones
-  sexoOptions = [
-    { value: 'masculino', label: 'Masculino' },
-    { value: 'femenino', label: 'Femenino' },
-  ];
+  // Combos de ubicación
+  provinces: LocationItem[] = [];
+  cantons: LocationItem[] = [];
+  parishes: LocationItem[] = [];
 
-  estadoCivilOptions = [
-    { value: 'casado/a', label: 'Casado/a' },
-    { value: 'unido/a', label: 'Unido/a' },
-    { value: 'separado/a', label: 'Separado/a' },
-    { value: 'divorciado/a', label: 'Divorciado/a' },
-    { value: 'viudo/a', label: 'Viudo/a' },
-    { value: 'soltero/a', label: 'Soltero/a' },
-  ];
-
-  discapacidadOptions = [
-    { value: 'si', label: 'Sí' },
-    { value: 'no', label: 'No' },
-  ];
-
-  discapacidadPermanenteOptions: string[] = [
-    'intelectual (retraso mental)',
-    'físico-motora (parálisis y amputaciones)',
-    'visual (ceguera)',
-    'auditiva (sordera)',
-    'mental (enfermedades psiquiátricas)',
-    'otro tipo',
-  ];
-
-  asistenciaDiscOptions = [
-    { value: 'si', label: 'Sí' },
-    { value: 'no', label: 'No' },
-  ];
-
-  // Defaults para primera vez
-  private readonly DEFAULTS = {
-    sexo: 'masculino' as 'masculino',
-    estado_civil: 'soltero/a' as 'soltero/a',
-    discapacidad: 'no' as 'no',
-  };
+  // Filas ficticias para el skeleton
+  skeletonRows = [1, 2, 3];
 
   constructor(
     private fb: FormBuilder,
-    private provincesService: ProvincesService,
     private informationService: InformationService,
+    private locationService: LocationService,
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
+    this.buildForm();
+    this.handleDiscapacidadChanges();
     this.loadProvinces();
-    this.loadUserInformation();
+    this.loadInformation();
   }
 
-  private initForm(): void {
-    // mantenemos el form por compatibilidad
-    this.personalForm = this.fb.group({
-      birthdate: [null],
-      phone_number: [null, [Validators.maxLength(20)]],
-      province: [null],
-      canton: [null],
-      parish: [null],
+  // =======================
+  //   FORM & VALIDATORS
+  // =======================
+
+  private buildForm(): void {
+    this.form = this.fb.group({
+      birthdate: ['', Validators.required],
+      phone_local: ['', [Validators.required, this.ecPhoneValidator()]],
+
+      // estos controls van a guardar IDs como STRING
+      province_id: [null, Validators.required],
+      canton_id: [null, Validators.required],
+      parish_id: [null, Validators.required],
+
+      sexo: [null, Validators.required],
+      estado_civil: [null, Validators.required],
+      discapacidad: ['no', Validators.required],
+      discapacidad_permanente: [null],
+      asistencia_establecimiento_discapacidad: [null],
     });
   }
 
-  // ---------- Carga inicial ----------
-  private loadProvinces(): void {
-    this.provincesService.getProvincias().subscribe(prov => this.provincias = prov);
-  }
+  private handleDiscapacidadChanges(): void {
+    this.form.get('discapacidad')?.valueChanges.subscribe((value: 'si' | 'no') => {
+      const discPermCtrl = this.form.get('discapacidad_permanente');
+      const asistCtrl = this.form.get('asistencia_establecimiento_discapacidad');
 
-  private loadUserInformation(): void {
-    this.informationService.getUserProfile().subscribe(data => {
-      this.lastInfo = data;
+      if (!discPermCtrl || !asistCtrl) return;
 
-      // Preselección por NOMBRE (lo que devuelve tu API)
-      const prov = this.provincias.find(p => p.nombre === data.province);
-      if (prov) {
-        this.selectedProvinciaId = prov.id;
-        this.cantones = prov.cantones;
-        const canton = prov.cantones.find(c => c.nombre === data.canton);
-        if (canton) {
-          this.selectedCantonId = canton.id;
-          this.parroquias = canton.parroquias;
-          const parish = canton.parroquias.find(pq => pq.nombre === data.parish);
-          if (parish) this.selectedParishId = parish.id;
-        }
-      }
-
-      // Fecha (tu backend usa 'YYYY-MM-DD')
-      this.viewBirthdate = data.birthdate ?? null;
-
-      // Teléfono: mostrar con 0 si corresponde
-      const apiPhone = data.phone_number || '';
-      if (apiPhone.startsWith('+593')) {
-        const local = apiPhone.replace('+593', '').trim();
-        this.viewPhone = local.startsWith('9') ? '0' + local : local;
+      if (value === 'si') {
+        discPermCtrl.setValidators([Validators.required]);
+        asistCtrl.setValidators([Validators.required]);
       } else {
-        this.viewPhone = apiPhone ?? '';
+        discPermCtrl.clearValidators();
+        asistCtrl.clearValidators();
+        discPermCtrl.setValue(null);
+        asistCtrl.setValue(null);
       }
 
-      // Campos extra
-      this.sexo = data.sexo || '';
-      this.estadoCivil = data.estado_civil || '';
-      this.discapacidad = data.discapacidad || '';
-      this.discapacidadPermanente = data.discapacidad_permanente;
-      this.asistenciaDisc = data.asistencia_establecimiento_discapacidad;
+      discPermCtrl.updateValueAndValidity();
+      asistCtrl.updateValueAndValidity();
     });
   }
 
-  // ---------- Cascada ubicación ----------
-  onProvinciaChange(): void {
-    const provincia = this.provincias.find(p => p.id === this.selectedProvinciaId);
-    this.cantones = provincia?.cantones || [];
-    this.selectedCantonId = '';
-    this.parroquias = [];
-    this.selectedParishId = '';
+  // Validador de teléfono local ecuatoriano: 10 dígitos, empieza en 0
+  private ecPhoneValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const raw = (control.value || '').toString();
+      const digits = raw.replace(/\D/g, '');
+
+      if (!digits) return { ecPhone: true };
+
+      // 10 dígitos, empezando en 0 (ej: 0963856048)
+      if (digits.length !== 10 || !digits.startsWith('0')) {
+        return { ecPhone: true };
+      }
+
+      return null;
+    };
+  }
+
+  get phoneLocalControl(): AbstractControl | null {
+    return this.form.get('phone_local');
+  }
+
+  // Se ejecuta en (input) para mantener el formato 096 385 6048
+  onPhoneInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 10); // máx 10 dígitos
+    const formatted = this.formatLocalPhone(digits);
+
+    this.form.patchValue(
+      { phone_local: formatted },
+      { emitEvent: false }
+    );
+  }
+
+  private formatLocalPhone(digits: string): string {
+    if (!digits) return '';
+
+    const part1 = digits.slice(0, 3);
+    const part2 = digits.slice(3, 6);
+    const part3 = digits.slice(6, 10);
+
+    if (digits.length <= 3) return part1;
+    if (digits.length <= 6) return `${part1} ${part2}`;
+    return `${part1} ${part2} ${part3}`;
+  }
+
+  private backendPhoneToLocalFormatted(phone: string | null): string {
+    if (!phone) return '';
+
+    // ejemplo: +593963856048
+    const match = phone.match(/^\+593(\d{9})$/);
+    if (!match) return '';
+
+    const withoutPrefix = match[1]; // '963856048'
+    const local = '0' + withoutPrefix; // '0963856048'
+    return this.formatLocalPhone(local);
+  }
+
+  private localToBackendPhone(localFormatted: string): string {
+    const digits = localFormatted.replace(/\D/g, '');
+    if (digits.length !== 10 || !digits.startsWith('0')) {
+      return '';
+    }
+    const withoutZero = digits.slice(1);
+    return `+593${withoutZero}`;
+  }
+
+  // =======================
+  //   CARGA DE UBICACIONES
+  // =======================
+
+  private loadProvinces(): void {
+    this.locationService.getProvinces().subscribe({
+      next: (provinces) => {
+        this.provinces = provinces;
+      },
+      error: () => {
+        this.provinces = [];
+      },
+    });
+  }
+
+  onProvinceChange(): void {
+    const provinceId = this.form.get('province_id')?.value;
+    if (!provinceId) {
+      this.cantons = [];
+      this.parishes = [];
+      this.form.patchValue({
+        canton_id: null,
+        parish_id: null,
+      });
+      return;
+    }
+
+    this.locationService.getCantons(provinceId).subscribe({
+      next: (cantons) => {
+        this.cantons = cantons;
+        this.parishes = [];
+        this.form.patchValue({
+          canton_id: null,
+          parish_id: null,
+        });
+      },
+      error: () => {
+        this.cantons = [];
+        this.parishes = [];
+      },
+    });
   }
 
   onCantonChange(): void {
-    const canton = this.cantones.find(c => c.id === this.selectedCantonId);
-    this.parroquias = canton?.parroquias || [];
-    this.selectedParishId = '';
-  }
+    const provinceId = this.form.get('province_id')?.value;
+    const cantonId = this.form.get('canton_id')?.value;
 
-  // ---------- Teléfono ----------
-  onPhoneInput(): void {
-    this.viewPhone = (this.viewPhone || '').replace(/\D+/g, '').slice(0, 10);
-  }
-
-  private normalizePhoneForApi(view: string): string | null {
-    const digits = (view || '').replace(/\D+/g, '');
-    if (!digits) return null;
-    const noZero = digits.startsWith('0') ? digits.slice(1) : digits;
-    return `+593${noZero}`;
-  }
-
-  // ---------- Discapacidad ----------
-  onDiscapacidadChange(): void {
-    if (this.discapacidad !== 'si') {
-      this.discapacidadPermanente = null;
-      this.asistenciaDisc = null;
-    }
-  }
-
-  // ---------- Guardar ----------
-  onSubmitPersonal(): void {
-    this.submitError = null;
-
-    // Validaciones previas (coinciden con tu backend)
-    if (!this.viewBirthdate) {
-      this.submitError = 'La fecha de nacimiento es obligatoria.';
-      alert(this.submitError); return;
+    if (!provinceId || !cantonId) {
+      this.parishes = [];
+      this.form.patchValue({
+        parish_id: null,
+      });
+      return;
     }
 
-    const phone = this.normalizePhoneForApi(this.viewPhone);
-    if (!phone || !/^\+593[0-9]{9}$/.test(phone)) {
-      this.submitError = 'El número telefónico debe tener el formato +593XXXXXXXXX.';
-      alert(this.submitError); return;
-    }
-
-    const provinceName = this.provincias.find(p => p.id === this.selectedProvinciaId)?.nombre ?? null;
-    const cantonName   = this.cantones.find(c => c.id === this.selectedCantonId)?.nombre ?? null;
-    const parishName   = this.parroquias.find(pq => pq.id === this.selectedParishId)?.nombre ?? null;
-
-    if (!provinceName) { alert('Selecciona una provincia.'); return; }
-    if (!cantonName)   { alert('Selecciona un cantón.'); return; }
-    if (!parishName)   { alert('Selecciona una parroquia.'); return; }
-
-    const sexo = this.sexo || this.lastInfo?.sexo || this.DEFAULTS.sexo;
-    const estadoCivil = this.estadoCivil || this.lastInfo?.estado_civil || this.DEFAULTS.estado_civil;
-    const discapacidad = this.discapacidad || this.lastInfo?.discapacidad || this.DEFAULTS.discapacidad;
-
-    if (!sexo)         { alert('Selecciona sexo.'); return; }
-    if (!estadoCivil)  { alert('Selecciona estado civil.'); return; }
-    if (!discapacidad) { alert('Selecciona si tiene discapacidad.'); return; }
-
-    // Condicionales de discapacidad
-    let discPerm: string | null = null;
-    let asisteDisc: string | null = null;
-    if (discapacidad === 'si') {
-      if (!this.discapacidadPermanente) {
-        alert('Selecciona el tipo de discapacidad.'); return;
-      }
-      if (!this.asistenciaDisc) {
-        alert('Indica si asiste a un establecimiento de discapacidad.'); return;
-      }
-      discPerm = this.discapacidadPermanente;
-      asisteDisc = this.asistenciaDisc;
-    }
-
-    const payload: InformationRequest = {
-      birthdate: this.viewBirthdate,
-      phone_number: phone,
-      province: provinceName,
-      canton: cantonName,
-      parish: parishName,
-      sexo,
-      estado_civil: estadoCivil,
-      discapacidad,
-      discapacidad_permanente: discPerm,
-      asistencia_establecimiento_discapacidad: asisteDisc,
-    };
-
-    this.informationService.updateUserProfile(payload).subscribe({
-      next: () => {
-        alert('✅ Información personal actualizada');
+    this.locationService.getParishes(provinceId, cantonId).subscribe({
+      next: (parishes) => {
+        this.parishes = parishes;
+        this.form.patchValue({
+          parish_id: null,
+        });
       },
-      error: (err) => {
-        // Muestra el primer error devuelto por Laravel si es 422
-        const e = err?.error;
-        if (e?.errors) {
-          const firstKey = Object.keys(e.errors)[0];
-          const firstMsg = e.errors[firstKey]?.[0] || e.message;
-          alert(firstMsg || 'Error al actualizar la información del perfil');
-        } else {
-          alert(e?.message || err.message || 'Error al actualizar la información del perfil');
-        }
-      }
+      error: () => {
+        this.parishes = [];
+      },
     });
   }
 
-  // trackBy para listas
-  trackById = (_: number, item: any) => item?.id ?? item;
+  // =======================
+  //   CARGA DE INFORMACIÓN
+  // =======================
+
+  private loadInformation(): void {
+    this.loading = true;
+
+    this.informationService.show().subscribe({
+      next: (res) => {
+        this.info = res.userInformation;
+        if (this.info) {
+          this.patchFormFromInfo(this.info);
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.info = null;
+        this.loading = false;
+      },
+    });
+  }
+
+  private patchFormFromInfo(info: UserInformation): void {
+    // Convertimos IDs a string para que coincidan con los <option> del select
+    const provinceId = info.province_id != null ? String(info.province_id) : null;
+    const cantonId = info.canton_id != null ? String(info.canton_id) : null;
+    const parishId = info.parish_id != null ? String(info.parish_id) : null;
+
+    this.form.patchValue(
+      {
+        birthdate: info.birthdate,
+        phone_local: this.backendPhoneToLocalFormatted(info.phone_number),
+        province_id: provinceId,
+        canton_id: cantonId,
+        parish_id: parishId,
+        sexo: info.sexo,
+        estado_civil: info.estado_civil,
+        discapacidad: info.discapacidad,
+        discapacidad_permanente: info.discapacidad_permanente,
+        asistencia_establecimiento_discapacidad:
+          info.asistencia_establecimiento_discapacidad,
+      },
+      { emitEvent: false }
+    );
+
+    // Cargar combos dependientes (cantones y parroquias)
+    if (info.province_id) {
+      this.locationService.getCantons(info.province_id).subscribe({
+        next: (cantons) => {
+          this.cantons = cantons;
+
+          this.form.patchValue(
+            { canton_id: cantonId },
+            { emitEvent: false }
+          );
+
+          if (info.canton_id) {
+            this.locationService
+              .getParishes(info.province_id, info.canton_id)
+              .subscribe({
+                next: (parishes) => {
+                  this.parishes = parishes;
+                  this.form.patchValue(
+                    { parish_id: parishId },
+                    { emitEvent: false }
+                  );
+                },
+              });
+          }
+        },
+      });
+    }
+
+    // Esta es la "línea mágica" para que el boton Guardar esté deshabilitado
+    // mientras no haya cambios:
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+  }
+
+  // =======================
+  //   MODO VISTA / EDICIÓN
+  // =======================
+
+  enterEditMode(): void {
+    this.isEditing = true;
+
+    if (!this.info) {
+      this.form.reset({ discapacidad: 'no' });
+      this.form.markAsPristine();
+      this.form.markAsUntouched();
+    } else {
+      this.patchFormFromInfo(this.info);
+    }
+  }
+
+  cancelEdit(): void {
+    this.confirmVisible = false;
+    this.isEditing = false;
+
+    if (this.info) {
+      this.patchFormFromInfo(this.info);
+    } else {
+      this.form.reset({ discapacidad: 'no' });
+      this.form.markAsPristine();
+      this.form.markAsUntouched();
+    }
+  }
+
+  // =======================
+  //   GUARDAR (CONFIRMACIÓN)
+  // =======================
+
+  // Getter para el botón Guardar
+  get canSave(): boolean {
+    // válido, no guardando y con cambios (form.dirty = !form.pristine)
+    return this.form.valid && !this.save && this.form.dirty;
+  }
+
+  openConfirm(): void {
+    if (this.form.invalid || !this.form.dirty) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.confirmVisible = true;
+  }
+
+  cancelConfirm(): void {
+    this.confirmVisible = false;
+  }
+
+  confirmSave(): void {
+    this.confirmVisible = false;
+    this.doSave();
+  }
+
+  private doSave(): void {
+    if (this.form.invalid || !this.form.dirty) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const value = this.form.value;
+
+    const payload: InformationRequest = {
+      birthdate: value.birthdate,
+      phone_number: this.localToBackendPhone(value.phone_local),
+      // aquí convertimos STRING → number para el backend
+      province_id: Number(value.province_id),
+      canton_id: Number(value.canton_id),
+      parish_id: Number(value.parish_id),
+      sexo: value.sexo,
+      estado_civil: value.estado_civil,
+      discapacidad: value.discapacidad,
+      discapacidad_permanente:
+        value.discapacidad === 'si'
+          ? value.discapacidad_permanente ?? null
+          : null,
+      asistencia_establecimiento_discapacidad:
+        value.discapacidad === 'si'
+          ? value.asistencia_establecimiento_discapacidad ?? null
+          : null,
+    };
+
+    this.save = true;
+
+    this.informationService.update(payload).subscribe({
+      next: (res) => {
+        this.save = false;
+        this.info = res.userInformation;
+        this.isEditing = false;
+        this.patchFormFromInfo(res.userInformation);
+        // aquí podrías disparar un toast con res.message
+      },
+      error: () => {
+        this.save = false;
+        // aquí podrías disparar un toast de error
+      },
+    });
+  }
 }

@@ -1,143 +1,352 @@
-<section class="card tab-card">
-    <header class="card-header">
-        <h3>Información personal</h3>
-        <p class="muted">Provincia, cantón y parroquia</p>
-    </header>
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
 
-    <div class="card-content">
-        <div class="form grid-2">
+<!-- Toast global -->
+<ui-toast></ui-toast>
 
-            <!-- Provincia -->
-            <div class="form-row">
-                <label class="label">Provincia</label>
-                <select class="select" [(ngModel)]="selectedProvinciaId" (change)="onProvinciaChange()">
-          <option value="" disabled selected>Selecciona una provincia</option>
-          <option
-            *ngFor="let p of provincias; trackBy: trackById"
-            [value]="p.id">
-            {{ p.nombre }}
-          </option>
-        </select>
-            </div>
+<div class="info-container">
 
-            <!-- Cantón -->
-            <div class="form-row">
-                <label class="label">Cantón</label>
-                <select class="select" [(ngModel)]="selectedCantonId" (change)="onCantonChange()" [disabled]="!cantones.length">
-          <option value="" disabled selected>Selecciona un cantón</option>
-          <option
-            *ngFor="let c of cantones; trackBy: trackById"
-            [value]="c.id">
-            {{ c.nombre }}
-          </option>
-        </select>
-                <small class="hint" [class.warn]="!cantones.length">
-          {{ !cantones.length ? 'Selecciona una provincia primero.' : '' }}
-        </small>
-            </div>
-
-            <!-- Parroquia -->
-            <div class="form-row span-2">
-                <label class="label">Parroquia</label>
-                <select class="select" [(ngModel)]="selectedParishId" [disabled]="!parroquias.length">
-          <option value="" disabled selected>Selecciona una parroquia</option>
-          <option
-            *ngFor="let parr of parroquias; trackBy: trackById"
-            [value]="parr.id">
-            {{ parr.nombre }}
-          </option>
-        </select>
-                <small class="hint" [class.warn]="!parroquias.length">
-          {{ !parroquias.length ? 'Selecciona un cantón para ver parroquias.' : '' }}
-        </small>
-            </div>
-
-            <div class="divider span-2"></div>
-
-            <!-- Fecha de nacimiento -->
-            <div class="form-row">
-                <label class="label">Fecha de nacimiento</label>
-                <input type="date" class="select date" [max]="today" [(ngModel)]="viewBirthdate" />
-            </div>
-
-            <!-- Número telefónico (+593 fijo a la izquierda) -->
-            <div class="form-row">
-                <label class="label">Número telefónico</label>
-                <div class="phone-input">
-                    <span class="prefix-chip">EC&nbsp;<b>+593</b></span>
-                    <input type="tel" inputmode="numeric" class="phone" placeholder="0999998888" [(ngModel)]="viewPhone" (input)="onPhoneInput()" maxlength="10" />
-                </div>
-                <small class="hint">
-          Solo números. Se enviará como: <b>+593</b> + tu número (sin el 0 inicial).
-        </small>
-            </div>
-
-            <div class="divider span-2"></div>
-
-            <!-- Sexo -->
-            <div class="form-row">
-                <label class="label">Sexo</label>
-                <select class="select" [(ngModel)]="sexo">
-          <option value="" selected>Selecciona una opción</option>
-          <option *ngFor="let opt of sexoOptions" [value]="opt.value">
-            {{ opt.label }}
-          </option>
-        </select>
-            </div>
-
-            <!-- Estado civil -->
-            <div class="form-row">
-                <label class="label">Estado civil</label>
-                <select class="select" [(ngModel)]="estadoCivil">
-          <option value="" selected>Selecciona una opción</option>
-          <option *ngFor="let opt of estadoCivilOptions" [value]="opt.value">
-            {{ opt.label }}
-          </option>
-        </select>
-            </div>
-
-            <!-- Discapacidad -->
-            <div class="form-row">
-                <label class="label">¿Tiene discapacidad?</label>
-                <select class="select" [(ngModel)]="discapacidad" (change)="onDiscapacidadChange()">
-          <option value="" selected>Selecciona una opción</option>
-          <option *ngFor="let opt of discapacidadOptions" [value]="opt.value">
-            {{ opt.label }}
-          </option>
-        </select>
-            </div>
-
-            <!-- Bloque dependiente: solo cuando discapacidad === 'si' -->
-            <ng-container *ngIf="discapacidad === 'si'">
-                <!-- Tipo de discapacidad -->
-                <div class="form-row">
-                    <label class="label">Tipo de discapacidad</label>
-                    <select class="select" [(ngModel)]="discapacidadPermanente">
-            <option value="" selected>Selecciona una opción</option>
-            <option *ngFor="let opt of discapacidadPermanenteOptions" [value]="opt">
-              {{ opt }}
-            </option>
-          </select>
-                </div>
-
-                <!-- Asistencia a establecimiento -->
-                <div class="form-row span-2">
-                    <label class="label">¿Asiste a algún establecimiento de discapacidad?</label>
-                    <select class="select" [(ngModel)]="asistenciaDisc">
-            <option value="" selected>Selecciona una opción</option>
-            <option *ngFor="let opt of asistenciaDiscOptions" [value]="opt.value">
-              {{ opt.label }}
-            </option>
-          </select>
-                </div>
-            </ng-container>
-
-        </div>
+  <!-- Encabezado -->
+  <header class="info-header">
+    <div class="info-header-title">
+      <h1>Información personal</h1>
+      <p>
+        Gestiona tus datos básicos para personalizar tu experiencia y
+        generar certificados correctamente.
+      </p>
     </div>
-
-    <footer class="card-footer">
-        <button type="button" class="btn btn-primary" (click)="onSubmitPersonal()">
-      Guardar cambios
+    <button
+      *ngIf="!loading && !isEditing"
+      type="button"
+      class="btn-primary"
+      (click)="enterEditMode()"
+    >
+      <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/rename.svg'"></ui-icon>
+      <span>Editar información</span>
     </button>
-    </footer>
-</section>
+  </header>
+
+  <!-- SKELETON -->
+  <ng-container *ngIf="loading; else contentTpl">
+    <div class="info-skeleton-card" *ngFor="let r of skeletonRows">
+      <div class="skeleton-line skeleton-title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line skeleton-short"></div>
+    </div>
+  </ng-container>
+
+  <!-- CONTENIDO -->
+  <ng-template #contentTpl>
+
+    <!-- MODO VISTA -->
+    <ng-container *ngIf="!isEditing; else editTpl">
+      <ng-container *ngIf="info; else emptyState">
+
+        <section class="info-grid">
+          <article class="info-card">
+            <h2>Datos generales</h2>
+            <div class="info-row">
+              <span class="label">Fecha de nacimiento</span>
+              <span class="value">{{ info.birthdate | date:'longDate' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Teléfono</span>
+              <span class="value">{{ info.phone_number }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Sexo</span>
+              <span class="value">{{ info.sexo | titlecase }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Estado civil</span>
+              <span class="value">{{ info.estado_civil }}</span>
+            </div>
+          </article>
+
+          <article class="info-card">
+            <h2>Ubicación</h2>
+            <div class="info-row">
+              <span class="label">Provincia</span>
+              <span class="value">{{ info.province_name || '—' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Cantón</span>
+              <span class="value">{{ info.canton_name || '—' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Parroquia</span>
+              <span class="value">{{ info.parish_name || '—' }}</span>
+            </div>
+          </article>
+
+          <article class="info-card">
+            <h2>Discapacidad</h2>
+            <div class="info-row">
+              <span class="label">¿Tiene discapacidad?</span>
+              <span class="value">{{ info.discapacidad === 'si' ? 'Sí' : 'No' }}</span>
+            </div>
+            <div class="info-row" *ngIf="info.discapacidad === 'si'">
+              <span class="label">Tipo</span>
+              <span class="value">
+                {{ info.discapacidad_permanente || '—' }}
+              </span>
+            </div>
+            <div class="info-row" *ngIf="info.discapacidad === 'si'">
+              <span class="label">Asiste a establecimiento</span>
+              <span class="value">
+                {{
+                  info.asistencia_establecimiento_discapacidad === 'si'
+                    ? 'Sí'
+                    : info.asistencia_establecimiento_discapacidad === 'no'
+                      ? 'No'
+                      : '—'
+                }}
+              </span>
+            </div>
+          </article>
+        </section>
+
+
+      </ng-container>
+
+      <!-- Sin información aún -->
+      <ng-template #emptyState>
+        <div class="info-empty">
+          <p>No has registrado tu información personal todavía.</p>
+          <button
+            type="button"
+            class="btn-primary"
+            (click)="enterEditMode()"
+          >
+            <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/rename.svg'"></ui-icon>
+            <span>Completar información</span>
+          </button>
+        </div>
+      </ng-template>
+    </ng-container>
+
+    <!-- MODO EDICIÓN -->
+    <ng-template #editTpl>
+      <form [formGroup]="form" (ngSubmit)="openConfirm()" class="info-form">
+
+        <!-- Datos generales -->
+        <section class="info-form-section">
+          <h2>Datos generales</h2>
+
+          <div class="field-group">
+            <label for="birthdate">Fecha de nacimiento</label>
+            <input
+              id="birthdate"
+              type="date"
+              formControlName="birthdate"
+            />
+            <small class="error" *ngIf="form.get('birthdate')?.invalid && form.get('birthdate')?.touched">
+              La fecha de nacimiento es obligatoria.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="phone">Teléfono</label>
+            <div class="phone-wrapper">
+              <span class="phone-prefix">+593</span>
+              <input
+                id="phone"
+                type="text"
+                formControlName="phone_local"
+                (input)="onPhoneInput($event)"
+                placeholder="096 385 6048"
+              />
+            </div>
+            <small class="helper">Formato: 0XX XXX XXXX</small>
+            <small class="error" *ngIf="phoneLocalControl?.invalid && phoneLocalControl?.touched">
+              Ingresa un número válido de 10 dígitos que empiece en 0.
+            </small>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="sexo">Sexo</label>
+              <select id="sexo" formControlName="sexo">
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+              </select>
+              <small class="error" *ngIf="form.get('sexo')?.invalid && form.get('sexo')?.touched">
+                Campo obligatorio.
+              </small>
+            </div>
+
+            <div class="field-group">
+              <label for="estado_civil">Estado civil</label>
+              <select id="estado_civil" formControlName="estado_civil">
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="casado/a">Casado/a</option>
+                <option value="unido/a">Unido/a</option>
+                <option value="separado/a">Separado/a</option>
+                <option value="divorciado/a">Divorciado/a</option>
+                <option value="viudo/a">Viudo/a</option>
+                <option value="soltero/a">Soltero/a</option>
+              </select>
+              <small class="error" *ngIf="form.get('estado_civil')?.invalid && form.get('estado_civil')?.touched">
+                Campo obligatorio.
+              </small>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ubicación -->
+        <section class="info-form-section">
+          <h2>Ubicación</h2>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="province_id">Provincia</label>
+              <select
+                id="province_id"
+                formControlName="province_id"
+                (change)="onProvinceChange()"
+              >
+                <option [ngValue]="null" disabled>Selecciona una provincia</option>
+                <option *ngFor="let p of provinces" [ngValue]="p.id">
+                  {{ p.name }}
+                </option>
+              </select>
+              <small class="error" *ngIf="form.get('province_id')?.invalid && form.get('province_id')?.touched">
+                Campo obligatorio.
+              </small>
+            </div>
+
+            <div class="field-group">
+              <label for="canton_id">Cantón</label>
+              <select
+                id="canton_id"
+                formControlName="canton_id"
+                (change)="onCantonChange()"
+                [disabled]="!form.get('province_id')?.value"
+              >
+                <option [ngValue]="null" disabled>Selecciona un cantón</option>
+                <option *ngFor="let c of cantons" [ngValue]="c.id">
+                  {{ c.name }}
+                </option>
+              </select>
+              <small class="error" *ngIf="form.get('canton_id')?.invalid && form.get('canton_id')?.touched">
+                Campo obligatorio.
+              </small>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="parish_id">Parroquia</label>
+            <select
+              id="parish_id"
+              formControlName="parish_id"
+              [disabled]="!form.get('canton_id')?.value"
+            >
+              <option [ngValue]="null" disabled>Selecciona una parroquia</option>
+              <option *ngFor="let pr of parishes" [ngValue]="pr.id">
+                {{ pr.name }}
+              </option>
+            </select>
+            <small class="error" *ngIf="form.get('parish_id')?.invalid && form.get('parish_id')?.touched">
+              Campo obligatorio.
+            </small>
+          </div>
+        </section>
+
+        <!-- Discapacidad -->
+        <section class="info-form-section">
+          <h2>Discapacidad</h2>
+
+          <div class="field-group">
+            <label for="discapacidad">¿Tienes alguna discapacidad?</label>
+            <select id="discapacidad" formControlName="discapacidad">
+              <option value="" disabled selected>Selecciona una opción</option>
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+            </select>
+            <small class="error" *ngIf="form.get('discapacidad')?.invalid && form.get('discapacidad')?.touched">
+              Campo obligatorio.
+            </small>
+          </div>
+
+          <div class="field-row" *ngIf="form.get('discapacidad')?.value === 'si'">
+            <div class="field-group">
+              <label for="discapacidad_permanente">Tipo de discapacidad</label>
+              <select id="discapacidad_permanente" formControlName="discapacidad_permanente">
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="intelectual (retraso mental)">Intelectual (retraso mental)</option>
+                <option value="físico-motora (parálisis y amputaciones)">Físico-motora (parálisis y amputaciones)</option>
+                <option value="visual (ceguera)">Visual (ceguera)</option>
+                <option value="auditiva (sordera)">Auditiva (sordera)</option>
+                <option value="mental (enfermedades psiquiátricas)">Mental (enfermedades psiquiátricas)</option>
+                <option value="otro tipo">Otro tipo</option>
+              </select>
+              <small class="error" *ngIf="form.get('discapacidad_permanente')?.invalid && form.get('discapacidad_permanente')?.touched">
+                Campo obligatorio.
+              </small>
+            </div>
+
+            <div class="field-group">
+              <label for="asistencia_establecimiento_discapacidad">
+                ¿Asistes a algún establecimiento de discapacidad?
+              </label>
+              <select
+                id="asistencia_establecimiento_discapacidad"
+                formControlName="asistencia_establecimiento_discapacidad"
+              >
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+              </select>
+              <small class="error" *ngIf="form.get('asistencia_establecimiento_discapacidad')?.invalid && form.get('asistencia_establecimiento_discapacidad')?.touched">
+                Campo obligatorio.
+              </small>
+            </div>
+          </div>
+        </section>
+
+        <!-- Botones -->
+        <!-- Botones -->
+<footer class="info-form-footer">
+  <button
+    type="button"
+    class="btn-secondary"
+    (click)="cancelEdit()"
+  >
+    Cancelar
+  </button>
+
+  <button
+    type="submit"
+    class="btn-primary"
+    [disabled]="!canSave"
+  >
+    Guardar cambios
+  </button>
+</footer>
+
+      </form>
+    </ng-template>
+
+  </ng-template>
+
+  <!-- MODAL DE CONFIRMACIÓN -->
+  <div class="dialog-backdrop" *ngIf="confirmVisible">
+    <div class="dialog">
+      <h3>Confirmar actualización</h3>
+      <p>
+        ¿Estás seguro de que deseas guardar los cambios de tu información personal?
+      </p>
+      <div class="dialog-actions">
+        <button type="button" class="btn-secondary" (click)="cancelConfirm()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-primary" (click)="confirmSave()">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,36 +1,87 @@
-// core/api/information/information.interface.ts
-export interface InformationResponse {
-  userInformation: UserInformation;
-}
+// core/api/profile/information.interface.ts
 
+/**
+ * Tipos auxiliares para campos de catálogo
+ */
+export type Sexo = 'masculino' | 'femenino';
+
+export type EstadoCivil =
+  | 'casado/a'
+  | 'unido/a'
+  | 'separado/a'
+  | 'divorciado/a'
+  | 'viudo/a'
+  | 'soltero/a';
+
+export type Discapacidad = 'si' | 'no';
+
+export type DiscapacidadPermanente =
+  | 'intelectual (retraso mental)'
+  | 'físico-motora (parálisis y amputaciones)'
+  | 'visual (ceguera)'
+  | 'auditiva (sordera)'
+  | 'mental (enfermedades psiquiátricas)'
+  | 'otro tipo';
+
+export type AsistenciaEstablecimiento = 'si' | 'no';
+
+/**
+ * Estructura que devuelve el backend en show/update
+ */
 export interface UserInformation {
-  id:           number;
-  birthdate:    string; // viene como string 'YYYY-MM-DD' desde Laravel
+  id: number;
+  birthdate: string; // 'YYYY-MM-DD'
   phone_number: string;
-  province:     string;
-  canton:       string;
-  parish:       string;
 
-  sexo:         'femenino' | 'masculino';
-  estado_civil: 'casado/a' | 'unido/a' | 'separado/a' | 'divorciado/a' | 'viudo/a' | 'soltero/a';
-  discapacidad: 'si' | 'no';
-  discapacidad_permanente: string | null;
-  asistencia_establecimiento_discapacidad: string | null;
+  province_id: number;
+  province_name: string | null;
 
-  user_id:      number;
-  created_at:   string;
-  updated_at:   string;
+  canton_id: number;
+  canton_name: string | null;
+
+  parish_id: number;
+  parish_name: string | null;
+
+  sexo: Sexo;
+  estado_civil: EstadoCivil;
+  discapacidad: Discapacidad;
+  discapacidad_permanente: DiscapacidadPermanente | null;
+  asistencia_establecimiento_discapacidad: AsistenciaEstablecimiento | null;
+
+  user_id: number;
+  created_at: string;
+  updated_at: string;
 }
 
+/**
+ * Payload que se envía al backend para update
+ */
 export interface InformationRequest {
-  birthdate:    string | null; // 'YYYY-MM-DD'
-  phone_number: string | null;
-  province:     string | null;
-  canton:       string | null;
-  parish:       string | null;
-  sexo:         string;
-  estado_civil: string;
-  discapacidad: string;
-  discapacidad_permanente: string | null;
-  asistencia_establecimiento_discapacidad: string | null;
+  birthdate: string; // 'YYYY-MM-DD'
+  phone_number: string;
+  province_id: number;
+  canton_id: number;
+  parish_id: number;
+  sexo: Sexo;
+  estado_civil: EstadoCivil;
+  discapacidad: Discapacidad;
+  discapacidad_permanente?: DiscapacidadPermanente | null;
+  asistencia_establecimiento_discapacidad?: AsistenciaEstablecimiento | null;
+}
+
+/**
+ * Respuesta del GET /profile/info/show
+ */
+export interface InformationShowResponse {
+  userInformation: UserInformation | null;
+ 
+}
+
+/**
+ * Respuesta del PUT /profile/info/update
+ */
+export interface InformationUpdateResponse {
+  message: string;
+  userInformation: UserInformation;
+  
 }
