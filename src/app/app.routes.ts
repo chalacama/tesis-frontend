@@ -102,6 +102,12 @@ export const routes: Routes = [
         import('./pages/private/learning/profile/education/education.component')
           .then(c => c.EducationComponent),
     },
+    {
+      path: 'interest',
+      loadComponent: () =>
+        import('./pages/private/learning/profile/interest/interest.component')
+          .then(c => c.InterestComponent),
+    },
   ],
 }
 ,

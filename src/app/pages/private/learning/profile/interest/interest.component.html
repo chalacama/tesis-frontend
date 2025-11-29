@@ -1,1 +1,141 @@
-<p>interest works!</p>
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<ui-toast></ui-toast>
+
+<div class="interest-container">
+
+  <!-- Encabezado -->
+  <header class="interest-header">
+    <div>
+      <h1>Intereses</h1>
+      <p>
+        Elige las categorías que mejor representan tus intereses de aprendizaje.
+      </p>
+    </div>
+
+    <!-- Botón editar (solo en modo vista) -->
+    <button
+      *ngIf="!loading && !editing"
+      class="btn btn-primary"
+      type="button"
+      (click)="onEdit()"
+    >
+      <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/rename.svg'"></ui-icon>
+      <span>Editar</span>
+    </button>
+  </header>
+
+  <!-- Error global -->
+  <div *ngIf="globalError" class="interest-error">
+    {{ globalError }}
+  </div>
+
+  <!-- SKELETON -->
+  <ng-container *ngIf="loading; else contentTpl">
+    <div class="info-skeleton-card" *ngFor="let r of skeletonRows">
+      <div class="skeleton-header skeleton-box"></div>
+      <div class="skeleton-row">
+        <div class="skeleton-box"></div>
+        <div class="skeleton-box"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #contentTpl>
+
+    <!-- MODO VISTA -->
+    <section *ngIf="!editing; else editTpl" class="interest-card">
+      <ng-container *ngIf="hasInterests; else noInterestsTpl">
+        <div class="chip-list">
+          <span
+            class="chip chip--selected chip--readonly"
+            *ngFor="let cat of selectedCategories"
+          >
+            {{ cat.name }}
+          </span>
+        </div>
+      </ng-container>
+
+      <ng-template #noInterestsTpl>
+        <p class="empty-text">
+          Aún no has seleccionado tus intereses. Haz clic en
+          <strong>"Editar"</strong> para escoger hasta 4 categorías.
+        </p>
+      </ng-template>
+    </section>
+
+    <!-- MODO EDICIÓN -->
+    <ng-template #editTpl>
+      <section class="interest-card">
+        <p class="hint">
+          Selecciona exactamente <strong>{{ maxSelectable }}</strong> categorías.
+        </p>
+
+        <div class="chip-list chip-list--selectable">
+          <button
+            type="button"
+            class="chip"
+            *ngFor="let cat of allCategories"
+            [class.chip--selected]="isSelected(cat.id)"
+            [class.chip--disabled]="!isSelected(cat.id) && selectedCategoryIds.length >= maxSelectable"
+            (click)="toggleCategory(cat.id)"
+          >
+            {{ cat.name }}
+          </button>
+        </div>
+
+        <div class="hint small">
+          Seleccionadas: {{ selectedCategoryIds.length }} / {{ maxSelectable }}
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSaveClick()"
+          >
+            Guardar cambios
+          </button>
+        </div>
+      </section>
+    </ng-template>
+  </ng-template>
+
+  <!-- MODAL CONFIRMACIÓN -->
+  <div class="modal-backdrop" *ngIf="confirmVisible">
+    <div class="modal">
+      <h2>Confirmar actualización</h2>
+      <p>
+        ¿Estás seguro de que deseas guardar tus intereses seleccionados?
+      </p>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="confirmVisible = false"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onConfirmUpdate()"
+        >
+          Sí, guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

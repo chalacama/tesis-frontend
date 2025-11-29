@@ -156,7 +156,7 @@ export class StepperInfoComponent implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(30),
-          Validators.pattern(/^[a-z0-9._]+$/),
+          Validators.pattern(/^[a-z0-9._-]+$/),
         ],
       ],
     });

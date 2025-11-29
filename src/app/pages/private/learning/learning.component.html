@@ -193,7 +193,7 @@
                                     <p class="dropdown_label">Ver perfil</p>
                                 </div>
                             </div>
-                            <div onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="myPortfolio()" class="dropdown_item">
+                            <div *ngIf="isTutor()" onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" (click)="myPortfolio()" class="dropdown_item">
                                 <div class="dropdown_item_icon">
                                     <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"
                                         height="200" viewBox="0 0 24 24">

@@ -1,35 +1,210 @@
 <div class="profile-page compact">
-    <!-- HERO -->
-    <section class="profile-hero card">
-        <div class="hero-left">
-            <ng-container *ngIf="(datosUsuario$ | async) as u">
-                <div class="avatar" [class.empty]="!u?.profile_picture_url">
-                    <img *ngIf="u?.profile_picture_url" [src]="u.profile_picture_url" alt="Foto de perfil" />
-                    <span *ngIf="!u?.profile_picture_url">{{ getInitialsFromUser(u) }}</span>
-                </div>
-            </ng-container>
-        </div>
+  <!-- BARRAS / TOASTS -->
+  <ui-loading-bar
+    [visible]="savingUsername || validatingUsername"
+    [mask]="{ type: 'dimmed' }"
+  ></ui-loading-bar>
 
-        <div class="hero-right" *ngIf="(datosUsuario$ | async) as u">
-            <h2 class="fullname">{{ getFullName(u) }}</h2>
-            <p class="username">{{'@'+ u.username }}
-                <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="'svg/rename.svg'">
-                </ui-icon>
+  <ui-toast></ui-toast>
+
+  <!-- HERO -->
+  <section
+    class="profile-hero card"
+    *ngIf="(datosUsuario$ | async) as u"
+  >
+    <div class="hero-left">
+      <div class="avatar" [class.empty]="!u?.profile_picture_url">
+        <img
+          *ngIf="u?.profile_picture_url"
+          [src]="u.profile_picture_url"
+          alt="Foto de perfil"
+        />
+        <span *ngIf="!u?.profile_picture_url">
+          {{ getInitialsFromUser(u) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <h2 class="fullname">{{ getFullName(u) }}</h2>
+
+      <!-- Username: modo vista / edición -->
+      <div class="username-block">
+        <ng-container *ngIf="!editingUsername; else editUsernameTpl">
+          <div class="username-row">
+            <span class="username-tag">{{ '@' + u.username }}</span>
+
+            <button
+              type="button"
+              class="btn-username-edit"
+              *ngIf="canEditUsername(u)"
+              (click)="startEditUsername()"
+            >
+              <ui-icon
+                [size]="'sm'"
+                [severity]="'contrast'"
+                [svgPath]="'svg/rename.svg'"
+              ></ui-icon>
+              <span>Cambiar</span>
+            </button>
+
+            <span
+              *ngIf="!canEditUsername(u)"
+              class="username-status-badge"
+            >
+              No editable
+            </span>
+          </div>
+
+          <p class="username-hint small">
+            Tu nombre de usuario es único y se muestra en tu perfil
+            público.
+            <span *ngIf="!canEditUsername(u)">
+              Actualmente no puedes cambiarlo.
+            </span>
+          </p>
+        </ng-container>
+
+        <!-- MODO EDICIÓN USERNAME -->
+        <ng-template #editUsernameTpl>
+          <form
+            class="username-form"
+            [formGroup]="usernameForm"
+            (ngSubmit)="onSaveUsernameClick()"
+          >
+            <label
+              class="username-label"
+              for="usernameInput"
+            >
+              Nombre de usuario
+            </label>
+
+            <div class="username-input-wrapper">
+              <span class="username-prefix"></span>
+              <input
+                id="usernameInput"
+                type="text"
+                class="username-input"
+                formControlName="username"
+                autocomplete="off"
+                placeholder="tu_usuario"
+              />
+            </div>
+
+            <div class="username-errors">
+              <span class="error" *ngIf="hasUsernameError('required')">
+                El nombre de usuario es obligatorio.
+              </span>
+              <span class="error" *ngIf="hasUsernameError('minlength')">
+                Debe tener al menos 3 caracteres.
+              </span>
+              <span class="error" *ngIf="hasUsernameError('maxlength')">
+                No puede superar 30 caracteres.
+              </span>
+              <span class="error" *ngIf="hasUsernameError('pattern')">
+                Solo se permiten minúsculas, números y los caracteres
+                <strong>.</strong>, <strong>_</strong> y
+                <strong>-</strong>.
+              </span>
+              <span class="error" *ngIf="hasUsernameError('notAvailable')">
+                Este nombre de usuario ya está en uso.
+              </span>
+            </div>
+
+            <p class="username-help small">
+              Solo puedes cambiar tu nombre de usuario cada cierto tiempo Asegúrate de que sea fácil de recordar y compartir.
             </p>
-            <p class="muted small">Gestiona tu información general y académica.</p>
-        </div>
-    </section>
 
-    <!-- TABS (relativos al route actual) -->
-    <nav class="tabs">
-        <a class="tab-btn" routerLink="information" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      Información personal
+            <div class="username-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="cancelEditUsername()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+              >
+                Guardar
+              </button>
+            </div>
+          </form>
+        </ng-template>
+      </div>
+
+      <p class="muted small">
+        Gestiona tu información personal, educativa y tus intereses.
+      </p>
+    </div>
+  </section>
+
+  <!-- TABS MODERNOS -->
+  <nav
+    class="tabs-modern card"
+    aria-label="Secciones del perfil"
+  >
+    <a
+      class="tab-modern"
+      routerLink="information"
+      routerLinkActive="tab-modern--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <span class="tab-modern__label">Información personal</span>
     </a>
 
-        <a class="tab-btn" routerLink="education" routerLinkActive="active">
-      Información académica
+    <a
+      class="tab-modern"
+      routerLink="education"
+      routerLinkActive="tab-modern--active"
+    >
+      <span class="tab-modern__label">Información académica</span>
     </a>
-    </nav>
 
+    <a
+      class="tab-modern"
+      routerLink="interest"
+      routerLinkActive="tab-modern--active"
+    >
+      <span class="tab-modern__label">Intereses</span>
+    </a>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <section class="profile-content">
     <router-outlet></router-outlet>
+  </section>
+
+  <!-- MODAL CONFIRMACIÓN -->
+  <div
+    class="modal-backdrop"
+    *ngIf="confirmVisible"
+  >
+    <div class="modal">
+      <h2>Confirmar cambio de usuario</h2>
+      <p>
+        Solo puedes cambiar tu nombre de usuario cada cierto tiempo
+        (hasta meses). ¿Estás seguro de que deseas cambiarlo a
+        <strong>{{ usernameForm.value.username }}</strong>?
+      </p>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="confirmVisible = false"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onConfirmUsernameChange()"
+        >
+          Sí, cambiar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
