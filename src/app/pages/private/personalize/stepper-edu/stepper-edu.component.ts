@@ -1,326 +1,315 @@
 import {
   Component,
   OnInit,
-  signal
+  Optional
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { LoadingBarComponent } from '../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 
 import {
-  EducationalRequest,
   EducationalUser,
-  EducationalLevel,
-  Career
+  EducationalRequest
 } from '../../../../core/api/profile/education.interface';
 import { EducationService } from '../../../../core/api/profile/education.service';
+
+import {
+  Sede,
+  Career,
+  EducationalLevel as SedeEducationalLevel
+} from '../../../../core/api/sede/sede.interface';
+import { SedeService } from '../../../../core/api/sede/sede.service';
+
 import { AuthService } from '../../../../core/api/auth/auth.service';
-
-import { forkJoin, of, catchError } from 'rxjs';
-
-interface SedeOption {
-  id: number;
-  label: string;
-  subtitle: string;
-  logoUrl: string;
-}
+import { PersonalizeComponent } from '../personalize.component';
 
 @Component({
   selector: 'app-stepper-edu',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    LoadingBarComponent
-  ],
+  imports: [CommonModule, ReactiveFormsModule, LoadingBarComponent],
   templateUrl: './stepper-edu.component.html',
   styleUrl: './stepper-edu.component.css'
 })
 export class StepperEduComponent implements OnInit {
 
-  // Barra de guardado
-  saving = signal(false);
+  // Barra de carga global al guardar
+  save = false;
 
-  // Skeleton de carga inicial
-  isLoading = signal(true);
-  skeletonRows = Array.from({ length: 3 }).map((_, i) => i);
+  // Carga inicial (skeletor)
+  loading = true;
+
+  // Error general de carga/submit
+  submitError: string | null = null;
 
   // Formulario
-  eduForm!: FormGroup;
+  form!: FormGroup;
 
-  // Opciones
-  sedeOptions: SedeOption[] = [];
-  careersBySedeId: Record<number, Career[]> = {};
-  filteredCareers: Career[] = [];
-  educationalLevels: EducationalLevel[] = [];
-  levelOptions: number[] = [];
+  // Skeleton
+  skeletonRows = [1, 2, 3];
 
-  // Vista de sede seleccionada
-  selectedSedeLogo: string | null = null;
-  selectedSedeSubtitle: string | null = null;
+  // Datos educativos actuales (si existen)
+  educationalUser: EducationalUser | null = null;
+
+  // Sedes y derivados
+  sedes: Sede[] = [];
+  selectedSede: Sede | null = null;
+  availableCareers: Career[] = [];
+  availableEducationalLevels: SedeEducationalLevel[] = [];
+  maxLevelAllowed: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private educationService: EducationService,
+    private sedeService: SedeService,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Optional() private personalizeParent: PersonalizeComponent
   ) {}
 
   ngOnInit(): void {
-    this.buildForm();
-    this.loadStaticOptions();  // Mock de sedes/carreras/niveles
-    this.loadInitialData();    // Perfil educativo si ya existe
+    this.initForm();
+    this.loadData();
   }
 
-  // ------------------------
-  // Form
-  // ------------------------
-  private buildForm(): void {
-    this.eduForm = this.fb.group({
+  // ---------------------------------------------------------
+  // Inicialización
+  // ---------------------------------------------------------
+
+  private initForm(): void {
+    this.form = this.fb.group({
       sede_id: [null, Validators.required],
-      career_id: [null, Validators.required],
+      career_id: [null],
       educational_level_id: [null, Validators.required],
-      level: [null, [Validators.required, Validators.min(1)]],
+      level: [null] // validación dinámica
     });
+  }
 
-    // Cambia de nivel → recalcular periodos
-    this.eduForm.get('educational_level_id')?.valueChanges.subscribe((id: number) => {
-      const lvl = this.educationalLevels.find(l => l.id === id);
-      const max = lvl?.max_periods ?? 10;
-      this.levelOptions = Array.from({ length: max }, (_, i) => i + 1);
+  private loadData(): void {
+    this.loading = true;
+    this.submitError = null;
 
-      if (this.eduForm.value.level && this.eduForm.value.level > max) {
-        this.eduForm.patchValue({ level: null });
+    this.sedeService.getSedes().subscribe({
+      next: sedes => {
+        this.sedes = sedes ?? [];
+
+        this.educationService.getEducationalProfile().subscribe({
+          next: eduUser => {
+            this.educationalUser = eduUser;
+            this.patchFormFromUser();
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+            this.submitError = 'No se pudo cargar tu información educativa inicial.';
+          }
+        });
+      },
+      error: () => {
+        this.loading = false;
+        this.submitError = 'No se pudieron cargar las sedes disponibles.';
       }
     });
   }
 
-  // ------------------------
-  // Datos "mock" para sedes / carreras / niveles
-  // (luego lo sustituyes por tu API de catálogos)
-  // ------------------------
-  private loadStaticOptions(): void {
-    const today = new Date();
+  private patchFormFromUser(): void {
+    if (!this.educationalUser) {
+      this.form.reset({
+        sede_id: null,
+        career_id: null,
+        educational_level_id: null,
+        level: null
+      });
+      this.selectedSede = null;
+      this.availableCareers = [];
+      this.availableEducationalLevels = [];
+      this.maxLevelAllowed = null;
+      return;
+    }
 
-    this.sedeOptions = [
-      {
-        id: 1,
-        label: 'ESPAM MFL - Sede Matriz',
-        subtitle: 'Calceta, Manabí · Educación superior',
-        logoUrl: 'assets/images/logos/espam-mfl.png'
-      },
-      {
-        id: 2,
-        label: 'Unidad Educativa San José de Manta',
-        subtitle: 'Manta, Manabí · Bachillerato',
-        logoUrl: 'assets/images/logos/san-jose-manta.png'
-      }
-    ];
+    const u = this.educationalUser;
 
-    this.careersBySedeId = {
-      1: [
-        {
-          id: 1,
-          name: 'Ingeniería en Computación',
-          max_semesters: 10,
-          url_logo: '',
-          created_at: today,
-          updated_at: today,
-          deleted_at: null
-        },
-        {
-          id: 2,
-          name: 'Ingeniería Agronómica',
-          max_semesters: 10,
-          url_logo: '',
-          created_at: today,
-          updated_at: today,
-          deleted_at: null
-        }
-      ],
-      2: [
-        {
-          id: 3,
-          name: 'Bachillerato en Ciencias',
-          max_semesters: 3,
-          url_logo: '',
-          created_at: today,
-          updated_at: today,
-          deleted_at: null
-        },
-        {
-          id: 4,
-          name: 'Bachillerato Técnico',
-          max_semesters: 3,
-          url_logo: '',
-          created_at: today,
-          updated_at: today,
-          deleted_at: null
-        }
-      ]
-    };
+    this.form.patchValue({
+      sede_id: u.sede_id ?? null,
+      career_id: u.career_id ?? null,
+      educational_level_id: u.educational_level_id ?? null,
+      level: u.level ?? null
+    });
 
-    this.educationalLevels = [
-      {
-        id: 1,
-        name: 'Bachillerato',
-        description: 'Educación secundaria',
-        period: 'año',
-        max_periods: 3,
-        created_at: today,
-        updated_at: today
-      },
-      {
-        id: 2,
-        name: 'Pregrado',
-        description: 'Educación superior universitaria',
-        period: 'semestre',
-        max_periods: 10,
-        created_at: today,
-        updated_at: today
-      }
-    ];
+    if (u.sede_id) {
+      this.selectedSede =
+        this.sedes.find(s => s.id === u.sede_id) ?? null;
+    } else {
+      this.selectedSede = null;
+    }
+
+    this.updateDerivedLists();
+    this.updateLevelValidation();
   }
 
-  // ------------------------
-  // Carga inicial
-  // ------------------------
-  private loadInitialData(): void {
-    this.isLoading.set(true);
+  // ---------------------------------------------------------
+  // Helpers de selección
+  // ---------------------------------------------------------
 
-    const edu$ = this.educationService.getEducationalProfile().pipe(
-      catchError(err => {
-        console.warn('No hay datos educativos previos o hubo error:', err);
-        return of(null);
-      })
+  onChangeSede(value: string | number): void {
+    const sedeId = Number(value) || null;
+
+    this.form.patchValue({
+      sede_id: sedeId,
+      career_id: null,
+      educational_level_id: null,
+      level: null
+    });
+
+    this.selectedSede =
+      this.sedes.find(s => s.id === sedeId) ?? null;
+
+    this.updateDerivedLists();
+    this.updateLevelValidation();
+  }
+
+  onChangeEducationalLevel(value: string | number): void {
+    const levelId = Number(value) || null;
+    this.form.patchValue({ educational_level_id: levelId, level: null });
+    this.updateLevelValidation();
+  }
+
+  onChangeCareer(value: string | number): void {
+    const careerId = Number(value) || null;
+    this.form.patchValue({ career_id: careerId, level: null });
+    this.updateLevelValidation();
+  }
+
+  private updateDerivedLists(): void {
+    if (this.selectedSede && this.selectedSede.educational_unit) {
+      this.availableEducationalLevels =
+        this.selectedSede.educational_unit.educational_levels ?? [];
+    } else {
+      this.availableEducationalLevels = [];
+    }
+
+    this.availableCareers = this.selectedSede?.careers ?? [];
+  }
+
+  private get selectedEducationalLevel(): SedeEducationalLevel | null {
+    const id = this.form.get('educational_level_id')?.value;
+    if (!id || !this.availableEducationalLevels) return null;
+    return (
+      this.availableEducationalLevels.find(l => l.id === id) ?? null
     );
-
-    forkJoin({
-      edu: edu$
-    }).subscribe({
-      next: ({ edu }) => {
-        this.fillEduForm(edu);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error cargando datos educativos iniciales', error);
-        this.isLoading.set(false);
-      },
-    });
   }
 
-  private fillEduForm(edu: EducationalUser | null): void {
-    if (!edu) return;
-
-    const sedeId = edu.sede_id ?? edu.sede?.id;
-    const careerId = edu.career_id ?? edu.career?.id;
-    const levelId = edu.educational_level_id ?? edu.educational_level?.id;
-
-    if (sedeId) {
-      this.eduForm.patchValue({ sede_id: sedeId }, { emitEvent: false });
-      this.onSedeSelected(sedeId);
-    }
-
-    if (careerId) {
-      this.eduForm.patchValue({ career_id: careerId }, { emitEvent: false });
-    }
-
-    if (levelId) {
-      this.eduForm.patchValue({ educational_level_id: levelId }, { emitEvent: true });
-      const lvl = this.educationalLevels.find(l => l.id === levelId);
-      const max = lvl?.max_periods ?? 10;
-      this.levelOptions = Array.from({ length: max }, (_, i) => i + 1);
-    }
-
-    if (edu.level) {
-      this.eduForm.patchValue({ level: edu.level }, { emitEvent: false });
-    }
-
-    if (sedeId) {
-      const sede = this.sedeOptions.find(s => s.id === sedeId);
-      this.selectedSedeLogo = sede?.logoUrl ?? null;
-      this.selectedSedeSubtitle = sede?.subtitle ?? null;
-    }
+  private get selectedCareer(): Career | null {
+    const id = this.form.get('career_id')?.value;
+    if (!id || !this.availableCareers) return null;
+    return this.availableCareers.find(c => c.id === id) ?? null;
   }
 
-  // ------------------------
-  // SelectButton "custom"
-  // ------------------------
-  onSelectSede(option: SedeOption): void {
-    this.eduForm.patchValue({ sede_id: option.id });
-    this.eduForm.get('sede_id')?.markAsDirty();
-    this.eduForm.get('sede_id')?.markAsTouched();
+  private updateLevelValidation(): void {
+    const ctrl = this.form.get('level');
+    if (!ctrl) return;
 
-    this.onSedeSelected(option.id);
+    const eduLevel = this.selectedEducationalLevel;
+    const career = this.selectedCareer;
+
+    // Si el nivel educativo no tiene max_periods, no pedimos "level"
+    if (!eduLevel || !eduLevel.max_periods || eduLevel.max_periods <= 0) {
+      this.maxLevelAllowed = null;
+      ctrl.clearValidators();
+      ctrl.setValue(null);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+      return;
+    }
+
+    let max = eduLevel.max_periods;
+
+    if (career && career.max_semesters && career.max_semesters > 0) {
+      max = Math.min(max, career.max_semesters);
+    }
+
+    this.maxLevelAllowed = max;
+
+    const validators = [Validators.required, Validators.min(1), Validators.max(max)];
+    ctrl.setValidators(validators);
+
+    const currentVal = ctrl.value;
+    if (currentVal != null && (currentVal < 1 || currentVal > max)) {
+      ctrl.setValue(max);
+    }
+
+    ctrl.updateValueAndValidity({ emitEvent: false });
   }
 
-  private onSedeSelected(sedeId: number): void {
-    this.filteredCareers = this.careersBySedeId[sedeId] ?? [];
-    this.eduForm.patchValue({ career_id: null }, { emitEvent: false });
-
-    const sede = this.sedeOptions.find(s => s.id === sedeId);
-    this.selectedSedeLogo = sede?.logoUrl ?? null;
-    this.selectedSedeSubtitle = sede?.subtitle ?? null;
-  }
-
-  isSedeSelected(id: number): boolean {
-    return this.eduForm.value.sede_id === id;
-  }
-
-  // ------------------------
+  // ---------------------------------------------------------
   // Submit
-  // ------------------------
-  onSubmitEdu(): void {
-    if (this.eduForm.invalid) {
-      this.eduForm.markAllAsTouched();
+  // ---------------------------------------------------------
+
+  onSubmit(): void {
+    this.submitError = null;
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
     const payload: EducationalRequest = {
-      sede_id: this.eduForm.value.sede_id,
-      career_id: this.eduForm.value.career_id,
-      educational_level_id: this.eduForm.value.educational_level_id,
-      level: this.eduForm.value.level,
+      sede_id: this.form.value.sede_id ?? null,
+      career_id: this.form.value.career_id ?? null,
+      educational_level_id: this.form.value.educational_level_id ?? null,
+      level: this.form.value.level ?? null
     };
 
-    this.saving.set(true);
+    this.save = true;
+
     this.educationService.updateEducationalProfile(payload).subscribe({
-      next: (updated: EducationalUser) => {
-        this.saving.set(false);
-        console.log('Datos educativos actualizados', updated);
-
-        this.authService.updateCurrentUser({
-          has_educational_user: true
-        });
-
-        this.router.navigate(['/personalize/interest'], {
-          relativeTo: this.route
-        });
+      next: updated => {
+        this.educationalUser = updated;
+        this.save = false;
+        this.onCompletedStep();
       },
-      error: (error) => {
-        this.saving.set(false);
-        console.error('Error al actualizar datos educativos', error);
-      },
+      error: () => {
+        this.save = false;
+        this.submitError = 'No se pudo guardar tu información educativa. Inténtalo nuevamente.';
+      }
     });
   }
 
-  // ------------------------
-  // Helpers UI
-  // ------------------------
-  fieldInvalid(controlName: string): boolean {
-    const control = this.eduForm.get(controlName);
-    return !!control && control.invalid && (control.dirty || control.touched);
+  /**
+   * Marca el flag has_educational_user y avanza al siguiente paso.
+   */
+  private onCompletedStep(): void {
+    // Actualizamos el usuario actual en AuthService / localStorage
+    this.authService.updateCurrentUser({
+      has_educational_user: true
+    });
+
+    // Si tenemos referencia al padre, usamos su método
+    if (this.personalizeParent) {
+      this.personalizeParent.onStepCompleted('education');
+    } else {
+      // Fallback: navegar manualmente al siguiente paso
+      this.router.navigate(['../interest'], {
+        relativeTo: this.route
+      });
+    }
   }
 
-  getPeriodSuffix(n: number): string {
-    return '°';
+  // Helpers de errores para el template
+  hasError(controlName: string, error: string): boolean {
+    const ctrl = this.form.get(controlName);
+    return !!ctrl && ctrl.touched && ctrl.hasError(error);
+  }
+
+  // Exponer el nivel educativo seleccionado al template
+  get currentEducationalLevel(): SedeEducationalLevel | null {
+    return this.selectedEducationalLevel;
   }
 }
+

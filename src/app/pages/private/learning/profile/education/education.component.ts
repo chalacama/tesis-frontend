@@ -1,224 +1,342 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 
-import { SedeService } from '../../../../../core/api/sede/sede.service';
-import { Sede, Career, EducationalLevel } from '../../../../../core/api/sede/sede.interface';
+import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
+import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
+import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
+
+import {
+  EducationalUser,
+  EducationalRequest
+} from '../../../../../core/api/profile/education.interface';
+import {
+  Sede,
+  Career,
+  EducationalLevel as SedeEducationalLevel
+} from '../../../../../core/api/sede/sede.interface';
+
 import { EducationService } from '../../../../../core/api/profile/education.service';
-
-// === Tipos de tu interfaz ===
-export interface EducationalResponse {
-  educationalUser: EducationalUser;
-}
-
-export interface EducationalUser {
-  id: number;
-  sede_id: number;
-  user_id: number;
-  career_id: number;
-  educational_level_id: number;
-  level: number;
-  created_at: string | Date;
-  updated_at: string | Date;
-}
-
-export interface EducationalRequest {
-  sede_id:              number | null;
-  career_id:            number | null;
-  educational_level_id: number | null;
-  level:                number | null;
-}
+import { SedeService } from '../../../../../core/api/sede/sede.service';
+import { UiToastService } from '../../../../../shared/services/ui-toast.service';
 
 @Component({
   selector: 'app-education',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    IconComponent,
+    ToastComponent,
+    LoadingBarComponent
+  ],
   templateUrl: './education.component.html',
   styleUrl: './education.component.css'
 })
 export class EducationComponent implements OnInit {
-  educationalForm!: FormGroup;
 
-  // === SEDES ===
+  // Barra de carga al guardar
+  save = false;
+
+  // Carga inicial (skeletor)
+  loading = true;
+
+  // Modo edición
+  editing = false;
+
+  // Modal de confirmación
+  confirmVisible = false;
+
+  // Datos actuales del usuario
+  educationalUser: EducationalUser | null = null;
+
+  // Listado de sedes visibles para el usuario
   sedes: Sede[] = [];
-  selectedSedeId: number | null = null;
+
+  // Sede seleccionada en el formulario
   selectedSede: Sede | null = null;
 
-  // === CARRERAS (dinámicas según la sede) ===
-  careers: Career[] = [];
-  selectedCareerId: number | null = null;
+  // Carreras y niveles educativos disponibles según la sede
+  availableCareers: Career[] = [];
+  availableEducationalLevels: SedeEducationalLevel[] = [];
 
-  // === NIVELES EDUCATIVOS (educational_levels) ===
-  educationalLevels: EducationalLevel[] = [];
-  selectedEducationalLevelId: number | null = null;
-  selectedEducationalLevel: EducationalLevel | null = null;
+  // Límite máximo permitido para el nivel
+  maxLevelAllowed: number | null = null;
 
-  // === NIVELES NUMÉRICOS 1..max_periods (máx 10) ===
-  levels: number[] = [];
-  selectedLevel: number | null = null;
-  maxAllowedLevel: number = 10;
+  // Formulario reactivo
+  form!: FormGroup;
+
+  // Skeleton rows
+  skeletonRows = [1, 2, 3];
 
   constructor(
     private fb: FormBuilder,
-    private sedeService: SedeService,
     private educationService: EducationService,
+    private sedeService: SedeService,
+    private toast: UiToastService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.loadSedes(); // y desde aquí cargamos la info guardada
+    this.loadData();
   }
+
+  // ---------------------------------------------------------
+  // Inicialización
+  // ---------------------------------------------------------
 
   private initForm(): void {
-    this.educationalForm = this.fb.group({
+    this.form = this.fb.group({
       sede_id: [null, Validators.required],
-      career_id: [null, Validators.required],
+      career_id: [null], // requerido solo si la sede tiene carreras y se escoge una
       educational_level_id: [null, Validators.required],
-      level: [null, [Validators.required, Validators.min(1)]],
+      level: [null] // requisitos dinámicos según maxLevelAllowed
     });
   }
 
-  // ================== CARGA DE DATOS ==================
+  private loadData(): void {
+    this.loading = true;
 
-  private loadSedes(): void {
+    // Carga en paralelo: perfil educativo + sedes
     this.sedeService.getSedes().subscribe({
-      next: (data) => {
-        this.sedes = data;
-        // Una vez que tenemos sedes, cargamos la info educativa guardada
-        this.loadEducationalInformation();
+      next: sedes => {
+        this.sedes = sedes ?? [];
+
+        this.educationService.getEducationalProfile().subscribe({
+          next: eduUser => {
+            this.educationalUser = eduUser;
+            this.patchFormFromUser();
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+            this.toast.add({
+              severity: 'danger',
+              summary: 'Error',
+              message: 'No se pudo cargar tu información educativa.'
+            });
+          }
+        });
       },
-      error: (err) => {
-        console.error('Error al cargar sedes', err);
+      error: () => {
+        this.loading = false;
+        this.toast.add({
+          severity: 'danger',
+          summary: 'Error',
+          message: 'No se pudieron cargar las sedes disponibles.'
+        });
       }
     });
   }
 
-  private loadEducationalInformation(): void {
-    this.educationService.getEducationalProfile().subscribe({
-      next: (resp: EducationalResponse | any) => {
-        const eu: EducationalUser | undefined = (resp?.educationalUser ?? resp) as EducationalUser;
+  private patchFormFromUser(): void {
+    if (!this.educationalUser) {
+      // Sin datos aún: dejamos el formulario vacío
+      this.form.reset({
+        sede_id: null,
+        career_id: null,
+        educational_level_id: null,
+        level: null
+      });
+      this.selectedSede = null;
+      this.availableCareers = [];
+      this.availableEducationalLevels = [];
+      this.maxLevelAllowed = null;
+      return;
+    }
 
-        if (!eu) return;
+    const u = this.educationalUser;
 
-        // Disparamos toda la lógica de combos en cadena
-        this.onSedeChange(eu.sede_id ?? null, eu);
-      },
-      error: (err) => {
-        // Si el usuario aún no tiene datos académicos, simplemente no hacemos nada
-        console.info('No hay información académica previa o hubo un error leve:', err?.message ?? err);
-      }
+    this.form.patchValue({
+      sede_id: u.sede_id ?? null,
+      career_id: u.career_id ?? null,
+      educational_level_id: u.educational_level_id ?? null,
+      level: u.level ?? null
     });
-  }
 
-  // ================== MANEJO DE CAMBIOS ==================
-
-  /**
-   * Cuando cambia la sede desde el select
-   * eu es opcional, lo usamos solo cuando cargamos datos previos.
-   */
-  onSedeChange(sedeId: number | null, eu?: EducationalUser): void {
-    this.selectedSedeId = sedeId;
-    this.selectedSede = this.sedes.find(s => s.id === sedeId) ?? null;
-
-    // Rellenar carreras y niveles educativos desde la sede seleccionada
-    this.careers = this.selectedSede?.careers ?? [];
-    this.educationalLevels = this.selectedSede?.educational_unit?.educational_levels ?? [];
-
-    if (eu) {
-      // Si venimos de datos guardados, intentamos restaurar selección
-      this.selectedCareerId = this.careers.some(c => c.id === eu.career_id) ? eu.career_id : null;
-
-      this.selectedEducationalLevelId = this.educationalLevels.some(el => el.id === eu.educational_level_id)
-        ? eu.educational_level_id
-        : null;
-
-      this.selectedLevel = eu.level ?? null;
-
-      if (this.selectedEducationalLevelId) {
-        this.onEducationalLevelChange(this.selectedEducationalLevelId, false);
-      } else {
-        this.selectedEducationalLevel = null;
-        this.updateLevelsOptions();
-      }
+    // Configuramos sede seleccionada + listas derivadas
+    if (u.sede_id) {
+      this.selectedSede =
+        this.sedes.find(s => s.id === u.sede_id) ?? null;
     } else {
-      // Si es un cambio manual del usuario, reseteamos dependientes
-      this.selectedCareerId = null;
-      this.selectedEducationalLevelId = null;
-      this.selectedEducationalLevel = null;
-      this.selectedLevel = null;
-      this.updateLevelsOptions();
+      this.selectedSede = null;
     }
 
-    // Sincronizamos el form (por si usas validaciones reactivas)
-    this.educationalForm.patchValue({
-      sede_id: this.selectedSedeId,
-      career_id: this.selectedCareerId,
-      educational_level_id: this.selectedEducationalLevelId,
-      level: this.selectedLevel
-    }, { emitEvent: false });
+    this.updateDerivedLists();
+    this.updateLevelValidation();
   }
 
-  /**
-   * Cuando el usuario selecciona un educational_level (tipo de estudio/período).
-   */
-  onEducationalLevelChange(levelId: number | null, patchForm: boolean = true): void {
-    this.selectedEducationalLevelId = levelId;
-    this.selectedEducationalLevel = this.educationalLevels.find(el => el.id === levelId) ?? null;
+  // ---------------------------------------------------------
+  // Helpers para modo vista / edición
+  // ---------------------------------------------------------
 
-    this.updateLevelsOptions();
+  get hasEducationalInfo(): boolean {
+    return !!this.educationalUser;
+  }
 
-    if (patchForm) {
-      this.educationalForm.patchValue({
-        educational_level_id: this.selectedEducationalLevelId,
-        level: this.selectedLevel
-      }, { emitEvent: false });
+  onEdit(): void {
+    this.editing = true;
+    this.patchFormFromUser();
+  }
+
+  onCancel(): void {
+    this.editing = false;
+    this.confirmVisible = false;
+    this.patchFormFromUser();
+  }
+
+  // ---------------------------------------------------------
+  // Cambio de sede / nivel / carrera
+  // ---------------------------------------------------------
+
+  onChangeSede(value: string | number): void {
+    const sedeId = Number(value) || null;
+    this.form.patchValue({
+      sede_id: sedeId,
+      career_id: null,
+      educational_level_id: null,
+      level: null
+    });
+
+    this.selectedSede =
+      this.sedes.find(s => s.id === sedeId) ?? null;
+
+    this.updateDerivedLists();
+    this.updateLevelValidation();
+  }
+
+  onChangeEducationalLevel(value: string | number): void {
+    const levelId = Number(value) || null;
+    this.form.patchValue({ educational_level_id: levelId, level: null });
+    this.updateLevelValidation();
+  }
+
+  onChangeCareer(value: string | number): void {
+    const careerId = Number(value) || null;
+    this.form.patchValue({ career_id: careerId, level: null });
+    this.updateLevelValidation();
+  }
+
+  private updateDerivedLists(): void {
+    if (this.selectedSede && this.selectedSede.educational_unit) {
+      this.availableEducationalLevels =
+        this.selectedSede.educational_unit.educational_levels ?? [];
+    } else {
+      this.availableEducationalLevels = [];
     }
+
+    this.availableCareers = this.selectedSede?.careers ?? [];
+  }
+  // public selectedEducationalLevel: EducationalLevel | null = null;
+  public get selectedEducationalLevel(): SedeEducationalLevel | null {
+  const id = this.form.get('educational_level_id')?.value;
+  if (!id || !this.availableEducationalLevels) return null;
+  return (
+    this.availableEducationalLevels.find(l => l.id === id) ?? null
+  );
+}
+
+  private get selectedCareer(): Career | null {
+    const id = this.form.get('career_id')?.value;
+    if (!id || !this.availableCareers) return null;
+    return this.availableCareers.find(c => c.id === id) ?? null;
   }
 
-  /**
-   * Calcula cuántos niveles (1..max_periods, máximo 10) puede elegir el usuario.
-   */
-  private updateLevelsOptions(): void {
-    const maxFromLevel = this.selectedEducationalLevel?.max_periods ?? 10;
-    const safeMax = Math.min(Math.max(maxFromLevel, 1), 10); // clamp 1..10
+  private updateLevelValidation(): void {
+    const ctrl = this.form.get('level');
+    if (!ctrl) return;
 
-    this.maxAllowedLevel = safeMax;
-    this.levels = Array.from({ length: safeMax }, (_, i) => i + 1);
+    const eduLevel = this.selectedEducationalLevel;
+    const career = this.selectedCareer;
 
-    // Si el nivel previamente seleccionado excede el máximo, lo ajustamos
-    if (this.selectedLevel && this.selectedLevel > safeMax) {
-      this.selectedLevel = safeMax;
-    }
-  }
-
-  // ================== GUARDAR ==================
-
-  onSubmitEducational(): void {
-    if (!this.selectedSedeId || !this.selectedCareerId || !this.selectedEducationalLevelId || !this.selectedLevel) {
-      alert('Completa sede, carrera, período y nivel.');
+    // Si el nivel educativo no tiene max_periods, asumimos que no se requiere nivel
+    if (!eduLevel || !eduLevel.max_periods || eduLevel.max_periods <= 0) {
+      this.maxLevelAllowed = null;
+      ctrl.clearValidators();
+      ctrl.setValue(null);
+      ctrl.updateValueAndValidity({ emitEvent: false });
       return;
     }
 
-    // Validar contra max_periods por seguridad extra
-    const max = this.selectedEducationalLevel?.max_periods ?? 10;
-    if (this.selectedLevel > max) {
-      alert(`El nivel máximo permitido para este período es ${max}.`);
+    let max = eduLevel.max_periods;
+
+    if (career && career.max_semesters && career.max_semesters > 0) {
+      max = Math.min(max, career.max_semesters);
+    }
+
+    this.maxLevelAllowed = max;
+
+    const validators = [Validators.required, Validators.min(1), Validators.max(max)];
+    ctrl.setValidators(validators);
+
+    const currentVal = ctrl.value;
+    if (currentVal != null && (currentVal < 1 || currentVal > max)) {
+      ctrl.setValue(max);
+    }
+
+    ctrl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  // ---------------------------------------------------------
+  // Submit + Confirmación
+  // ---------------------------------------------------------
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toast.add({
+        severity: 'warn',
+        summary: 'Validación',
+        message: 'Revisa los campos marcados antes de guardar.'
+      });
       return;
     }
 
+    // Abrimos ventana de confirmación
+    this.confirmVisible = true;
+  }
+
+  onConfirmUpdate(): void {
+    this.confirmVisible = false;
     const payload: EducationalRequest = {
-      sede_id: this.selectedSedeId,
-      career_id: this.selectedCareerId,
-      educational_level_id: this.selectedEducationalLevelId,
-      level: this.selectedLevel,
+      sede_id: this.form.value.sede_id ?? null,
+      career_id: this.form.value.career_id ?? null,
+      educational_level_id: this.form.value.educational_level_id ?? null,
+      level: this.form.value.level ?? null
     };
 
+    this.save = true;
+
     this.educationService.updateEducationalProfile(payload).subscribe({
-      next: () => alert('✅ Información académica actualizada'),
-      error: err => {
-        console.error(err);
-        alert('❌ No se pudo actualizar la información académica');
+      next: updated => {
+        this.educationalUser = updated;
+        this.save = false;
+        this.editing = false;
+        this.toast.add({
+          severity: 'primary',
+          summary: 'Actualizado',
+          message: 'Tu información educativa se actualizó correctamente.'
+        });
+      },
+      error: () => {
+        this.save = false;
+        this.toast.add({
+          severity: 'danger',
+          summary: 'Error',
+          message: 'No se pudo actualizar tu información educativa.'
+        });
       }
     });
+  }
+
+  // Helpers de template para errores
+  hasError(controlName: string, error: string): boolean {
+    const ctrl = this.form.get(controlName);
+    return !!ctrl && ctrl.touched && ctrl.hasError(error);
   }
 }

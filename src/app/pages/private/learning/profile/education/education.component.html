@@ -1,102 +1,289 @@
-<section class="card tab-card">
-  <header class="card-header">
-    <h3>Información académica</h3>
-    <p class="muted">Unidad educativa / Sede</p>
+<!-- Barra de carga global al guardar -->
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<!-- Toast global -->
+<ui-toast></ui-toast>
+
+<div class="education-container">
+
+  <!-- Encabezado -->
+  <header class="education-header">
+    <div>
+      <h1>Información educativa</h1>
+      <p>
+        Registra tu sede, nivel educativo y carrera para personalizar tu experiencia en DigiMentor.
+      </p>
+    </div>
+
+    <button
+      *ngIf="!loading && hasEducationalInfo && !editing"
+      class="btn btn-primary"
+      type="button"
+      (click)="onEdit()"
+    >
+      <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/rename.svg'"></ui-icon>
+      <span>Editar</span>
+    </button>
+
+    <button
+      *ngIf="!loading && !hasEducationalInfo && !editing"
+      class="btn btn-primary"
+      type="button"
+      (click)="editing = true"
+    >
+      <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/rename.svg'"></ui-icon>
+      <span>Completar información</span>
+    </button>
   </header>
 
-  <div class="card-content">
-    <div class="form grid-3">
-      <!-- Sede -->
-      <div class="form-row">
-        <label class="label" for="sede">Selecciona una sede</label>
-        <select
-          [(ngModel)]="selectedSedeId"
-          (ngModelChange)="onSedeChange($event)"
-          [ngModelOptions]="{ standalone: true }"
-          name="sede"
-          id="sede"
-          required
-          class="select">
-          <option [ngValue]="null" disabled>Selecciona una sede</option>
-          <option *ngFor="let sede of sedes" [ngValue]="sede.id">
-            {{ sede.educational_unit.name }} — {{ sede.province }}, {{ sede.canton }}
-          </option>
-        </select>
-        <small class="hint">Elige la sede asociada a tu unidad educativa.</small>
+  <!-- SKELETON -->
+  <ng-container *ngIf="loading; else contentTpl">
+    <div class="info-skeleton-card" *ngFor="let r of skeletonRows">
+      <div class="skeleton-header skeleton-box"></div>
+      <div class="skeleton-row">
+        <div class="skeleton-box"></div>
+        <div class="skeleton-box"></div>
       </div>
+    </div>
+  </ng-container>
 
-      <!-- Carrera (dinámica según sede) -->
-      <div class="form-row">
-        <label class="label" for="career">Selecciona una carrera</label>
-        <select
-          [(ngModel)]="selectedCareerId"
-          [ngModelOptions]="{ standalone: true }"
-          name="career"
-          id="career"
-          required
-          class="select"
-          [disabled]="!selectedSedeId || !careers.length">
-          <option [ngValue]="null" disabled>Selecciona una carrera</option>
-          <option *ngFor="let c of careers" [ngValue]="c.id">
-            {{ c.name }}
-          </option>
-        </select>
-        <small class="hint">
-          Las carreras dependen de la sede seleccionada.
-        </small>
-      </div>
+  <ng-template #contentTpl>
 
-      <!-- Educational Level (período / tipo de estudio) -->
-      <div class="form-row">
-        <label class="label" for="educationalLevel">Selecciona el período / nivel educativo</label>
-        <select
-          [(ngModel)]="selectedEducationalLevelId"
-          (ngModelChange)="onEducationalLevelChange($event)"
-          [ngModelOptions]="{ standalone: true }"
-          name="educationalLevel"
-          id="educationalLevel"
-          required
-          class="select"
-          [disabled]="!selectedSedeId || !educationalLevels.length">
-          <option [ngValue]="null" disabled>Selecciona un período / nivel educativo</option>
-          <option *ngFor="let el of educationalLevels" [ngValue]="el.id">
-            {{ el.name }}{{ el.period ? ' (' + el.period + ')' : '' }}
-          </option>
-        </select>
-        <small class="hint">
-          El período define cuántos niveles puedes seleccionar.
-        </small>
-      </div>
+    <!-- MODO VISTA -->
+    <section *ngIf="!editing; else editTpl" class="education-card">
+      <ng-container *ngIf="hasEducationalInfo; else noInfoTpl">
+        <div class="education-row">
+          <div class="label">Sede / Unidad educativa</div>
+          <div class="value">
+            {{ educationalUser?.sede?.educational_unit?.name || 'Sin sede registrada' }}
+          </div>
+        </div>
 
-      <!-- Nivel numérico -->
-      <div class="form-row">
-        <label class="label" for="level">Selecciona tu nivel (1–{{ maxAllowedLevel }})</label>
-        <select
-          [(ngModel)]="selectedLevel"
-          [ngModelOptions]="{ standalone: true }"
-          name="level"
-          id="level"
-          required
-          class="select"
-          [disabled]="!selectedEducationalLevelId || !levels.length">
-          <option [ngValue]="null" disabled>Selecciona un nivel</option>
-          <option *ngFor="let lv of levels" [ngValue]="lv">
-            Nivel {{ lv }}
-          </option>
-        </select>
-        <small class="hint">
-          Máximo permitido para este período: {{ maxAllowedLevel }} niveles.
-        </small>
+        <div class="education-row">
+          <div class="label">Provincia / Cantón</div>
+          <div class="value">
+            <span *ngIf="educationalUser?.sede">
+              {{ educationalUser?.sede?.province_name || '-' }} /
+              {{ educationalUser?.sede?.canton_name || '-' }}
+            </span>
+            <span *ngIf="!educationalUser?.sede">-</span>
+          </div>
+        </div>
+
+        <div class="education-row">
+          <div class="label">Nivel educativo</div>
+          <div class="value">
+            {{ educationalUser?.educational_level?.name || 'No especificado' }}
+          </div>
+        </div>
+
+        <div class="education-row">
+          <div class="label">Carrera</div>
+          <div class="value">
+            {{ educationalUser?.career?.name || 'Sin carrera' }}
+          </div>
+        </div>
+
+        <div class="education-row">
+          <div class="label">Nivel actual</div>
+          <div class="value">
+            <ng-container *ngIf="educationalUser?.level; else noLevelTpl">
+              {{ educationalUser?.level }}
+              <span *ngIf="educationalUser?.educational_level?.period">
+                / {{ educationalUser?.educational_level?.period }}
+              </span>
+            </ng-container>
+            <ng-template #noLevelTpl> No especificado </ng-template>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noInfoTpl>
+        <p class="empty-text">
+          Aún no has registrado tu información educativa. Haz clic en
+          <strong>"Completar información"</strong> para agregarla.
+        </p>
+      </ng-template>
+    </section>
+
+    <!-- MODO EDICIÓN -->
+    <ng-template #editTpl>
+      <section class="education-card">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- Sede -->
+          <div class="form-row">
+            <label class="form-label" for="sede">
+              Sede / Unidad educativa <span class="required">*</span>
+            </label>
+
+            <select
+              id="sede"
+              class="form-control"
+              formControlName="sede_id"
+              (change)="onChangeSede($any($event.target).value)"
+            >
+              <option [ngValue]="null">Selecciona una sede</option>
+              <option *ngFor="let sede of sedes" [value]="sede.id">
+                {{ sede.educational_unit?.name || 'Unidad sin nombre' }}
+                -
+                {{ sede.province_name || 'Provincia' }}
+                /
+                {{ sede.canton_name || 'Cantón' }}
+              </option>
+            </select>
+
+            <div class="error" *ngIf="hasError('sede_id', 'required')">
+              La sede es obligatoria.
+            </div>
+          </div>
+
+          <!-- Info extra de la sede -->
+          <div class="form-row hint" *ngIf="selectedSede?.educational_unit">
+            <div class="hint-title">
+              Unidad seleccionada:
+              <strong>{{ selectedSede?.educational_unit?.name }}</strong>
+            </div>
+          </div>
+
+          <!-- Carrera (solo si la sede tiene carreras) -->
+          <div class="form-row" *ngIf="availableCareers.length > 0">
+            <label class="form-label" for="career">
+              Carrera (opcional)
+            </label>
+
+            <select
+              id="career"
+              class="form-control"
+              formControlName="career_id"
+              (change)="onChangeCareer($any($event.target).value)"
+            >
+              <option [ngValue]="null">Sin carrera</option>
+              <option *ngFor="let career of availableCareers" [value]="career.id">
+                {{ career.name }} (máx. {{ career.max_semesters }} niveles)
+              </option>
+            </select>
+          </div>
+
+          <div class="form-row" *ngIf="selectedSede && availableCareers.length === 0">
+            <span class="hint">
+              Esta sede no tiene carreras registradas.
+            </span>
+          </div>
+
+          <!-- Nivel educativo -->
+          <div class="form-row">
+            <label class="form-label" for="educational_level">
+              Nivel educativo <span class="required">*</span>
+            </label>
+
+            <select
+              id="educational_level"
+              class="form-control"
+              formControlName="educational_level_id"
+              (change)="onChangeEducationalLevel($any($event.target).value)"
+            >
+              <option [ngValue]="null">Selecciona un nivel educativo</option>
+              <option
+                *ngFor="let level of availableEducationalLevels"
+                [value]="level.id"
+              >
+                {{ level.name }}
+                <ng-container *ngIf="level.max_periods && level.max_periods > 0">
+                  (máx. {{ level.max_periods }} niveles)
+                </ng-container>
+              </option>
+            </select>
+
+            <div class="error" *ngIf="hasError('educational_level_id', 'required')">
+              El nivel educativo es obligatorio.
+            </div>
+          </div>
+
+          <!-- Nivel actual (solo si hay maxLevelAllowed) -->
+          <div class="form-row" *ngIf="maxLevelAllowed">
+            <label class="form-label" for="level">
+              Nivel actual <span class="required">*</span>
+            </label>
+
+            <input
+              id="level"
+              type="number"
+              class="form-control"
+              formControlName="level"
+              [min]="1"
+              [max]="maxLevelAllowed || 1"
+              placeholder="Ej: 1, 2, 3..."
+            />
+
+            <div class="hint">
+              Debe estar entre <strong>1</strong> y
+              <strong>{{ maxLevelAllowed }}</strong>.
+                <span *ngIf="selectedEducationalLevel?.period">
+                ({{ selectedEducationalLevel?.period }})
+                </span>
+            </div>
+
+            <div class="error" *ngIf="hasError('level', 'required')">
+              El nivel es obligatorio.
+            </div>
+            <div class="error" *ngIf="hasError('level', 'min')">
+              El nivel mínimo permitido es 1.
+            </div>
+            <div class="error" *ngIf="hasError('level', 'max')">
+              El nivel máximo permitido es {{ maxLevelAllowed }}.
+            </div>
+          </div>
+
+          <!-- Botones -->
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="onCancel()"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </section>
+    </ng-template>
+  </ng-template>
+
+  <!-- MODAL DE CONFIRMACIÓN -->
+  <div class="modal-backdrop" *ngIf="confirmVisible">
+    <div class="modal">
+      <h2>Confirmar actualización</h2>
+      <p>
+        ¿Estás seguro de que deseas actualizar tu información educativa?
+      </p>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="confirmVisible = false"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onConfirmUpdate()"
+        >
+          Sí, actualizar
+        </button>
       </div>
     </div>
   </div>
-
-  <footer class="card-footer">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="onSubmitEducational()">
-      Guardar datos académicos
-    </button>
-  </footer>
-</section>
+</div>
