@@ -37,9 +37,10 @@ export class ContentLearningComponent implements OnInit {
   loadbar = signal<boolean>(false);
 
   // ====== límites de validación ======
-  readonly MAX_FILE_MB = 100;
+  readonly MAX_FILE_MB = 900;
   readonly MIN_VIDEO_SECONDS = 10;
   readonly MAX_VIDEO_SECONDS = 480;
+  
   private readonly MAX_FILE_BYTES = this.MAX_FILE_MB * 1024 * 1024;
 
   // ====== estado drag & drop / errores ======
