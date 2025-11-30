@@ -12,7 +12,7 @@ export interface Chapter {
   module_id: number;
   created_at: string;
   updated_at: string;
-  deleted_at: null;
+  
 }
 
 export interface ChapterUpdateRequest {
@@ -105,7 +105,7 @@ export interface Question {
   test_id: number;              // <--- ANTES era chapter_id
   created_at: string;
   updated_at: string;
-  deleted_at: null;
+  
   type_question: TypeQuestion;
   answers: Answer[];
 }

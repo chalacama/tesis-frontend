@@ -37,7 +37,7 @@ export interface Sede {
 
   created_at?: string;
   updated_at?: string;
-  deleted_at?: string | null;
+  
 }
 
 export interface EducationalUnit {
@@ -47,7 +47,7 @@ export interface EducationalUnit {
   url_logo:            string;
   created_at:          string;
   updated_at:          string;
-  deleted_at:          string | null;
+  
 }
 
 // ---------- Career ----------
@@ -59,7 +59,7 @@ export interface Career {
   url_logo:      string | null;
   created_at:    string;
   updated_at:    string;
-  deleted_at?:   string | null;
+  
 }
 
 // ---------- EducationalLevel ----------

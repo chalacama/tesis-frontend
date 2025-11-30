@@ -7,12 +7,12 @@ export type UiSize =
 export type UiPosition    = 'top' | 'right' |'bottom' | 'left' | 'center' | UiCorner;
 export type UiOrientation   = 'horizontal' | 'vertical';
 export type UiFileType = 'document' | 'video' | 'image';
-export type UiFileFormat = 'pdf' | 'mp4' | 'jpg' | 'png' | 'gif';
+export type UiFileFormat = 'pdf' | 'mp4' | 'jpg' | 'png' | 'gif' | 'webp' | 'jpeg';
 
 export const UiFileFormats: Record<UiFileType, UiFileFormat[]> = {
   document: ['pdf'],
   video: ['mp4'],
-  image: ['jpg', 'png', 'gif'],
+  image: ['jpg', 'png', 'gif' , 'webp', 'jpeg'],
 }
 
 

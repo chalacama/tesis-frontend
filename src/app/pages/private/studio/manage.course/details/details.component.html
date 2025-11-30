@@ -88,15 +88,7 @@
                                 <span *ngIf="!form.get('private')?.value">Sin codigo de acceso</span>
                                 <input readonly class="item-card-body-input" *ngIf="form.get('private')?.value" type="text"
                                     formControlName="code">
-                                <div class="item-card-expand">
-                                    <ui-button *ngIf="form.get('private')?.value" variant="flat"
-                                        [style]="{borderRadius: '20px', width: '40px', height: '40px'}"
-                                        severity="primary" [icon]="{svgPath: 'svg/expand.svg'}">
-
-
-                                    </ui-button>
-
-                                </div>
+                                
 
                             </div>
                         </div>
@@ -129,7 +121,7 @@
                 <div class="start-right-edit">
                     <div class="start-right-edit-item">
                         <ui-file-upload   (fileSelected)="selectedMiniature = $event" [formControl]="form.controls.miniatureUrl"  [style]="{width: '350px'}"
-                        label="Suelta una imagen o selecciona" [types]="['image']" [formats]="['jpg','png','gif']"
+                        label="Suelta una imagen o selecciona" [types]="['image']" [formats]="['jpg','png','webp']"
                         variant="outlined" severity="primary" size="sm"></ui-file-upload>
                         
                         

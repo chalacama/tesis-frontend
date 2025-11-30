@@ -52,6 +52,7 @@ export interface AuthResponse {
   has_user_information?: boolean;
   has_educational_user?: boolean;
   has_user_category_interest?: boolean;
+  expires_at?: string;
 }
 
 export interface GoogleLoginRequest {

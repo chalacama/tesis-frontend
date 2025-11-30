@@ -23,7 +23,7 @@ export interface Career {
     url_logo:             string;
     created_at:           Date;
     updated_at:           Date;
-    deleted_at:           null;
+    
     organization_domain?: string;
 }
 

@@ -1,24 +1,46 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+// core/api/auth/auth.interceptor.ts
+
+import {
+  HttpInterceptorFn,
+  HttpErrorResponse
+} from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { inject } from '@angular/core';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // 1. Inyecta el servicio usando la función inject()
   const authService = inject(AuthService);
+  const router = inject(Router);
+
   const token = authService.getToken();
 
-  // 2. Si no hay token, continúa sin modificar la petición
+  // Si no hay token (o está expirado), seguimos normal
   if (!token) {
     return next(req);
   }
 
-  // 3. Si hay token, clona la petición y añade el encabezado
   const authReq = req.clone({
     setHeaders: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json'
     }
   });
 
-  // 4. Pasa la petición clonada al siguiente manejador
-  return next(authReq);
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        // Token no válido / expirado / revocado
+        authService.clearUserData();
+
+        // Redirigir al login (ajusta la ruta si usas otra)
+        router.navigate(['/auth'], {
+          queryParams: { reason: 'session_expired' },
+        });
+      }
+
+      return throwError(() => error);
+    })
+  );
 };

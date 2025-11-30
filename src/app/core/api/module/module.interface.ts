@@ -17,7 +17,7 @@ export interface Chapters {
     module_id:  number;
     created_at: string;
     updated_at: string;
-    deleted_at:  string | null;
+    
     questions_count: number;
     learning_content:LearningContent
 }

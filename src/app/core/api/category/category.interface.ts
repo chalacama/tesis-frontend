@@ -24,7 +24,7 @@ export interface Category {
   description: string | null;
   created_at: string; // Laravel devuelve string tipo 'YYYY-MM-DD HH:MM:SS'
   updated_at: string;
-  deleted_at: string | null;
+  
 }
 
 /** Respuesta para listado de categorías */

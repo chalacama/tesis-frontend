@@ -51,7 +51,7 @@ export interface EducationalUnit {
   url_logo: string;
   created_at: string;
   updated_at: string;
-  deleted_at?: string | null;
+  
 
   // niveles de educación de la unidad
   educational_levels: EducationalLevel[];

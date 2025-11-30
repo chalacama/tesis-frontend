@@ -36,7 +36,7 @@ export interface LearningContent {
     chapter_id:            number;
     created_at:            string;
     updated_at:            string;
-    deleted_at:            null;
+    
     type_learning_content: TypeLearningContent;
 }
 

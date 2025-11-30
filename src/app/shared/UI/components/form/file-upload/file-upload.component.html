@@ -1,92 +1,117 @@
-<div class="ufu-root" [class]="hostClasses().join(' ')" [ngStyle]="styleMap()"
-  [attr.aria-label]="fud.ariaLabel || defaultLabel()" [attr.role]="fud.role || 'group'"
-  [attr.tabindex]="fud.tabIndex ?? 0" [attr.aria-disabled]="fud.disabled">
+<div class="ufu-root"
+     [ngClass]="hostClasses()"
+     [ngStyle]="styleMap()"
+     [attr.aria-label]="fud.ariaLabel || defaultLabel()"
+     [attr.role]="fud.role || 'group'"
+     [attr.tabindex]="fud.tabIndex ?? 0"
+     [attr.aria-disabled]="fud.disabled">
 
-  <!-- Zona de selección / DnD target -->
-  <label class="ufu-input-area" [class.is-disabled]="fud.disabled" (dragover)="onDragOver($event)"
-    (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+  <!-- Zona de selección / DnD -->
+  <label class="ufu-input-area"
+         [class.is-disabled]="fud.disabled"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)">
 
-    <input class="ufu-input" type="file" [attr.id]="fud.id || null" [attr.accept]="acceptAttr() || null"
-      [attr.multiple]="(num(fud.max,1) > 1) ? '' : null" [disabled]="fud.disabled"
-      (change)="onFileInputChange($event)" />
+    <input class="ufu-input"
+           type="file"
+           [attr.id]="fud.id || null"
+           [attr.accept]="acceptAttr() || null"
+           [attr.multiple]="(num(fud.max, 1) > 1) ? '' : null"
+           [disabled]="fud.disabled"
+           (change)="onFileInputChange($event)" />
 
     <div class="ufu-input-content">
       <div class="ufu-icon">
-        <ui-icon [size]="fud.size || 'sm'" [severity]="fud.severity || 'primary'"
-          [svgPath]="fud.icon?.svgPath || 'svg/image.svg'" [style]="{width: '50px', height: '50px'}"></ui-icon>
+        <ui-icon
+          [size]="fud.size || 'sm'"
+          [severity]="fud.severity || 'primary'"
+          [svgPath]="fud.icon?.svgPath || 'svg/image.svg'">
+        </ui-icon>
       </div>
       <div class="ufu-label">
         <span>{{ defaultLabel() }}</span>
       </div>
+      <div class="ufu-helper">
+        <span>Formatos: JPG, PNG, WEBP</span>
+        <span *ngIf="num(fud.maxMb)"> • Máx. {{ num(fud.maxMb) }} MB</span>
+        <span *ngIf="num(fud.max, 1) === 1"> • 1 imagen</span>
+        <span *ngIf="num(fud.max, 1) > 1"> • Hasta {{ num(fud.max, 1) }} imágenes</span>
+      </div>
     </div>
   </label>
 
-  <!-- Panel de previews + acciones (tu layout) -->
+  <!-- Previews -->
   <div class="ufu-preview-row">
-    <div class="ufu-previews">
+    <div class="ufu-previews" *ngIf="previews.length; else emptyState">
       <div class="ufu-card" *ngFor="let p of previews; let i = index">
         <div class="ufu-preview">
-          <ng-container [ngSwitch]="p.type">
-            <ng-container *ngSwitchCase="'image'">
-              <ui-preview [style]="{width: '150px'}" [types]="'image'" [overlay]="true"
-                [severity]="fud.severity || 'primary'" [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'"
-                [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
-              </ui-preview>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'video'">
-              <ui-preview [style]="{width: '500px'}" [types]="'video'" [overlay]="true" [severity]="fud.severity || 'primary'"
-                [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" 
-                [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
-              </ui-preview>
-            </ng-container>
-
-            <ng-container *ngSwitchDefault>
-              <ui-preview [types]="'document'" [overlay]="true" [severity]="fud.severity || 'primary'"
-                [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'" 
-                [mask]="{ type: 'blur' }" [src]="p.url!" [alt]="p.file?.name">
-              </ui-preview>
-            </ng-container>
-          </ng-container>
-
+          <ui-preview
+            [style]="{ width: '96px', height: '96px', borderRadius: '8px' }"
+            [types]="'image'"
+            [overlay]="true"
+            [severity]="fud.severity || 'primary'"
+            [size]="fud.size || 'sm'"
+            [variant]="fud.variant || 'outlined'"
+            [mask]="{ type: 'blur' }"
+            [src]="p.url"
+            [alt]="p.name">
+          </ui-preview>
         </div>
 
-        <div class="ufu-name">
-          
-          <span>{{ p.file?.name }}</span>
+        <div class="ufu-info">
+          <span class="ufu-name" [title]="p.name">{{ p.name }}</span>
+          <span class="ufu-meta" *ngIf="p.sizeLabel">{{ p.sizeLabel }}</span>
         </div>
 
         <div class="ufu-remove">
-          <ui-button [severity]="fud.severity || 'danger'" [size]="'sm'"
-            [style]="{borderRadius: '17px', width: '25px', height: '25px'}" [variant]="'flat'"
-            [icon]="{ svgPath: 'svg/x.svg'}" [disabled]="fud.disabled" (click)="removeAt(i)">
-          </ui-button>
-        </div>
-      </div>
-
-      <div class="ufu-empty" *ngIf="!previews.length">
-        <ui-preview [src]="" [style]="{width: '150px', borderRadius: '5px'}" [types]="'image'" [overlay]="true"
-          [severity]="fud.severity || 'primary'" [size]="fud.size || 'sm'" [variant]="fud.variant || 'outlined'"
-           [mask]="{ type: 'blur' }">
-        </ui-preview>
-        <div class="ufu-errors" *ngIf="errors.length">
-            <span *ngFor="let e of errors">{{ e }}</span>
-          
-        </div>
-          <div class="ufu-empty-name " *ngIf="!errors.length">            
-            <span>No se ha seleccionado ningun archivo</span>          
-          </div>
-          
-        <div class="ufu-remove">
-          <ui-button [severity]="fud.severity || 'danger'" [size]="'sm'"
-            [style]="{borderRadius: '17px', width: '25px', height: '25px'}" [variant]="'flat'"
-            [icon]="{ svgPath: 'svg/x.svg'}" [disabled]="true">
+          <ui-button
+            [severity]="'secondary'"
+            [size]="'sm'"
+            [style]="{ borderRadius: '999px', width: '26px', height: '26px' }"
+            [variant]="'flat'"
+            [icon]="{ svgPath: 'svg/x.svg' }"
+            [disabled]="fud.disabled"
+            (click)="removeAt(i)">
           </ui-button>
         </div>
       </div>
     </div>
+
+    <!-- Estado vacío -->
+    <ng-template #emptyState>
+      <div class="ufu-empty">
+        <ui-preview
+          [style]="{ width: '120px', height: '96px', borderRadius: '8px' }"
+          [types]="'image'"
+          [overlay]="true"
+          [severity]="fud.severity || 'primary'"
+          [size]="fud.size || 'sm'"
+          [variant]="fud.variant || 'outlined'"
+          [mask]="{ type: 'blur' }"
+          [src]="''">
+        </ui-preview>
+
+        <div class="ufu-empty-text">
+          <span>No se ha seleccionado ninguna imagen</span>
+        </div>
+
+        <div class="ufu-remove">
+          <ui-button
+            [severity]="'secondary'"
+            [size]="'sm'"
+            [style]="{ borderRadius: '999px', width: '26px', height: '26px' }"
+            [variant]="'flat'"
+            [icon]="{ svgPath: 'svg/x.svg' }"
+            [disabled]="true">
+          </ui-button>
+        </div>
+      </div>
+    </ng-template>
   </div>
 
-
-
+  <!-- Errores -->
+  <div class="ufu-errors" *ngIf="errors.length">
+    <span *ngFor="let e of errors">{{ e }}</span>
+  </div>
 </div>
