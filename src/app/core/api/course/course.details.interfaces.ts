@@ -61,7 +61,7 @@ export interface CodeResponse {
 }
 
 export interface CourseDetailRequest {
-    title?: string;
+  title?: string;
   description?: string;
   private?: boolean;
   enabled?: boolean;
@@ -77,5 +77,7 @@ export interface CourseDetailRequest {
 
   // Archivo para miniatura (si lo incluyes, el request se envía como multipart/form-data)
   miniature?: File | null;
+
+  remove_miniature?: boolean;
   
 }

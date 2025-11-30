@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, inject, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { ApplicationRef, Component, effect, inject, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, ParamMap, Router, RouterOutlet } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, Observable, Subject, tap } from 'rxjs';
@@ -19,6 +19,7 @@ import { Portfolio } from '../../../core/api/profile/portfolio.interface';
 import { SearchComponent } from '../../../shared/UI/components/data/search/search.component';
 import { NotificationComponent } from '../../../shared/UI/components/data/notification/notification.component';
 import { ExploreComponent } from '../../../shared/UI/components/data/explore/explore.component';
+import { StudioBridgeService } from '../../../core/api/studio/studio-bridge.service';
 
 @Component({
   selector: 'app-studio',
@@ -46,8 +47,8 @@ export class StudioComponent implements OnInit {
     usernameEdit?: string;
 
     private destroy$ = new Subject<void>();
-  
-  
+    private readonly studioBridge = inject(StudioBridgeService);
+
     constructor(
       private themeService: ThemeService,
       @Inject(PLATFORM_ID) private platformId: Object,
@@ -61,6 +62,7 @@ export class StudioComponent implements OnInit {
       private studioService: StudioService,
     ) {
       this.setupRouterSubscription();
+      this.setupStudioBridgeListener();
     }
   
     ngOnInit() {
@@ -78,7 +80,57 @@ export class StudioComponent implements OnInit {
   .subscribe(() => {
     this.renderer.removeClass(document.body, 'app-loading');
   });
+  
     }
+    private setupStudioBridgeListener(): void {
+  effect(() => {
+    const update = this.studioBridge.courseUpdate();
+    if (!update) return;
+
+    // ID del curso actual en la ruta
+    const currentIdParam = this.route.snapshot.paramMap.get('id');
+    const currentId = currentIdParam ? Number(currentIdParam) : NaN;
+
+    // Solo reaccionar si el update corresponde al curso que se está editando
+    if (!Number.isFinite(currentId) || currentId !== update.id) {
+      return;
+    }
+
+    // Si aún no tenemos miniatureData (por alguna razón), salimos
+    if (!this.miniatureData) {
+      return;
+    }
+
+    // Actualizar título si quieres
+    if (this.miniatureData.course) {
+      this.miniatureData = {
+        ...this.miniatureData,
+        course: {
+          ...this.miniatureData.course,
+          title: update.title
+        }
+      };
+    }
+
+    // Actualizar miniatura (añadir o quitar)
+    if (update.miniatureUrl) {
+      this.miniatureData = {
+        ...this.miniatureData,
+        miniature: {
+          ...(this.miniatureData?.miniature ? { ...this.miniatureData.miniature } : { id: 0, course_id: update.id, created_at: new Date(), updated_at: new Date() }),
+          url: update.miniatureUrl
+        }
+      };
+    } else {
+      // Si viene null => se eliminó la miniatura
+      this.miniatureData = {
+        ...this.miniatureData,
+        miniature: null
+      };
+    }
+  });
+}
+
     isAdmin(): boolean {
       return this.authService.hasRole('admin');
     }

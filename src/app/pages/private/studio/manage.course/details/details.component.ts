@@ -27,7 +27,7 @@ import { Career } from '../../../../../core/api/carrer/career.interface';
 import { min } from 'rxjs';
 import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 import e from 'express';
-
+import { StudioBridgeService } from '../../../../../core/api/studio/studio-bridge.service';
 
 @Component({
   selector: 'app-details',
@@ -60,7 +60,7 @@ export class DetailsComponent implements OnInit {
   private readonly categoryService = inject(CategoryService);
   private readonly careerService = inject(CareerService);
   private readonly host = inject(ElementRef<HTMLElement>);
-
+  private readonly studioBridge = inject(StudioBridgeService);
   @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
   
   constructor(
@@ -84,6 +84,8 @@ export class DetailsComponent implements OnInit {
 
   isDialogOpen = true; // o false según el caso
   selectedMiniature: File | null = null;
+  miniatureAction: 'none' | 'upload' | 'remove' = 'none';
+
 
   readonly MAX_CATEGORIES = 4;
 readonly MAX_CAREERS = 2;
@@ -158,13 +160,34 @@ readonly MAX_CAREERS = 2;
 }
   onMiniatureChange(file: File | null) {
   this.selectedMiniature = file;
+
   if (file) {
-    // solo previsualización (opcional)
+    // Usuario eligió nueva miniatura → subir
+    this.miniatureAction = 'upload';
+
     const reader = new FileReader();
-    reader.onload = () => this.form.patchValue({ miniatureUrl: String(reader.result) });
+    reader.onload = () =>
+      this.form.patchValue({ miniatureUrl: String(reader.result) });
     reader.readAsDataURL(file);
+  } else {
+    // Quitó selección local; si no hay miniatura en el curso,
+    // dejamos vacío y acción 'none'
+    if (!this.course()?.miniature) {
+      this.miniatureAction = 'none';
+      this.form.patchValue({ miniatureUrl: '' });
+    }
   }
+
+  this.form.markAsDirty();
 }
+removeMiniature(): void {
+  // Usuario quiere eliminar la miniatura actual sin subir otra
+  this.selectedMiniature = null;
+  this.miniatureAction = 'remove';
+  this.form.patchValue({ miniatureUrl: '' });
+  this.form.markAsDirty();
+}
+
   private loadCategories(): void {
     this.loadingCategories.set(true);
     this.categoryService.getAll()
@@ -238,12 +261,14 @@ readonly MAX_CAREERS = 2;
       careers: this.idsOrEmpty(c.careers),
       categories: this.idsOrEmpty(c.categories),
       miniatureUrl: c.miniature?.url ?? '', // <- clave: evita leer url si no hay miniatura
+
     },
     { emitEvent: false }
   );
 
   // al resetear, limpiamos estado local de archivo/flags
   this.selectedMiniature = null;
+  this.miniatureAction = 'none';
   
 }
   
@@ -303,7 +328,8 @@ readonly MAX_CAREERS = 2;
     code: this.form.value.code ?? undefined,
     careers,
     categories, // si quieres enviar con order, arma [{id, order}]
-    miniature: this.selectedMiniature ?? undefined , // si hay archivo, lo envía
+    miniature: this.selectedMiniature ?? null , // si hay archivo, lo envía
+    remove_miniature: this.form.value.miniatureUrl === '' ? true : false
   };
 
   this.saving.set(true);
@@ -329,6 +355,11 @@ console.log('Payload a enviar:', payload);
         this.saving.set(false);
         // opcional: cierra modal de miniatura
         this.modalOpenMiniature = false;
+        this.studioBridge.notifyCourseUpdated({
+        id: res.course.id,
+        title: res.course.title,
+        miniatureUrl: res.course.miniature?.url ?? null,
+      })
       },
       error: (err: Error) => {
         this.errorMsg.set(err.message || 'No se pudo actualizar el curso.');

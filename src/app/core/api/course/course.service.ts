@@ -189,66 +189,72 @@ export class CourseService {
   }
 
   updateCourse(
-    courseId: number | string,
-    data: CourseDetailRequest
-  ): Observable<CourseDetailResponse> {
-    const url = `${this.apiUrl}/${courseId}/update`;
-    const fd = new FormData();
+  courseId: number | string,
+  data: CourseDetailRequest
+): Observable<CourseDetailResponse> {
+  const url = `${this.apiUrl}/${courseId}/update`;
+  const fd = new FormData();
 
-    const appendIfDefined = (key: string, v: unknown) => {
-      if (v === undefined) return;
-      if (v === null) {
-        fd.append(key, '');
-        return;
-      }
-      fd.append(key, String(v));
-    };
-
-    // Campos base
-    appendIfDefined('title', data.title);
-    appendIfDefined('description', data.description);
-    if (data.private !== undefined) fd.append('private', data.private ? '1' : '0');
-    if (data.enabled !== undefined) fd.append('enabled', data.enabled ? '1' : '0');
-    appendIfDefined('difficulty_id', data.difficulty_id);
-    if (data.code !== undefined) {
-      fd.append('code', data.code ?? '');
+  const appendIfDefined = (key: string, v: unknown) => {
+    if (v === undefined) return;
+    if (v === null) {
+      fd.append(key, '');
+      return;
     }
+    fd.append(key, String(v));
+  };
 
-    // Carreras (ids)
-    if (Array.isArray(data.careers)) {
-      const careers = [...new Set(data.careers)];
-      careers.forEach(id => fd.append('careers[]', String(id)));
-    }
-
-    // Categorías
-    if (Array.isArray(data.categories)) {
-      const cats = data.categories;
-      if (typeof cats[0] === 'number') {
-        (cats as number[]).forEach(id => fd.append('categories[]', String(id)));
-      } else {
-        (cats as { id: number; order?: number }[]).forEach((c, i) => {
-          fd.append(`categories[${i}][id]`, String(c.id));
-          if (c.order !== undefined) {
-            fd.append(`categories[${i}][order]`, String(c.order));
-          }
-        });
-      }
-    }
-
-    // Miniatura (archivo)
-    if (data.miniature) {
-      fd.append('miniature', data.miniature);
-    }
-
-    return this.http.post<CourseDetailResponse>(url, fd).pipe(
-      map(res => res),
-      catchError((err: HttpErrorResponse) => {
-        const msg =
-          (err.error && (err.error.message || err.error.error)) ||
-          err.message ||
-          'Error actualizando el curso';
-        return throwError(() => new Error(msg));
-      })
-    );
+  // Campos base
+  appendIfDefined('title', data.title);
+  appendIfDefined('description', data.description);
+  if (data.private !== undefined) fd.append('private', data.private ? '1' : '0');
+  if (data.enabled !== undefined) fd.append('enabled', data.enabled ? '1' : '0');
+  appendIfDefined('difficulty_id', data.difficulty_id);
+  if (data.code !== undefined) {
+    fd.append('code', data.code ?? '');
   }
+
+  // Carreras (ids)
+  if (Array.isArray(data.careers)) {
+    const careers = [...new Set(data.careers)];
+    careers.forEach(id => fd.append('careers[]', String(id)));
+  }
+
+  // Categorías
+  if (Array.isArray(data.categories)) {
+    const cats = data.categories;
+    if (typeof cats[0] === 'number') {
+      (cats as number[]).forEach(id => fd.append('categories[]', String(id)));
+    } else {
+      (cats as { id: number; order?: number }[]).forEach((c, i) => {
+        fd.append(`categories[${i}][id]`, String(c.id));
+        if (c.order !== undefined) {
+          fd.append(`categories[${i}][order]`, String(c.order));
+        }
+      });
+    }
+  }
+
+  // Miniatura (archivo): solo si es File
+  if (data.miniature instanceof File) {
+    fd.append('miniature', data.miniature);
+  }
+
+  // Flag para quitar miniatura
+  if (data.remove_miniature !== undefined) {
+    fd.append('remove_miniature', data.remove_miniature ? '1' : '0');
+  }
+
+  return this.http.post<CourseDetailResponse>(url, fd).pipe(
+    map(res => res),
+    catchError((err: HttpErrorResponse) => {
+      const msg =
+        (err.error && (err.error.message || err.error.error)) ||
+        err.message ||
+        'Error actualizando el curso';
+      return throwError(() => new Error(msg));
+    })
+  );
+}
+
 }
