@@ -82,7 +82,23 @@ export interface ProgressData {
     chapter_completed:  boolean;
     certificate_issued: boolean;
 }
+// ====== RATING COURSE (calificación de curso) ======
 
+export interface RatingCourseRequest {
+  stars: number; // 1–5
+}
+
+export interface RatingCourseResponse {
+  ok: boolean;
+  message: string;
+  data: {
+    course_id: number;
+    user_id: number;
+    stars: number;
+    average_stars: number;
+    ratings_count: number;
+  };
+}
 
 
 

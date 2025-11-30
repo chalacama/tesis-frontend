@@ -16,6 +16,9 @@ import { DetailComponent } from './detail/detail.component';
 import { CourseBridge } from '../../../../core/api/watching/course-bridge.service';
 import { filter } from 'rxjs';
 import { ToastComponent } from '../../../../shared/UI/components/overlay/toast/toast.component';
+import { DialogComponent } from '../../../../shared/UI/components/overlay/dialog/dialog.component';
+import { UiToastService } from '../../../../shared/services/ui-toast.service';
+import { RatingComponent } from './rating/rating.component';
 
 type ChapterItem = {
   id: number;
@@ -43,6 +46,9 @@ type ModuleItem = {
     RouterOutlet,
     CommentComponent,
     DetailComponent,
+    ToastComponent,
+    DialogComponent,
+    RatingComponent
     
   ],
   templateUrl: './course.component.html',
@@ -53,12 +59,13 @@ export class CourseComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly watchingSvc = inject(WatchingService);
   readonly bridge = inject(CourseBridge);
-  
+  private readonly toast = inject(UiToastService);
   private firstChapterId: number | null = null;
 
   // UI state
   visibleModule = true;
   smallModule = false;
+  dialogShow = false;
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
 
@@ -99,7 +106,7 @@ export class CourseComponent implements OnInit {
     return null;
   });
 
-  constructor() {
+    constructor() {
     // Evalúa la URL inicial
     this.syncViewModeFromUrl(this.router.url);
 
@@ -110,7 +117,38 @@ export class CourseComponent implements OnInit {
         takeUntilDestroyed()
       )
       .subscribe(e => this.syncViewModeFromUrl(e.urlAfterRedirects));
+
+    // 🌉 Escuchar cuando se emita un certificado (curso completado)
+    effect(() => {
+      const issued = this.bridge.certificateIssued();
+      if (!issued) return;
+
+      // 1) Abrir el diálogo de rating
+      this.dialogShow = true;
+
+      // 2) Mostrar Toast
+      this.toast.add({
+        severity: 'primary',
+        summary: '🎓 ¡Curso completado!',
+        message:
+          'Se ha emitido tu certificado. Revísalo en tus notificaciones o en la sección de certificados.',
+        position: 'top-right',
+        lifetime: 5000
+      });
+
+      // 3) Consumir el evento para que no se repita
+      this.bridge.consumeCertificateIssued();
+    });
+    // 🌉 Escuchar cuando RatingComponent pida cerrar el diálogo
+    effect(() => {
+      const shouldClose = this.bridge.closeRatingDialog();
+      if (!shouldClose) return;
+
+      this.dialogShow = false;
+      this.bridge.consumeCloseRatingDialog();
+    });
   }
+
 
   private syncViewModeFromUrl(url: string): void {
     const last = url

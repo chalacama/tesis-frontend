@@ -35,7 +35,7 @@
     
       <ui-button
       [style]="{borderRadius: '50%' , width: '40px', height: '40px'}"
-      
+      *ngIf="dlg.showBtn"
       [variant]="dlg.variant"
       [severity]="dlg.severity"
       ariaLabel="cerrar"

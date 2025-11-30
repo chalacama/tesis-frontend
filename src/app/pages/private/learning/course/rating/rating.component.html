@@ -1,0 +1,63 @@
+<div class="rating-card">
+  <header class="rating-header">
+    <p class="tag">🎓 Curso completado</p>
+    <h2>¿Qué te pareció este curso?</h2>
+    <p class="subtitle">
+      Tu calificación ayudará a otros estudiantes y a los tutores a mejorar sus contenidos.
+    </p>
+  </header>
+
+  <div
+    class="stars-row"
+    role="radiogroup"
+    aria-label="Calificar el curso de 1 a 5 estrellas"
+  >
+    <button
+      *ngFor="let s of stars"
+      type="button"
+      class="star-btn"
+      [class.filled]="currentStars() >= s"
+      [class.hovered]="(hoverStars() ?? 0) >= s"
+      (mouseenter)="onStarEnter(s)"
+      (mouseleave)="onStarLeave()"
+      (click)="onStarClick(s)"
+      [attr.aria-label]="s + ' estrellas'"
+      [attr.aria-pressed]="selectedStars() === s"
+    >
+      ★
+    </button>
+  </div>
+
+  <div class="rating-label">
+    {{ label() }}
+  </div>
+
+  <p class="helper">
+    Puedes actualizar tu calificación más adelante desde los detalles del curso.
+  </p>
+
+  <div class="actions">
+    <button
+      type="button"
+      class="primary"
+      (click)="submit()"
+      [disabled]="saving() || selectedStars() === 0"
+    >
+      {{ saving() ? 'Guardando...' : 'Enviar calificación' }}
+    </button>
+
+    <button
+      type="button"
+      class="ghost"
+      (click)="reset()"
+      [disabled]="saving()"
+    >
+      Limpiar selección
+    </button>
+  </div>
+
+  <p *ngIf="error()" class="error-msg">
+    {{ error() }}
+  </p>
+</div>
+

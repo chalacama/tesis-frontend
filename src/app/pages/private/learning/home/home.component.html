@@ -43,21 +43,13 @@
       <div class="card" *ngFor="let course of courses">
         <div (click)="viewCourse(course)" class="card_view">
           <!-- Miniatura con preview tipo GIF (video) -->
-          <div *ngIf="course.thumbnail_url"
-               class="card_view_img"
-               (mouseenter)="onThumbnailEnter(course)"
-               (mouseleave)="onThumbnailLeave(course)">
+          <div *ngIf="course.thumbnail_url" class="card_view_img" (mouseenter)="onThumbnailEnter(course)"
+            (mouseleave)="onThumbnailLeave(course)">
             <ng-container *ngIf="!isPreviewActive(course); else videoPreview">
               <img [src]="course.thumbnail_url" alt="">
             </ng-container>
             <ng-template #videoPreview>
-              <video
-                class="card_view_video"
-                [src]="course.first_learning_content_url"
-                autoplay
-                muted
-                loop
-                playsinline>
+              <video class="card_view_video" [src]="course.first_learning_content_url" autoplay muted loop playsinline>
               </video>
             </ng-template>
           </div>
@@ -73,22 +65,15 @@
 
         <div class="card_content">
           <div class="card_content_profile">
-            <div (click)="viewPortfolio(course.tutor?.username)"
-                 *ngIf="course.tutor?.profile_picture_url"
-                 class="card_content_profile_img">
-              <img [src]="course.tutor?.profile_picture_url" alt="">
+            <div (click)="viewPortfolio(course.tutor?.username)" class="card_content_profile_img"
+              [class.empty]="course.tutor?.profile_picture_url">
+              <img *ngIf="course.tutor?.profile_picture_url" [src]="course.tutor?.profile_picture_url" alt="Foto de perfil" />
+              <span *ngIf="!course.tutor?.profile_picture_url">
+                {{ getInitialsFromUser(course.tutor) }}
+              </span>
             </div>
+            
 
-            <div *ngIf="course.tutor?.profile_picture_url === null && course.tutor?.name === null"
-                 class="card_content_profile_img">
-              <img src="img\logo\jpg\digi-mentor-solo-buho.jpg" alt="">
-            </div>
-
-            <div (click)="viewPortfolio(course.tutor?.username)"
-                 *ngIf="course.tutor?.profile_picture_url === null && course.tutor?.name"
-                 class="card_content_profile_img">
-              <img src="img/avatar/default-profile-green.png" alt="">
-            </div>
 
             <div class="card_content_profile-info">
               <div class="card_content_profile_title">

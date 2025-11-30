@@ -1,0 +1,138 @@
+.rating-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 1.25rem;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 12px 30px var(--shadow-color);
+  max-width: 480px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rating-header h2 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.rating-header .subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+}
+
+.rating-header .tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: color-mix(in srgb, var(--sev-primary) 12%, transparent);
+  color: var(--sev-primary);
+}
+
+/* Estrellas */
+.stars-row {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  padding: 0.15rem;
+  cursor: pointer;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--border-color);
+  transition:
+    color 120ms ease,
+    transform 120ms ease,
+    text-shadow 120ms ease;
+}
+
+.star-btn.filled {
+  color: var(--sev-warn);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--sev-warn) 40%, transparent);
+}
+
+.star-btn.hovered {
+  transform: scale(1.06);
+}
+
+.star-btn:focus-visible {
+  outline: 2px solid var(--active-color);
+  outline-offset: 3px;
+}
+
+/* Texto debajo */
+.rating-label {
+  min-height: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.helper {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+/* Acciones */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.actions .primary,
+.actions .ghost {
+  border-radius: 999px;
+  padding: 0.45rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease,
+    transform 80ms ease;
+}
+
+.actions .primary {
+  background: var(--sev-primary);
+  color: var(--text-color-contrast);
+}
+
+.actions .primary:hover:not(:disabled) {
+  background: var(--sev-primary-hover);
+  transform: translateY(-1px);
+}
+
+.actions .primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.actions .ghost {
+  background: transparent;
+  color: var(--text-color-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.actions .ghost:hover:not(:disabled) {
+  background: var(--background-hover);
+}
+
+/* Error */
+.error-msg {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--danger-500);
+}

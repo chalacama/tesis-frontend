@@ -20,13 +20,12 @@ import {
 } from '../../../../../core/api/watching/test.interface';
 import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
 import { NotificationBridgeService } from '../../../../../core/api/notification/notification-bridge.service';
-import { UiToastService } from '../../../../../shared/services/ui-toast.service';
 import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, LoadingBarComponent , ToastComponent],
+  imports: [CommonModule, ButtonComponent, LoadingBarComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.css'
 })
@@ -37,7 +36,7 @@ export class TestComponent {
   private readonly destroyRef = inject(DestroyRef);
    private readonly bridge = inject(CourseBridge);
    private readonly notificationBridge = inject(NotificationBridgeService); // 👈 NUEVO
-  private readonly toast = inject(UiToastService); 
+  
   // ---- state base ----
   loading    = signal<boolean>(false);
   submitting = signal<boolean>(false);
@@ -249,14 +248,8 @@ export class TestComponent {
         }
         if (res.data?.certificate_issued) {
         this.notificationBridge.increment(1);
-
-        this.toast.add({
-          severity: 'primary',
-          summary: '🎓 ¡Certificado disponible!',
-          message: 'Has completado el curso y se generó tu certificado.',
-          position: 'top-right',
-          lifetime: 5000
-        });
+        this.bridge.notifyCertificateIssued();
+        
       }
 
         // Volver al hub y refrescar meta (score, attempts, flags)

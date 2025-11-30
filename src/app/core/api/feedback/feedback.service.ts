@@ -13,6 +13,8 @@ import {
   LikedRequest, LikeResponse,
   ProgressRequest,
   ProgressResponse,
+  RatingCourseRequest,
+  RatingCourseResponse,
   RegisterCourseByCodeRequest,
   RegisterCourseRequest,
   RegisterCourseResponse,
@@ -104,6 +106,26 @@ updateProgress(learningContentId: number | string, body: ProgressRequest): Obser
   completeTest(testViewId: number): Observable<CompletedTestResponse> {
     const url = `${this.apiUrl}/completed/${testViewId}/test`;
     return this.http.post<CompletedTestResponse>(url, {});
+  }
+
+  // ====== RATING COURSE ======
+
+  /**
+   * Calificar o actualizar calificación de un curso.
+   * POST /feedback/rating/{course}/update
+   */
+  rateCourse(courseId: number | string, body: RatingCourseRequest): Observable<RatingCourseResponse> {
+    return this.http.post<RatingCourseResponse>(
+      `${this.apiUrl}/rating/${courseId}/update`,
+      body
+    );
+  }
+
+  /**
+   * Azúcar sintáctico para enviar solo las estrellas
+   */
+  setRating(courseId: number | string, stars: number) {
+    return this.rateCourse(courseId, { stars });
   }
 
 }

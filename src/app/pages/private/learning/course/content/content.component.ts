@@ -34,9 +34,9 @@ import { FeedbackService } from '../../../../../core/api/feedback/feedback.servi
 import { LikeResponse, SavedResponse } from '../../../../../core/api/feedback/feedback.interface';
 import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
 import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
-import { UiToastService } from '../../../../../shared/services/ui-toast.service';
+
 import { NotificationBridgeService } from '../../../../../core/api/notification/notification-bridge.service';
-import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
+
 import { TextComponent } from '../../../../../shared/UI/components/data/text/text.component';
 
 declare global {
@@ -52,7 +52,6 @@ declare global {
     ButtonComponent,
     AvatarComponent,
     DialogComponent,
-    ToastComponent,
     TextComponent
   ],
   templateUrl: './content.component.html',
@@ -67,7 +66,7 @@ export class ContentComponent implements OnInit {
   private readonly feedbackSvc = inject(FeedbackService);
   private readonly bridge = inject(CourseBridge);
   private readonly notificationBridge = inject(NotificationBridgeService);
-  private readonly toast = inject(UiToastService);
+  
 
   @ViewChild('ytFrame') ytFrame?: ElementRef<HTMLIFrameElement>;
   @ViewChild('codeInput') codeInput?: ElementRef<HTMLInputElement>;
@@ -720,15 +719,8 @@ export class ContentComponent implements OnInit {
         }
         if (res?.data?.certificate_issued) {
           this.notificationBridge.increment(1);
-
-          this.toast.add({
-            severity: 'primary',
-            summary: '🎓 ¡Curso completado!',
-            message:
-              'Se ha emitido tu certificado. Revísalo en tus notificaciones o en la sección de certificados.',
-            position: 'top-right',
-            lifetime: 5000
-          });
+          this.bridge.notifyCertificateIssued();
+          
         }
       },
       error: () => {

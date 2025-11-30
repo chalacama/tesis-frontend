@@ -34,6 +34,10 @@ line-height: 1.2;
 .content-course-relative{
   position: relative;
 }
+.dialog-rating{
+  width: 100%;
+  height: 100%;
+}
 .modules-header{
     width: 100%;
     height: auto;
@@ -480,7 +484,7 @@ padding-left: 5px;
 
 .module-chip:hover,
 .chapter-pill:hover {
-  background: var(--background-hover);
+  background: var(--sev-primary-hover);
 }
 
 .module-chip-active {

@@ -3,6 +3,7 @@ import { Course } from '../../../../core/api/start/start.interfaces';
 import { StartService } from '../../../../core/api/start/start.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AvatarComponent } from '../../../../shared/UI/components/media/avatar/avatar.component';
 
 @Component({
   selector: 'app-home',
@@ -35,7 +36,22 @@ export class HomeComponent implements OnInit {
 
     this.loadCourses();
   }
-
+    getInitialsFromUser(u: any): string {
+      if (!u) return 'U';
+      const base = this.getFullName(u) || u.username || 'D M';
+      return base
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((p: string) => p[0]?.toUpperCase() || '')
+        .join('') || 'D M';
+    }
+    getFullName(u: any): string {
+        if (!u) return '';
+        const n = (u.name || '').trim();
+        const ln = (u.lastname || '').trim();
+        const full = [n, ln].filter(Boolean).join(' ');
+        return full || (u.username || '');
+      }
   loadCourses(): void {
     if (this.loading || !this.hasMore) return;
 

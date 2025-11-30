@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, DestroyRef } from '@angular/core';
+import { Component, inject, signal, computed, DestroyRef, effect, untracked } from '@angular/core';
+
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -46,7 +47,30 @@ export class DetailComponent {
     return Math.max(0, Math.min(100, Math.round(pct)));
   });
 
-  
+    constructor() {
+    // 🌉 PUENTE #2: cuando se actualice el rating desde el RatingComponent
+    effect(() => {
+      const summary = this.bridge.ratingSummary();
+      if (!summary) return;
+
+      // No queremos que el effect dependa de course(), así que usamos untracked
+      untracked(() => {
+        const current = this.course();
+        if (!current) return;
+
+        this.course.set({
+          ...current,
+          ratings: {
+            ...(current as any).ratings,
+            avg_stars: summary.avg_stars,
+            count: summary.count,
+            user_stars: summary.user_stars
+          }
+        });
+      });
+    });
+  }
+
 
   ngOnInit() {
     this.route.paramMap
