@@ -1,6 +1,6 @@
 // src/app/services/category.service.ts
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 import { environment } from '../../environment/environment';
@@ -10,7 +10,9 @@ import {
   CategoryListResponse,
   CategoryDetailResponse,
   CategoryCreateDto,
-  CategoryUpdateDto
+  CategoryUpdateDto,
+  CategoryAdminListResponse,
+  CategoryAdminQuery
 } from './category.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -94,5 +96,32 @@ export class CategoryService {
     };
 
     return throwError(() => wrappedError);
+  }
+  getAdminList(
+    query: CategoryAdminQuery = {}
+  ): Observable<CategoryAdminListResponse> {
+    let params = new HttpParams();
+
+    if (query.search) {
+      params = params.set('search', query.search);
+    }
+    if (query.page != null) {
+      params = params.set('page', String(query.page));
+    }
+    if (query.per_page != null) {
+      params = params.set('per_page', String(query.per_page));
+    }
+
+    return this.http
+      .get<CategoryAdminListResponse>(`${this.apiUrl}/index-admin` , { params })
+      .pipe(
+        // aquí mantenemos intacto el shape del backend (data + meta)
+        catchError((err) =>
+          this.handleError(
+            err,
+            'obtener la lista administrativa de categorías'
+          )
+        )
+      );
   }
 }

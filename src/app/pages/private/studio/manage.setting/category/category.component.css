@@ -109,6 +109,14 @@
   gap: 0.5rem;
 }
 
+/* columnas numéricas (conteos) */
+
+.th-number,
+.td-number {
+  text-align: right;
+  width: 130px;
+}
+
 /* ICON BUTTONS */
 
 .icon-btn {
@@ -176,6 +184,29 @@
   flex-direction: column;
   gap: 0.75rem;
   align-items: center;
+}
+
+/* PAGINACIÓN */
+
+.pagination-wrapper {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-page {
+  min-width: 120px;
+  text-align: center;
 }
 
 /* DIALOGS */
@@ -316,5 +347,10 @@
 
   .search-wrapper {
     max-width: 100%;
+  }
+
+  .pagination-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

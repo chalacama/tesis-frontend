@@ -8,9 +8,10 @@ import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay
 import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
 
 import {
-  Category,
   CategoryCreateDto,
-  CategoryUpdateDto
+  CategoryUpdateDto,
+  CategoryAdmin,
+  PaginationMeta
 } from '../../../../../core/api/category/category.interface';
 import { CategoryService } from '../../../../../core/api/category/category.service';
 import { UiToastService } from '../../../../../shared/services/ui-toast.service';
@@ -37,21 +38,23 @@ export class CategoryComponent implements OnInit {
   loading = true;
   skeletonRows = Array.from({ length: 5 });
 
-  // Datos
-  categories: Category[] = [];
-  filteredCategories: Category[] = [];
+  // Datos (paginados desde la API adminIndex)
+  categories: CategoryAdmin[] = [];
+  meta: PaginationMeta | null = null;
 
-  // Búsqueda
+  // Filtros y paginación
   searchTerm = '';
+  currentPage = 1;
+  perPage = 10; // puedes exponerlo en la vista si quieres cambiarlo
 
   // Diálogo de renombrar/crear
   renameDialogOpen = false;
   renameName = '';
-  editingCategory: Category | null = null; // null => crear
+  editingCategory: CategoryAdmin | null = null; // null => crear
 
   // Diálogo de eliminar
   deleteDialogOpen = false;
-  deletingCategory: Category | null = null;
+  deletingCategory: CategoryAdmin | null = null;
 
   private readonly categoryService = inject(CategoryService);
   private readonly toast = inject(UiToastService);
@@ -61,14 +64,22 @@ export class CategoryComponent implements OnInit {
   }
 
   // ==========================
-  //   Carga y filtrado
+  //   Carga desde adminIndex
   // ==========================
-  private loadCategories(): void {
+  private loadCategories(page: number = 1): void {
     this.loading = true;
-    this.categoryService.getAll().subscribe({
-      next: (cats) => {
-        this.categories = cats;
-        this.applyFilter();
+    this.currentPage = page;
+
+    const query = {
+      search: this.searchTerm.trim() || undefined,
+      page: this.currentPage,
+      per_page: this.perPage
+    };
+
+    this.categoryService.getAdminList(query).subscribe({
+      next: (res) => {
+        this.categories = res.data ?? [];
+        this.meta = res.meta;
         this.loading = false;
       },
       error: (err) => {
@@ -84,15 +95,21 @@ export class CategoryComponent implements OnInit {
     });
   }
 
+  /**
+   * Cuando cambia el término de búsqueda:
+   * resetea a la página 1 y vuelve a pedir al backend.
+   */
   applyFilter(): void {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      this.filteredCategories = [...this.categories];
-      return;
-    }
-    this.filteredCategories = this.categories.filter((cat) =>
-      cat.name.toLowerCase().includes(term)
-    );
+    this.loadCategories(1);
+  }
+
+  /**
+   * Navegación entre páginas (usa los datos de meta)
+   */
+  goToPage(page: number): void {
+    if (!this.meta) return;
+    if (page < 1 || page > this.meta.last_page || page === this.meta.current_page) return;
+    this.loadCategories(page);
   }
 
   // ==========================
@@ -104,7 +121,7 @@ export class CategoryComponent implements OnInit {
     this.renameDialogOpen = true;
   }
 
-  openRenameDialog(category: Category): void {
+  openRenameDialog(category: CategoryAdmin): void {
     this.editingCategory = category;
     this.renameName = category.name;
     this.renameDialogOpen = true;
@@ -133,16 +150,16 @@ export class CategoryComponent implements OnInit {
     if (!this.editingCategory) {
       const payload: CategoryCreateDto = { name };
       this.categoryService.create(payload).subscribe({
-        next: (created) => {
+        next: () => {
           this.save = false;
           this.toast.add({
             severity: 'primary',
             summary: 'Creada',
             message: 'Categoría creada correctamente.'
           });
-          this.categories = [created, ...this.categories];
-          this.applyFilter();
           this.closeRenameDialog();
+          // Volver a cargar desde el backend (respeta filtros y página actual)
+          this.loadCategories(this.currentPage);
         },
         error: (err) => {
           this.save = false;
@@ -164,21 +181,16 @@ export class CategoryComponent implements OnInit {
     // Renombrar (update)
     const payload: CategoryUpdateDto = { name };
     this.categoryService.update(this.editingCategory.id, payload).subscribe({
-      next: (updated) => {
+      next: () => {
         this.save = false;
         this.toast.add({
           severity: 'primary',
           summary: 'Actualizada',
           message: 'Categoría renombrada correctamente.'
         });
-        const idx = this.categories.findIndex(
-          (c) => c.id === updated.id
-        );
-        if (idx !== -1) {
-          this.categories[idx] = updated;
-        }
-        this.applyFilter();
         this.closeRenameDialog();
+        // Reload para refrescar el orden alfabético y los conteos si cambian
+        this.loadCategories(this.currentPage);
       },
       error: (err) => {
         this.save = false;
@@ -199,7 +211,7 @@ export class CategoryComponent implements OnInit {
   // ==========================
   //   Eliminar
   // ==========================
-  openDeleteDialog(category: Category): void {
+  openDeleteDialog(category: CategoryAdmin): void {
     this.deletingCategory = category;
     this.deleteDialogOpen = true;
   }
@@ -223,9 +235,17 @@ export class CategoryComponent implements OnInit {
           summary: 'Eliminada',
           message: res?.message || 'Categoría eliminada correctamente.'
         });
-        this.categories = this.categories.filter((c) => c.id !== id);
-        this.applyFilter();
+
+        // Elegimos la página a recargar:
+        // Si era la única de la página y no estamos en la primera,
+        // bajamos una página para evitar ver una página vacía.
+        const nextPage =
+          this.meta && this.categories.length === 1 && this.meta.current_page > 1
+            ? this.meta.current_page - 1
+            : this.meta?.current_page ?? 1;
+
         this.closeDeleteDialog();
+        this.loadCategories(nextPage);
       },
       error: (err) => {
         this.save = false;
@@ -240,4 +260,3 @@ export class CategoryComponent implements OnInit {
     });
   }
 }
-

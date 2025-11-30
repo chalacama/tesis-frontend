@@ -22,6 +22,11 @@
       type="button"
       (click)="openCreateDialog()"
     >
+      <ui-icon
+        [size]="'sm'"
+        [severity]="'primary'"
+        [svgPath]="'svg/create.svg'">
+      </ui-icon>
       <span class="btn-label">Nueva categoría</span>
     </button>
   </header>
@@ -51,18 +56,26 @@
 
     <!-- Contenido real -->
     <ng-template #tableContent>
-      <ng-container *ngIf="filteredCategories.length; else emptyState">
+      <ng-container *ngIf="categories.length; else emptyState">
         <table class="category-table">
           <thead>
             <tr>
               <th>Nombre</th>
+              <th class="th-number">Cursos</th>
+              <th class="th-number">Usuarios interesados</th>
               <th class="th-actions">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cat of filteredCategories">
+            <tr *ngFor="let cat of categories">
               <td>
                 <span class="cat-name">{{ cat.name }}</span>
+              </td>
+              <td class="td-number">
+                {{ cat.courses_count }}
+              </td>
+              <td class="td-number">
+                {{ cat.users_interested_count }}
               </td>
               <td class="td-actions">
                 <button
@@ -74,8 +87,7 @@
                   <ui-icon
                     [size]="'sm'"
                     [severity]="'primary'"
-                    [svgPath]="'svg/rename.svg'"
-                  >
+                    [svgPath]="'svg/rename.svg'">
                   </ui-icon>
                 </button>
 
@@ -88,14 +100,48 @@
                   <ui-icon
                     [size]="'sm'"
                     [severity]="'danger'"
-                    [svgPath]="'svg/delete.svg'"
-                  >
+                    [svgPath]="'svg/delete.svg'">
                   </ui-icon>
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
+
+        <!-- Paginación basada en la API -->
+        <div class="pagination-wrapper" *ngIf="meta">
+          <div class="pagination-info">
+            Mostrando
+            <strong>{{ meta.from || 0 }}</strong> -
+            <strong>{{ meta.to || 0 }}</strong>
+            de
+            <strong>{{ meta.total }}</strong> categorías
+          </div>
+
+          <div class="pagination-controls">
+            <button
+              type="button"
+              class="btn-ghost btn-outline"
+              (click)="goToPage(meta.current_page - 1)"
+              [disabled]="meta.current_page <= 1 || loading"
+            >
+              Anterior
+            </button>
+
+            <span class="pagination-page">
+              Página {{ meta.current_page }} de {{ meta.last_page }}
+            </span>
+
+            <button
+              type="button"
+              class="btn-ghost btn-outline"
+              (click)="goToPage(meta.current_page + 1)"
+              [disabled]="meta.current_page >= meta.last_page || loading"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
       </ng-container>
 
       <ng-template #emptyState>
@@ -113,7 +159,7 @@
     </ng-template>
   </section>
 
-  <!-- Dialogo Renombrar / Crear -->
+  <!-- Diálogo Renombrar / Crear -->
   <div class="dialog-backdrop" *ngIf="renameDialogOpen">
     <div class="dialog">
       <h3 class="dialog-title">
@@ -158,7 +204,7 @@
     </div>
   </div>
 
-  <!-- Dialogo Eliminar -->
+  <!-- Diálogo Eliminar -->
   <div class="dialog-backdrop" *ngIf="deleteDialogOpen">
     <div class="dialog">
       <h3 class="dialog-title danger">

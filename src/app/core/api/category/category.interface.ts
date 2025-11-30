@@ -42,3 +42,53 @@ export interface CategoryCreateDto {
 export interface CategoryUpdateDto {
   name: string;
 }
+
+/* ============================================================
+ *   SECCIÓN ADMINISTRATIVA (adminIndex)
+ *   Con paginación, filtros y contadores extra
+ * ============================================================*/
+
+/**
+ * Modelo de categoría para el uso ADMINISTRATIVO,
+ * extiende Category y añade los conteos que devuelve adminIndex.
+ */
+export interface CategoryAdmin extends Category {
+  /** Cantidad de cursos asociados a la categoría */
+  courses_count: number;
+
+  /** Cantidad de usuarios interesados en la categoría */
+  users_interested_count: number;
+}
+
+/**
+ * Meta de paginación que devuelve Laravel en adminIndex
+ */
+export interface PaginationMeta {
+  current_page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
+  from: number | null;
+  to: number | null;
+  // extra que mandamos desde backend
+  search?: string | null;
+}
+
+/**
+ * Respuesta paginada del adminIndex de categorías
+ * data: CategoryAdmin[]
+ * meta: información de paginación
+ */
+export interface CategoryAdminListResponse extends ApiResponse<CategoryAdmin[]> {
+  meta: PaginationMeta;
+}
+
+/**
+ * Query params que le enviarás al endpoint adminIndex
+ * (filtros y paginación)
+ */
+export interface CategoryAdminQuery {
+  search?: string;
+  page?: number;
+  per_page?: number;
+}
