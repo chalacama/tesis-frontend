@@ -6,18 +6,19 @@ import {
   Sede,
   SedeResponse,
   SedePaginatedResponse,
-  SedeAllFilters
+  SedeAllFilters,
+  SedePayload,
+  SedeWithUsersCount,
+  SedeItemResponse,
+  SedeDeleteResponse
 } from './sede.interface';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environment/environment';
-
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class SedeService {
-
   private readonly apiUrl = `${environment.apiUrl}/sede`;
 
   constructor(private http: HttpClient) {}
@@ -37,7 +38,7 @@ export class SedeService {
   }
 
   /**
-   * Listado global de sedes con filtros y paginación (/sede/index-all).
+   * Listado global de sedes con filtros y paginación (/sede/index-admin).
    * Ideal para tablas de administración.
    */
   getAdminSedes(filters: SedeAllFilters = {}): Observable<SedePaginatedResponse> {
@@ -52,6 +53,12 @@ export class SedeService {
     if (filters.cantonId != null) {
       params = params.set('canton_id', String(filters.cantonId));
     }
+    if (filters.educationalLevelId != null) {
+      params = params.set(
+        'educational_level_id',
+        String(filters.educationalLevelId)
+      );
+    }
     if (filters.page != null) {
       params = params.set('page', String(filters.page));
     }
@@ -63,10 +70,62 @@ export class SedeService {
       .get<SedePaginatedResponse>(`${this.apiUrl}/index-admin`, { params })
       .pipe(
         catchError(error => {
-          console.error('Error al obtener sedes (index-all):', error);
+          console.error('Error al obtener sedes (index-admin):', error);
           return throwError(
-            () => new Error('No se pudieron cargar las sedes (index-all)')
+            () => new Error('No se pudieron cargar las sedes (index-admin)')
           );
+        })
+      );
+  }
+
+  /**
+   * Crear una sede (/sede/store).
+   */
+  createSede(payload: SedePayload): Observable<SedeWithUsersCount> {
+    return this.http
+      .post<SedeItemResponse>(`${this.apiUrl}/store`, payload)
+      .pipe(
+        map(res => res.data as SedeWithUsersCount),
+        catchError(error => {
+          console.error('Error al crear sede:', error);
+          const msg =
+            error?.error?.message || 'No se pudo crear la sede. Intenta nuevamente.';
+          return throwError(() => new Error(msg));
+        })
+      );
+  }
+
+  /**
+   * Actualizar una sede (/sede/{id}/update).
+   */
+  updateSede(id: number, payload: SedePayload): Observable<SedeWithUsersCount> {
+    return this.http
+      .put<SedeItemResponse>(`${this.apiUrl}/${id}/update`, payload)
+      .pipe(
+        map(res => res.data as SedeWithUsersCount),
+        catchError(error => {
+          console.error('Error al actualizar sede:', error);
+          const msg =
+            error?.error?.message ||
+            'No se pudo actualizar la sede. Intenta nuevamente.';
+          return throwError(() => new Error(msg));
+        })
+      );
+  }
+
+  /**
+   * Eliminar una sede (/sede/{id}/destroy).
+   */
+  deleteSede(id: number): Observable<SedeDeleteResponse> {
+    return this.http
+      .delete<SedeDeleteResponse>(`${this.apiUrl}/${id}/destroy`)
+      .pipe(
+        catchError(error => {
+          console.error('Error al eliminar sede:', error);
+          const msg =
+            error?.error?.message ||
+            'No se pudo eliminar la sede. Intenta nuevamente.';
+          return throwError(() => new Error(msg));
         })
       );
   }

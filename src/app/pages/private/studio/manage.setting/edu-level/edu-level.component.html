@@ -1,1 +1,395 @@
-<p>edu-level works!</p>
+<!-- Loading global -->
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<!-- Toast global -->
+<ui-toast></ui-toast>
+
+<div class="edu-level-page">
+  <!-- Header -->
+  <header class="edu-level-header">
+    <div>
+      <h1 class="page-title">Niveles educativos</h1>
+      <p class="page-subtitle">
+        Administra los niveles educativos disponibles en la plataforma.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="openCreateDialog()"
+    >
+      <ui-icon
+        [size]="'sm'"
+        [severity]="'contrast'"
+        [svgPath]="'svg/create.svg'"
+      ></ui-icon>
+      <span>Nuevo nivel</span>
+    </button>
+  </header>
+
+  <!-- Filtros -->
+  <section class="card filters-card">
+    <form
+      class="filters-form"
+      [formGroup]="filterForm"
+      (ngSubmit)="applyFilters()"
+    >
+      <div class="filters-grid">
+        <div class="filter-field">
+          <label for="f-name">Nombre</label>
+          <input
+            id="f-name"
+            type="text"
+            class="dm-input"
+            formControlName="name"
+            placeholder="Buscar por nombre..."
+          />
+        </div>
+
+        <div class="filter-field">
+          <label for="f-period">Periodo</label>
+          <input
+            id="f-period"
+            type="text"
+            class="dm-input"
+            formControlName="period"
+            placeholder="ej. Semestre, Ciclo..."
+          />
+        </div>
+
+        <div class="filter-field">
+          <label for="f-max">Máx. períodos</label>
+          <input
+            id="f-max"
+            type="number"
+            min="1"
+            class="dm-input"
+            formControlName="max_periods"
+            placeholder="Filtrar por máximo de períodos"
+          />
+        </div>
+      </div>
+
+      <div class="filters-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetFilters()"
+        >
+          Limpiar
+        </button>
+        <button type="submit" class="btn btn-primary-outline">
+          Aplicar filtros
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Tabla -->
+  <section class="card table-card">
+    <div class="table-header">
+      <h2 class="table-title">Listado administrativo</h2>
+      <p class="table-subtitle">
+        {{
+          meta
+            ? 'Mostrando ' +
+              (meta.from || 0) +
+              ' - ' +
+              (meta.to || 0) +
+              ' de ' +
+              meta.total +
+              ' registros'
+            : ' '
+        }}
+      </p>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="edu-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Periodo</th>
+            <th>Máx. períodos</th>
+            <th>Usuarios</th>
+            <th>Unidades educativas</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Skeleton -->
+          <ng-container *ngIf="loadingTable; else tableBody">
+            <tr *ngFor="let s of skeletonRows">
+              <td>
+                <div class="skeleton-box skeleton-text"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-text-wide"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-text-short"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-count"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-count"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-count"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-actions"></div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <!-- Datos reales -->
+          <ng-template #tableBody>
+            <tr
+              *ngFor="let level of rows; trackBy: trackById"
+              class="data-row"
+            >
+              <td>
+                <div class="level-name">{{ level.name }}</div>
+              </td>
+              <td>
+                <div class="level-description">
+                  {{ level.description || 'Sin descripción' }}
+                </div>
+              </td>
+              <td>
+                <span class="badge badge-soft">
+                  {{ level.period }}
+                </span>
+              </td>
+              <td>
+                <span class="badge">
+                  {{ level.max_periods }}
+                </span>
+              </td>
+              <td>
+                <span class="badge">
+                  {{ level.users_count }}
+                </span>
+              </td>
+              <td>
+                <span class="badge">
+                  {{ level.educational_units_count }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <button
+                    type="button"
+                    class="icon-button"
+                    (click)="openEditDialog(level)"
+                  >
+                    <ui-icon
+                      [size]="'sm'"
+                      [severity]="'primary'"
+                      [svgPath]="'svg/rename.svg'"
+                    ></ui-icon>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="icon-button danger"
+                    (click)="openDeleteDialog(level)"
+                  >
+                    <ui-icon
+                      [size]="'sm'"
+                      [severity]="'danger'"
+                      [svgPath]="'svg/delete.svg'"
+                    ></ui-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="!rows.length && !loadingTable">
+              <td colspan="7" class="empty-state">
+                No se encontraron niveles educativos con los filtros
+                actuales.
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination-bar" *ngIf="meta">
+      <div class="pagination-info">
+        Página
+        <strong>{{ meta.current_page }}</strong>
+        de
+        <strong>{{ meta.last_page }}</strong>
+      </div>
+
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goToPrevPage()"
+          [disabled]="loadingTable || meta.current_page <= 1"
+        >
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goToNextPage()"
+          [disabled]="
+            loadingTable || meta.current_page >= meta.last_page
+          "
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Crear/Editar -->
+<div class="modal-backdrop" *ngIf="dialogMode">
+  <div class="modal">
+    <header class="modal-header">
+      <h2 class="modal-title">
+        {{ dialogMode === 'create' ? 'Nuevo nivel educativo' : 'Editar nivel educativo' }}
+      </h2>
+    </header>
+
+    <form
+      class="modal-body"
+      [formGroup]="levelForm"
+      (ngSubmit)="submitLevel()"
+    >
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="l-name">Nombre</label>
+          <input
+            id="l-name"
+            type="text"
+            class="dm-input"
+            formControlName="name"
+            placeholder="Nombre del nivel"
+          />
+          <small
+            class="field-error"
+            *ngIf="hasLevelError('name')"
+          >
+            El nombre es obligatorio (mínimo 3 caracteres).
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="l-period">Periodo</label>
+          <input
+            id="l-period"
+            type="text"
+            class="dm-input"
+            formControlName="period"
+            placeholder="ej. Semestre, Ciclo..."
+          />
+          <small
+            class="field-error"
+            *ngIf="hasLevelError('period')"
+          >
+            El periodo es obligatorio.
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="l-max">Máx. períodos</label>
+          <input
+            id="l-max"
+            type="number"
+            min="1"
+            class="dm-input"
+            formControlName="max_periods"
+          />
+          <small
+            class="field-error"
+            *ngIf="hasLevelError('max_periods') || hasLevelError('max_periods', 'min')"
+          >
+            Debes ingresar un número mayor o igual a 1.
+          </small>
+        </div>
+
+        <div class="form-field form-field-full">
+          <label for="l-desc">Descripción</label>
+          <textarea
+            id="l-desc"
+            rows="3"
+            class="dm-input dm-textarea"
+            formControlName="description"
+            placeholder="Describe brevemente el nivel (opcional)"
+          ></textarea>
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeLevelDialog()"
+          [disabled]="save"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="save"
+        >
+          {{ dialogMode === 'create' ? 'Crear' : 'Guardar cambios' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal-backdrop" *ngIf="showDeleteDialog">
+  <div class="modal modal-sm">
+    <header class="modal-header">
+      <h2 class="modal-title">Eliminar nivel educativo</h2>
+    </header>
+
+    <div class="modal-body">
+      <p class="modal-text">
+        ¿Estás seguro de eliminar
+        <strong>{{ deleteTarget?.name }}</strong>?
+        Esta acción no se puede deshacer.
+      </p>
+    </div>
+
+    <footer class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancelDelete()"
+        [disabled]="save"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="confirmDelete()"
+        [disabled]="save"
+      >
+        Eliminar
+      </button>
+    </footer>
+  </div>
+</div>
+
+

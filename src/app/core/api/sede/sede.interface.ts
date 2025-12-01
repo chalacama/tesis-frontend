@@ -24,12 +24,12 @@ export interface Sede {
   updated_at: string;
 }
 
-// Sede con conteo de usuarios (index-all)
+// Sede con conteo de usuarios (index-admin, store, update)
 export interface SedeWithUsersCount extends Sede {
   users_count: number;
 }
 
-// Respuesta paginada de /sede/index-all
+// Respuesta paginada de /sede/index-admin
 export interface SedePaginatedResponse {
   current_page: number;
   data: SedeWithUsersCount[];
@@ -40,9 +40,9 @@ export interface SedePaginatedResponse {
   total: number;
 }
 
-// --------------------------------------------------
+// ----------------------------------------
 // Relacionados
-// --------------------------------------------------
+// ----------------------------------------
 
 export interface EducationalUnit {
   id: number;
@@ -51,7 +51,6 @@ export interface EducationalUnit {
   url_logo: string;
   created_at: string;
   updated_at: string;
-  
 
   // niveles de educación de la unidad
   educational_levels: EducationalLevel[];
@@ -76,10 +75,38 @@ export interface Career {
   updated_at: string;
 }
 
+// Filtros para /sede/index-admin
 export interface SedeAllFilters {
   unitName?: string;
   provinceId?: number | null;
   cantonId?: number | null;
+  educationalLevelId?: number | null; // 👈 nuevo filtro
   page?: number;
   perPage?: number;
 }
+
+// ----------------------------------------
+// DTOs y respuestas CRUD
+// ----------------------------------------
+
+// Payload para crear / actualizar sede
+export interface SedePayload {
+  contry: string;
+  province_id: number;
+  canton_id: number;
+  educational_unit_id: number;
+}
+
+// Respuesta genérica del backend para store/update/destroy
+export interface SedeApiBaseResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data?: T;
+  errors?: Record<string, string[]>;
+}
+
+// store / update -> devuelven una sede (con users_count)
+export type SedeItemResponse = SedeApiBaseResponse<SedeWithUsersCount>;
+
+// destroy -> solo success + message (sin data)
+export type SedeDeleteResponse = SedeApiBaseResponse<void>;

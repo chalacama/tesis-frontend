@@ -1,1 +1,440 @@
-<p>edu-unit works!</p>
+<!-- Barra de carga global para submits (store / update / delete) -->
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<!-- Toast global -->
+<ui-toast></ui-toast>
+
+<div class="edu-unit-page">
+  <!-- Header -->
+  <header class="edu-unit-header">
+    <div>
+      <h1 class="page-title">Unidades educativas</h1>
+      <p class="page-subtitle">
+        Administra las instituciones, sus niveles educativos y sus usuarios
+        asociados.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="openCreateDialog()"
+    >
+      <ui-icon
+        [size]="'sm'"
+        [severity]="'contrast'"
+        [svgPath]="'svg/create.svg'"
+      ></ui-icon>
+      <span>Nueva unidad</span>
+    </button>
+  </header>
+
+  <!-- Filtros -->
+  <section class="card filters-card">
+    <form
+      class="filters-form"
+      [formGroup]="filterForm"
+      (ngSubmit)="applyFilters()"
+    >
+      <div class="filters-grid">
+        <div class="filter-field">
+          <label for="f-name">Nombre</label>
+          <input
+            id="f-name"
+            type="text"
+            class="dm-input"
+            formControlName="name"
+            placeholder="Buscar por nombre..."
+          />
+        </div>
+
+        <div class="filter-field">
+          <label for="f-domain">Dominio</label>
+          <input
+            id="f-domain"
+            type="text"
+            class="dm-input"
+            formControlName="organization_domain"
+            placeholder="ej. colegio.edu.ec"
+          />
+        </div>
+
+        <div class="filter-field">
+          <label for="f-levels">Niveles educativos</label>
+          <select
+            id="f-levels"
+            multiple
+            class="dm-select dm-select-multiple"
+            formControlName="educational_level_ids"
+            [disabled]="loadingLevels"
+          >
+            <option
+              *ngFor="let lvl of levels"
+              [value]="lvl.id"
+            >
+              {{ lvl.name }}
+            </option>
+          </select>
+          <small class="hint"
+            >Filtra por niveles solo en el resultado actual
+            (frontend).</small
+          >
+        </div>
+      </div>
+
+      <div class="filters-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetFilters()"
+        >
+          Limpiar
+        </button>
+        <button type="submit" class="btn btn-primary-outline">
+          Aplicar filtros
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Tabla -->
+  <section class="card table-card">
+    <div class="table-header">
+      <h2 class="table-title">Listado administrativo</h2>
+      <p class="table-subtitle">
+        {{
+          meta
+            ? 'Mostrando ' +
+              (meta.from || 0) +
+              ' - ' +
+              (meta.to || 0) +
+              ' de ' +
+              meta.total +
+              ' registros'
+            : ' '
+        }}
+      </p>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="edu-table">
+        <thead>
+          <tr>
+            <th class="col-logo">Logo</th>
+            <th class="col-name">Unidad educativa</th>
+            <th class="col-levels">Niveles educativos</th>
+            <th class="col-count">Sedes</th>
+            <th class="col-count">Usuarios</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Skeleton -->
+          <ng-container *ngIf="loadingTable; else tableBody">
+            <tr *ngFor="let s of skeletonRows">
+              <td>
+                <div class="skeleton-box skeleton-logo"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-text"></div>
+                <div class="skeleton-box skeleton-text-line"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-chips"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-count"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-count"></div>
+              </td>
+              <td>
+                <div class="skeleton-box skeleton-actions"></div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <!-- Cuerpo real -->
+          <ng-template #tableBody>
+            <tr
+              *ngFor="let unit of filteredUnits(); trackBy: trackById"
+              class="data-row"
+            >
+              <td>
+                <div class="logo-wrapper">
+                  <img
+                    *ngIf="unit.url_logo; else noLogoTpl"
+                    [src]="unit.url_logo"
+                    [alt]="unit.name"
+                    class="logo-img"
+                  />
+                  <ng-template #noLogoTpl>
+                    <div class="logo-placeholder">
+                      {{ unit.name[0] | uppercase }}
+                    </div>
+                  </ng-template>
+                </div>
+              </td>
+
+              <td>
+                <div class="unit-name">{{ unit.name }}</div>
+                <div class="unit-domain" *ngIf="unit.organization_domain; else noDom">
+                  {{ unit.organization_domain }}
+                </div>
+                <ng-template #noDom>
+                  <span class="unit-domain muted">Sin dominio</span>
+                </ng-template>
+              </td>
+
+              <td>
+                <div class="level-chips">
+                  <span
+                    class="chip"
+                    *ngFor="let lvl of unit.educational_levels"
+                  >
+                    {{ lvl.name }}
+                  </span>
+                  <span
+                    class="chip chip-empty"
+                    *ngIf="unit.educational_levels.length === 0"
+                  >
+                    Sin niveles
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <span class="badge">{{ unit.sedes_count }}</span>
+              </td>
+
+              <td>
+                <span class="badge">{{ unit.users_count }}</span>
+              </td>
+
+              <td>
+                <div class="actions">
+                  <button
+                    type="button"
+                    class="icon-button"
+                    (click)="openEditDialog(unit)"
+                  >
+                    <ui-icon
+                      [size]="'sm'"
+                      [severity]="'primary'"
+                      [svgPath]="'svg/rename.svg'"
+                    ></ui-icon>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="icon-button danger"
+                    (click)="openDeleteDialog(unit)"
+                  >
+                    <ui-icon
+                      [size]="'sm'"
+                      [severity]="'danger'"
+                      [svgPath]="'svg/delete.svg'"
+                    ></ui-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="!filteredUnits().length && !loadingTable">
+              <td colspan="6" class="empty-state">
+                No se encontraron unidades educativas con los filtros
+                actuales.
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination-bar" *ngIf="meta">
+      <div class="pagination-info">
+        Página
+        <strong>{{ meta.current_page }}</strong>
+        de
+        <strong>{{ meta.last_page }}</strong>
+      </div>
+
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goToPrevPage()"
+          [disabled]="loadingTable || meta.current_page <= 1"
+        >
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="goToNextPage()"
+          [disabled]="
+            loadingTable || meta.current_page >= meta.last_page
+          "
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Crear/Editar -->
+<div class="modal-backdrop" *ngIf="dialogMode">
+  <div class="modal">
+    <header class="modal-header">
+      <h2 class="modal-title">
+        {{ dialogMode === 'create' ? 'Nueva unidad educativa' : 'Editar unidad educativa' }}
+      </h2>
+    </header>
+
+    <form
+      class="modal-body"
+      [formGroup]="unitForm"
+      (ngSubmit)="submitUnit()"
+    >
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="u-name">Nombre</label>
+          <input
+            id="u-name"
+            type="text"
+            class="dm-input"
+            formControlName="name"
+            placeholder="Nombre de la institución"
+          />
+          <small
+            class="field-error"
+            *ngIf="hasUnitError('name')"
+          >
+            El nombre es obligatorio (mínimo 3 caracteres).
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="u-domain">Dominio institucional</label>
+          <input
+            id="u-domain"
+            type="text"
+            class="dm-input"
+            formControlName="organization_domain"
+            placeholder="ej. colegio.edu.ec (opcional)"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="u-logo">URL del logo</label>
+          <input
+            id="u-logo"
+            type="text"
+            class="dm-input"
+            formControlName="url_logo"
+            placeholder="https://..."
+          />
+          <small
+            class="field-error"
+            *ngIf="hasUnitError('url_logo')"
+          >
+            La URL del logo es obligatoria.
+          </small>
+
+          <div class="logo-preview" *ngIf="unitForm.get('url_logo')?.value">
+            <span>Vista previa:</span>
+            <div class="logo-wrapper">
+              <img
+                [src]="unitForm.get('url_logo')?.value"
+                alt="Logo preview"
+                class="logo-img"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="u-levels">Niveles educativos</label>
+          <select
+            id="u-levels"
+            multiple
+            class="dm-select dm-select-multiple"
+            formControlName="educational_level_ids"
+          >
+            <option
+              *ngFor="let lvl of levels"
+              [value]="lvl.id"
+            >
+              {{ lvl.name }}
+            </option>
+          </select>
+          <small
+            class="field-error"
+            *ngIf="hasUnitError('educational_level_ids')"
+          >
+            Debes seleccionar al menos un nivel educativo.
+          </small>
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeUnitDialog()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="save"
+        >
+          {{ dialogMode === 'create' ? 'Crear' : 'Guardar cambios' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal-backdrop" *ngIf="showDeleteDialog">
+  <div class="modal modal-sm">
+    <header class="modal-header">
+      <h2 class="modal-title">Eliminar unidad educativa</h2>
+    </header>
+
+    <div class="modal-body">
+      <p class="modal-text">
+        ¿Estás seguro de eliminar
+        <strong>{{ deleteTarget?.name }}</strong>?
+        Esta acción no se puede deshacer.
+      </p>
+    </div>
+
+    <footer class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancelDelete()"
+        [disabled]="save"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="confirmDelete()"
+        [disabled]="save"
+      >
+        Eliminar
+      </button>
+    </footer>
+  </div>
+</div>
