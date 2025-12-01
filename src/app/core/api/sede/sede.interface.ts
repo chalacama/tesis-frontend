@@ -91,10 +91,10 @@ export interface SedeAllFilters {
 
 // Payload para crear / actualizar sede
 export interface SedePayload {
-  contry: string;
   province_id: number;
   canton_id: number;
   educational_unit_id: number;
+  career_ids?: number[];
 }
 
 // Respuesta genérica del backend para store/update/destroy

@@ -1,1 +1,446 @@
-<p>sede works!</p>
+<!-- Barra de carga global -->
+<ui-loading-bar
+  [visible]="save"
+  [mask]="{ type: 'dimmed' }"
+></ui-loading-bar>
+
+<!-- Toast global -->
+<ui-toast></ui-toast>
+
+<div class="sede-page">
+  <!-- Encabezado -->
+  <header class="sede-header">
+    <div>
+      <h1>Administrar sedes</h1>
+      <p class="sede-subtitle">
+        Gestiona las sedes educativas, sus ubicaciones y carreras asociadas.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="openCreateModal()"
+    >
+      <ui-icon
+        [size]="'sm'"
+        [severity]="'contrast'"
+        [svgPath]="'svg/create.svg'"
+      ></ui-icon>
+      <span>Nueva sede</span>
+    </button>
+  </header>
+
+  <!-- Filtros -->
+  <section class="sede-filters">
+    <form [formGroup]="filtersForm" (ngSubmit)="onApplyFilters()">
+      <div class="filters-grid">
+        <!-- Nombre unidad -->
+        <div class="field">
+          <label>Unidad educativa</label>
+          <input
+            type="text"
+            formControlName="unitName"
+            placeholder="Buscar por nombre de unidad"
+          />
+        </div>
+
+        <!-- Provincia -->
+        <div class="field">
+          <label>Provincia</label>
+          <select formControlName="provinceId">
+            <option [ngValue]="null">Todas</option>
+            <option
+              *ngFor="let prov of filterProvinces"
+              [ngValue]="prov.id"
+            >
+              {{ prov.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Cantón -->
+        <div class="field">
+          <label>Cantón</label>
+          <select formControlName="cantonId">
+            <option [ngValue]="null">Todos</option>
+            <option
+              *ngFor="let canton of filterCantons"
+              [ngValue]="canton.id"
+            >
+              {{ canton.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Nivel educativo -->
+        <div class="field">
+          <label>Nivel educativo</label>
+          <select formControlName="educationalLevelId">
+            <option [ngValue]="null">Todos</option>
+            <option
+              *ngFor="let level of eduLevels"
+              [ngValue]="level.id"
+            >
+              {{ level.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filters-actions">
+        <button type="button" class="btn btn-secondary" (click)="onResetFilters()">
+          Limpiar
+        </button>
+        <button type="submit" class="btn btn-primary">
+          Aplicar filtros
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Tabla / Skeleton -->
+  <section class="sede-table-container">
+    <!-- Skeleton -->
+    <div *ngIf="isTableLoading" class="sede-skeleton-list">
+      <div class="sede-skeleton-row" *ngFor="let _ of skeletonRows">
+        <div class="skeleton-box short"></div>
+        <div class="skeleton-box"></div>
+        <div class="skeleton-box"></div>
+        <div class="skeleton-box"></div>
+        <div class="skeleton-box short"></div>
+      </div>
+    </div>
+
+    <!-- Sin datos -->
+    <div *ngIf="!isTableLoading && sedes.length === 0" class="sede-empty">
+      <p>No se encontraron sedes con los filtros actuales.</p>
+    </div>
+
+    <!-- Tabla expandible -->
+    <table
+      *ngIf="!isTableLoading && sedes.length > 0"
+      class="sede-table"
+    >
+      <thead>
+        <tr>
+          <th></th>
+          <th>Unidad educativa</th>
+          <th>Provincia</th>
+          <th>Cantón</th>
+          <th>Usuarios</th>
+          <th>Carreras</th>
+          <th class="col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let sede of sedes">
+          <!-- Fila principal -->
+          <tr class="sede-row" (click)="toggleExpand(sede.id)">
+            <td class="col-expand">
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="toggleExpand(sede.id); $event.stopPropagation()"
+              >
+                <ui-icon
+                  [size]="'sm'"
+                  [severity]="'contrast'"
+                  [svgPath]="'svg/arrow-right.svg'"
+                  [ngClass]="{ 'rotated': isExpanded(sede.id) }"
+                ></ui-icon>
+              </button>
+            </td>
+            <td>
+              <span class="sede-unit-name">
+                {{ sede.educational_unit?.name || 'Sin unidad' }}
+              </span>
+            </td>
+            <td>{{ sede.province_name || '-' }}</td>
+            <td>{{ sede.canton_name || '-' }}</td>
+            <td>{{ sede.users_count }}</td>
+            <td>{{ sede.careers.length || 0 }}</td>
+            <td class="col-actions">
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="openEditModal(sede); $event.stopPropagation()"
+                title="Editar sede"
+              >
+                <ui-icon
+                  [size]="'sm'"
+                  [severity]="'contrast'"
+                  [svgPath]="'svg/rename.svg'"
+                ></ui-icon>
+              </button>
+              <button
+                type="button"
+                class="icon-btn danger"
+                (click)="openDeleteModal(sede); $event.stopPropagation()"
+                title="Eliminar sede"
+              >
+                <ui-icon
+                  [size]="'sm'"
+                  [severity]="'contrast'"
+                  [svgPath]="'svg/delete.svg'"
+                ></ui-icon>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Fila expandida -->
+          <tr *ngIf="isExpanded(sede.id)" class="sede-expanded-row">
+            <td colspan="7">
+              <div class="expanded-card">
+                <div class="expanded-section">
+                  <h4>Detalles generales</h4>
+                  <p><strong>País:</strong> {{ sede.contry }}</p>
+                  <p>
+                    <strong>Unidad educativa:</strong>
+                    {{ sede.educational_unit?.name || 'Sin unidad' }}
+                  </p>
+                  <p>
+                    <strong>Dominio institucional:</strong>
+                    {{ sede.educational_unit?.organization_domain || 'Sin dominio' }}
+                  </p>
+                </div>
+
+                <div class="expanded-section">
+                  <h4>Niveles educativos</h4>
+                  <ul>
+                    <li
+                      *ngFor="let level of sede.educational_unit?.educational_levels || []"
+                    >
+                      {{ level.name }} ({{ level.period }},
+                      máx. {{ level.max_periods }})
+                    </li>
+                    <li *ngIf="!sede.educational_unit?.educational_levels?.length">
+                      Sin niveles asociados
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="expanded-section">
+                  <h4>Carreras en la sede</h4>
+                  <ul class="careers-list">
+                    <li *ngFor="let career of sede.careers">
+                      {{ career.name }} (máx. {{ career.max_semesters }} semestres)
+                    </li>
+                    <li *ngIf="!sede.careers.length">
+                      No hay carreras asociadas a esta sede.
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="expanded-footer">
+                  <span
+                    >Creado: {{ sede.created_at | date: 'short' }}</span
+                  >
+                  <span
+                    >Actualizado: {{ sede.updated_at | date: 'short' }}</span
+                  >
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <div *ngIf="!isTableLoading && sedes.length > 0" class="sede-pagination">
+      <div class="pagination-info">
+        Mostrando
+        <strong>{{ sedes.length }}</strong> de
+        <strong>{{ totalItems }}</strong> registros
+      </div>
+
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)"
+        >
+          Anterior
+        </button>
+
+        <span class="page-indicator">
+          Página {{ currentPage }} de {{ lastPage }}
+        </span>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="currentPage === lastPage"
+          (click)="goToPage(currentPage + 1)"
+        >
+          Siguiente
+        </button>
+
+        <select
+          class="per-page-select"
+          (change)="changePerPage(+$any($event.target).value)"
+        >
+          <option value="5" [selected]="perPage === 5">5</option>
+          <option value="10" [selected]="perPage === 10">10</option>
+          <option value="20" [selected]="perPage === 20">20</option>
+          <option value="50" [selected]="perPage === 50">50</option>
+        </select>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal crear / editar sede -->
+<div
+  class="modal-backdrop"
+  *ngIf="isSedeModalOpen"
+>
+  <div class="modal">
+    <header class="modal-header">
+      <h2>{{ isEditMode ? 'Editar sede' : 'Crear nueva sede' }}</h2>
+    </header>
+
+    <form [formGroup]="sedeForm" (ngSubmit)="onSubmitSedeForm()">
+      <div class="modal-body">
+        <div class="field-grid">
+          <!-- Provincia -->
+          <div class="field">
+            <label>Provincia <span class="req">*</span></label>
+            <select formControlName="province_id">
+              <option [ngValue]="null">Selecciona una provincia</option>
+              <option
+                *ngFor="let prov of formProvinces"
+                [ngValue]="prov.id"
+              >
+                {{ prov.name }}
+              </option>
+            </select>
+            <div
+              class="field-error"
+              *ngIf="sedeForm.get('province_id')?.touched && sedeForm.get('province_id')?.invalid"
+            >
+              La provincia es obligatoria.
+            </div>
+          </div>
+
+          <!-- Cantón -->
+          <div class="field">
+            <label>Cantón <span class="req">*</span></label>
+            <select formControlName="canton_id">
+              <option [ngValue]="null">Selecciona un cantón</option>
+              <option
+                *ngFor="let canton of formCantons"
+                [ngValue]="canton.id"
+              >
+                {{ canton.name }}
+              </option>
+            </select>
+            <div
+              class="field-error"
+              *ngIf="sedeForm.get('canton_id')?.touched && sedeForm.get('canton_id')?.invalid"
+            >
+              El cantón es obligatorio.
+            </div>
+          </div>
+
+          <!-- Unidad educativa -->
+          <div class="field">
+            <label>ID Unidad educativa <span class="req">*</span></label>
+            <input
+              type="number"
+              min="1"
+              formControlName="educational_unit_id"
+              placeholder="Ej: 1"
+            />
+            <div
+              class="field-error"
+              *ngIf="sedeForm.get('educational_unit_id')?.touched && sedeForm.get('educational_unit_id')?.invalid"
+            >
+              La unidad educativa es obligatoria.
+            </div>
+            <p class="field-hint">
+              (Enlaza el ID de la unidad educativa existente. Luego puedes
+              mejorar esto con un selector).
+            </p>
+          </div>
+
+          <!-- Carreras -->
+          <div class="field field-full">
+            <label>Carreras (opcional)</label>
+            <select
+              multiple
+              formControlName="career_ids"
+              size="5"
+            >
+              <option
+                *ngFor="let career of careers"
+                [ngValue]="career.id"
+              >
+                {{ career.name }}
+              </option>
+            </select>
+            <p class="field-hint">
+              Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar varias carreras.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="closeSedeModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="sedeForm.invalid"
+        >
+          {{ isEditMode ? 'Actualizar sede' : 'Crear sede' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- Modal eliminar -->
+<div
+  class="modal-backdrop"
+  *ngIf="isDeleteModalOpen"
+>
+  <div class="modal modal-sm">
+    <header class="modal-header">
+      <h2>Eliminar sede</h2>
+    </header>
+    <div class="modal-body">
+      <p>
+        ¿Seguro que deseas eliminar la sede
+        <strong>{{ deletingSede?.educational_unit?.name || ('ID ' + deletingSede?.id) }}</strong>?
+      </p>
+      <p class="field-hint">
+        Esta acción no se puede deshacer.
+      </p>
+    </div>
+    <footer class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="closeDeleteModal()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="confirmDelete()"
+      >
+        Eliminar
+      </button>
+    </footer>
+  </div>
+</div>
