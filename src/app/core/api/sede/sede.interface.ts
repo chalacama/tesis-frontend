@@ -75,3 +75,11 @@ export interface Career {
   created_at: string;
   updated_at: string;
 }
+
+export interface SedeAllFilters {
+  unitName?: string;
+  provinceId?: number | null;
+  cantonId?: number | null;
+  page?: number;
+  perPage?: number;
+}

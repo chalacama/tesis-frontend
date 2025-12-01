@@ -5,18 +5,13 @@ import { Injectable } from '@angular/core';
 import {
   Sede,
   SedeResponse,
-  SedePaginatedResponse
+  SedePaginatedResponse,
+  SedeAllFilters
 } from './sede.interface';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environment/environment';
 
-export interface SedeAllFilters {
-  unitName?: string;
-  provinceId?: number | null;
-  cantonId?: number | null;
-  page?: number;
-  perPage?: number;
-}
+
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +40,7 @@ export class SedeService {
    * Listado global de sedes con filtros y paginación (/sede/index-all).
    * Ideal para tablas de administración.
    */
-  getAllSedes(filters: SedeAllFilters = {}): Observable<SedePaginatedResponse> {
+  getAdminSedes(filters: SedeAllFilters = {}): Observable<SedePaginatedResponse> {
     let params = new HttpParams();
 
     if (filters.unitName) {
@@ -65,7 +60,7 @@ export class SedeService {
     }
 
     return this.http
-      .get<SedePaginatedResponse>(`${this.apiUrl}/index-all`, { params })
+      .get<SedePaginatedResponse>(`${this.apiUrl}/index-admin`, { params })
       .pipe(
         catchError(error => {
           console.error('Error al obtener sedes (index-all):', error);

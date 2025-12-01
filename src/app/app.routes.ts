@@ -199,6 +199,16 @@ export const routes: Routes = [
             canActivate: [adminGuard],
             loadComponent: () => import('./pages/private/studio/manage.setting/sede/sede.component').then((c) => c.SedeComponent)
           },
+          {
+            path: 'edu-units',
+            canActivate: [adminGuard],
+            loadComponent: () => import('./pages/private/studio/manage.setting/edu-unit/edu-unit.component').then((c) => c.EduUnitComponent)
+          },
+          {
+            path: 'edu-levels',
+            canActivate: [adminGuard],
+            loadComponent: () => import('./pages/private/studio/manage.setting/edu-level/edu-level.component').then((c) => c.EduLevelComponent)
+          },
         ]
       },
       {

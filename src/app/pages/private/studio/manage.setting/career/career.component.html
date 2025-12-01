@@ -24,7 +24,7 @@
     </button>
   </header>
 
-  <!-- Barra de búsqueda -->
+  <!-- Barra de búsqueda + filtros -->
   <div class="career-toolbar">
     <div class="search-wrapper">
       <input
@@ -35,9 +35,19 @@
       />
     </div>
 
-    <span class="career-count" *ngIf="!isLoading">
-      {{ filteredCareers.length }}
-      carrera{{ filteredCareers.length !== 1 ? 's' : '' }}
+    <div class="filter-semesters">
+      <input
+        type="number"
+        min="1"
+        placeholder="Filtrar por máx. semestres"
+        [value]="maxSemestersFilter ?? ''"
+        (input)="onMaxSemestersChange(($any($event.target)?.value) ?? '')"
+      />
+    </div>
+
+    <span class="career-count" *ngIf="!isLoading && meta">
+      {{ meta.total }}
+      carrera{{ meta.total !== 1 ? 's' : '' }}
     </span>
   </div>
 
@@ -51,22 +61,25 @@
 
   <!-- CONTENIDO -->
   <div *ngIf="!isLoading">
-    <div *ngIf="filteredCareers.length === 0" class="career-empty">
-      No se encontraron carreras para el criterio de búsqueda.
+    <div *ngIf="careers.length === 0" class="career-empty">
+      No se encontraron carreras para los filtros aplicados.
     </div>
 
-    <div *ngIf="filteredCareers.length > 0" class="career-table-wrapper">
+    <div *ngIf="careers.length > 0" class="career-table-wrapper">
       <table class="career-table">
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>Semestres</th>
+            <th>Máx. semestres</th>
             <th>Logo</th>
+            <th class="th-number">Cursos</th>
+            <th class="th-number">Usuarios</th>
+            <th class="th-number">Sedes</th>
             <th class="actions-col">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let career of filteredCareers; trackBy: trackById">
+          <tr *ngFor="let career of careers; trackBy: trackById">
             <td>{{ career.name }}</td>
             <td>{{ career.max_semesters }}</td>
             <td>
@@ -75,6 +88,15 @@
                 [alt]="career.name"
                 class="career-logo"
               />
+            </td>
+            <td class="td-number">
+              {{ career.courses_count }}
+            </td>
+            <td class="td-number">
+              {{ career.users_count }}
+            </td>
+            <td class="td-number">
+              {{ career.sedes_count }}
             </td>
             <td class="actions-col">
               <button
@@ -101,6 +123,42 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Paginación -->
+      <div class="pagination-wrapper" *ngIf="meta">
+        <div class="pagination-info">
+          Mostrando
+          <strong>{{ meta.from || 0 }}</strong> -
+          <strong>{{ meta.to || 0 }}</strong>
+          de
+          <strong>{{ meta.total }}</strong>
+          carreras
+        </div>
+
+        <div class="pagination-controls">
+          <button
+            type="button"
+            class="btn-secondary btn-outline"
+            (click)="goToPage(meta.current_page - 1)"
+            [disabled]="meta.current_page <= 1 || isLoading"
+          >
+            Anterior
+          </button>
+
+          <span class="pagination-page">
+            Página {{ meta.current_page }} de {{ meta.last_page }}
+          </span>
+
+          <button
+            type="button"
+            class="btn-secondary btn-outline"
+            (click)="goToPage(meta.current_page + 1)"
+            [disabled]="meta.current_page >= meta.last_page || isLoading"
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

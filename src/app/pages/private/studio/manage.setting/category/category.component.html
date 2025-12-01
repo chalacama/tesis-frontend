@@ -50,7 +50,9 @@
     <ng-container *ngIf="loading; else tableContent">
       <div class="skeleton-card" *ngFor="let row of skeletonRows">
         <div class="skeleton-line w-40"></div>
-        <div class="skeleton-line w-20"></div>
+        <div class="skeleton-line w-5"></div>
+        <div class="skeleton-line w-5"></div>
+        <div class="skeleton-line w-5"></div>
       </div>
     </ng-container>
 

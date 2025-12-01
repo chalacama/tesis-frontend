@@ -66,6 +66,11 @@
   background: var(--sev-danger-hover);
 }
 
+.btn-secondary.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border-color);
+}
+
 /* Barra de herramientas */
 .career-toolbar {
   display: flex;
@@ -77,7 +82,7 @@
 
 .search-wrapper {
   flex: 1;
-  max-width: 340px;
+  max-width: 280px;
 }
 
 .search-wrapper input {
@@ -90,6 +95,24 @@
 }
 
 .search-wrapper input:focus {
+  outline: none;
+  border-color: var(--active-color);
+}
+
+.filter-semesters {
+  width: 210px;
+}
+
+.filter-semesters input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--background-hover);
+  color: var(--text-color);
+}
+
+.filter-semesters input:focus {
   outline: none;
   border-color: var(--active-color);
 }
@@ -155,8 +178,14 @@
 
 .actions-col {
   text-align: right;
-  width: 120px;
-  
+  width: 140px;
+}
+
+/* columnas numéricas (conteos) */
+.th-number,
+.td-number {
+  text-align: right;
+  width: 110px;
 }
 
 .icon-btn {
@@ -177,7 +206,6 @@
 
 .career-logo {
   width: 200px;
-  /* height: 100px; */
   object-fit: contain;
   border-radius: 0.5rem;
 }
@@ -187,6 +215,29 @@
   border-radius: 0.75rem;
   background: var(--card-bg);
   color: var(--text-color-secondary);
+  text-align: center;
+}
+
+/* Paginación */
+.pagination-wrapper {
+  margin-top: 0.75rem;
+  padding: 0.25rem 0.75rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-page {
+  min-width: 120px;
   text-align: center;
 }
 
@@ -277,4 +328,27 @@
 .warning-text {
   font-size: 0.85rem;
   color: var(--sev-warn);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .career-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .career-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-wrapper,
+  .filter-semesters {
+    max-width: 100%;
+  }
+
+  .pagination-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

@@ -12,7 +12,11 @@ import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay
 import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
 
 import { CareerService } from '../../../../../core/api/carrer/career.service';
-import { Career, CareerPayload } from '../../../../../core/api/carrer/career.interface';
+import {
+  CareerAdmin,
+  CareerPayload,
+  PaginationMeta
+} from '../../../../../core/api/carrer/career.interface';
 import { UiToastService } from '../../../../../shared/services/ui-toast.service';
 
 @Component({
@@ -37,22 +41,27 @@ export class CareerComponent implements OnInit {
   isLoading = true;
   skeletonRows = Array.from({ length: 5 });
 
-  // Datos
-  careers: Career[] = [];
-  filteredCareers: Career[] = [];
+  // Datos (paginados desde index-admin)
+  careers: CareerAdmin[] = [];
+  meta: PaginationMeta | null = null;
 
-  // Búsqueda
-  searchTerm = '';
+  // Filtros
+  searchTerm = '';              // filtro por name
+  maxSemestersFilter: number | null = null; // filtro por max_semesters
+
+  // Paginación
+  currentPage = 1;
+  perPage = 10;
 
   // Formulario (crear / editar)
   form!: FormGroup;
-  selectedCareer: Career | null = null;
+  selectedCareer: CareerAdmin | null = null;
 
   // Modales
   showCreateModal = false;
   showEditModal = false;
   showDeleteModal = false;
-  deleteCareerTarget: Career | null = null;
+  deleteCareerTarget: CareerAdmin | null = null;
 
   constructor(
     private readonly careerService: CareerService,
@@ -73,45 +82,67 @@ export class CareerComponent implements OnInit {
     });
   }
 
-  private loadCareers(): void {
+  // ==========================
+  //   Carga desde index-admin
+  // ==========================
+  private loadCareers(page: number = 1): void {
     this.isLoading = true;
-    this.careerService.getAll().subscribe({
-      next: (data) => {
-        this.careers = data;
-        this.applyFilter();
+    this.currentPage = page;
+
+    const nameTrim = this.searchTerm.trim();
+
+    const query = {
+      name: nameTrim || undefined,
+      max_semesters: this.maxSemestersFilter ?? undefined,
+      page: this.currentPage,
+      per_page: this.perPage
+    };
+
+    this.careerService.getAdminList(query).subscribe({
+      next: (res) => {
+        this.careers = res.data ?? [];
+        this.meta = res.meta;
         this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
+        const msg =
+          err?.friendlyMessage || 'Error al obtener las carreras.';
         this.toast.add({
           severity: 'danger',
           summary: 'Error',
-          message: err.message || 'Error al obtener las carreras.'
+          message: msg
         });
       }
     });
   }
 
-  // ====== BÚSQUEDA ======
+  // ====== Filtros ======
   onSearchChange(value: string): void {
     this.searchTerm = value;
-    this.applyFilter();
+    this.loadCareers(1);
   }
 
-  private applyFilter(): void {
-    const term = this.searchTerm.trim().toLowerCase();
-
-    if (!term) {
-      this.filteredCareers = [...this.careers];
-      return;
+  onMaxSemestersChange(value: string): void {
+    const v = value.trim();
+    if (!v) {
+      this.maxSemestersFilter = null;
+    } else {
+      const parsed = Number(v);
+      this.maxSemestersFilter =
+        !isNaN(parsed) && parsed >= 1 ? parsed : null;
     }
-
-    this.filteredCareers = this.careers.filter(c =>
-      c.name.toLowerCase().includes(term)
-    );
+    this.loadCareers(1);
   }
 
-  trackById(index: number, item: Career): number {
+  // ====== Paginación ======
+  goToPage(page: number): void {
+    if (!this.meta) return;
+    if (page < 1 || page > this.meta.last_page || page === this.meta.current_page) return;
+    this.loadCareers(page);
+  }
+
+  trackById(index: number, item: CareerAdmin): number {
     return item.id;
   }
 
@@ -127,7 +158,7 @@ export class CareerComponent implements OnInit {
     this.showEditModal = false;
   }
 
-  openEditModal(career: Career): void {
+  openEditModal(career: CareerAdmin): void {
     this.selectedCareer = career;
     this.form.reset({
       name: career.name,
@@ -161,11 +192,7 @@ export class CareerComponent implements OnInit {
     if (this.selectedCareer) {
       // actualizar
       this.careerService.update(this.selectedCareer.id, payload).subscribe({
-        next: (updated) => {
-          this.careers = this.careers.map(c =>
-            c.id === updated.id ? updated : c
-          );
-          this.applyFilter();
+        next: () => {
           this.toast.add({
             severity: 'primary',
             summary: 'Actualizado',
@@ -173,24 +200,29 @@ export class CareerComponent implements OnInit {
           });
           this.save = false;
           this.closeCreateEditModal();
+          // recargar lista para respetar orden, filtros y conteos
+          this.loadCareers(this.currentPage);
         },
         error: (err) => {
           this.save = false;
+          const apiErrors = err?.error?.errors;
+          const firstError =
+            apiErrors?.name?.[0] ||
+            apiErrors?.max_semesters?.[0] ||
+            apiErrors?.url_logo?.[0] ||
+            err?.friendlyMessage ||
+            'Error al actualizar la carrera.';
           this.toast.add({
             severity: 'danger',
             summary: 'Error',
-            message: err?.error?.message || err.message || 'Error al actualizar la carrera.'
+            message: firstError
           });
         }
       });
     } else {
       // crear
       this.careerService.create(payload).subscribe({
-        next: (created) => {
-          this.careers = [...this.careers, created].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
-          this.applyFilter();
+        next: () => {
           this.toast.add({
             severity: 'primary',
             summary: 'Creado',
@@ -198,13 +230,22 @@ export class CareerComponent implements OnInit {
           });
           this.save = false;
           this.closeCreateEditModal();
+          // recargar lista (desde la página actual)
+          this.loadCareers(this.currentPage);
         },
         error: (err) => {
           this.save = false;
+          const apiErrors = err?.error?.errors;
+          const firstError =
+            apiErrors?.name?.[0] ||
+            apiErrors?.max_semesters?.[0] ||
+            apiErrors?.url_logo?.[0] ||
+            err?.friendlyMessage ||
+            'Error al crear la carrera.';
           this.toast.add({
             severity: 'danger',
             summary: 'Error',
-            message: err?.error?.message || err.message || 'Error al crear la carrera.'
+            message: firstError
           });
         }
       });
@@ -212,7 +253,7 @@ export class CareerComponent implements OnInit {
   }
 
   // ====== ELIMINAR ======
-  openDeleteModal(career: Career): void {
+  openDeleteModal(career: CareerAdmin): void {
     this.deleteCareerTarget = career;
     this.showDeleteModal = true;
   }
@@ -232,25 +273,33 @@ export class CareerComponent implements OnInit {
 
     this.careerService.delete(id).subscribe({
       next: (res) => {
-        this.careers = this.careers.filter(c => c.id !== id);
-        this.applyFilter();
         this.toast.add({
           severity: 'primary',
           summary: 'Eliminado',
           message: res?.message || 'Carrera eliminada correctamente.'
         });
         this.save = false;
+
+        // Si era la única fila de la página y no estamos en la primera,
+        // retrocedemos una página para evitar una página vacía.
+        const nextPage =
+          this.meta && this.careers.length === 1 && this.meta.current_page > 1
+            ? this.meta.current_page - 1
+            : this.meta?.current_page ?? 1;
+
         this.closeDeleteModal();
+        this.loadCareers(nextPage);
       },
       error: (err) => {
         this.save = false;
+        const msg =
+          err?.friendlyMessage || 'Error al eliminar la carrera.';
         this.toast.add({
           severity: 'danger',
           summary: 'Error',
-          message: err?.error?.message || err.message || 'Error al eliminar la carrera.'
+          message: msg
         });
       }
     });
   }
 }
-
