@@ -29,6 +29,8 @@ export interface Career {
 
 export interface Sede {
     id:               number;
+    province_id:      number;
+    canton_id:        number;
     province:         string;
     canton:           string;
     educational_unit: Career;
