@@ -13,7 +13,6 @@ import { PortfolioBridgeService } from '../../../../core/api/profile/portfolio-b
   standalone: true,
   imports: [
     CommonModule,
-    DatePipe,
     NgOptimizedImage,
     IconComponent,
     RouterLink,
