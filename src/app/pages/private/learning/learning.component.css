@@ -712,10 +712,12 @@
 }
 .dropdown_header_right_name{
     display: flex;
-    font-size: 10;
+    font-size: 10px;
     align-items: center;
     justify-content: left;
     gap: 5px;
+    
+
 }
 .dropdown_label{
     font-size: 10px;

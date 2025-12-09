@@ -159,9 +159,9 @@
 
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" 
                 style="position: relative;">
-                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
-                    >
+                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md">
                 </ui-avatar>
+                
 
                 <div *ngIf="isProfileMenuOpen" class="profile-dropdown">
                     <div>
@@ -172,11 +172,10 @@
                             </div>
                             <div class="dropdown_header_right">
                                 <div class="dropdown_header_right_name">
-                                    <p>{{ usuario.name }}</p>
-                                    <p>{{ usuario.lastname }}</p>
+                                    <p>{{ (usuario.name + ' ' + usuario.lastname).length > 21 ? ((usuario.name + ' ' + usuario.lastname) | slice:0:21) + '..' : (usuario.name + ' ' + usuario.lastname) }}</p>
                                 </div>
                                 <div class="dropdown_header_right_username">
-                                    <p>&commat;{{ usuario.username }}</p>
+                                    <p>&commat;{{usuario.username }}</p>
                                 </div>
                             </div>
                         </div>

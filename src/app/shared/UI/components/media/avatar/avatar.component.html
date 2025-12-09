@@ -6,26 +6,22 @@
   [attr.role]="av.role || 'img'"
   [attr.tabindex]="av.tabIndex ?? 0"
   [attr.title]="av.title || av.name || ''"
-  
-  
 >
-  <!-- Imagen si hay src -->
   <img  *ngIf="hasImg(); else initialsTpl"
        [src]="av.src!"
+       referrerpolicy="no-referrer"
+       (error)="handleImgError()"
+       loading="lazy"
        [attr.alt]="av.alt || av.name || 'avatar'"
        class="av-img"/>
 
-  <!-- Iniciales si NO hay imagen -->
   <ng-template #initialsTpl>
     <span class="av-initials">{{ initials }}</span>
-    
   </ng-template>
 
-  <!-- Badge opcional -->
   <span *ngIf="av.badge"
         class="av-badge"
         [class.has-value]="av.badge.value !== undefined && av.badge.value !== null">
     {{ av.badge.value }}
   </span>
 </div>
-

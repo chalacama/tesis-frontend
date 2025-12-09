@@ -50,13 +50,14 @@
                     <div>
                         <div class="dropdown_header">
                             <div class="dropdown_header_left">
-                                <img onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
-                                    class="dropdown-avatar" [src]="usuario.profile_picture_url" alt="profile">
+                                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}"
+                                    [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname"
+                                    severity="primary" size="sm">
+                                </ui-avatar>
                             </div>
                             <div class="dropdown_header_right">
                                 <div class="dropdown_header_right_name">
-                                    <p>{{ usuario.name }}</p>
-                                    <p>{{ usuario.lastname }}</p>
+                                    <p>{{ (usuario.name + ' ' + usuario.lastname).length > 21 ? ((usuario.name + ' ' + usuario.lastname) | slice:0:21) + '..' : (usuario.name + ' ' + usuario.lastname) }}</p>
                                 </div>
                                 <div class="dropdown_header_right_username">
                                     <p>&commat;{{ usuario.username }}</p>

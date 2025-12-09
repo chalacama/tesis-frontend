@@ -11,7 +11,7 @@ export interface User {
   lastname: string;
   username: string;
   email: string;
-  profile_picture_url: string;
+  profile_picture_url: string ;
   roles: Role[];
 
   // Flags que vienen tanto dentro de user (si los tienes como accessors)

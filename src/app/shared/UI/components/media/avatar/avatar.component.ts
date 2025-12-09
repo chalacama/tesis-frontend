@@ -28,7 +28,10 @@ import { mergeStyles, styleToNgStyle } from '../../../utils/style.utils';
 export class AvatarComponent implements OnChanges {
   
   constructor() {
-    this.ngOnChanges();
+    // No es recomendable llamar a ngOnChanges en el constructor manualmente, 
+    // pero si lo dejas, asegúrate de resetear el error.
+    this.imgError = false;
+    this.initials = this.buildInitials(this.av.name);
   }
   public readonly av = inject(UiAvatarDirective);
   
@@ -40,6 +43,9 @@ export class AvatarComponent implements OnChanges {
   
   ngOnChanges(): void {
     
+    // IMPORTANTE: Cada vez que cambien los datos, reseteamos el error
+    // para intentar cargar la nueva imagen.
+    this.imgError = false;
     this.initials = this.buildInitials(this.av.name);
     
   }
@@ -117,8 +123,18 @@ export class AvatarComponent implements OnChanges {
     return ['app-avatar', s, neu, v, dis, extra].filter(Boolean);
   }
 
-  hasImg(): boolean {
+  /* hasImg(): boolean {
     return !!this.av.src;
+  } */
+  imgError = false;
+  // Modifica o agrega este método para manejar el error de carga
+  handleImgError() {
+    this.imgError = true;
+  }
+
+  hasImg(): boolean {
+    // Ahora solo decimos que tiene imagen si hay SRC y NO ha dado error
+    return !!this.av.src && !this.imgError;
   }
 
   /** Soporte de teclado como en tu botón */

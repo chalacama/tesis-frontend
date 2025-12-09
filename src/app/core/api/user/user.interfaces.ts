@@ -9,7 +9,7 @@ export interface UserListItem {
   lastname: string;
   username: string;
   email: string;
-  profile_picture_url: string | null;
+  profile_picture_url: string;
   rol: string | null;      // nombre del rol (admin, tutor, student, etc.)
   role_id: number | null;  // id del rol
 }
