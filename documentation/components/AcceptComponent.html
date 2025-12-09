@@ -1,0 +1,1464 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AcceptComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/public/accept/accept.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-accept</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../components/AvatarComponent.html" target="_self" >AvatarComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./accept.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./accept.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#data" >data</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#invitationService" >invitationService</a>
+                            </li>
+                            <li>
+                                <a href="#message" >message</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                <a href="#state" >state</a>
+                            </li>
+                            <li>
+                                <a href="#userNotFoundEmail" >userNotFoundEmail</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#acceptInvitation" >acceptInvitation</a>
+                            </li>
+                            <li>
+                                <a href="#getMiniatureUrl" >getMiniatureUrl</a>
+                            </li>
+                            <li>
+                                <a href="#goBack" >goBack</a>
+                            </li>
+                            <li>
+                                <a href="#goToCourse" >goToCourse</a>
+                            </li>
+                            <li>
+                                <a href="#goToInvitedPortfolio" >goToInvitedPortfolio</a>
+                            </li>
+                            <li>
+                                <a href="#goToInviterPortfolio" >goToInviterPortfolio</a>
+                            </li>
+                            <li>
+                                <a href="#hasMiniature" >hasMiniature</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#slugify" >slugify</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="acceptInvitation"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>acceptInvitation</b></span>
+                        <a href="#acceptInvitation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>acceptInvitation(token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMiniatureUrl"></a>
+                    <span class="name">
+                        <span ><b>getMiniatureUrl</b></span>
+                        <a href="#getMiniatureUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getMiniatureUrl()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goBack"></a>
+                    <span class="name">
+                        <span ><b>goBack</b></span>
+                        <a href="#goBack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goBack()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:118</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToCourse"></a>
+                    <span class="name">
+                        <span ><b>goToCourse</b></span>
+                        <a href="#goToCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToCourse()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:103</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToInvitedPortfolio"></a>
+                    <span class="name">
+                        <span ><b>goToInvitedPortfolio</b></span>
+                        <a href="#goToInvitedPortfolio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToInvitedPortfolio(user: BasicUser | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                        <code>BasicUser | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToInviterPortfolio"></a>
+                    <span class="name">
+                        <span ><b>goToInviterPortfolio</b></span>
+                        <a href="#goToInviterPortfolio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToInviterPortfolio(user: BasicUser | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="85"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                        <code>BasicUser | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasMiniature"></a>
+                    <span class="name">
+                        <span ><b>hasMiniature</b></span>
+                        <a href="#hasMiniature"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasMiniature()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="123"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:123</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="slugify"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>slugify</b></span>
+                        <a href="#slugify"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>slugify(title: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="136"
+                                    class="link-to-prism">src/app/pages/public/accept/accept.component.ts:136</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>title</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="data"></a>
+                    <span class="name">
+                        <span ><b>data</b></span>
+                        <a href="#data"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;AcceptInvitationSuccessResponse | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="invitationService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>invitationService</b></span>
+                        <a href="#invitationService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(InvitationService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="message"></a>
+                    <span class="name">
+                        <span ><b>message</b></span>
+                        <a href="#message"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string&gt;(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="state"></a>
+                    <span class="name">
+                        <span ><b>state</b></span>
+                        <a href="#state"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;AcceptState&gt;(&#x27;loading&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userNotFoundEmail"></a>
+                    <span class="name">
+                        <span ><b>userNotFoundEmail</b></span>
+                        <a href="#userNotFoundEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/pages/public/accept/accept.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  OnInit,
+  signal,
+  inject,
+} from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+
+import { AvatarComponent } from &#x27;../../../shared/UI/components/media/avatar/avatar.component&#x27;;
+
+import {
+  AcceptInvitationResponse,
+  AcceptInvitationSuccessResponse,
+  BasicUser,
+} from &#x27;../../../core/api/course/invitation.interface&#x27;;
+import { InvitationService } from &#x27;../../../core/api/course/invitation.service&#x27;;
+
+type AcceptState &#x3D; &#x27;loading&#x27; | &#x27;success&#x27; | &#x27;user_not_found&#x27; | &#x27;error&#x27;;
+
+@Component({
+  selector: &#x27;app-accept&#x27;,
+  standalone: true,
+  imports: [CommonModule, AvatarComponent],
+  templateUrl: &#x27;./accept.component.html&#x27;,
+  styleUrl: &#x27;./accept.component.css&#x27;,
+})
+export class AcceptComponent implements OnInit {
+
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly router &#x3D; inject(Router);
+  private readonly invitationService &#x3D; inject(InvitationService);
+
+  // Estado
+  state &#x3D; signal&lt;AcceptState&gt;(&#x27;loading&#x27;);
+  message &#x3D; signal&lt;string&gt;(&#x27;&#x27;);
+  data &#x3D; signal&lt;AcceptInvitationSuccessResponse | null&gt;(null);
+  userNotFoundEmail &#x3D; signal&lt;string | null&gt;(null);
+
+  ngOnInit(): void {
+    const token &#x3D; this.route.snapshot.queryParamMap.get(&#x27;token&#x27;);
+
+    if (!token) {
+      this.state.set(&#x27;error&#x27;);
+      this.message.set(&#x27;El enlace de invitación no es válido o le falta el token.&#x27;);
+      return;
+    }
+
+    this.acceptInvitation(token);
+  }
+
+  private acceptInvitation(token: string): void {
+    this.state.set(&#x27;loading&#x27;);
+    this.message.set(&#x27;&#x27;);
+
+    this.invitationService.acceptInvitation(token).subscribe({
+      next: (res: AcceptInvitationResponse) &#x3D;&gt; {
+        // Caso: usuario no existe aún
+        if (&#x27;status&#x27; in res &amp;&amp; res.status &#x3D;&#x3D;&#x3D; &#x27;user_not_found&#x27;) {
+          this.state.set(&#x27;user_not_found&#x27;);
+          this.message.set(res.message);
+          this.userNotFoundEmail.set(res.email);
+          return;
+        }
+
+        // Caso éxito con datos del curso y usuarios
+        const success &#x3D; res as AcceptInvitationSuccessResponse;
+        this.data.set(success);
+        this.state.set(&#x27;success&#x27;);
+        this.message.set(success.message);
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;Error al aceptar invitación&#x27;, err);
+        const msg &#x3D;
+          err?.error?.message ||
+          err?.message ||
+          &#x27;No se pudo procesar la invitación.&#x27;;
+        this.state.set(&#x27;error&#x27;);
+        this.message.set(msg);
+      },
+    });
+  }
+
+  // Navegaciones
+  goToInviterPortfolio(user: BasicUser | null): void {
+    if (!user?.username) return;
+    this.router.navigate([
+      &#x27;/learning/portfolio&#x27;,
+      &#x27;@&#x27; + user.username,
+      &#x27;courses&#x27;,
+    ]);
+  }
+
+  goToInvitedPortfolio(user: BasicUser | null): void {
+    if (!user?.username) return;
+    this.router.navigate([
+      &#x27;/learning/portfolio&#x27;,
+      &#x27;@&#x27; + user.username,
+      &#x27;collaborations&#x27;,
+    ]);
+  }
+
+  goToCourse(): void {
+    const d &#x3D; this.data();
+    if (!d?.course) return;
+
+    // Aquí asumo que tienes slug + id, como en tu ejemplo:
+    // /learning/course/laravel-b-sico/1
+    // Si en la respuesta solo tienes id y title, puedes ajustar esta parte.
+    const slug &#x3D; this.slugify(d.course.title);
+    this.router.navigate([
+      &#x27;/learning/course&#x27;,
+      slug,
+      d.course.id,
+    ]);
+  }
+
+  goBack(): void {
+    this.router.navigate([&#x27;/learning&#x27;]);
+  }
+
+  // Helpers
+  hasMiniature(): boolean {
+    const d &#x3D; this.data();
+    return !!d?.course?.miniature_url;
+  }
+
+  getMiniatureUrl(): string {
+    const d &#x3D; this.data();
+    return (
+      d?.course?.miniature_url ||
+      &#x27;/img/cover/portada-miniature.png&#x27;
+    );
+  }
+
+  private slugify(title: string): string {
+    return (title || &#x27;&#x27;)
+      .toLowerCase()
+      .normalize(&#x27;NFD&#x27;)
+      .replace(/[\u0300-\u036f]/g, &#x27;&#x27;)
+      .replace(/[^a-z0-9]+/g, &#x27;-&#x27;)
+      .replace(/^-+|-+$/g, &#x27;&#x27;);
+  }
+}
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;accept-page&quot;&gt;
+  &lt;div class&#x3D;&quot;accept-card&quot;&gt;
+    &lt;!-- ESTADO: CARGANDO (SKELETON) --&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;state() &#x3D;&#x3D;&#x3D; &#x27;loading&#x27;&quot;&gt;
+      &lt;div class&#x3D;&quot;skeleton-header&quot;&gt;
+        &lt;div class&#x3D;&quot;skeleton-title&quot;&gt;&lt;/div&gt;
+        &lt;div class&#x3D;&quot;skeleton-subtitle&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;skeleton-course&quot;&gt;&lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;skeleton-users&quot;&gt;
+        &lt;div class&#x3D;&quot;skeleton-user&quot;&gt;&lt;/div&gt;
+        &lt;div class&#x3D;&quot;skeleton-user&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;skeleton-footer&quot;&gt;&lt;/div&gt;
+    &lt;/ng-container&gt;
+
+    &lt;!-- ESTADO: ERROR --&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;state() &#x3D;&#x3D;&#x3D; &#x27;error&#x27;&quot;&gt;
+      &lt;h1 class&#x3D;&quot;accept-title&quot;&gt;Invitación no válida&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;accept-message&quot;&gt;
+        {{ message() }}
+      &lt;/p&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;btn btn-secondary&quot;
+        (click)&#x3D;&quot;goBack()&quot;
+      &gt;
+        Volver
+      &lt;/button&gt;
+    &lt;/ng-container&gt;
+
+    &lt;!-- ESTADO: USER NOT FOUND --&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;state() &#x3D;&#x3D;&#x3D; &#x27;user_not_found&#x27;&quot;&gt;
+      &lt;h1 class&#x3D;&quot;accept-title&quot;&gt;Usuario no encontrado&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;accept-message&quot;&gt;
+        {{ message() }}
+      &lt;/p&gt;
+
+      &lt;p class&#x3D;&quot;accept-hint&quot;&gt;
+        Correo invitado:
+        &lt;strong&gt;{{ userNotFoundEmail() }}&lt;/strong&gt;
+      &lt;/p&gt;
+
+      &lt;p class&#x3D;&quot;accept-hint&quot;&gt;
+        Por favor, regístrate o inicia sesión con este correo para poder
+        colaborar en el curso.
+      &lt;/p&gt;
+
+      &lt;div class&#x3D;&quot;accept-actions&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-primary&quot;
+          routerLink&#x3D;&quot;/auth&quot;
+        &gt;
+          Ir a iniciar sesión / registro
+        &lt;/button&gt;
+
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;goBack()&quot;
+        &gt;
+          Volver
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/ng-container&gt;
+
+    &lt;!-- ESTADO: ÉXITO --&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;state() &#x3D;&#x3D;&#x3D; &#x27;success&#x27; &amp;&amp; data() as d&quot;&gt;
+      &lt;h1 class&#x3D;&quot;accept-title&quot;&gt;
+        ¡Invitación aceptada!
+      &lt;/h1&gt;
+
+      &lt;p class&#x3D;&quot;accept-message&quot;&gt;
+        {{ message() }}
+      &lt;/p&gt;
+
+      &lt;!-- CURSO --&gt;
+      &lt;div
+        class&#x3D;&quot;course-card&quot;
+        (click)&#x3D;&quot;goToCourse()&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;course-thumb-wrapper&quot;&gt;
+          &lt;img
+            class&#x3D;&quot;course-thumb&quot;
+            [src]&#x3D;&quot;getMiniatureUrl()&quot;
+            alt&#x3D;&quot;Miniatura del curso&quot;
+          /&gt;
+
+          &lt;!-- Título sobre la imagen si NO hay miniatura real --&gt;
+          &lt;div
+            class&#x3D;&quot;course-thumb-overlay&quot;
+            *ngIf&#x3D;&quot;!hasMiniature()&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;course-title-overlay&quot;&gt;
+              {{ d.course.title }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;course-info&quot;&gt;
+          &lt;h2 class&#x3D;&quot;course-title&quot;&gt;
+            {{ d.course.title }}
+          &lt;/h2&gt;
+          &lt;p class&#x3D;&quot;course-subtitle&quot;&gt;
+            Ahora formas parte del equipo de tutores colaboradores.
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- USUARIOS --&gt;
+      &lt;div class&#x3D;&quot;users-row&quot;&gt;
+
+        &lt;!-- Quien invitó --&gt;
+        &lt;div
+          class&#x3D;&quot;user-column&quot;
+          *ngIf&#x3D;&quot;d.inviter_user as inviter&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;user-label&quot;&gt;Te envió la invitación&lt;/div&gt;
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;user-avatar-btn&quot;
+            (click)&#x3D;&quot;goToInviterPortfolio(inviter)&quot;
+          &gt;
+            &lt;ui-avatar
+              [style]&#x3D;&quot;{ width: &#x27;64px&#x27;, height: &#x27;64px&#x27; }&quot;
+              [src]&#x3D;&quot;inviter.profile_picture_url || &#x27;&#x27;&quot;
+              [name]&#x3D;&quot;inviter.name + &#x27; &#x27; + inviter.lastname&quot;
+              severity&#x3D;&quot;primary&quot;
+              size&#x3D;&quot;lg&quot;
+            &gt;&lt;/ui-avatar&gt;
+          &lt;/button&gt;
+          &lt;div class&#x3D;&quot;user-name&quot;&gt;
+            {{ inviter.name }} {{ inviter.lastname }}
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;user-username&quot;&gt;
+            {{ &#x27;@&#x27; + inviter.username }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Quien acepta --&gt;
+        &lt;div
+          class&#x3D;&quot;user-column&quot;
+          *ngIf&#x3D;&quot;d.invited_user as invited&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;user-label&quot;&gt;Colaborador&lt;/div&gt;
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;user-avatar-btn&quot;
+            (click)&#x3D;&quot;goToInvitedPortfolio(invited)&quot;
+          &gt;
+            &lt;ui-avatar
+              [style]&#x3D;&quot;{ width: &#x27;64px&#x27;, height: &#x27;64px&#x27; }&quot;
+              [src]&#x3D;&quot;invited.profile_picture_url || &#x27;&#x27;&quot;
+              [name]&#x3D;&quot;invited.name + &#x27; &#x27; + invited.lastname&quot;
+              severity&#x3D;&quot;primary&quot;
+              size&#x3D;&quot;lg&quot;
+            &gt;&lt;/ui-avatar&gt;
+          &lt;/button&gt;
+          &lt;div class&#x3D;&quot;user-name&quot;&gt;
+            {{ invited.name }} {{ invited.lastname }}
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;user-username&quot;&gt;
+            {{ &#x27;@&#x27; + invited.username }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- ACCIONES FINALES --&gt;
+      &lt;div class&#x3D;&quot;accept-actions&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-primary&quot;
+          (click)&#x3D;&quot;goToCourse()&quot;
+        &gt;
+          Ir al curso
+        &lt;/button&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;goBack()&quot;
+        &gt;
+          Volver
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/ng-container&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="accept-page">  <div class="accept-card">    <!-- ESTADO: CARGANDO (SKELETON) -->    <ng-container *ngIf="state() === \'loading\'">      <div class="skeleton-header">        <div class="skeleton-title"></div>        <div class="skeleton-subtitle"></div>      </div>      <div class="skeleton-course"></div>      <div class="skeleton-users">        <div class="skeleton-user"></div>        <div class="skeleton-user"></div>      </div>      <div class="skeleton-footer"></div>    </ng-container>    <!-- ESTADO: ERROR -->    <ng-container *ngIf="state() === \'error\'">      <h1 class="accept-title">Invitación no válida</h1>      <p class="accept-message">        {{ message() }}      </p>      <button        type="button"        class="btn btn-secondary"        (click)="goBack()"      >        Volver      </button>    </ng-container>    <!-- ESTADO: USER NOT FOUND -->    <ng-container *ngIf="state() === \'user_not_found\'">      <h1 class="accept-title">Usuario no encontrado</h1>      <p class="accept-message">        {{ message() }}      </p>      <p class="accept-hint">        Correo invitado:        <strong>{{ userNotFoundEmail() }}</strong>      </p>      <p class="accept-hint">        Por favor, regístrate o inicia sesión con este correo para poder        colaborar en el curso.      </p>      <div class="accept-actions">        <button          type="button"          class="btn btn-primary"          routerLink="/auth"        >          Ir a iniciar sesión / registro        </button>        <button          type="button"          class="btn btn-secondary"          (click)="goBack()"        >          Volver        </button>      </div>    </ng-container>    <!-- ESTADO: ÉXITO -->    <ng-container *ngIf="state() === \'success\' && data() as d">      <h1 class="accept-title">        ¡Invitación aceptada!      </h1>      <p class="accept-message">        {{ message() }}      </p>      <!-- CURSO -->      <div        class="course-card"        (click)="goToCourse()"      >        <div class="course-thumb-wrapper">          <img            class="course-thumb"            [src]="getMiniatureUrl()"            alt="Miniatura del curso"          />          <!-- Título sobre la imagen si NO hay miniatura real -->          <div            class="course-thumb-overlay"            *ngIf="!hasMiniature()"          >            <span class="course-title-overlay">              {{ d.course.title }}            </span>          </div>        </div>        <div class="course-info">          <h2 class="course-title">            {{ d.course.title }}          </h2>          <p class="course-subtitle">            Ahora formas parte del equipo de tutores colaboradores.          </p>        </div>      </div>      <!-- USUARIOS -->      <div class="users-row">        <!-- Quien invitó -->        <div          class="user-column"          *ngIf="d.inviter_user as inviter"        >          <div class="user-label">Te envió la invitación</div>          <button            type="button"            class="user-avatar-btn"            (click)="goToInviterPortfolio(inviter)"          >            <ui-avatar              [style]="{ width: \'64px\', height: \'64px\' }"              [src]="inviter.profile_picture_url || \'\'"              [name]="inviter.name + \' \' + inviter.lastname"              severity="primary"              size="lg"            ></ui-avatar>          </button>          <div class="user-name">            {{ inviter.name }} {{ inviter.lastname }}          </div>          <div class="user-username">            {{ \'@\' + inviter.username }}          </div>        </div>        <!-- Quien acepta -->        <div          class="user-column"          *ngIf="d.invited_user as invited"        >          <div class="user-label">Colaborador</div>          <button            type="button"            class="user-avatar-btn"            (click)="goToInvitedPortfolio(invited)"          >            <ui-avatar              [style]="{ width: \'64px\', height: \'64px\' }"              [src]="invited.profile_picture_url || \'\'"              [name]="invited.name + \' \' + invited.lastname"              severity="primary"              size="lg"            ></ui-avatar>          </button>          <div class="user-name">            {{ invited.name }} {{ invited.lastname }}          </div>          <div class="user-username">            {{ \'@\' + invited.username }}          </div>        </div>      </div>      <!-- ACCIONES FINALES -->      <div class="accept-actions">        <button          type="button"          class="btn btn-primary"          (click)="goToCourse()"        >          Ir al curso        </button>        <button          type="button"          class="btn btn-secondary"          (click)="goBack()"        >          Volver        </button>      </div>    </ng-container>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'AcceptComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AcceptComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

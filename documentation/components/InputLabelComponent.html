@@ -1,0 +1,2212 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  InputLabelComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/UI/components/form/input-label/input-label.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>ControlValueAccessor</code>
+                <code>OnChanges</code>
+                <code>AfterViewInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+                <tr>
+                    <td class="col-md-3">HostDirectives</td>
+                    <td class="col-md-9">
+                                    <code><a href="../directives/UiInputLabelDirective.html" target="_self" >UiInputLabelDirective</a></code>
+<br/>
+                                    <div><i>&nbsp;Inputs</i> : severity&nbsp;size&nbsp;disabled&nbsp;invalid&nbsp;label&nbsp;class&nbsp;style&nbsp;placeholder&nbsp;type&nbsp;variant&nbsp;autoSize&nbsp;max&nbsp;counter&nbsp;ariaLabel&nbsp;role&nbsp;tabIndex&nbsp;ariaPressed&nbsp;title&nbsp;showCounter&nbsp;</div>
+                    </td>
+                </tr>
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                            <code>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>ui-input-label</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./input-label.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./input-label.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_value" >_value</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#il" >il</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#inp" >inp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#onChange" >onChange</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#onTouched" >onTouched</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#ta" >ta</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#counterStyle" >counterStyle</a>
+                            </li>
+                            <li>
+                                <a href="#counterText" >counterText</a>
+                            </li>
+                            <li>
+                                <a href="#cssVars" >cssVars</a>
+                            </li>
+                            <li>
+                                <a href="#fieldStyle" >fieldStyle</a>
+                            </li>
+                            <li>
+                                <a href="#isTextarea" >isTextarea</a>
+                            </li>
+                            <li>
+                                <a href="#labelStyle" >labelStyle</a>
+                            </li>
+                            <li>
+                                <a href="#len" >len</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges" >ngOnChanges</a>
+                            </li>
+                            <li>
+                                <a href="#onBlur" >onBlur</a>
+                            </li>
+                            <li>
+                                <a href="#onInput" >onInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#onWinResize" >onWinResize</a>
+                            </li>
+                            <li>
+                                <a href="#registerOnChange" >registerOnChange</a>
+                            </li>
+                            <li>
+                                <a href="#registerOnTouched" >registerOnTouched</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#resizeTextarea" >resizeTextarea</a>
+                            </li>
+                            <li>
+                                <a href="#rootClasses" >rootClasses</a>
+                            </li>
+                            <li>
+                                <a href="#setDisabledState" >setDisabledState</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setupTextareaBase" >setupTextareaBase</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#sizeTokens" >sizeTokens</a>
+                            </li>
+                            <li>
+                                <a href="#writeValue" >writeValue</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>HostListeners</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#window:resize" >window:resize</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#value" >value</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(il: <a href="../directives/UiInputLabelDirective.html" target="_self">UiInputLabelDirective</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:39</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>il</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../directives/UiInputLabelDirective.html" target="_self" >UiInputLabelDirective</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-methods">
+    <h3>HostListeners</h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="window:resize"></a>
+                    <span class="name">
+                        <span ><b>window:resize</b></span>
+                        <a href="#window:resize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>window:resize()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:183</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="counterStyle"></a>
+                    <span class="name">
+                        <span ><b>counterStyle</b></span>
+                        <a href="#counterStyle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>counterStyle()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="163"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:163</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="counterText"></a>
+                    <span class="name">
+                        <span ><b>counterText</b></span>
+                        <a href="#counterText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>counterText()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="209"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:209</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cssVars"></a>
+                    <span class="name">
+                        <span ><b>cssVars</b></span>
+                        <a href="#cssVars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cssVars()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fieldStyle"></a>
+                    <span class="name">
+                        <span ><b>fieldStyle</b></span>
+                        <a href="#fieldStyle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fieldStyle()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:122</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTextarea"></a>
+                    <span class="name">
+                        <span ><b>isTextarea</b></span>
+                        <a href="#isTextarea"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isTextarea()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Forzar textarea cuando autoSize sea true</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="labelStyle"></a>
+                    <span class="name">
+                        <span ><b>labelStyle</b></span>
+                        <a href="#labelStyle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>labelStyle()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:151</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="len"></a>
+                    <span class="name">
+                        <span ><b>len</b></span>
+                        <a href="#len"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>len()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="208"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:208</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <span ><b>ngOnChanges</b></span>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onBlur"></a>
+                    <span class="name">
+                        <span ><b>onBlur</b></span>
+                        <a href="#onBlur"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onBlur()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="205"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onInput"></a>
+                    <span class="name">
+                        <span ><b>onInput</b></span>
+                        <a href="#onInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onInput(ev: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="193"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:193</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ev</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onWinResize"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>onWinResize</b></span>
+                        <a href="#onWinResize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onWinResize()</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HostListener(&#x27;window:resize&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:183</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="registerOnChange"></a>
+                    <span class="name">
+                        <span ><b>registerOnChange</b></span>
+                        <a href="#registerOnChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>registerOnChange(fn: (v: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>) => void)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fn</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="registerOnTouched"></a>
+                    <span class="name">
+                        <span ><b>registerOnTouched</b></span>
+                        <a href="#registerOnTouched"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>registerOnTouched(fn: () => void)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fn</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resizeTextarea"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>resizeTextarea</b></span>
+                        <a href="#resizeTextarea"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resizeTextarea()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="222"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:222</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rootClasses"></a>
+                    <span class="name">
+                        <span ><b>rootClasses</b></span>
+                        <a href="#rootClasses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>rootClasses()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:114</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setDisabledState"></a>
+                    <span class="name">
+                        <span ><b>setDisabledState</b></span>
+                        <a href="#setDisabledState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setDisabledState(isDisabled: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>isDisabled</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setupTextareaBase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setupTextareaBase</b></span>
+                        <a href="#setupTextareaBase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setupTextareaBase()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:175</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sizeTokens"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>sizeTokens</b></span>
+                        <a href="#sizeTokens"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sizeTokens(size: <a href="../undefineds/UiSize.html" target="_self">UiSize | undefined</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>size</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#UiSize" target="_self" >UiSize | undefined</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>{ padY: string; padX: string; font: string; labelFont: string; radius: string; borderWidth: string; }</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="writeValue"></a>
+                    <span class="name">
+                        <span ><b>writeValue</b></span>
+                        <a href="#writeValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>writeValue(v: string | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>v</td>
+                                            <td>
+                                                        <code>string | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_value"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_value</b></span>
+                        <a href="#_value"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="il"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>il</b></span>
+                        <a href="#il"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../directives/UiInputLabelDirective.html" target="_self" >UiInputLabelDirective</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inp"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>inp</b></span>
+                        <a href="#inp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLInputElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;inp&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChange"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>onChange</b></span>
+                        <a href="#onChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onTouched"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>onTouched</b></span>
+                        <a href="#onTouched"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ta"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>ta</b></span>
+                        <a href="#ta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLTextAreaElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;ta&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="value"></a>
+                        <span class="name"><b>value</b><a href="#value"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>value()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="186" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:186</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>value(v: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="187" class="link-to-prism">src/app/shared/UI/components/form/input-label/input-label.component.ts:187</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>v</td>
+                                                    
+                                                            <td>
+                                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component, OnChanges, AfterViewInit, ViewChild, ElementRef,
+  forwardRef, HostListener
+} from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from &#x27;@angular/forms&#x27;;
+import { UiInputLabelDirective } from &#x27;../../../directive/ui-input-label.directive&#x27;;
+import { UiSeverity, UiSize, UiVariant } from &#x27;../../../interfaces/ui-presets.interface&#x27;;
+/* import { inputLabelVariant } from &#x27;../../../interfaces/ui-input-label.interface&#x27;; */
+
+
+@Component({
+  selector: &#x27;ui-input-label&#x27;,
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: &#x27;./input-label.component.html&#x27;,
+  styleUrls: [&#x27;./input-label.component.css&#x27;],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() &#x3D;&gt; InputLabelComponent),
+    multi: true
+  }],
+  hostDirectives: [{
+    directive: UiInputLabelDirective,
+    inputs: [
+      // UiFormProps
+      &#x27;severity&#x27;,&#x27;size&#x27;,&#x27;disabled&#x27;,&#x27;invalid&#x27;,
+      // UiLabelProps
+      &#x27;label&#x27;,
+      // Base
+      &#x27;class&#x27;,&#x27;style&#x27;,&#x27;placeholder&#x27;,&#x27;type&#x27;,&#x27;variant&#x27;,&#x27;autoSize&#x27;,
+      // Counter
+      &#x27;max&#x27;,&#x27;counter&#x27;,
+      // A11y
+      &#x27;ariaLabel&#x27;,&#x27;role&#x27;,&#x27;tabIndex&#x27;,&#x27;ariaPressed&#x27;,&#x27;title&#x27;,&#x27;showCounter&#x27;
+    ]
+  }]
+})
+export class InputLabelComponent implements ControlValueAccessor, OnChanges, AfterViewInit {
+
+  constructor(public readonly il: UiInputLabelDirective) {
+    this.ngOnChanges();
+  }
+
+  // ControlValueAccessor
+  private _value &#x3D; &#x27;&#x27;;
+  private onChange &#x3D; (v: string) &#x3D;&gt; {};
+  private onTouched &#x3D; () &#x3D;&gt; {};
+  writeValue(v: string | null): void {
+    this._value &#x3D; v ?? &#x27;&#x27;;
+    queueMicrotask(() &#x3D;&gt; this.resizeTextarea());
+  }
+  registerOnChange(fn: (v: string) &#x3D;&gt; void): void { this.onChange &#x3D; fn; }
+  registerOnTouched(fn: () &#x3D;&gt; void): void { this.onTouched &#x3D; fn; }
+  setDisabledState(isDisabled: boolean): void { this.il.disabled &#x3D; isDisabled; }
+
+  // Refs
+  @ViewChild(&#x27;ta&#x27;) ta?: ElementRef&lt;HTMLTextAreaElement&gt;;
+  @ViewChild(&#x27;inp&#x27;) inp?: ElementRef&lt;HTMLInputElement&gt;;
+
+  ngOnChanges(): void {
+    queueMicrotask(() &#x3D;&gt; this.resizeTextarea());
+  }
+  /* ngAfterViewInit(): void {
+    this.setupTextareaBase();
+    this.resizeTextarea();
+  } */
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; UI tokens &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; sm
+  private sizeTokens(size: UiSize | undefined) {
+    const s &#x3D; size ?? &#x27;md&#x27;;
+    return {
+      padY:  s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;30px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;36px&#x27; : &#x27;33px&#x27;,
+      padX:  s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;12px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;15px&#x27; : &#x27;14px&#x27;,
+      font:  s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;13px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;15px&#x27; : &#x27;14px&#x27;,
+      labelFont: s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;11px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;12px&#x27; : &#x27;11px&#x27;,
+      radius: &#x27;10px&#x27;,
+      borderWidth: &#x27;1px&#x27;
+    };
+  }
+
+  cssVars(): Record&lt;string,string&gt; {
+    const sev: UiSeverity &#x3D; (this.il.severity as UiSeverity) ?? &#x27;primary&#x27;;
+    const s &#x3D; this.sizeTokens(this.il.size as UiSize);
+    const v: UiVariant &#x3D; (this.il.variant as UiVariant) ?? &#x27;outlined&#x27;;
+
+    const baseBorder &#x3D; &#x27;var(--border-color)&#x27;;
+    const active     &#x3D; &#x60;var(--sev-${sev}, var(--active-color))&#x60;;
+    const activeHv   &#x3D; &#x60;var(--sev-${sev}-hover, var(--active-color))&#x60;;
+    const txt        &#x3D; &#x27;var(--text-color)&#x27;;
+    const bg         &#x3D; &#x27;transparent&#x27;;
+
+    const borderColor &#x3D; v &#x3D;&#x3D;&#x3D; &#x27;outlined&#x27; ? baseBorder : &#x27;transparent&#x27;;
+    const fillBg      &#x3D; v &#x3D;&#x3D;&#x3D; &#x27;filled&#x27;
+      ? &#x27;color-mix(in oklab, var(--active-color) 10%, transparent)&#x27;
+      : bg;
+
+    return {
+      &#x27;--uil-pad-y&#x27;: s.padY,
+      &#x27;--uil-pad-x&#x27;: s.padX,
+      &#x27;--uil-font&#x27;:  s.font,
+      &#x27;--uil-label-font&#x27;: s.labelFont,
+      &#x27;--uil-radius&#x27;: s.radius,
+      &#x27;--uil-border&#x27;: borderColor,
+      &#x27;--uil-border-width&#x27;: s.borderWidth,
+      &#x27;--uil-color&#x27;: txt,
+      &#x27;--uil-bg&#x27;: fillBg,
+      &#x27;--uil-focus&#x27;: active,
+      &#x27;--uil-focus-hover&#x27;: activeHv,
+      &#x27;--uil-height&#x27;: this.il.type &#x3D;&#x3D;&#x3D; &#x27;textarea&#x27; ? &#x27;200px&#x27; : this.il.type &#x3D;&#x3D;&#x3D; &#x27;text&#x27; ? &#x27;50px&#x27; : &#x27;auto&#x27;
+    };
+  }
+
+  rootClasses(): string[] {
+    const v &#x3D; &#x60;uil-input--${this.il.variant ?? &#x27;outlined&#x27;}&#x60;;
+    const s &#x3D; &#x60;uil-input--${this.il.size ?? &#x27;md&#x27;}&#x60;;
+    const dis &#x3D; this.il.disabled ? &#x27;is-disabled&#x27; : &#x27;&#x27;;
+    const inv &#x3D; this.il.invalid ? &#x27;is-invalid&#x27; : &#x27;&#x27;;
+    return [&#x27;uil-input&#x27;, v, s, dis, inv].filter(Boolean);
+  }
+
+  fieldStyle(): Record&lt;string,string&gt; {
+    const s &#x3D; this.il.style;
+    const map: Record&lt;string,string&gt; &#x3D; {};
+    if (!s) return map;
+    if (s.backgroundColor) map[&#x27;background&#x27;]   &#x3D; s.backgroundColor;
+    if (s.color)           map[&#x27;color&#x27;]        &#x3D; s.color;
+    if (s.fontSize)        map[&#x27;font-size&#x27;]    &#x3D; s.fontSize;
+    if (s.fontWeight)      map[&#x27;font-weight&#x27;]  &#x3D; s.fontWeight;
+    if (s.fontStyle)       map[&#x27;font-style&#x27;]   &#x3D; s.fontStyle;
+    if (s.textDecoration)  map[&#x27;text-decoration&#x27;] &#x3D; s.textDecoration;
+    if (s.padding)         map[&#x27;padding&#x27;]      &#x3D; s.padding;
+    if (s.margin)          map[&#x27;margin&#x27;]       &#x3D; s.margin;
+    if (s.borderRadius)    map[&#x27;border-radius&#x27;]&#x3D; s.borderRadius;
+    if (s.border)          map[&#x27;border&#x27;]       &#x3D; s.border;
+    if (s.boxShadow)       map[&#x27;box-shadow&#x27;]   &#x3D; s.boxShadow;
+    if (s.opacity !&#x3D;&#x3D; undefined) map[&#x27;opacity&#x27;]&#x3D; String(s.opacity);
+    if (s.cursor)          map[&#x27;cursor&#x27;]       &#x3D; s.cursor;
+    if (s.width)           map[&#x27;width&#x27;]        &#x3D; s.width;
+    if (s.height)          map[&#x27;height&#x27;]       &#x3D; s.height;
+    // Posición opcional:
+    if (s.position)        map[&#x27;position&#x27;]     &#x3D; s.position;
+    if (s.top)             map[&#x27;top&#x27;]          &#x3D; s.top;
+    if (s.right)           map[&#x27;right&#x27;]        &#x3D; s.right;
+    if (s.bottom)          map[&#x27;bottom&#x27;]       &#x3D; s.bottom;
+    if (s.left)            map[&#x27;left&#x27;]         &#x3D; s.left;
+    if (s.zIndex !&#x3D;&#x3D; undefined) map[&#x27;z-index&#x27;] &#x3D; String(s.zIndex);
+    return map;
+  }
+
+  labelStyle(): Record&lt;string,string&gt; {
+    const s &#x3D; this.il.label?.style;
+    const map: Record&lt;string,string&gt; &#x3D; {};
+    if (!s) return map;
+    if (s.color)        map[&#x27;color&#x27;]        &#x3D; s.color;
+    if (s.fontSize)     map[&#x27;font-size&#x27;]    &#x3D; s.fontSize;
+    if (s.fontWeight)   map[&#x27;font-weight&#x27;]  &#x3D; s.fontWeight;
+    if (s.fontStyle)    map[&#x27;font-style&#x27;]   &#x3D; s.fontStyle;
+    if (s.textDecoration) map[&#x27;text-decoration&#x27;] &#x3D; s.textDecoration;
+    return map;
+  }
+
+  counterStyle(): Record&lt;string,string&gt; {
+    const s &#x3D; this.il.counter?.style;
+    const map: Record&lt;string,string&gt; &#x3D; {};
+    if (!s) return map;
+    if (s.color)      map[&#x27;color&#x27;]      &#x3D; s.color;
+    if (s.fontSize)   map[&#x27;font-size&#x27;]  &#x3D; s.fontSize;
+    if (s.fontWeight) map[&#x27;font-weight&#x27;]&#x3D; s.fontWeight;
+    if (s.fontStyle)  map[&#x27;font-style&#x27;] &#x3D; s.fontStyle;
+    return map;
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Autosize &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  private setupTextareaBase() {
+    const ta &#x3D; this.ta?.nativeElement;
+    if (!ta) return;
+    ta.style.overflow &#x3D; &#x27;hidden&#x27;;
+    ta.style.resize   &#x3D; &#x27;none&#x27;;
+  }
+
+
+  @HostListener(&#x27;window:resize&#x27;) onWinResize() { this.resizeTextarea(); }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Handlers &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  get value(): string { return this._value; }
+  set value(v: string) {
+    this._value &#x3D; v ?? &#x27;&#x27;;
+    this.onChange(this._value);
+    this.resizeTextarea();
+  }
+
+  onInput(ev: Event) {
+    const el &#x3D; ev.target as HTMLTextAreaElement | HTMLInputElement;
+    let val &#x3D; el.value ?? &#x27;&#x27;;
+    if (this.il.max !&#x3D;&#x3D; undefined &amp;&amp; val.length &gt; this.il.max) {
+      val &#x3D; val.slice(0, this.il.max);
+      el.value &#x3D; val;
+    }
+    this._value &#x3D; val;
+    this.onChange(this._value);
+    this.resizeTextarea();
+  }
+
+  onBlur() { this.onTouched(); }
+
+  // Counter
+  len(): number { return (this._value ?? &#x27;&#x27;).length; }
+  counterText(): string {
+    const cur &#x3D; this.len();
+    return this.il.max ? &#x60;${cur}/${this.il.max}&#x60; : &#x60;${cur}&#x60;;
+  }
+  ngAfterViewInit(): void {
+  if (this.isTextarea()) this.setupTextareaBase();
+  this.resizeTextarea();
+}
+/** Forzar textarea cuando autoSize sea true */
+isTextarea(): boolean {
+  return !!this.il.autoSize || this.il.type &#x3D;&#x3D;&#x3D; &#x27;textarea&#x27;;
+}
+
+private resizeTextarea() {
+  if (!this.il.autoSize || !this.isTextarea()) return;
+  const ta &#x3D; this.ta?.nativeElement;
+  if (!ta) return;
+  ta.style.height &#x3D; &#x27;auto&#x27;;
+  ta.style.height &#x3D; &#x60;${ta.scrollHeight}px&#x60;;
+}
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div
+  [class]&#x3D;&quot;rootClasses().join(&#x27; &#x27;)&quot;
+  [ngStyle]&#x3D;&quot;cssVars()&quot;
+  
+&gt;
+  &lt;div class&#x3D;&quot;uil-input__wrapper&quot;&gt;
+    &lt;!-- Label --&gt;
+    &lt;div class&#x3D;&quot;uil-input__label&quot; [ngClass]&#x3D;&quot;il.label?.class&quot; [ngStyle]&#x3D;&quot;labelStyle()&quot;&gt;
+      &lt;label&gt;{{ il.label?.label }}&lt;/label&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Field --&gt;
+    &lt;ng-container [ngSwitch]&#x3D;&quot;isTextarea() ? &#x27;textarea&#x27; : il.type&quot;&gt;
+      &lt;!-- text --&gt;
+      &lt;input
+        *ngSwitchCase&#x3D;&quot;&#x27;text&#x27;&quot;
+        #inp
+        size&#x3D;&quot;md&quot;
+        class&#x3D;&quot;uil-input__field {{ il.class || &#x27;&#x27; }}&quot;
+        [ngStyle]&#x3D;&quot;fieldStyle()&quot;
+        [placeholder]&#x3D;&quot;il.placeholder || &#x27;&#x27;&quot;
+        [attr.aria-label]&#x3D;&quot;il.ariaLabel || il.label || null&quot;
+        [attr.role]&#x3D;&quot;il.role || null&quot;
+        [attr.tabindex]&#x3D;&quot;il.tabIndex ?? 0&quot;
+        [attr.title]&#x3D;&quot;il.title || null&quot;
+        [disabled]&#x3D;&quot;il.disabled&quot;
+        [class.is-invalid]&#x3D;&quot;il.invalid&quot;
+        [value]&#x3D;&quot;value&quot;
+        (input)&#x3D;&quot;onInput($event)&quot;
+        (blur)&#x3D;&quot;onBlur()&quot;
+      /&gt;
+
+      &lt;!-- textarea --&gt;
+      &lt;textarea
+        *ngSwitchDefault
+        #ta
+        rows&#x3D;&quot;1&quot;
+        class&#x3D;&quot;uil-input__field uil-input__field--textarea {{ il.class || &#x27;&#x27; }}&quot;
+        [ngStyle]&#x3D;&quot;fieldStyle()&quot;
+        [placeholder]&#x3D;&quot;il.placeholder || &#x27;&#x27;&quot;
+        [attr.aria-label]&#x3D;&quot;il.ariaLabel || il.label || null&quot;
+        [attr.role]&#x3D;&quot;il.role || null&quot;
+        [attr.tabindex]&#x3D;&quot;il.tabIndex ?? 0&quot;
+        [attr.title]&#x3D;&quot;il.title || null&quot;
+        [disabled]&#x3D;&quot;il.disabled&quot;
+        [class.is-invalid]&#x3D;&quot;il.invalid&quot;
+        [value]&#x3D;&quot;value&quot;
+        (input)&#x3D;&quot;onInput($event)&quot;
+        (blur)&#x3D;&quot;onBlur()&quot;
+      &gt;&lt;/textarea&gt;
+    &lt;/ng-container&gt;
+
+    &lt;!-- Counter --&gt;
+    &lt;div *ngIf&#x3D;&quot;il.showCounter&quot; class&#x3D;&quot;uil-input__counter {{ il.counter?.class }}&quot; [ngStyle]&#x3D;&quot;counterStyle()&quot;&gt;
+      &lt;span&gt;{{ counterText() }}&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./input-label.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/* Root block + modifiers */
+.uil-input {
+  position: relative;
+  width: 100%;
+}
+/* .uil-input--outlined {} */
+/* .uil-input--filled {} */
+/* .uil-input--flat {} */
+/* .uil-input--sm {} */
+/* .uil-input--md {} */
+/* .uil-input--lg {} */
+.is-disabled { opacity: .7; pointer-events: none; }
+/* .is-invalid  {} */
+
+/* Wrapper: controla layout y spacing interior */
+.uil-input__wrapper {
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+/* Label */
+.uil-input__label {
+  position: absolute;
+  top: 0;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--uil-label-font, 11px);
+  font-weight: 500;
+  color: var(--text-color);
+  padding: 7px 0px 0px 0px;
+
+}
+
+/* Field (input/textarea) */
+.uil-input__field {
+  width: 100%;
+  margin: 0;
+  border-radius: var(--uil-radius, 10px);
+  border: var(--uil-border-width, 1px) solid var(--uil-border, var(--border-color));
+  background: var(--uil-bg, transparent);
+  outline: none;
+  padding: var(--uil-pad-y, 26px) var(--uil-pad-x, 14px);
+  font-size: var(--uil-font, 14px);
+  font-weight: 500;
+  color: var(--uil-color, var(--text-color));
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+  height: var(--uil-height);
+}
+.uil-input__field:hover {
+  border-color: var(--uil-focus-hover, var(--active-color));
+}
+.uil-input__field:focus {
+  /* border-color: var(--uil-focus, var(--active-color)); */
+  box-shadow: none;
+  border: 1.5px solid var(--uil-focus, var(--active-color));
+}
+.uil-input__field.is-invalid {
+  border-color: var(--sev-danger, var(--danger-500));
+}
+
+/* Textarea specifics */
+.uil-input__field--textarea {
+  min-height: var(--uil-height);
+  resize: none; /* autosize maneja el alto */
+}
+
+/* Counter (bottom-right) */
+.uil-input__counter {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: .9;
+}
+
+/* Variants */
+.uil-input--outlined .uil-input__field {
+  background: transparent;
+}
+.uil-input--filled .uil-input__field {
+  border-color: transparent;
+  background: var(--uil-bg);
+}
+.uil-input--flat .uil-input__field {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--uil-border, var(--border-color));
+  border-radius: 6px;
+}
+.uil-input--flat .uil-input__field:hover {
+  border-bottom-color: var(--uil-focus-hover, var(--active-color));
+}
+.uil-input--flat .uil-input__field:focus {
+  border-bottom-color: var(--uil-focus, var(--active-color));
+}
+/* .uil-input-contend{
+    width: 100%;
+    height: 100%;
+} */</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div  [class]="rootClasses().join(\' \')"  [ngStyle]="cssVars()"  >  <div class="uil-input__wrapper">    <!-- Label -->    <div class="uil-input__label" [ngClass]="il.label?.class" [ngStyle]="labelStyle()">      <label>{{ il.label?.label }}</label>    </div>    <!-- Field -->    <ng-container [ngSwitch]="isTextarea() ? \'textarea\' : il.type">      <!-- text -->      <input        *ngSwitchCase="\'text\'"        #inp        size="md"        class="uil-input__field {{ il.class || \'\' }}"        [ngStyle]="fieldStyle()"        [placeholder]="il.placeholder || \'\'"        [attr.aria-label]="il.ariaLabel || il.label || null"        [attr.role]="il.role || null"        [attr.tabindex]="il.tabIndex ?? 0"        [attr.title]="il.title || null"        [disabled]="il.disabled"        [class.is-invalid]="il.invalid"        [value]="value"        (input)="onInput($event)"        (blur)="onBlur()"      />      <!-- textarea -->      <textarea        *ngSwitchDefault        #ta        rows="1"        class="uil-input__field uil-input__field--textarea {{ il.class || \'\' }}"        [ngStyle]="fieldStyle()"        [placeholder]="il.placeholder || \'\'"        [attr.aria-label]="il.ariaLabel || il.label || null"        [attr.role]="il.role || null"        [attr.tabindex]="il.tabIndex ?? 0"        [attr.title]="il.title || null"        [disabled]="il.disabled"        [class.is-invalid]="il.invalid"        [value]="value"        (input)="onInput($event)"        (blur)="onBlur()"      ></textarea>    </ng-container>    <!-- Counter -->    <div *ngIf="il.showCounter" class="uil-input__counter {{ il.counter?.class }}" [ngStyle]="counterStyle()">      <span>{{ counterText() }}</span>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'InputLabelComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'InputLabelComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

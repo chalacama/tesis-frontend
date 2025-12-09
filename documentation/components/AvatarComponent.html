@@ -1,0 +1,1200 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AvatarComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/UI/components/media/avatar/avatar.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnChanges</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+                <tr>
+                    <td class="col-md-3">HostDirectives</td>
+                    <td class="col-md-9">
+                                    <code><a href="../directives/UiAvatarDirective.html" target="_self" >UiAvatarDirective</a></code>
+<br/>
+                                    <div><i>&nbsp;Inputs</i> : id&nbsp;class&nbsp;style&nbsp;name&nbsp;src&nbsp;alt&nbsp;severity&nbsp;size&nbsp;disabled&nbsp;neumorphism&nbsp;variant&nbsp;ariaLabel&nbsp;role&nbsp;tabIndex&nbsp;ariaPressed&nbsp;title&nbsp;badge&nbsp;</div>
+                    </td>
+                </tr>
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>ui-avatar</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./avatar.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./avatar.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#av" >av</a>
+                            </li>
+                            <li>
+                                <a href="#initials" >initials</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#buildInitials" >buildInitials</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#cssVars" >cssVars</a>
+                            </li>
+                            <li>
+                                <a href="#hasImg" >hasImg</a>
+                            </li>
+                            <li>
+                                <a href="#hostClasses" >hostClasses</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges" >ngOnChanges</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#sizeTokens" >sizeTokens</a>
+                            </li>
+                            <li>
+                                <a href="#styleMap" >styleMap</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#name" >name</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#name" >name</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:28</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="name"></a>
+                        <b>name</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | undefined</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:36</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Iniciales calculadas cuando no hay src</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildInitials"></a>
+                    <span class="name">
+                        <span ><b>buildInitials</b></span>
+                        <a href="#buildInitials"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildInitials(name?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cssVars"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>cssVars</b></span>
+                        <a href="#cssVars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>cssVars()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Variables CSS según severidad/size</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasImg"></a>
+                    <span class="name">
+                        <span ><b>hasImg</b></span>
+                        <a href="#hasImg"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasImg()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hostClasses"></a>
+                    <span class="name">
+                        <span ><b>hostClasses</b></span>
+                        <a href="#hostClasses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hostClasses()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:111</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <span ><b>ngOnChanges</b></span>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="41"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sizeTokens"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>sizeTokens</b></span>
+                        <a href="#sizeTokens"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sizeTokens(size?: <a href="../undefineds/UiSize.html" target="_self">UiSize</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Map de tamaños -&gt; tokens por defecto</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>size</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#UiSize" target="_self" >UiSize</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>{ px: string; font: string; badgePx: string; badgeFont: string; ring: string; shadow: string; }</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="styleMap"></a>
+                    <span class="name">
+                        <span ><b>styleMap</b></span>
+                        <a href="#styleMap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>styleMap()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="105"
+                                    class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:105</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Estilos finales combinando overrides del input avatarStyle</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="av"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>av</b></span>
+                        <a href="#av"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(UiAvatarDirective)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initials"></a>
+                    <span class="name">
+                        <span ><b>initials</b></span>
+                        <a href="#initials"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="name"></a>
+                        <span class="name"><b>name</b><a href="#name"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>name(val: string | undefined)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/shared/UI/components/media/avatar/avatar.component.ts:36</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Iniciales calculadas cuando no hay src</p>
+</div>
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>val</td>
+                                                    
+                                                            <td>
+                                                                        <code>string | undefined</code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, inject, input, Input, OnChanges } from &#x27;@angular/core&#x27;;
+import { UiAvatarDirective } from &#x27;../../../directive/ui-avatar.directive&#x27;;
+import { UiSeverity, UiSize } from &#x27;../../../interfaces/ui-presets.interface&#x27;;
+import { mergeStyles, styleToNgStyle } from &#x27;../../../utils/style.utils&#x27;;
+
+@Component({
+  selector: &#x27;ui-avatar&#x27;,
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: &#x27;./avatar.component.html&#x27;,
+  styleUrls: [&#x27;./avatar.component.css&#x27;],
+  hostDirectives: [{
+    directive: UiAvatarDirective,
+    inputs: [
+      // Avatar base
+      &#x27;id&#x27;,&#x27;class&#x27;,&#x27;style&#x27;,&#x27;name&#x27;,&#x27;src&#x27;,&#x27;alt&#x27;,
+      // UiProps heredados
+      &#x27;severity&#x27;,&#x27;size&#x27;,&#x27;disabled&#x27;,&#x27;neumorphism&#x27;,&#x27;variant&#x27;,
+      // A11y
+      &#x27;ariaLabel&#x27;,&#x27;role&#x27;,&#x27;tabIndex&#x27;,&#x27;ariaPressed&#x27;,&#x27;title&#x27;,
+      // Badge
+      &#x27;badge&#x27;
+    ]
+  }]
+})
+export class AvatarComponent implements OnChanges {
+  
+  constructor() {
+    this.ngOnChanges();
+  }
+  public readonly av &#x3D; inject(UiAvatarDirective);
+  
+  /** Iniciales calculadas cuando no hay src */
+  @Input() set name(val: string | undefined) {
+      this.av.name &#x3D; val;
+    }
+  initials &#x3D; &#x27;&#x27;;
+  
+  ngOnChanges(): void {
+    
+    this.initials &#x3D; this.buildInitials(this.av.name);
+    
+  }
+
+   buildInitials(name?: string): string {
+    
+   
+    if (!name) return &#x27;&#x27;;
+    const parts &#x3D; name
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2); // máx 2 letras
+     
+    return parts.map(p &#x3D;&gt; p[0]?.toUpperCase() ?? &#x27;&#x27;).join(&#x27;&#x27;);
+  }
+
+  /** Map de tamaños -&gt; tokens por defecto */
+  private sizeTokens(size?: UiSize) {
+    const s &#x3D; (size ?? &#x27;md&#x27;) as UiSize;
+    return {
+      px:      s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;32px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;56px&#x27; : &#x27;42px&#x27;,
+      font:    s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;.80rem&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;1.05rem&#x27; : &#x27;.95rem&#x27;,
+      badgePx: s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;14px&#x27;  : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;20px&#x27;  : &#x27;16px&#x27;,
+      badgeFont: s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;.65rem&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;.8rem&#x27; : &#x27;.72rem&#x27;,
+      ring:    s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;2px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;3px&#x27; : &#x27;2.5px&#x27;,
+      shadow : s &#x3D;&#x3D;&#x3D; &#x27;sm&#x27; ? &#x27;1px 2px 4px&#x27; : s &#x3D;&#x3D;&#x3D; &#x27;lg&#x27; ? &#x27;4px 8px 12px&#x27; : &#x27;2px 4px 8px&#x27;,
+    };
+  }
+
+  /** Variables CSS según severidad/size */
+  private cssVars(): Record&lt;string, string&gt; {
+    const sev: UiSeverity &#x3D; (this.av.severity as UiSeverity) ?? &#x27;secondary&#x27;;
+    const sizeTok &#x3D; this.sizeTokens(this.av.size as UiSize);
+
+    const bg &#x3D; &#x60;var(--sev-${sev}, var(--sev-secondary))&#x60;;
+    const fg &#x3D; sev &#x3D;&#x3D;&#x3D; &#x27;secondary&#x27;
+      ? &#x27;var(--text-color, #111)&#x27;
+      : &#x27;var(--text-color-contrast, #fff)&#x27;;
+
+    const badgeSev: UiSeverity &#x3D; (this.av.badge?.severity as UiSeverity) ?? sev;
+    const badgeBg &#x3D; &#x60;var(--sev-${badgeSev}, ${bg})&#x60;;
+    const badgeFg &#x3D; &#x27;var(--text-color-contrast, #fff)&#x27;;
+
+    return {
+      &#x27;--av-size&#x27;: sizeTok.px,
+      &#x27;--av-font&#x27;: sizeTok.font,
+      &#x27;--av-radius&#x27;: &#x27;50%&#x27;,
+      &#x27;--av-bg&#x27;: bg,
+      &#x27;--av-fg&#x27;: fg,
+      &#x27;--av-shadow&#x27;: sizeTok.shadow,
+      &#x27;--av-ring&#x27;: sizeTok.ring,
+
+      &#x27;--av-badge-size&#x27;: sizeTok.badgePx,
+      &#x27;--av-badge-font&#x27;: sizeTok.badgeFont,
+      &#x27;--av-badge-bg&#x27;: badgeBg,
+      &#x27;--av-badge-fg&#x27;: badgeFg,
+      &#x27;--av-badge-offset&#x27;: &#x27;0px&#x27;,
+    };
+  }
+
+  /** Estilos finales combinando overrides del input avatarStyle */
+  styleMap(): Record&lt;string, string&gt; {
+    const baseVars &#x3D; this.cssVars();
+    const overrides &#x3D; styleToNgStyle(this.av.style);
+    return mergeStyles(baseVars, overrides);
+  }
+
+  hostClasses(): string[] {
+    const s   &#x3D; &#x60;s-${this.av.size ?? &#x27;md&#x27;}&#x60;;
+    const neu &#x3D; &#x60;neu-${this.av.neumorphism ?? &#x27;flat&#x27;}&#x60;;
+    const v   &#x3D; &#x60;v-${this.av.variant ?? &#x27;filled&#x27;}&#x60;;
+    const dis &#x3D; this.av.disabled ? &#x27;is-disabled&#x27; : &#x27;&#x27;;
+    const extra &#x3D; this.av.class ?? &#x27;&#x27;;
+    return [&#x27;app-avatar&#x27;, s, neu, v, dis, extra].filter(Boolean);
+  }
+
+  hasImg(): boolean {
+    return !!this.av.src;
+  }
+
+  /** Soporte de teclado como en tu botón */
+
+}
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- src/app/shared/ui/components/avatar/avatar.component.html --&gt;
+&lt;div
+  [class]&#x3D;&quot;hostClasses().join(&#x27; &#x27;)&quot;
+  [ngStyle]&#x3D;&quot;styleMap()&quot;
+  [attr.aria-label]&#x3D;&quot;av.ariaLabel || av.name || &#x27;avatar&#x27;&quot;
+  [attr.role]&#x3D;&quot;av.role || &#x27;img&#x27;&quot;
+  [attr.tabindex]&#x3D;&quot;av.tabIndex ?? 0&quot;
+  [attr.title]&#x3D;&quot;av.title || av.name || &#x27;&#x27;&quot;
+  
+  
+&gt;
+  &lt;!-- Imagen si hay src --&gt;
+  &lt;img  *ngIf&#x3D;&quot;hasImg(); else initialsTpl&quot;
+       [src]&#x3D;&quot;av.src!&quot;
+       [attr.alt]&#x3D;&quot;av.alt || av.name || &#x27;avatar&#x27;&quot;
+       class&#x3D;&quot;av-img&quot;/&gt;
+
+  &lt;!-- Iniciales si NO hay imagen --&gt;
+  &lt;ng-template #initialsTpl&gt;
+    &lt;span class&#x3D;&quot;av-initials&quot;&gt;{{ initials }}&lt;/span&gt;
+    
+  &lt;/ng-template&gt;
+
+  &lt;!-- Badge opcional --&gt;
+  &lt;span *ngIf&#x3D;&quot;av.badge&quot;
+        class&#x3D;&quot;av-badge&quot;
+        [class.has-value]&#x3D;&quot;av.badge.value !&#x3D;&#x3D; undefined &amp;&amp; av.badge.value !&#x3D;&#x3D; null&quot;&gt;
+    {{ av.badge.value }}
+  &lt;/span&gt;
+&lt;/div&gt;
+
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./avatar.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/* src/app/shared/ui/components/avatar/avatar.component.css */
+:host {
+  display: contents;
+}
+.app-avatar {
+  /* Tamaño / forma */
+  inline-size: var(--av-size);
+  block-size: var(--av-size);
+  border-radius: var(--av-radius, 50%);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  /* Colores */
+  background: var(--av-bg, var(--sev-secondary));
+ 
+  color: var(--av-fg, var(--text-color-contrast, #fff));
+
+  /* Texto */
+  font: 600 var(--av-font, .95rem) / 1 &#x27;Open Sans&#x27;, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  text-transform: uppercase;
+
+  /* Borde/sombra (neumorphism-friendly) */
+  /* box-shadow: 0 0 0 var(--av-ring, 2px) color-mix(in oklab, var(--av-bg, #888), transparent 72%),
+              0 6px 12px var(--shadow-color, rgba(0,0,0,.25)); */
+  user-select: none;
+}
+
+.app-avatar.is-disabled {
+  opacity: .6;
+  filter: grayscale(.15);
+  pointer-events: none;
+}
+
+.av-img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.av-initials {
+  letter-spacing: .5px;
+}
+
+.av-badge {
+  position: absolute;
+  top: var(--av-badge-offset, 0px);
+  right: var(--av-badge-offset, 0px);
+  inline-size: var(--av-badge-size, 16px);
+  block-size: var(--av-badge-size, 16px);
+  border-radius: 999px;
+  background: var(--av-badge-bg, #f44);
+  color: var(--av-badge-fg, #fff);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--av-badge-font, .72rem);
+  line-height: 1;
+  box-shadow: 0 2px 6px var(--shadow-color, rgba(0,0,0,.25));
+  transform: translate(25%, -25%);
+  padding: 0; /* se ajusta por tamaño circular */
+}
+
+.av-badge:not(.has-value) {
+  /* Cuando no hay value -&gt; punto de estado */
+  font-size: 0; /* oculta texto */
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- src/app/shared/ui/components/avatar/avatar.component.html --><div  [class]="hostClasses().join(\' \')"  [ngStyle]="styleMap()"  [attr.aria-label]="av.ariaLabel || av.name || \'avatar\'"  [attr.role]="av.role || \'img\'"  [attr.tabindex]="av.tabIndex ?? 0"  [attr.title]="av.title || av.name || \'\'"    >  <!-- Imagen si hay src -->  <img  *ngIf="hasImg(); else initialsTpl"       [src]="av.src!"       [attr.alt]="av.alt || av.name || \'avatar\'"       class="av-img"/>  <!-- Iniciales si NO hay imagen -->  <ng-template #initialsTpl>    <span class="av-initials">{{ initials }}</span>      </ng-template>  <!-- Badge opcional -->  <span *ngIf="av.badge"        class="av-badge"        [class.has-value]="av.badge.value !== undefined && av.badge.value !== null">    {{ av.badge.value }}  </span></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'AvatarComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AvatarComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

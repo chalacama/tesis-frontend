@@ -1,0 +1,1414 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  CertificateComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/public/certificate/certificate.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-certificate</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./certificate.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./certificate.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#certificate" >certificate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#certificateCard" >certificateCard</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#certificateService" >certificateService</a>
+                            </li>
+                            <li>
+                                <a href="#downloading" >downloading</a>
+                            </li>
+                            <li>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#getCareerLogo" >getCareerLogo</a>
+                            </li>
+                            <li>
+                                <a href="#getStudentAvatar" >getStudentAvatar</a>
+                            </li>
+                            <li>
+                                <a href="#getStudentFullName" >getStudentFullName</a>
+                            </li>
+                            <li>
+                                <a href="#getTutorAvatar" >getTutorAvatar</a>
+                            </li>
+                            <li>
+                                <a href="#getTutorFullName" >getTutorFullName</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onDownload" >onDownload</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCareerLogo"></a>
+                    <span class="name">
+                        <span ><b>getCareerLogo</b></span>
+                        <a href="#getCareerLogo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCareerLogo(cert: <a href="../interfaces/CertificateView.html" target="_self">CertificateView | null</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:180</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CertificateView.html" target="_self" >CertificateView | null</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStudentAvatar"></a>
+                    <span class="name">
+                        <span ><b>getStudentAvatar</b></span>
+                        <a href="#getStudentAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStudentAvatar(cert: <a href="../interfaces/CertificateView.html" target="_self">CertificateView | null</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="166"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:166</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CertificateView.html" target="_self" >CertificateView | null</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStudentFullName"></a>
+                    <span class="name">
+                        <span ><b>getStudentFullName</b></span>
+                        <a href="#getStudentFullName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStudentFullName()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTutorAvatar"></a>
+                    <span class="name">
+                        <span ><b>getTutorAvatar</b></span>
+                        <a href="#getTutorAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getTutorAvatar(cert: <a href="../interfaces/CertificateView.html" target="_self">CertificateView | null</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:173</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CertificateView.html" target="_self" >CertificateView | null</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTutorFullName"></a>
+                    <span class="name">
+                        <span ><b>getTutorFullName</b></span>
+                        <a href="#getTutorFullName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getTutorFullName()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="36"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDownload"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onDownload</b></span>
+                        <a href="#onDownload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onDownload()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="certificate"></a>
+                    <span class="name">
+                        <span ><b>certificate</b></span>
+                        <a href="#certificate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;CertificateView | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="certificateCard"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>certificateCard</b></span>
+                        <a href="#certificateCard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;certificateCard&#x27;, {static: false})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="certificateService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>certificateService</b></span>
+                        <a href="#certificateService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CertificateService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="downloading"></a>
+                    <span class="name">
+                        <span ><b>downloading</b></span>
+                        <a href="#downloading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/pages/public/certificate/certificate.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, ElementRef, OnInit, ViewChild, inject, signal } from &#x27;@angular/core&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+
+import { CertificateService } from &#x27;../../../core/api/certificate/certificate.service&#x27;;
+import { CertificateView } from &#x27;../../../core/api/certificate/certificate.interface&#x27;;
+
+import { of } from &#x27;rxjs&#x27;;
+import { switchMap } from &#x27;rxjs&#x27;;
+
+// 👇 imports para PDF
+import html2canvas from &#x27;html2canvas&#x27;;
+import jsPDF from &#x27;jspdf&#x27;;
+
+@Component({
+  selector: &#x27;app-certificate&#x27;,
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: &#x27;./certificate.component.html&#x27;,
+  styleUrl: &#x27;./certificate.component.css&#x27;
+})
+export class CertificateComponent implements OnInit {
+
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly certificateService &#x3D; inject(CertificateService);
+
+  loading &#x3D; signal(true);
+  downloading &#x3D; signal(false);
+  error &#x3D; signal&lt;string | null&gt;(null);
+  certificate &#x3D; signal&lt;CertificateView | null&gt;(null);
+
+  // 👉 referencia al elemento del certificado
+  @ViewChild(&#x27;certificateCard&#x27;, { static: false })
+  certificateCard!: ElementRef&lt;HTMLElement&gt;;
+
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        switchMap(params &#x3D;&gt; {
+          const code &#x3D; params.get(&#x27;code&#x27;);
+          if (!code) {
+            this.error.set(&#x27;No se proporcionó el código del certificado.&#x27;);
+            this.loading.set(false);
+            return of(null);
+          }
+
+          this.loading.set(true);
+          this.error.set(null);
+
+          return this.certificateService.show(code);
+        })
+      )
+      .subscribe({
+        next: (resp) &#x3D;&gt; {
+          if (resp) {
+            this.certificate.set(resp.data);
+          }
+          this.loading.set(false);
+        },
+        error: () &#x3D;&gt; {
+          this.error.set(&#x27;No se pudo cargar el certificado del codigo &#x27; + this.route.snapshot.paramMap.get(&#x27;code&#x27;));
+          this.loading.set(false);
+        }
+      });
+  }
+
+  getStudentFullName(): string {
+    const cert &#x3D; this.certificate();
+    if (!cert || !cert.certificate_owner) return &#x27;&#x27;;
+    return &#x60;${cert.certificate_owner.name} ${cert.certificate_owner.lastname}&#x60;;
+  }
+
+  getTutorFullName(): string {
+    const cert &#x3D; this.certificate();
+    if (!cert || !cert.course_owner) return &#x27;&#x27;;
+    return &#x60;${cert.course_owner.name} ${cert.course_owner.lastname}&#x60;;
+  }
+
+  async onDownload(): Promise&lt;void&gt; {
+  const cert &#x3D; this.certificate();
+
+  if (!cert || !cert.can_download || this.downloading()) {
+    return;
+  }
+
+  const code &#x3D; cert.certificate.code;
+  this.downloading.set(true);
+  this.error.set(null);
+
+  try {
+    const element &#x3D; this.certificateCard?.nativeElement;
+    if (!element) {
+      throw new Error(&#x27;No se encontró el certificado en pantalla.&#x27;);
+    }
+
+    const canvas &#x3D; await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: &#x27;#ffffff&#x27;,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+
+      onclone: (clonedDoc: Document) &#x3D;&gt; {
+        // Fondo verde suave del cuerpo del certificado
+        const body &#x3D; clonedDoc.querySelector&lt;HTMLElement&gt;(&#x27;.certificate-body&#x27;);
+        if (body) {
+          body.style.background &#x3D; &#x27;#E6F7F1&#x27;; // verde menta similar al original
+          body.style.backgroundImage &#x3D; &#x27;none&#x27;;
+        }
+
+        // Tarjetas de persona (estudiante / tutor)
+        clonedDoc.querySelectorAll&lt;HTMLElement&gt;(&#x27;.person-card&#x27;).forEach(el &#x3D;&gt; {
+          el.style.background &#x3D; &#x27;#FFFFFF&#x27;;  // blanco tarjeta
+        });
+
+        // Tags (Beginner / Programación / Tecnología)
+        clonedDoc.querySelectorAll&lt;HTMLElement&gt;(&#x27;.tag&#x27;).forEach(el &#x3D;&gt; {
+          if (el.classList.contains(&#x27;difficulty&#x27;)) {
+            // dificultad: verde suave
+            el.style.background &#x3D; &#x27;#DCFCE7&#x27;;
+          } else {
+            // categorías: gris/azul muy claro
+            el.style.background &#x3D; &#x27;#E5F0FF&#x27;;
+          }
+        });
+
+        // Mensajes de error (por si acaso)
+        clonedDoc.querySelectorAll&lt;HTMLElement&gt;(&#x27;.certificate-error&#x27;).forEach(el &#x3D;&gt; {
+          el.style.background &#x3D; &#x27;#FEF2F2&#x27;;
+          el.style.borderColor &#x3D; &#x27;#FCA5A5&#x27;;
+        });
+      }
+    });
+
+    const imgData &#x3D; canvas.toDataURL(&#x27;image/png&#x27;);
+
+    const pdf &#x3D; new jsPDF(&#x27;landscape&#x27;, &#x27;pt&#x27;, &#x27;a4&#x27;);
+    const pageWidth &#x3D; pdf.internal.pageSize.getWidth();
+    const pageHeight &#x3D; pdf.internal.pageSize.getHeight();
+
+    const imgWidth &#x3D; canvas.width;
+    const imgHeight &#x3D; canvas.height;
+
+    const ratio &#x3D; Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+    const pdfWidth &#x3D; imgWidth * ratio;
+    const pdfHeight &#x3D; imgHeight * ratio;
+
+    const marginX &#x3D; (pageWidth - pdfWidth) / 2;
+    const marginY &#x3D; (pageHeight - pdfHeight) / 2;
+
+    pdf.addImage(imgData, &#x27;PNG&#x27;, marginX, marginY, pdfWidth, pdfHeight);
+
+    const fileName &#x3D; &#x60;certificado-${code}.pdf&#x60;;
+    pdf.save(fileName);
+
+  } catch (err) {
+    console.error(err);
+    this.error.set(&#x27;No se pudo generar el PDF del certificado.&#x27;);
+  } finally {
+    this.downloading.set(false);
+  }
+}
+
+  // &#x3D;&#x3D;&#x3D;&#x3D; NUEVOS MÉTODOS PARA AVATARES / LOGO &#x3D;&#x3D;&#x3D;&#x3D;
+
+  getStudentAvatar(cert: CertificateView | null): string | null {
+    if (!cert?.certificate_owner?.profile_picture_url) return null;
+    return this.certificateService.getProxiedImage(
+      cert.certificate_owner.profile_picture_url
+    );
+  }
+
+  getTutorAvatar(cert: CertificateView | null): string | null {
+    if (!cert?.course_owner?.profile_picture_url) return null;
+    return this.certificateService.getProxiedImage(
+      cert.course_owner.profile_picture_url
+    );
+  }
+
+  getCareerLogo(cert: CertificateView | null): string | null {
+    if (!cert?.academic_information?.career?.url_logo) return null;
+    return this.certificateService.getProxiedImage(
+      cert.academic_information.career.url_logo
+    );
+  }
+
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;section class&#x3D;&quot;certificate-page&quot;&gt;
+
+  &lt;!-- Mensaje de error --&gt;
+  &lt;div *ngIf&#x3D;&quot;error() as err&quot; class&#x3D;&quot;certificate-error&quot;&gt;
+    &lt;p&gt;{{ err }}&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Skeleton de carga --&gt;
+  &lt;div *ngIf&#x3D;&quot;loading(); else loaded&quot; class&#x3D;&quot;certificate-skeleton&quot;&gt;
+    &lt;div class&#x3D;&quot;skeleton-header&quot;&gt;
+      &lt;div class&#x3D;&quot;skeleton-logo&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-title&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-logo small&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;skeleton-body&quot;&gt;
+      &lt;div class&#x3D;&quot;skeleton-line wide&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-line&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-line&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-line half&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Contenido real --&gt;
+  &lt;ng-template #loaded&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;certificate() as cert&quot;&gt;
+      &lt;article class&#x3D;&quot;certificate-card&quot; #certificateCard&gt;
+
+        &lt;!-- HEADER --&gt;
+        &lt;header class&#x3D;&quot;certificate-header&quot;&gt;
+          &lt;div class&#x3D;&quot;header-brand&quot;&gt;
+            &lt;img
+              src&#x3D;&quot;/img/logo/png/lefth/digi-mentor-solo-buho.png&quot;
+              alt&#x3D;&quot;DigiMentor&quot;
+              class&#x3D;&quot;logo logo-digimentor&quot;
+            /&gt;
+            &lt;div class&#x3D;&quot;brand-text&quot;&gt;
+              &lt;h1&gt;DigiMentor&lt;/h1&gt;
+              &lt;p&gt;Plataforma de aprendizaje en línea&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;header-institution&quot;&gt;
+            &lt;img
+              src&#x3D;&quot;/img\logo\png\espam-mfl-label.png&quot;
+              alt&#x3D;&quot;ESPAM MFL&quot;
+              class&#x3D;&quot;logo logo-espam&quot;
+            /&gt;
+            &lt;span class&#x3D;&quot;institution-name&quot;&gt;ESPAM MFL&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/header&gt;
+
+        &lt;!-- CUERPO PRINCIPAL --&gt;
+        &lt;main class&#x3D;&quot;certificate-body&quot;&gt;
+          &lt;section class&#x3D;&quot;certificate-title-block&quot;&gt;
+            &lt;h2&gt;Certificado de aprovechamiento&lt;/h2&gt;
+            &lt;p class&#x3D;&quot;subtitle&quot;&gt;
+              Se otorga el presente certificado a
+              &lt;strong&gt;{{ getStudentFullName() }}&lt;/strong&gt;
+              por su participación y cumplimiento en el curso:
+            &lt;/p&gt;
+            &lt;h3 class&#x3D;&quot;course-title&quot;&gt;
+              {{ cert.course.title }}
+            &lt;/h3&gt;
+
+            &lt;div class&#x3D;&quot;course-tags&quot;&gt;
+              
+
+              &lt;span
+                *ngFor&#x3D;&quot;let cat of cert.course.categories&quot;
+                class&#x3D;&quot;tag category&quot;
+              &gt;
+                {{ cat.name }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/section&gt;
+
+          &lt;!-- INFO PERSONAS --&gt;
+          &lt;section class&#x3D;&quot;persons-grid&quot;&gt;
+            &lt;!-- Estudiante --&gt;
+            &lt;div class&#x3D;&quot;person-card&quot;&gt;
+              &lt;div class&#x3D;&quot;person-header&quot;&gt;
+                &lt;div class&#x3D;&quot;avatar&quot;&gt;
+                  &lt;img
+                    *ngIf&#x3D;&quot;getStudentAvatar(cert) as studentAvatar; else avatarInitialStudent&quot;
+                      [src]&#x3D;&quot;studentAvatar&quot;
+                    alt&#x3D;&quot;Foto estudiante&quot;
+                  /&gt;
+                  &lt;ng-template #avatarInitialStudent&gt;
+                    &lt;div class&#x3D;&quot;avatar-initial&quot;&gt;
+                      {{ cert.certificate_owner?.name?.[0] || &#x27;?&#x27; }}
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;p class&#x3D;&quot;person-role&quot;&gt;Estudiante&lt;/p&gt;
+                  &lt;p class&#x3D;&quot;person-name&quot;&gt;{{ getStudentFullName() }}&lt;/p&gt;
+                  &lt;p class&#x3D;&quot;person-username&quot;&gt;{{ &#x27;@&#x27;+ cert.certificate_owner?.username }}&lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Info académica: Sede y carrera --&gt;
+              &lt;div class&#x3D;&quot;academic-info&quot;&gt;
+                &lt;h4&gt;Información académica&lt;/h4&gt;
+
+                &lt;div *ngIf&#x3D;&quot;cert.academic_information.sede&quot; class&#x3D;&quot;academic-row&quot;&gt;
+                  &lt;span class&#x3D;&quot;label&quot;&gt;Sede:&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;value&quot;&gt;
+                    {{ cert.academic_information.sede.province }}
+                    -
+                    {{ cert.academic_information.sede.canton }}
+                  &lt;/span&gt;
+                &lt;/div&gt;
+
+                &lt;div *ngIf&#x3D;&quot;cert.academic_information.career&quot; class&#x3D;&quot;academic-row career-row&quot;&gt;
+                  &lt;span class&#x3D;&quot;label&quot;&gt;Carrera:&lt;/span&gt;
+                  &lt;div class&#x3D;&quot;value career-value&quot;&gt;
+                    &lt;img
+    *ngIf&#x3D;&quot;getCareerLogo(cert) as careerLogo&quot;
+    [src]&#x3D;&quot;careerLogo&quot;
+    alt&#x3D;&quot;Logo carrera&quot;
+    class&#x3D;&quot;career-logo&quot;
+  /&gt;
+                    &lt;span&gt;{{ cert.academic_information.career.name }}&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Tutor / dueño del curso --&gt;
+            &lt;div class&#x3D;&quot;person-card&quot;&gt;
+              &lt;div class&#x3D;&quot;person-header&quot;&gt;
+                &lt;div class&#x3D;&quot;avatar&quot;&gt;
+                  &lt;img
+    *ngIf&#x3D;&quot;getTutorAvatar(cert) as tutorAvatar; else avatarInitialTutor&quot;
+    [src]&#x3D;&quot;tutorAvatar&quot;
+    alt&#x3D;&quot;Foto tutor&quot;
+  /&gt;
+                  &lt;ng-template #avatarInitialTutor&gt;
+                    &lt;div class&#x3D;&quot;avatar-initial&quot;&gt;
+                      {{ cert.course_owner?.name?.[0] || &#x27;T&#x27; }}
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;p class&#x3D;&quot;person-role&quot;&gt;Tutor responsable&lt;/p&gt;
+                  &lt;p class&#x3D;&quot;person-name&quot;&gt;{{ getTutorFullName() }}&lt;/p&gt;
+                  &lt;p class&#x3D;&quot;person-username&quot;&gt;{{ &#x27;@&#x27; +cert.course_owner?.username }}&lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;div class&#x3D;&quot;course-meta&quot;&gt;
+                &lt;div&gt;
+                  &lt;span class&#x3D;&quot;meta-label&quot;&gt;Fecha del curso:&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;meta-value&quot;&gt;
+                    {{ cert.course.created_at | date:&#x27;longDate&#x27; }}
+                  &lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;span class&#x3D;&quot;meta-label&quot;&gt;Fecha del certificado:&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;meta-value&quot;&gt;
+                    {{ cert.certificate.date | date:&#x27;longDate&#x27; }}
+                  &lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;span class&#x3D;&quot;meta-label&quot;&gt;Puntuación obtenida:&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;meta-value score&quot;&gt;
+                    {{ cert.certificate.total_score | number:&#x27;1.0-2&#x27; }} pts
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/section&gt;
+        &lt;/main&gt;
+
+        &lt;!-- FOOTER / ACCIONES --&gt;
+        &lt;footer class&#x3D;&quot;certificate-footer&quot;&gt;
+          &lt;div class&#x3D;&quot;footer-left&quot;&gt;
+            &lt;p class&#x3D;&quot;certificate-code&quot;&gt;
+              Código de verificación:
+              &lt;strong&gt;{{ cert.certificate.code }}&lt;/strong&gt;
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;footer-note&quot;&gt;
+              Este certificado puede verificarse en DigiMentor usando el código anterior.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;footer-right&quot;&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;btn-download&quot;
+        (click)&#x3D;&quot;onDownload()&quot;
+        [disabled]&#x3D;&quot;!cert.can_download || downloading()&quot;
+        data-html2canvas-ignore&#x3D;&quot;true&quot;
+      &gt;
+        &lt;span *ngIf&#x3D;&quot;!downloading(); else downloadingTpl&quot;&gt;
+          Descargar PDF
+        &lt;/span&gt;
+        &lt;ng-template #downloadingTpl&gt;
+          Descargando...
+        &lt;/ng-template&gt;
+      &lt;/button&gt;
+
+      &lt;p *ngIf&#x3D;&quot;!cert.can_download&quot; class&#x3D;&quot;download-hint&quot;&gt;
+        Solo el dueño del certificado o un administrador pueden descargar el PDF.
+      &lt;/p&gt;
+    &lt;/div&gt;
+        &lt;/footer&gt;
+      &lt;/article&gt;
+    &lt;/ng-container&gt;
+  &lt;/ng-template&gt;
+&lt;/section&gt;</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><section class="certificate-page">  <!-- Mensaje de error -->  <div *ngIf="error() as err" class="certificate-error">    <p>{{ err }}</p>  </div>  <!-- Skeleton de carga -->  <div *ngIf="loading(); else loaded" class="certificate-skeleton">    <div class="skeleton-header">      <div class="skeleton-logo"></div>      <div class="skeleton-title"></div>      <div class="skeleton-logo small"></div>    </div>    <div class="skeleton-body">      <div class="skeleton-line wide"></div>      <div class="skeleton-line"></div>      <div class="skeleton-line"></div>      <div class="skeleton-line half"></div>    </div>  </div>  <!-- Contenido real -->  <ng-template #loaded>    <ng-container *ngIf="certificate() as cert">      <article class="certificate-card" #certificateCard>        <!-- HEADER -->        <header class="certificate-header">          <div class="header-brand">            <img              src="/img/logo/png/lefth/digi-mentor-solo-buho.png"              alt="DigiMentor"              class="logo logo-digimentor"            />            <div class="brand-text">              <h1>DigiMentor</h1>              <p>Plataforma de aprendizaje en línea</p>            </div>          </div>          <div class="header-institution">            <img              src="/img\logo\png\espam-mfl-label.png"              alt="ESPAM MFL"              class="logo logo-espam"            />            <span class="institution-name">ESPAM MFL</span>          </div>        </header>        <!-- CUERPO PRINCIPAL -->        <main class="certificate-body">          <section class="certificate-title-block">            <h2>Certificado de aprovechamiento</h2>            <p class="subtitle">              Se otorga el presente certificado a              <strong>{{ getStudentFullName() }}</strong>              por su participación y cumplimiento en el curso:            </p>            <h3 class="course-title">              {{ cert.course.title }}            </h3>            <div class="course-tags">                            <span                *ngFor="let cat of cert.course.categories"                class="tag category"              >                {{ cat.name }}              </span>            </div>          </section>          <!-- INFO PERSONAS -->          <section class="persons-grid">            <!-- Estudiante -->            <div class="person-card">              <div class="person-header">                <div class="avatar">                  <img                    *ngIf="getStudentAvatar(cert) as studentAvatar; else avatarInitialStudent"                      [src]="studentAvatar"                    alt="Foto estudiante"                  />                  <ng-template #avatarInitialStudent>                    <div class="avatar-initial">                      {{ cert.certificate_owner?.name?.[0] || \'?\' }}                    </div>                  </ng-template>                </div>                <div>                  <p class="person-role">Estudiante</p>                  <p class="person-name">{{ getStudentFullName() }}</p>                  <p class="person-username">{{ \'@\'+ cert.certificate_owner?.username }}</p>                </div>              </div>              <!-- Info académica: Sede y carrera -->              <div class="academic-info">                <h4>Información académica</h4>                <div *ngIf="cert.academic_information.sede" class="academic-row">                  <span class="label">Sede:</span>                  <span class="value">                    {{ cert.academic_information.sede.province }}                    -                    {{ cert.academic_information.sede.canton }}                  </span>                </div>                <div *ngIf="cert.academic_information.career" class="academic-row career-row">                  <span class="label">Carrera:</span>                  <div class="value career-value">                    <img    *ngIf="getCareerLogo(cert) as careerLogo"    [src]="careerLogo"    alt="Logo carrera"    class="career-logo"  />                    <span>{{ cert.academic_information.career.name }}</span>                  </div>                </div>              </div>            </div>            <!-- Tutor / dueño del curso -->            <div class="person-card">              <div class="person-header">                <div class="avatar">                  <img    *ngIf="getTutorAvatar(cert) as tutorAvatar; else avatarInitialTutor"    [src]="tutorAvatar"    alt="Foto tutor"  />                  <ng-template #avatarInitialTutor>                    <div class="avatar-initial">                      {{ cert.course_owner?.name?.[0] || \'T\' }}                    </div>                  </ng-template>                </div>                <div>                  <p class="person-role">Tutor responsable</p>                  <p class="person-name">{{ getTutorFullName() }}</p>                  <p class="person-username">{{ \'@\' +cert.course_owner?.username }}</p>                </div>              </div>              <div class="course-meta">                <div>                  <span class="meta-label">Fecha del curso:</span>                  <span class="meta-value">                    {{ cert.course.created_at | date:\'longDate\' }}                  </span>                </div>                <div>                  <span class="meta-label">Fecha del certificado:</span>                  <span class="meta-value">                    {{ cert.certificate.date | date:\'longDate\' }}                  </span>                </div>                <div>                  <span class="meta-label">Puntuación obtenida:</span>                  <span class="meta-value score">                    {{ cert.certificate.total_score | number:\'1.0-2\' }} pts                  </span>                </div>              </div>            </div>          </section>        </main>        <!-- FOOTER / ACCIONES -->        <footer class="certificate-footer">          <div class="footer-left">            <p class="certificate-code">              Código de verificación:              <strong>{{ cert.certificate.code }}</strong>            </p>            <p class="footer-note">              Este certificado puede verificarse en DigiMentor usando el código anterior.            </p>          </div>          <div class="footer-right">      <button        type="button"        class="btn-download"        (click)="onDownload()"        [disabled]="!cert.can_download || downloading()"        data-html2canvas-ignore="true"      >        <span *ngIf="!downloading(); else downloadingTpl">          Descargar PDF        </span>        <ng-template #downloadingTpl>          Descargando...        </ng-template>      </button>      <p *ngIf="!cert.can_download" class="download-hint">        Solo el dueño del certificado o un administrador pueden descargar el PDF.      </p>    </div>        </footer>      </article>    </ng-container>  </ng-template></section></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'CertificateComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'CertificateComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

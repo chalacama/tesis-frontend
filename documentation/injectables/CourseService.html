@@ -1,0 +1,1342 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >CourseService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/api/course/course.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#apiUrl" >apiUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleError" >handleError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#http" >http</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#loading$" >loading$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadingSubject" >loadingSubject</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildHttpParams" >buildHttpParams</a>
+                            </li>
+                            <li>
+                                <a href="#createCourse" >createCourse</a>
+                            </li>
+                            <li>
+                                <a href="#generateCode" >generateCode</a>
+                            </li>
+                            <li>
+                                <a href="#getCourseDetail" >getCourseDetail</a>
+                            </li>
+                            <li>
+                                <a href="#getCourses" >getCourses</a>
+                            </li>
+                            <li>
+                                <a href="#getFilteredCourses" >getFilteredCourses</a>
+                            </li>
+                            <li>
+                                <a href="#searchCourses" >searchCourses</a>
+                            </li>
+                            <li>
+                                <a href="#updateCourse" >updateCourse</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildHttpParams"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildHttpParams</b></span>
+                        <a href="#buildHttpParams"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildHttpParams(params: <a href="../interfaces/CourseQueryParams.html" target="_self">CourseQueryParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Construye los parámetros HTTP a partir de los parámetros de consulta</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CourseQueryParams.html" target="_self" >CourseQueryParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>HttpParams</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createCourse"></a>
+                    <span class="name">
+                        <span ><b>createCourse</b></span>
+                        <a href="#createCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createCourse(courseData: <a href="../interfaces/CourseRequest.html" target="_self">CourseRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="162"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:162</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>courseData</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CourseRequest.html" target="_self" >CourseRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;Course&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateCode"></a>
+                    <span class="name">
+                        <span ><b>generateCode</b></span>
+                        <a href="#generateCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateCode()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="182"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:182</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCourseDetail"></a>
+                    <span class="name">
+                        <span ><b>getCourseDetail</b></span>
+                        <a href="#getCourseDetail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCourseDetail(courseParam: string | number)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="172"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:172</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>courseParam</td>
+                                            <td>
+                                                        <code>string | number</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;CourseDetailResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCourses"></a>
+                    <span class="name">
+                        <span ><b>getCourses</b></span>
+                        <a href="#getCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCourses(params: <a href="../interfaces/CourseQueryParams.html" target="_self">CourseQueryParams</a>, routeParams?: <a href="../interfaces/CourseRouteParams.html" target="_self">CourseRouteParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtener cursos con paginación, búsqueda y filtros.
+Sin caché, el skeleton se encargará de la experiencia visual.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CourseQueryParams.html" target="_self" >CourseQueryParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>routeParams</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CourseRouteParams.html" target="_self" >CourseRouteParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;CourseResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFilteredCourses"></a>
+                    <span class="name">
+                        <span ><b>getFilteredCourses</b></span>
+                        <a href="#getFilteredCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFilteredCourses(filters: <a href="../interfaces/CourseFilters.html" target="_self">CourseFilters</a>, params: Omit<CourseQueryParams | filters>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="77"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene cursos con filtros específicos</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CourseFilters.html" target="_self" >CourseFilters</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                        <code>Omit&lt;CourseQueryParams | filters&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;CourseResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchCourses"></a>
+                    <span class="name">
+                        <span ><b>searchCourses</b></span>
+                        <a href="#searchCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>searchCourses(searchTerm: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: Omit<CourseQueryParams | search>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Busca cursos por término de búsqueda</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>searchTerm</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                        <code>Omit&lt;CourseQueryParams | search&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;CourseResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateCourse"></a>
+                    <span class="name">
+                        <span ><b>updateCourse</b></span>
+                        <a href="#updateCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateCourse(courseId: number | string, data: <a href="../interfaces/CourseDetailRequest.html" target="_self">CourseDetailRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/app/core/api/course/course.service.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>courseId</td>
+                                            <td>
+                                                        <code>number | string</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CourseDetailRequest.html" target="_self" >CourseDetailRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;CourseDetailResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="apiUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>apiUrl</b></span>
+                        <a href="#apiUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x60;${environment.apiUrl}/course&#x60;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/core/api/course/course.service.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>handleError</b></span>
+                        <a href="#handleError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/app/core/api/course/course.service.ts:117</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Maneja errores HTTP de forma consistente</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="http"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>http</b></span>
+                        <a href="#http"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(HttpClient)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/core/api/course/course.service.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>loading$</b></span>
+                        <a href="#loading$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.loadingSubject.asObservable()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/core/api/course/course.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingSubject"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadingSubject</b></span>
+                        <a href="#loadingSubject"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new BehaviorSubject&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/core/api/course/course.service.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpClient, HttpErrorResponse, HttpParams } from &#x27;@angular/common/http&#x27;;
+import { inject, Injectable } from &#x27;@angular/core&#x27;;
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  map,
+  Observable,
+  of,
+  switchMap,
+  throwError
+} from &#x27;rxjs&#x27;;
+import {
+  Course,
+  CourseFilters,
+  CourseQueryParams,
+  CourseRequest,
+  CourseResponse,
+  CourseRouteParams
+} from &#x27;./course.interfaces&#x27;;
+import { environment } from &#x27;../../environment/environment&#x27;;
+import { CodeResponse, CourseDetailRequest, CourseDetailResponse } from &#x27;./course.details.interfaces&#x27;;
+
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class CourseService {
+
+  private readonly http &#x3D; inject(HttpClient);
+  private readonly apiUrl &#x3D; &#x60;${environment.apiUrl}/course&#x60;;
+
+  // Estado de loading para mejor UX (skeletons)
+  private loadingSubject &#x3D; new BehaviorSubject&lt;boolean&gt;(false);
+  public loading$ &#x3D; this.loadingSubject.asObservable();
+
+  /**
+   * Obtener cursos con paginación, búsqueda y filtros.
+   * Sin caché, el skeleton se encargará de la experiencia visual.
+   */
+  getCourses(
+    params: CourseQueryParams &#x3D; {},
+    routeParams?: CourseRouteParams
+  ): Observable&lt;CourseResponse&gt; {
+    this.loadingSubject.next(true);
+
+    let httpParams &#x3D; this.buildHttpParams(params);
+
+    if (routeParams?.username) {
+      httpParams &#x3D; httpParams.set(&#x27;username&#x27;, routeParams.username);
+    }
+
+    if (routeParams?.id) {
+      httpParams &#x3D; httpParams.set(&#x27;id&#x27;, routeParams.id.toString());
+    }
+
+    return this.http
+      .get&lt;CourseResponse&gt;(&#x60;${this.apiUrl}/index&#x60;, { params: httpParams })
+      .pipe(
+        catchError(this.handleError),
+        finalize(() &#x3D;&gt; this.loadingSubject.next(false))
+      );
+  }
+
+  /**
+   * Busca cursos por término de búsqueda
+   */
+  searchCourses(
+    searchTerm: string,
+    params: Omit&lt;CourseQueryParams, &#x27;search&#x27;&gt; &#x3D; {}
+  ): Observable&lt;CourseResponse&gt; {
+    return this.getCourses({ ...params, search: searchTerm });
+  }
+
+  /**
+   * Obtiene cursos con filtros específicos
+   */
+  getFilteredCourses(
+    filters: CourseFilters,
+    params: Omit&lt;CourseQueryParams, &#x27;filters&#x27;&gt; &#x3D; {}
+  ): Observable&lt;CourseResponse&gt; {
+    return this.getCourses({ ...params, filters });
+  }
+
+  /**
+   * Construye los parámetros HTTP a partir de los parámetros de consulta
+   */
+  private buildHttpParams(params: CourseQueryParams): HttpParams {
+    let httpParams &#x3D; new HttpParams();
+
+    if (params.per_page) {
+      httpParams &#x3D; httpParams.set(&#x27;per_page&#x27;, params.per_page.toString());
+    }
+
+    if (params.page) {
+      httpParams &#x3D; httpParams.set(&#x27;page&#x27;, params.page.toString());
+    }
+
+    if (params.search?.trim()) {
+      httpParams &#x3D; httpParams.set(&#x27;search&#x27;, params.search.trim());
+    }
+
+    if (params.filters) {
+      const filters &#x3D; params.filters;
+      Object.entries(filters).forEach(([key, value]) &#x3D;&gt; {
+        if (value !&#x3D;&#x3D; undefined &amp;&amp; value !&#x3D;&#x3D; null &amp;&amp; &#x60;${value}&#x60; !&#x3D;&#x3D; &#x27;&#x27;) {
+          httpParams &#x3D; httpParams.set(&#x60;filters[${key}]&#x60;, String(value));
+        }
+      });
+    }
+
+    return httpParams;
+  }
+
+  /**
+   * Maneja errores HTTP de forma consistente
+   */
+  private handleError &#x3D; (error: HttpErrorResponse): Observable&lt;never&gt; &#x3D;&gt; {
+    let errorMessage &#x3D; &#x27;Ha ocurrido un error inesperado&#x27;;
+
+    if (error.error instanceof ErrorEvent) {
+      // Error del lado del cliente
+      errorMessage &#x3D; &#x60;Error de red: ${error.error.message}&#x60;;
+    } else {
+      // Error del servidor
+      switch (error.status) {
+        case 400:
+          errorMessage &#x3D; &#x27;Solicitud inválida. Por favor, verifica los datos enviados.&#x27;;
+          break;
+        case 401:
+          errorMessage &#x3D; &#x27;No tienes autorización para acceder a este recurso.&#x27;;
+          break;
+        case 403:
+          errorMessage &#x3D; &#x27;No tienes permisos suficientes para realizar esta acción.&#x27;;
+          break;
+        case 404:
+          errorMessage &#x3D; &#x27;El recurso solicitado no fue encontrado.&#x27;;
+          break;
+        case 422:
+          errorMessage &#x3D; error.error?.message || &#x27;Datos de entrada inválidos.&#x27;;
+          break;
+        case 429:
+          errorMessage &#x3D; &#x27;Demasiadas solicitudes. Por favor, intenta más tarde.&#x27;;
+          break;
+        case 500:
+          errorMessage &#x3D; &#x27;Error interno del servidor. Por favor, contacta al soporte.&#x27;;
+          break;
+        default:
+          errorMessage &#x3D; error.error?.message || &#x60;Error ${error.status}: ${error.statusText}&#x60;;
+      }
+    }
+
+    console.error(&#x27;CourseService Error:&#x27;, {
+      status: error.status,
+      message: errorMessage,
+      url: error.url,
+      timestamp: new Date().toISOString()
+    });
+
+    return throwError(() &#x3D;&gt; new Error(errorMessage));
+  };
+
+  createCourse(courseData: CourseRequest): Observable&lt;Course&gt; {
+    this.loadingSubject.next(true);
+    return this.http.post&lt;{ course: Course }&gt;(&#x60;${this.apiUrl}/store&#x60;, courseData).pipe(
+      finalize(() &#x3D;&gt; this.loadingSubject.next(false)),
+      catchError(this.handleError),
+      // extrae solo el objeto &#x27;course&#x27;
+      switchMap(response &#x3D;&gt; of(response.course))
+    );
+  }
+
+  getCourseDetail(courseParam: string | number): Observable&lt;CourseDetailResponse&gt; {
+    this.loadingSubject.next(true);
+    return this.http
+      .get&lt;CourseDetailResponse&gt;(&#x60;${this.apiUrl}/${courseParam}/show&#x60;)
+      .pipe(
+        finalize(() &#x3D;&gt; this.loadingSubject.next(false)),
+        catchError(this.handleError)
+      );
+  }
+
+  generateCode(): Observable&lt;string&gt; {
+    this.loadingSubject.next(true);
+    return this.http.get&lt;CodeResponse&gt;(&#x60;${this.apiUrl}/generate-code&#x60;).pipe(
+      map(res &#x3D;&gt; res.code),
+      finalize(() &#x3D;&gt; this.loadingSubject.next(false)),
+      catchError(this.handleError)
+    );
+  }
+
+  updateCourse(
+  courseId: number | string,
+  data: CourseDetailRequest
+): Observable&lt;CourseDetailResponse&gt; {
+  const url &#x3D; &#x60;${this.apiUrl}/${courseId}/update&#x60;;
+  const fd &#x3D; new FormData();
+
+  const appendIfDefined &#x3D; (key: string, v: unknown) &#x3D;&gt; {
+    if (v &#x3D;&#x3D;&#x3D; undefined) return;
+    if (v &#x3D;&#x3D;&#x3D; null) {
+      fd.append(key, &#x27;&#x27;);
+      return;
+    }
+    fd.append(key, String(v));
+  };
+
+  // Campos base
+  appendIfDefined(&#x27;title&#x27;, data.title);
+  appendIfDefined(&#x27;description&#x27;, data.description);
+  if (data.private !&#x3D;&#x3D; undefined) fd.append(&#x27;private&#x27;, data.private ? &#x27;1&#x27; : &#x27;0&#x27;);
+  if (data.enabled !&#x3D;&#x3D; undefined) fd.append(&#x27;enabled&#x27;, data.enabled ? &#x27;1&#x27; : &#x27;0&#x27;);
+  appendIfDefined(&#x27;difficulty_id&#x27;, data.difficulty_id);
+  if (data.code !&#x3D;&#x3D; undefined) {
+    fd.append(&#x27;code&#x27;, data.code ?? &#x27;&#x27;);
+  }
+
+  // Carreras (ids)
+  if (Array.isArray(data.careers)) {
+    const careers &#x3D; [...new Set(data.careers)];
+    careers.forEach(id &#x3D;&gt; fd.append(&#x27;careers[]&#x27;, String(id)));
+  }
+
+  // Categorías
+  if (Array.isArray(data.categories)) {
+    const cats &#x3D; data.categories;
+    if (typeof cats[0] &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+      (cats as number[]).forEach(id &#x3D;&gt; fd.append(&#x27;categories[]&#x27;, String(id)));
+    } else {
+      (cats as { id: number; order?: number }[]).forEach((c, i) &#x3D;&gt; {
+        fd.append(&#x60;categories[${i}][id]&#x60;, String(c.id));
+        if (c.order !&#x3D;&#x3D; undefined) {
+          fd.append(&#x60;categories[${i}][order]&#x60;, String(c.order));
+        }
+      });
+    }
+  }
+
+  // Miniatura (archivo): solo si es File
+  if (data.miniature instanceof File) {
+    fd.append(&#x27;miniature&#x27;, data.miniature);
+  }
+
+  // Flag para quitar miniatura
+  if (data.remove_miniature !&#x3D;&#x3D; undefined) {
+    fd.append(&#x27;remove_miniature&#x27;, data.remove_miniature ? &#x27;1&#x27; : &#x27;0&#x27;);
+  }
+
+  return this.http.post&lt;CourseDetailResponse&gt;(url, fd).pipe(
+    map(res &#x3D;&gt; res),
+    catchError((err: HttpErrorResponse) &#x3D;&gt; {
+      const msg &#x3D;
+        (err.error &amp;&amp; (err.error.message || err.error.error)) ||
+        err.message ||
+        &#x27;Error actualizando el curso&#x27;;
+      return throwError(() &#x3D;&gt; new Error(msg));
+    })
+  );
+}
+
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CourseService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

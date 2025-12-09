@@ -132,6 +132,7 @@
 .badge-muted {
   background-color: var(--background-hover);
   color: var(--text-color-secondary);
+  cursor: pointer;
 }
 
 /* Select rol */

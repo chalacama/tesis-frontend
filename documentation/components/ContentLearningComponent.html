@@ -1,0 +1,4168 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ContentLearningComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-content-learning</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../interfaces/Module.html" target="_self" >ReactiveFormsModule</a></code>
+                                <code><a href="../components/ButtonComponent.html" target="_self" >ButtonComponent</a></code>
+                                <code><a href="../components/IconComponent.html" target="_self" >IconComponent</a></code>
+                                <code><a href="../components/LoadingBarComponent.html" target="_self" >LoadingBarComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./content-learning.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./content-learning.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#allowEmptySave" >allowEmptySave</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#chapterSrv" >chapterSrv</a>
+                            </li>
+                            <li>
+                                <a href="#current" >current</a>
+                            </li>
+                            <li>
+                                <a href="#dragOver" >dragOver</a>
+                            </li>
+                            <li>
+                                <a href="#embedSafe" >embedSafe</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#embedUrl" >embedUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fb" >fb</a>
+                            </li>
+                            <li>
+                                <a href="#fileError" >fileError</a>
+                            </li>
+                            <li>
+                                <a href="#fileName" >fileName</a>
+                            </li>
+                            <li>
+                                <a href="#filePreviewType" >filePreviewType</a>
+                            </li>
+                            <li>
+                                <a href="#filePreviewUrl" >filePreviewUrl</a>
+                            </li>
+                            <li>
+                                <a href="#fileSafePreviewUrl" >fileSafePreviewUrl</a>
+                            </li>
+                            <li>
+                                <a href="#fileSel" >fileSel</a>
+                            </li>
+                            <li>
+                                <a href="#fileSizeLabel" >fileSizeLabel</a>
+                            </li>
+                            <li>
+                                <a href="#form" >form</a>
+                            </li>
+                            <li>
+                                <a href="#hasChanges" >hasChanges</a>
+                            </li>
+                            <li>
+                                <a href="#isArchivo" >isArchivo</a>
+                            </li>
+                            <li>
+                                <a href="#isYouTube" >isYouTube</a>
+                            </li>
+                            <li>
+                                <a href="#loadbar" >loadbar</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_FILE_BYTES" >MAX_FILE_BYTES</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_FILE_MB" >MAX_FILE_MB</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_VIDEO_SECONDS" >MAX_VIDEO_SECONDS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MIN_VIDEO_SECONDS" >MIN_VIDEO_SECONDS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                            <li>
+                                <a href="#sabed" >sabed</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#sanitizer" >sanitizer</a>
+                            </li>
+                            <li>
+                                <a href="#saving" >saving</a>
+                            </li>
+                            <li>
+                                <a href="#selectedTypeId" >selectedTypeId</a>
+                            </li>
+                            <li>
+                                <a href="#typeIdArchivo" >typeIdArchivo</a>
+                            </li>
+                            <li>
+                                <a href="#typeIdYoutube" >typeIdYoutube</a>
+                            </li>
+                            <li>
+                                <a href="#types" >types</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#typeSrv" >typeSrv</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildEmbedUrl" >buildEmbedUrl</a>
+                            </li>
+                            <li>
+                                <a href="#clearFile" >clearFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#clearFileInternal" >clearFileInternal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#detectPreviewType" >detectPreviewType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#extractYouTubeId" >extractYouTubeId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#formatBytes" >formatBytes</a>
+                            </li>
+                            <li>
+                                <a href="#formStatus" >formStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getChapterParamFromRoute" >getChapterParamFromRoute</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getVideoDuration" >getVideoDuration</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleIncomingFile" >handleIncomingFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#init" >init</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isValidId" >isValidId</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onDragLeave" >onDragLeave</a>
+                            </li>
+                            <li>
+                                <a href="#onDragOver" >onDragOver</a>
+                            </li>
+                            <li>
+                                <a href="#onDrop" >onDrop</a>
+                            </li>
+                            <li>
+                                <a href="#onFileInputChange" >onFileInputChange</a>
+                            </li>
+                            <li>
+                                <a href="#openFileDialog" >openFileDialog</a>
+                            </li>
+                            <li>
+                                <a href="#openPreviewInNewTab" >openPreviewInNewTab</a>
+                            </li>
+                            <li>
+                                <a href="#pickArchivo" >pickArchivo</a>
+                            </li>
+                            <li>
+                                <a href="#pickYouTube" >pickYouTube</a>
+                            </li>
+                            <li>
+                                <a href="#reset" >reset</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#revokePreviewUrl" >revokePreviewUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#save" >save</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateEmbedFromUrl" >updateEmbedFromUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateFilePreviewFromBackend" >updateFilePreviewFromBackend</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateFilePreviewFromFile" >updateFilePreviewFromFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#youtubeUrlOptionalValidator" >youtubeUrlOptionalValidator</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:91</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildEmbedUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildEmbedUrl</b></span>
+                        <a href="#buildEmbedUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildEmbedUrl(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="208"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:208</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearFile"></a>
+                    <span class="name">
+                        <span ><b>clearFile</b></span>
+                        <a href="#clearFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clearFile()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="520"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:520</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearFileInternal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>clearFileInternal</b></span>
+                        <a href="#clearFileInternal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>clearFileInternal(markDelete: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="500"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:500</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>markDelete</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="detectPreviewType"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>detectPreviewType</b></span>
+                        <a href="#detectPreviewType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>detectPreviewType(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, mime?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="439"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:439</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>mime</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>&quot;image&quot; | &quot;video&quot; | &quot;audio&quot; | &quot;pdf&quot; | &quot;other&quot;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractYouTubeId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>extractYouTubeId</b></span>
+                        <a href="#extractYouTubeId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>extractYouTubeId(raw: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="148"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:148</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Acepta watch, youtu.be, shorts, embed, con parámetros extra</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>raw</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatBytes"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>formatBytes</b></span>
+                        <a href="#formatBytes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>formatBytes(bytes: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="491"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:491</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bytes</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formStatus"></a>
+                    <span class="name">
+                        <span ><b>formStatus</b></span>
+                        <a href="#formStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formStatus()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:140</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChapterParamFromRoute"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getChapterParamFromRoute</b></span>
+                        <a href="#getChapterParamFromRoute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChapterParamFromRoute()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="236"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:236</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getVideoDuration"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getVideoDuration</b></span>
+                        <a href="#getVideoDuration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getVideoDuration(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="419"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:419</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;number | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleIncomingFile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleIncomingFile</b></span>
+                        <a href="#handleIncomingFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleIncomingFile(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="378"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:378</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="init"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>init</b></span>
+                        <a href="#init"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>init()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="242"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:242</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValidId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isValidId</b></span>
+                        <a href="#isValidId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isValidId(id?: string | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="204"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:204</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                        <code>string | null</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDragLeave"></a>
+                    <span class="name">
+                        <span ><b>onDragLeave</b></span>
+                        <a href="#onDragLeave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onDragLeave(event: DragEvent)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="349"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:349</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>DragEvent</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDragOver"></a>
+                    <span class="name">
+                        <span ><b>onDragOver</b></span>
+                        <a href="#onDragOver"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onDragOver(event: DragEvent)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="343"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:343</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>DragEvent</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDrop"></a>
+                    <span class="name">
+                        <span ><b>onDrop</b></span>
+                        <a href="#onDrop"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onDrop(event: DragEvent)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="355"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:355</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>DragEvent</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onFileInputChange"></a>
+                    <span class="name">
+                        <span ><b>onFileInputChange</b></span>
+                        <a href="#onFileInputChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onFileInputChange(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="366"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:366</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openFileDialog"></a>
+                    <span class="name">
+                        <span ><b>openFileDialog</b></span>
+                        <a href="#openFileDialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openFileDialog(input: HTMLInputElement | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="374"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:374</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>input</td>
+                                            <td>
+                                                        <code>HTMLInputElement | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openPreviewInNewTab"></a>
+                    <span class="name">
+                        <span ><b>openPreviewInNewTab</b></span>
+                        <a href="#openPreviewInNewTab"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openPreviewInNewTab()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="528"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:528</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pickArchivo"></a>
+                    <span class="name">
+                        <span ><b>pickArchivo</b></span>
+                        <a href="#pickArchivo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>pickArchivo()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="317"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:317</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pickYouTube"></a>
+                    <span class="name">
+                        <span ><b>pickYouTube</b></span>
+                        <a href="#pickYouTube"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>pickYouTube()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="298"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:298</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Acciones UI</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reset"></a>
+                    <span class="name">
+                        <span ><b>reset</b></span>
+                        <a href="#reset"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>reset()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="535"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:535</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="revokePreviewUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>revokePreviewUrl</b></span>
+                        <a href="#revokePreviewUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>revokePreviewUrl()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="484"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:484</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="save"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>save</b></span>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>save()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="570"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:570</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateEmbedFromUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>updateEmbedFromUrl</b></span>
+                        <a href="#updateEmbedFromUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateEmbedFromUrl(url: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="212"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:212</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>url</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateFilePreviewFromBackend"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>updateFilePreviewFromBackend</b></span>
+                        <a href="#updateFilePreviewFromBackend"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateFilePreviewFromBackend(url: string | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="466"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:466</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>url</td>
+                                            <td>
+                                                        <code>string | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateFilePreviewFromFile"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>updateFilePreviewFromFile</b></span>
+                        <a href="#updateFilePreviewFromFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateFilePreviewFromFile(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="456"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:456</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="youtubeUrlOptionalValidator"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>youtubeUrlOptionalValidator</b></span>
+                        <a href="#youtubeUrlOptionalValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>youtubeUrlOptionalValidator(ctrl: AbstractControl)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="227"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:227</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validador opcional:</p>
+<ul>
+<li>Si el valor NO es string → válido (no aplica).</li>
+<li>Si es string vacío → válido.</li>
+<li>Si es string con texto → debe ser URL válida de YouTube (extraíble a videoId).</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ctrl</td>
+                                            <td>
+                                                        <code>AbstractControl</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidationErrors | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allowEmptySave"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>allowEmptySave</b></span>
+                        <a href="#allowEmptySave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:90</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Para permitir guardar aun sin cambios (vacío)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="chapterSrv"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>chapterSrv</b></span>
+                        <a href="#chapterSrv"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ChapterService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="current"></a>
+                    <span class="name">
+                        <span ><b>current</b></span>
+                        <a href="#current"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;LearingContentResponse | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dragOver"></a>
+                    <span class="name">
+                        <span ><b>dragOver</b></span>
+                        <a href="#dragOver"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="embedSafe"></a>
+                    <span class="name">
+                        <span ><b>embedSafe</b></span>
+                        <a href="#embedSafe"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;SafeResourceUrl | null&gt;(() &#x3D;&gt; {
+    const u &#x3D; this.embedUrl();
+    return u ? this.sanitizer.bypassSecurityTrustResourceUrl(u) : null;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="embedUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>embedUrl</b></span>
+                        <a href="#embedUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>URL embebible (<a href="https://www.youtube.com/embed/VIDEOID">https://www.youtube.com/embed/VIDEOID</a>)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fb"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fb</b></span>
+                        <a href="#fb"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FormBuilder)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fileError"></a>
+                    <span class="name">
+                        <span ><b>fileError</b></span>
+                        <a href="#fileError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fileName"></a>
+                    <span class="name">
+                        <span ><b>fileName</b></span>
+                        <a href="#fileName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filePreviewType"></a>
+                    <span class="name">
+                        <span ><b>filePreviewType</b></span>
+                        <a href="#filePreviewType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;&#x27;image&#x27; | &#x27;video&#x27; | &#x27;audio&#x27; | &#x27;pdf&#x27; | &#x27;other&#x27; | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filePreviewUrl"></a>
+                    <span class="name">
+                        <span ><b>filePreviewUrl</b></span>
+                        <a href="#filePreviewUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fileSafePreviewUrl"></a>
+                    <span class="name">
+                        <span ><b>fileSafePreviewUrl</b></span>
+                        <a href="#fileSafePreviewUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;SafeResourceUrl | null&gt;(() &#x3D;&gt; {
+    const url &#x3D; this.filePreviewUrl();
+    return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fileSel"></a>
+                    <span class="name">
+                        <span ><b>fileSel</b></span>
+                        <a href="#fileSel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;File | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fileSizeLabel"></a>
+                    <span class="name">
+                        <span ><b>fileSizeLabel</b></span>
+                        <a href="#fileSizeLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="form"></a>
+                    <span class="name">
+                        <span ><b>form</b></span>
+                        <a href="#form"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.fb.group({
+    type_content_id: this.fb.control&lt;number | null&gt;(null, { validators: [Validators.required], nonNullable: true }),
+    url: this.fb.control&lt;string | File | File[] | string[] | null&gt;(null),
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasChanges"></a>
+                    <span class="name">
+                        <span ><b>hasChanges</b></span>
+                        <a href="#hasChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.allowEmptySave || (!this.loading() &amp;&amp; (this.form.dirty || !!this.fileSel())))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:91</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isArchivo"></a>
+                    <span class="name">
+                        <span ><b>isArchivo</b></span>
+                        <a href="#isArchivo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.selectedTypeId() &#x3D;&#x3D;&#x3D; this.typeIdArchivo())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isYouTube"></a>
+                    <span class="name">
+                        <span ><b>isYouTube</b></span>
+                        <a href="#isYouTube"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.selectedTypeId() &#x3D;&#x3D;&#x3D; this.typeIdYoutube())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:86</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Vista/estado</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadbar"></a>
+                    <span class="name">
+                        <span ><b>loadbar</b></span>
+                        <a href="#loadbar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_FILE_BYTES"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_FILE_BYTES</b></span>
+                        <a href="#MAX_FILE_BYTES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.MAX_FILE_MB * 1024 * 1024</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_FILE_MB"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_FILE_MB</b></span>
+                        <a href="#MAX_FILE_MB"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>900</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_VIDEO_SECONDS"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_VIDEO_SECONDS</b></span>
+                        <a href="#MAX_VIDEO_SECONDS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>480</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MIN_VIDEO_SECONDS"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MIN_VIDEO_SECONDS</b></span>
+                        <a href="#MIN_VIDEO_SECONDS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sabed"></a>
+                    <span class="name">
+                        <span ><b>sabed</b></span>
+                        <a href="#sabed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:138</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sanitizer"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>sanitizer</b></span>
+                        <a href="#sanitizer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(DomSanitizer)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saving"></a>
+                    <span class="name">
+                        <span ><b>saving</b></span>
+                        <a href="#saving"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedTypeId"></a>
+                    <span class="name">
+                        <span ><b>selectedTypeId</b></span>
+                        <a href="#selectedTypeId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number | null&gt;(this.form.controls.type_content_id.value)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:68</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Reactive → signals</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="typeIdArchivo"></a>
+                    <span class="name">
+                        <span ><b>typeIdArchivo</b></span>
+                        <a href="#typeIdArchivo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt;
+    this.types().find(t &#x3D;&gt; (t.name ?? &#x27;&#x27;).toLowerCase() &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27;)?.id ?? null
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="typeIdYoutube"></a>
+                    <span class="name">
+                        <span ><b>typeIdYoutube</b></span>
+                        <a href="#typeIdYoutube"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt;
+    this.types().find(t &#x3D;&gt; (t.name ?? &#x27;&#x27;).toLowerCase() &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27;)?.id ?? null
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:78</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>IDs de tipo desde backend</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="types"></a>
+                    <span class="name">
+                        <span ><b>types</b></span>
+                        <a href="#types"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;TypeLarningContentResponse[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="typeSrv"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>typeSrv</b></span>
+                        <a href="#typeSrv"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(TypeService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/pages/private/studio/manage.course/module/chapter/content-learning/content-learning.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, OnInit, computed, effect, inject, signal } from &#x27;@angular/core&#x27;;
+import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from &#x27;@angular/forms&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+import { DomSanitizer, SafeResourceUrl } from &#x27;@angular/platform-browser&#x27;;
+import { debounceTime, firstValueFrom } from &#x27;rxjs&#x27;;
+
+import { ButtonComponent } from &#x27;../../../../../../../shared/UI/components/button/button/button.component&#x27;;
+import { IconComponent } from &#x27;../../../../../../../shared/UI/components/button/icon/icon.component&#x27;;
+
+import { ChapterService } from &#x27;../../../../../../../core/api/chapter/chapter.service&#x27;;
+import { TypeService } from &#x27;../../../../../../../core/api/type/type.service&#x27;;
+import { TypeLarningContentResponse } from &#x27;../../../../../../../core/api/type/type.interface&#x27;;
+import { LearingContentResponse } from &#x27;../../../../../../../core/api/chapter/chapter.interface&#x27;;
+import { LoadingBarComponent } from &#x27;../../../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component&#x27;;
+
+@Component({
+  selector: &#x27;app-content-learning&#x27;,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, IconComponent, LoadingBarComponent],
+  templateUrl: &#x27;./content-learning.component.html&#x27;,
+  styleUrl: &#x27;./content-learning.component.css&#x27;
+})
+export class ContentLearningComponent implements OnInit {
+
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly fb &#x3D; inject(FormBuilder);
+  private readonly chapterSrv &#x3D; inject(ChapterService);
+  private readonly typeSrv &#x3D; inject(TypeService);
+  private readonly sanitizer &#x3D; inject(DomSanitizer);
+
+  loading &#x3D; signal&lt;boolean&gt;(true);
+  saving  &#x3D; signal&lt;boolean&gt;(false);
+  types   &#x3D; signal&lt;TypeLarningContentResponse[]&gt;([]);
+  current &#x3D; signal&lt;LearingContentResponse | null&gt;(null);
+  fileSel &#x3D; signal&lt;File | null&gt;(null);
+  loadbar &#x3D; signal&lt;boolean&gt;(false);
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; límites de validación &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  readonly MAX_FILE_MB &#x3D; 900;
+  readonly MIN_VIDEO_SECONDS &#x3D; 10;
+  readonly MAX_VIDEO_SECONDS &#x3D; 480;
+  
+  private readonly MAX_FILE_BYTES &#x3D; this.MAX_FILE_MB * 1024 * 1024;
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; estado drag &amp; drop / errores &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  dragOver &#x3D; signal&lt;boolean&gt;(false);
+  fileError &#x3D; signal&lt;string | null&gt;(null);
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; previsualización del archivo (tipo Classroom) &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  filePreviewUrl &#x3D; signal&lt;string | null&gt;(null); // blob: o url del backend
+  filePreviewType &#x3D; signal&lt;&#x27;image&#x27; | &#x27;video&#x27; | &#x27;audio&#x27; | &#x27;pdf&#x27; | &#x27;other&#x27; | null&gt;(null);
+  fileName &#x3D; signal&lt;string | null&gt;(null);
+  fileSizeLabel &#x3D; signal&lt;string | null&gt;(null);
+
+  fileSafePreviewUrl &#x3D; computed&lt;SafeResourceUrl | null&gt;(() &#x3D;&gt; {
+    const url &#x3D; this.filePreviewUrl();
+    return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
+  });
+
+  // ⬇️ url ahora acepta string | File | File[] | string[] | null
+  form &#x3D; this.fb.group({
+    type_content_id: this.fb.control&lt;number | null&gt;(null, { validators: [Validators.required], nonNullable: true }),
+    url: this.fb.control&lt;string | File | File[] | string[] | null&gt;(null),
+  });
+
+  /** Reactive → signals */
+  selectedTypeId &#x3D; signal&lt;number | null&gt;(this.form.controls.type_content_id.value);
+
+  /** URL embebible (https://www.youtube.com/embed/VIDEOID) */
+  private embedUrl &#x3D; signal&lt;string | null&gt;(null);
+  embedSafe &#x3D; computed&lt;SafeResourceUrl | null&gt;(() &#x3D;&gt; {
+    const u &#x3D; this.embedUrl();
+    return u ? this.sanitizer.bypassSecurityTrustResourceUrl(u) : null;
+  });
+
+  /** IDs de tipo desde backend */
+  typeIdYoutube &#x3D; computed(() &#x3D;&gt;
+    this.types().find(t &#x3D;&gt; (t.name ?? &#x27;&#x27;).toLowerCase() &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27;)?.id ?? null
+  );
+  typeIdArchivo &#x3D; computed(() &#x3D;&gt;
+    this.types().find(t &#x3D;&gt; (t.name ?? &#x27;&#x27;).toLowerCase() &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27;)?.id ?? null
+  );
+
+  /** Vista/estado */
+  isYouTube &#x3D; computed(() &#x3D;&gt; this.selectedTypeId() &#x3D;&#x3D;&#x3D; this.typeIdYoutube());
+  isArchivo &#x3D; computed(() &#x3D;&gt; this.selectedTypeId() &#x3D;&#x3D;&#x3D; this.typeIdArchivo());
+
+  /** Para permitir guardar aun sin cambios (vacío) */
+  private allowEmptySave &#x3D; true;
+  hasChanges &#x3D; computed(() &#x3D;&gt; this.allowEmptySave || (!this.loading() &amp;&amp; (this.form.dirty || !!this.fileSel())));
+
+  constructor() {
+    /** Validadores dinámicos &amp; preview de YouTube */
+    effect(() &#x3D;&gt; {
+      const isYT &#x3D; this.isYouTube();
+
+      // Limpia validadores del control
+      this.form.controls.url.clearValidators();
+
+      // Si es YouTube: NO required, solo valida formato si hay texto (y si el valor es string)
+      if (isYT) {
+        this.form.controls.url.addValidators([this.youtubeUrlOptionalValidator.bind(this)]);
+      } else {
+        // Si pasa a Archivo, limpia el embed
+        this.embedUrl.set(null);
+      }
+      this.form.controls.url.updateValueAndValidity({ emitEvent: false });
+    });
+
+    /** Sync selectedTypeId con el control */
+    this.form.controls.type_content_id.valueChanges
+      .pipe(debounceTime(0))
+      .subscribe(v &#x3D;&gt; this.selectedTypeId.set(v));
+
+    /** Trimming + preview al escribir URL (solo si es string) */
+    this.form.controls.url.valueChanges
+      .pipe(debounceTime(200))
+      .subscribe(v &#x3D;&gt; {
+        if (typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+          const trimmed &#x3D; v.trim();
+          if (trimmed !&#x3D;&#x3D; v) {
+            this.form.controls.url.setValue(trimmed, { emitEvent: false });
+          }
+          this.updateEmbedFromUrl(trimmed);
+        } else {
+          // Si no es string (archivo/array), no hay preview de YouTube
+          this.embedUrl.set(null);
+        }
+      });
+  }
+
+  ngOnInit(): void {
+    this.init();
+    this.formStatus();
+  }
+
+  sabed &#x3D; true;
+
+  formStatus() {
+    this.form.statusChanges.subscribe(() &#x3D;&gt; {
+      this.sabed &#x3D; this.form.pristine &amp;&amp; !this.form.invalid;
+      console.log(this.sabed);
+    });
+  }
+
+  /** Acepta watch, youtu.be, shorts, embed, con parámetros extra */
+  private extractYouTubeId(raw: string): string | null {
+    if (!raw) return null;
+    try {
+      const normalized &#x3D; raw.startsWith(&#x27;http&#x27;) ? raw : &#x60;https://${raw}&#x60;;
+      const url &#x3D; new URL(normalized);
+
+      const host &#x3D; url.hostname.replace(/^www\./i, &#x27;&#x27;).toLowerCase();
+      const path &#x3D; url.pathname;
+
+      // 1) youtu.be/&lt;id&gt;
+      if (host &#x3D;&#x3D;&#x3D; &#x27;youtu.be&#x27;) {
+        const id &#x3D; path.split(&#x27;/&#x27;).filter(Boolean)[0];
+        return this.isValidId(id) ? id : null;
+      }
+
+      // 2) youtube.com/watch?v&#x3D;&lt;id&gt; | /shorts/&lt;id&gt; | /embed/&lt;id&gt;
+      if (host &#x3D;&#x3D;&#x3D; &#x27;youtube.com&#x27; || host &#x3D;&#x3D;&#x3D; &#x27;m.youtube.com&#x27; || host &#x3D;&#x3D;&#x3D; &#x27;music.youtube.com&#x27;) {
+        const p &#x3D; path.toLowerCase();
+
+        const v &#x3D; url.searchParams.get(&#x27;v&#x27;);
+        if (p &#x3D;&#x3D;&#x3D; &#x27;/watch&#x27; &amp;&amp; v &amp;&amp; this.isValidId(v)) return v;
+
+        if (p.startsWith(&#x27;/shorts/&#x27;)) {
+          const id &#x3D; path.split(&#x27;/&#x27;).filter(Boolean)[1];
+          return this.isValidId(id) ? id : null;
+        }
+
+        if (p.startsWith(&#x27;/embed/&#x27;)) {
+          const id &#x3D; path.split(&#x27;/&#x27;).filter(Boolean)[1];
+          return this.isValidId(id) ? id : null;
+        }
+      }
+
+      // 3) Fallback para *.youtube.com
+      if (host.endsWith(&#x27;youtube.com&#x27;)) {
+        const v &#x3D; url.searchParams.get(&#x27;v&#x27;);
+        if (v &amp;&amp; this.isValidId(v)) return v;
+
+        const segs &#x3D; path.split(&#x27;/&#x27;).filter(Boolean);
+        if (segs[0] &#x3D;&#x3D;&#x3D; &#x27;shorts&#x27; || segs[0] &#x3D;&#x3D;&#x3D; &#x27;embed&#x27;) {
+          const id &#x3D; segs[1];
+          if (this.isValidId(id)) return id;
+        }
+      }
+
+      // 4) Último recurso: regex
+      const REG_FALLBACK &#x3D; /(?:v&#x3D;|\/shorts\/|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
+      const m &#x3D; raw.match(REG_FALLBACK);
+      if (m?.[1] &amp;&amp; this.isValidId(m[1])) return m[1];
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  private isValidId(id?: string | null): boolean {
+    return !!id &amp;&amp; /^[A-Za-z0-9_-]{6,}$/.test(id); // &gt;&#x3D;6 para contemplar variantes
+  }
+
+  private buildEmbedUrl(id: string): string {
+    return &#x60;https://www.youtube.com/embed/${id}?rel&#x3D;0&#x60;;
+  }
+
+  private updateEmbedFromUrl(url: string) {
+    if (!this.isYouTube()) {
+      this.embedUrl.set(null);
+      return;
+    }
+    const id &#x3D; this.extractYouTubeId(url);
+    this.embedUrl.set(id ? this.buildEmbedUrl(id) : null);
+  }
+
+  /**
+   * Validador opcional:
+   * - Si el valor NO es string → válido (no aplica).
+   * - Si es string vacío → válido.
+   * - Si es string con texto → debe ser URL válida de YouTube (extraíble a videoId).
+   */
+  private youtubeUrlOptionalValidator(ctrl: AbstractControl): ValidationErrors | null {
+    const v &#x3D; ctrl.value;
+    if (typeof v !&#x3D;&#x3D; &#x27;string&#x27;) return null;   // no valida si no es string
+    const value &#x3D; v.trim();
+    if (!value) return null;                  // vacío es VÁLIDO
+    const id &#x3D; this.extractYouTubeId(value);
+    return id ? null : { youtubeUrl: true };
+  }
+
+  private getChapterParamFromRoute(): string | null {
+    return this.route.snapshot.paramMap.get(&#x27;chapter&#x27;)
+      ?? this.route.parent?.snapshot.paramMap.get(&#x27;chapter&#x27;)
+      ?? null;
+  }
+
+  private async init() {
+    try {
+      this.loading.set(true);
+
+      const list &#x3D; await firstValueFrom(this.typeSrv.getTypeLearningContentAll());
+      this.types.set(list);
+
+      const chapterParam &#x3D; this.getChapterParamFromRoute() ?? &#x27;&#x27;;
+      const lc &#x3D; await firstValueFrom(this.chapterSrv.showLearningContent(chapterParam));
+      this.current.set(lc);
+
+      const name &#x3D; lc.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
+
+      const preTypeId &#x3D;
+        name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27; ? this.typeIdArchivo() :
+        name &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27; ? this.typeIdYoutube() : this.typeIdYoutube();
+
+      // url desde backend (puede ser &#x27;&#x27; o una url real)
+      const initialUrl &#x3D; lc.learning_content?.url ?? &#x27;&#x27;;
+
+      this.form.patchValue({
+        type_content_id: preTypeId,
+        url: initialUrl ? initialUrl : null
+      }, { emitEvent: true });
+
+      this.selectedTypeId.set(this.form.controls.type_content_id.value);
+
+      if (name &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27;) {
+        this.updateEmbedFromUrl(initialUrl);
+        this.updateFilePreviewFromBackend(null);
+      } else if (name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27;) {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(initialUrl || null);
+      } else {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(null);
+      }
+
+      this.form.markAsPristine();
+      this.fileSel.set(null);
+      this.fileError.set(null);
+    } catch {
+      const yt &#x3D; this.types().find(t &#x3D;&gt; (t.name ?? &#x27;&#x27;).toLowerCase() &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27;);
+      this.form.patchValue({ type_content_id: yt?.id ?? null, url: &#x27;&#x27; }, { emitEvent: true });
+      this.selectedTypeId.set(this.form.controls.type_content_id.value);
+      this.embedUrl.set(null);
+      this.updateFilePreviewFromBackend(null);
+      this.form.markAsPristine();
+      this.fileSel.set(null);
+      this.fileError.set(null);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /** Acciones UI */
+  pickYouTube() {
+    const id &#x3D; this.typeIdYoutube();
+    if (!id) return;
+
+    this.form.controls.type_content_id.setValue(id);
+    this.selectedTypeId.set(id);
+
+    // Limpia todo lo de archivo
+    this.fileSel.set(null);
+    this.fileError.set(null);
+    this.updateFilePreviewFromBackend(null);
+    this.revokePreviewUrl();
+
+    this.form.controls.url.setValue(&#x27;&#x27;, { emitEvent: true }); // borra valor del archivo/url
+    this.embedUrl.set(null); // y el embed, hasta que escriban una URL
+    this.form.markAsDirty();
+    this.sabed &#x3D; false;
+  }
+
+  pickArchivo() {
+    const id &#x3D; this.typeIdArchivo();
+    if (!id) return;
+
+    this.form.controls.type_content_id.setValue(id);
+    this.selectedTypeId.set(id);
+
+    this.fileSel.set(null);
+    this.fileError.set(null);
+    this.embedUrl.set(null);
+
+    // Si lo último guardado era archivo, muestra ese; si no, limpia
+    const lc &#x3D; this.current();
+    const isFileFromBackend &#x3D; lc?.learning_content?.type_learning_content?.name?.toLowerCase() &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27;;
+    const urlBack &#x3D; isFileFromBackend ? (lc?.learning_content?.url ?? &#x27;&#x27;) : &#x27;&#x27;;
+
+    this.updateFilePreviewFromBackend(urlBack || null);
+
+    // En el control dejamos la url del backend (o null)
+    this.form.controls.url.setValue(urlBack || null, { emitEvent: true });
+    this.form.markAsDirty();
+    this.sabed &#x3D; false;
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; MANEJO DE ARCHIVOS (drag &amp; drop, selección, validación) &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragOver.set(true);
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragOver.set(false);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragOver.set(false);
+
+    const dt &#x3D; event.dataTransfer;
+    if (!dt || !dt.files?.length) return;
+    const file &#x3D; dt.files[0];
+    void this.handleIncomingFile(file);
+  }
+
+  onFileInputChange(event: Event) {
+    const input &#x3D; event.target as HTMLInputElement;
+    const file &#x3D; input.files &amp;&amp; input.files[0] ? input.files[0] : null;
+    if (file) {
+      void this.handleIncomingFile(file);
+    }
+  }
+
+  openFileDialog(input: HTMLInputElement | null) {
+    input?.click();
+  }
+
+  async handleIncomingFile(file: File): Promise&lt;void&gt; {
+    this.fileError.set(null);
+
+    // Tamaño máximo
+    if (file.size &gt; this.MAX_FILE_BYTES) {
+      this.fileError.set(&#x60;El archivo supera el tamaño máximo permitido de ${this.MAX_FILE_MB} MB.&#x60;);
+      this.clearFileInternal(false);
+      return;
+    }
+
+    // Validación de duración para videos
+    const isVideo &#x3D; file.type.startsWith(&#x27;video/&#x27;);
+    if (isVideo) {
+      const duration &#x3D; await this.getVideoDuration(file);
+      if (duration &#x3D;&#x3D; null) {
+        this.fileError.set(&#x27;No se pudo leer la duración del video. Intenta con otro archivo.&#x27;);
+        this.clearFileInternal(false);
+        return;
+      }
+      if (duration &lt; this.MIN_VIDEO_SECONDS || duration &gt; this.MAX_VIDEO_SECONDS) {
+        this.fileError.set(
+          &#x60;La duración del video debe estar entre ${this.MIN_VIDEO_SECONDS} y ${this.MAX_VIDEO_SECONDS} segundos. &#x60; +
+          &#x60;Duración detectada: ${Math.round(duration)} s.&#x60;
+        );
+        this.clearFileInternal(false);
+        return;
+      }
+    }
+
+    // Si todo ok: selecciona archivo
+    this.fileSel.set(file);
+    this.form.controls.type_content_id.setValue(this.typeIdArchivo());
+    this.selectedTypeId.set(this.typeIdArchivo());
+    this.form.controls.url.setValue([file], { emitEvent: true });
+
+    this.updateFilePreviewFromFile(file);
+    this.embedUrl.set(null);
+    this.form.markAsDirty();
+    this.sabed &#x3D; false;
+  }
+
+  private getVideoDuration(file: File): Promise&lt;number | null&gt; {
+    return new Promise&lt;number | null&gt;((resolve) &#x3D;&gt; {
+      const url &#x3D; URL.createObjectURL(file);
+      const video &#x3D; document.createElement(&#x27;video&#x27;);
+      video.preload &#x3D; &#x27;metadata&#x27;;
+      video.src &#x3D; url;
+
+      video.onloadedmetadata &#x3D; () &#x3D;&gt; {
+        const duration &#x3D; video.duration;
+        URL.revokeObjectURL(url);
+        resolve(duration || null);
+      };
+
+      video.onerror &#x3D; () &#x3D;&gt; {
+        URL.revokeObjectURL(url);
+        resolve(null);
+      };
+    });
+  }
+
+  private detectPreviewType(name: string, mime?: string): &#x27;image&#x27; | &#x27;video&#x27; | &#x27;audio&#x27; | &#x27;pdf&#x27; | &#x27;other&#x27; {
+    const ext &#x3D; name.split(&#x27;.&#x27;).pop()?.toLowerCase() ?? &#x27;&#x27;;
+
+    if (mime?.startsWith(&#x27;image/&#x27;) || [&#x27;png&#x27;, &#x27;jpg&#x27;, &#x27;jpeg&#x27;, &#x27;gif&#x27;, &#x27;webp&#x27;, &#x27;bmp&#x27;, &#x27;svg&#x27;].includes(ext)) {
+      return &#x27;image&#x27;;
+    }
+    if (mime?.startsWith(&#x27;video/&#x27;) || [&#x27;mp4&#x27;, &#x27;webm&#x27;, &#x27;ogg&#x27;, &#x27;mkv&#x27;, &#x27;mov&#x27;].includes(ext)) {
+      return &#x27;video&#x27;;
+    }
+    if (mime?.startsWith(&#x27;audio/&#x27;) || [&#x27;mp3&#x27;, &#x27;wav&#x27;, &#x27;ogg&#x27;, &#x27;aac&#x27;, &#x27;flac&#x27;].includes(ext)) {
+      return &#x27;audio&#x27;;
+    }
+    if (ext &#x3D;&#x3D;&#x3D; &#x27;pdf&#x27;) return &#x27;pdf&#x27;;
+
+    return &#x27;other&#x27;;
+  }
+
+  private updateFilePreviewFromFile(file: File) {
+    this.revokePreviewUrl();
+    const url &#x3D; URL.createObjectURL(file);
+
+    this.filePreviewUrl.set(url);
+    this.filePreviewType.set(this.detectPreviewType(file.name, file.type));
+    this.fileName.set(file.name);
+    this.fileSizeLabel.set(this.formatBytes(file.size));
+  }
+
+  private updateFilePreviewFromBackend(url: string | null) {
+    this.revokePreviewUrl();
+
+    if (!url) {
+      this.filePreviewUrl.set(null);
+      this.filePreviewType.set(null);
+      this.fileName.set(null);
+      this.fileSizeLabel.set(null);
+      return;
+    }
+
+    const nameFromPath &#x3D; url.split(&#x27;/&#x27;).pop() ?? &#x27;archivo&#x27;;
+    this.filePreviewUrl.set(url);
+    this.filePreviewType.set(this.detectPreviewType(nameFromPath));
+    this.fileName.set(nameFromPath);
+    this.fileSizeLabel.set(null); // no conocemos el tamaño del backend
+  }
+
+  private revokePreviewUrl() {
+    const current &#x3D; this.filePreviewUrl();
+    if (current &amp;&amp; current.startsWith(&#x27;blob:&#x27;)) {
+      URL.revokeObjectURL(current);
+    }
+  }
+
+  private formatBytes(bytes: number): string {
+    if (!bytes) return &#x27;0 B&#x27;;
+    const k &#x3D; 1024;
+    const sizes &#x3D; [&#x27;B&#x27;, &#x27;KB&#x27;, &#x27;MB&#x27;, &#x27;GB&#x27;, &#x27;TB&#x27;];
+    const i &#x3D; Math.floor(Math.log(bytes) / Math.log(k));
+    const value &#x3D; bytes / Math.pow(k, i);
+    return &#x60;${value.toFixed(i &#x3D;&#x3D;&#x3D; 0 ? 0 : 1)} ${sizes[i]}&#x60;;
+  }
+
+  private clearFileInternal(markDelete: boolean) {
+    this.fileSel.set(null);
+    this.revokePreviewUrl();
+    this.filePreviewUrl.set(null);
+    this.filePreviewType.set(null);
+    this.fileName.set(null);
+    this.fileSizeLabel.set(null);
+
+    if (markDelete) {
+      // url &#x3D; &#x27;&#x27; → backend puede interpretarlo como borrar archivo
+      this.form.controls.url.setValue(&#x27;&#x27;, { emitEvent: true });
+    } else {
+      // Solo limpiar selección local, manteniendo lo último del backend
+      const lc &#x3D; this.current();
+      const name &#x3D; lc?.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
+      const urlBack &#x3D; name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27; ? (lc?.learning_content?.url ?? &#x27;&#x27;) : &#x27;&#x27;;
+      this.form.controls.url.setValue(urlBack || null, { emitEvent: true });
+    }
+  }
+
+  clearFile() {
+    // El usuario quiere eliminar el archivo (actual o nuevo)
+    this.fileError.set(null);
+    this.clearFileInternal(true);
+    this.form.markAsDirty();
+    this.sabed &#x3D; false;
+  }
+
+  openPreviewInNewTab() {
+    const url &#x3D; this.filePreviewUrl();
+    if (url) {
+      window.open(url, &#x27;_blank&#x27;);
+    }
+  }
+
+  reset() {
+    const lc &#x3D; this.current();
+    const name &#x3D; lc?.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
+
+    const typeBack &#x3D;
+      name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27; ? this.typeIdArchivo() :
+      name &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27; ? this.typeIdYoutube() : this.typeIdYoutube();
+
+    const urlBack &#x3D; lc?.learning_content?.url ?? &#x27;&#x27;;
+
+    const urlForForm &#x3D; urlBack ? urlBack : null;
+
+    this.form.reset({ type_content_id: typeBack, url: urlForForm });
+    this.selectedTypeId.set(typeBack);
+
+    this.fileSel.set(null);
+    this.fileError.set(null);
+    this.dragOver.set(false);
+
+    if (name &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27;) {
+      this.updateEmbedFromUrl(urlBack);
+      this.updateFilePreviewFromBackend(null);
+    } else if (name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27;) {
+      this.embedUrl.set(null);
+      this.updateFilePreviewFromBackend(urlBack || null);
+    } else {
+      this.embedUrl.set(null);
+      this.updateFilePreviewFromBackend(null);
+    }
+
+    this.form.markAsPristine();
+    this.sabed &#x3D; true;
+  }
+
+  // Guardar con soporte YouTube/Archivo (prioriza File si existe)
+  async save() {
+    if (this.saving()) return;
+    if (this.fileError()) return; // no guardamos si hay error de archivo
+
+    try {
+      this.saving.set(true);
+      this.loadbar.set(true);
+
+      const chapterParam &#x3D; this.getChapterParamFromRoute() ?? &#x27;&#x27;;
+      const typeId &#x3D; this.form.controls.type_content_id.value!;
+      const isYT      &#x3D; this.isYouTube();
+      const isArchivo &#x3D; this.isArchivo();
+
+      // Valor crudo del control url
+      const raw &#x3D; this.form.controls.url.value;
+
+      // URL segura solo si es string
+      const urlStr &#x3D; (typeof raw &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) ? raw.trim() : &#x27;&#x27;;
+
+      // Archivo desde signal o desde el control (File[])
+      let fileToSend: File | null &#x3D; this.fileSel();
+      if (!fileToSend &amp;&amp; Array.isArray(raw) &amp;&amp; raw.length &amp;&amp; raw[0] instanceof File) {
+        fileToSend &#x3D; raw[0] as File;
+      }
+
+      const fd &#x3D; new FormData();
+      fd.append(&#x27;type_content_id&#x27;, String(typeId));
+
+      if (isYT) {
+        // YouTube: solo url (puede ir &#x27;&#x27; para limpiar)
+        fd.append(&#x27;url&#x27;, urlStr);
+      } else if (isArchivo) {
+        if (fileToSend) {
+          fd.append(&#x27;file&#x27;, fileToSend, fileToSend.name);
+        } else {
+          // Sin archivo: respeta urlStr (&#x27;&#x27; para limpiar en backend si lo deseas)
+          fd.append(&#x27;url&#x27;, urlStr);
+        }
+      }
+
+      const res &#x3D; await firstValueFrom(
+        this.chapterSrv.updateLearningContent(chapterParam, fd)
+      );
+
+      // Refresca estado local
+      this.current.set(res);
+
+      const name &#x3D; res.learning_content?.type_learning_content?.name?.toLowerCase() ?? null;
+      const typeBack &#x3D;
+        name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27; ? this.typeIdArchivo() :
+        name &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27; ? this.typeIdYoutube() : this.typeIdYoutube();
+
+      const urlBack &#x3D; res.learning_content?.url ?? &#x27;&#x27;;
+
+      // Restaura el formulario con lo guardado
+      const nextUrlForForm &#x3D; urlBack ? urlBack : null;
+
+      this.form.reset({ type_content_id: typeBack, url: nextUrlForForm });
+      this.selectedTypeId.set(typeBack);
+
+      if (name &#x3D;&#x3D;&#x3D; &#x27;youtube&#x27;) {
+        this.updateEmbedFromUrl(urlBack);
+        this.updateFilePreviewFromBackend(null);
+      } else if (name &#x3D;&#x3D;&#x3D; &#x27;archivo&#x27;) {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(urlBack || null);
+      } else {
+        this.embedUrl.set(null);
+        this.updateFilePreviewFromBackend(null);
+      }
+
+      this.fileSel.set(null);
+      this.fileError.set(null);
+      this.form.markAsPristine();
+      this.sabed &#x3D; true;
+
+    } catch (err) {
+      console.error(err);
+      // aquí puedes disparar tu ui-toast de error si ya lo tienes
+      // this.toast.error(&#x27;No se pudo guardar los cambios&#x27;);
+    } finally {
+      this.saving.set(false);
+      this.loadbar.set(false);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;cl-wrapper&quot; [class.loading]&#x3D;&quot;loading()&quot;&gt;
+  &lt;div class&#x3D;&quot;cl-header&quot;&gt;
+    &lt;small class&#x3D;&quot;muted&quot;&gt;
+      Elige si enlazas un &lt;b&gt;video de YouTube&lt;/b&gt; o subes un &lt;b&gt;archivo&lt;/b&gt;.
+    &lt;/small&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Selector binario (YouTube | Archivo) --&gt;
+  &lt;div class&#x3D;&quot;switcher&quot; role&#x3D;&quot;tablist&quot; aria-label&#x3D;&quot;Tipo de contenido&quot;&gt;
+    &lt;button
+      type&#x3D;&quot;button&quot;
+      class&#x3D;&quot;switcher-btn&quot;
+      [class.active]&#x3D;&quot;isYouTube()&quot;
+      (click)&#x3D;&quot;pickYouTube()&quot;
+      [attr.aria-pressed]&#x3D;&quot;isYouTube()&quot;
+    &gt;
+      &lt;span class&#x3D;&quot;icon&quot;&gt;
+        &lt;ui-icon [size]&#x3D;&quot;&#x27;sm&#x27;&quot; [severity]&#x3D;&quot;&#x27;primary&#x27;&quot; [svgPath]&#x3D;&quot;&#x27;svg/youtube.svg&#x27;&quot;&gt;&lt;/ui-icon&gt;
+      &lt;/span&gt;
+      &lt;span&gt;YouTube&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;button
+      type&#x3D;&quot;button&quot;
+      class&#x3D;&quot;switcher-btn&quot;
+      [class.active]&#x3D;&quot;isArchivo()&quot;
+      (click)&#x3D;&quot;pickArchivo()&quot;
+      [attr.aria-pressed]&#x3D;&quot;isArchivo()&quot;
+    &gt;
+      &lt;span class&#x3D;&quot;icon&quot;&gt;
+        &lt;ui-icon [size]&#x3D;&quot;&#x27;sm&#x27;&quot; [severity]&#x3D;&quot;&#x27;primary&#x27;&quot; [svgPath]&#x3D;&quot;&#x27;svg/file.svg&#x27;&quot;&gt;&lt;/ui-icon&gt;
+      &lt;/span&gt;
+      &lt;span&gt;Archivo&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Panel YouTube --&gt;
+  &lt;div class&#x3D;&quot;panel&quot; *ngIf&#x3D;&quot;isYouTube()&quot;&gt;
+    &lt;label class&#x3D;&quot;lbl&quot; for&#x3D;&quot;yt-url&quot;&gt;Pega la URL de YouTube&lt;/label&gt;
+    &lt;input
+      id&#x3D;&quot;yt-url&quot;
+      type&#x3D;&quot;text&quot;
+      class&#x3D;&quot;input&quot;
+      [class.invalid]&#x3D;&quot;form.controls.url.touched &amp;&amp; form.controls.url.invalid&quot;
+      placeholder&#x3D;&quot;Busca en YouTube o pega la URL de YouTube&quot;
+      [formControl]&#x3D;&quot;form.controls.url&quot;
+      autocomplete&#x3D;&quot;off&quot;
+      spellcheck&#x3D;&quot;false&quot;
+    /&gt;
+    &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;form.controls.url.touched &amp;&amp; form.controls.url.hasError(&#x27;youtubeUrl&#x27;)&quot;&gt;
+      Ingresa una URL válida de YouTube.
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;preview&quot; *ngIf&#x3D;&quot;isYouTube() &amp;&amp; embedSafe()&quot;&gt;
+      &lt;iframe
+        class&#x3D;&quot;preview-iframe&quot;
+        [src]&#x3D;&quot;embedSafe()&quot;
+        title&#x3D;&quot;YouTube video&quot;
+        frameborder&#x3D;&quot;0&quot;
+        allow&#x3D;&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot;
+        allowfullscreen&gt;
+      &lt;/iframe&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Panel Archivo --&gt;
+  &lt;div class&#x3D;&quot;panel panel-file&quot; *ngIf&#x3D;&quot;isArchivo()&quot;&gt;
+    &lt;div class&#x3D;&quot;uploader&quot; [formGroup]&#x3D;&quot;form&quot;&gt;
+
+      &lt;!-- Zona de arrastrar / soltar + clic --&gt;
+      &lt;div
+        class&#x3D;&quot;dropzone&quot;
+        [class.drag-over]&#x3D;&quot;dragOver()&quot;
+        (dragover)&#x3D;&quot;onDragOver($event)&quot;
+        (dragleave)&#x3D;&quot;onDragLeave($event)&quot;
+        (drop)&#x3D;&quot;onDrop($event)&quot;
+        (click)&#x3D;&quot;openFileDialog(fileInput)&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;dropzone-inner&quot;&gt;
+          &lt;ui-icon
+            [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+            [severity]&#x3D;&quot;&#x27;primary&#x27;&quot;
+            [svgPath]&#x3D;&quot;&#x27;svg/file.svg&#x27;&quot;&gt;
+          &lt;/ui-icon&gt;
+
+          &lt;div class&#x3D;&quot;dropzone-text&quot;&gt;
+            &lt;p class&#x3D;&quot;dropzone-title&quot;&gt;Suelta un archivo aquí o haz clic para seleccionarlo&lt;/p&gt;
+            &lt;p class&#x3D;&quot;dropzone-subtitle&quot;&gt;
+              Se permite un solo archivo. Tamaño máximo {{ MAX_FILE_MB }} MB.
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;dropzone-subtitle&quot;&gt;
+              Para videos: mínimo {{ MIN_VIDEO_SECONDS }} s y máximo {{ MAX_VIDEO_SECONDS }} s.
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;input
+          #fileInput
+          type&#x3D;&quot;file&quot;
+          class&#x3D;&quot;dropzone-input&quot;
+          (change)&#x3D;&quot;onFileInputChange($event)&quot;
+        /&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;fileError()&quot;&gt;
+        {{ fileError() }}
+      &lt;/div&gt;
+
+      &lt;!-- Vista previa tipo Classroom --&gt;
+      &lt;div class&#x3D;&quot;file-card&quot; *ngIf&#x3D;&quot;filePreviewType() &amp;&amp; filePreviewUrl()&quot;&gt;
+        &lt;div class&#x3D;&quot;file-card-header&quot;&gt;
+          &lt;div class&#x3D;&quot;file-card-main&quot;&gt;
+            &lt;ui-icon
+              [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+              [severity]&#x3D;&quot;&#x27;primary&#x27;&quot;
+              [svgPath]&#x3D;&quot;&#x27;svg/file.svg&#x27;&quot;&gt;
+            &lt;/ui-icon&gt;
+
+            &lt;div class&#x3D;&quot;file-card-info&quot;&gt;
+              &lt;div class&#x3D;&quot;file-name&quot; [title]&#x3D;&quot;fileName() || &#x27;&#x27;&quot;&gt;
+                {{ fileName() || &#x27;Archivo adjunto&#x27; }}
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;file-meta&quot; *ngIf&#x3D;&quot;fileSizeLabel()&quot;&gt;
+                {{ fileSizeLabel() }}
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;file-card-actions&quot;&gt;
+            &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;icon-btn&quot; (click)&#x3D;&quot;clearFile()&quot;&gt;
+              &lt;ui-icon
+                [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+                [severity]&#x3D;&quot;&#x27;primary&#x27;&quot;
+                [svgPath]&#x3D;&quot;&#x27;svg/delete.svg&#x27;&quot;&gt;
+              &lt;/ui-icon&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;file-card-body&quot; [ngSwitch]&#x3D;&quot;filePreviewType()&quot;&gt;
+          &lt;figure *ngSwitchCase&#x3D;&quot;&#x27;image&#x27;&quot; class&#x3D;&quot;file-preview-img&quot;&gt;
+            &lt;img [src]&#x3D;&quot;filePreviewUrl()!&quot; alt&#x3D;&quot;Vista previa de la imagen&quot; /&gt;
+          &lt;/figure&gt;
+
+          &lt;div *ngSwitchCase&#x3D;&quot;&#x27;video&#x27;&quot; class&#x3D;&quot;file-preview-media&quot;&gt;
+            &lt;video [src]&#x3D;&quot;filePreviewUrl()!&quot; controls&gt;&lt;/video&gt;
+          &lt;/div&gt;
+
+          &lt;div *ngSwitchCase&#x3D;&quot;&#x27;audio&#x27;&quot; class&#x3D;&quot;file-preview-media&quot;&gt;
+            &lt;audio [src]&#x3D;&quot;filePreviewUrl()!&quot; controls&gt;&lt;/audio&gt;
+          &lt;/div&gt;
+
+          &lt;div *ngSwitchCase&#x3D;&quot;&#x27;pdf&#x27;&quot; class&#x3D;&quot;file-preview-pdf&quot;&gt;
+            &lt;iframe
+              *ngIf&#x3D;&quot;fileSafePreviewUrl()&quot;
+              [src]&#x3D;&quot;fileSafePreviewUrl()!&quot;
+              title&#x3D;&quot;Vista previa de PDF&quot;&gt;
+            &lt;/iframe&gt;
+          &lt;/div&gt;
+
+          &lt;div *ngSwitchDefault class&#x3D;&quot;file-preview-generic&quot;&gt;
+            &lt;p&gt;Vista previa no disponible para este tipo de archivo.&lt;/p&gt;
+            &lt;a *ngIf&#x3D;&quot;filePreviewUrl()&quot; [href]&#x3D;&quot;filePreviewUrl()!&quot; target&#x3D;&quot;_blank&quot; rel&#x3D;&quot;noopener&quot;&gt;
+              Abrir archivo en una nueva pestaña
+            &lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Acciones --&gt;
+  &lt;div class&#x3D;&quot;actions&quot;&gt;
+    &lt;ui-button
+      [disabled]&#x3D;&quot;form.pristine&quot;
+      (click)&#x3D;&quot;reset()&quot;
+      label&#x3D;&quot;Restablecer&quot;
+      [icon]&#x3D;&quot;{svgPath: &#x27;svg/clear-all.svg&#x27;}&quot;
+      severity&#x3D;&quot;secondary&quot;&gt;
+    &lt;/ui-button&gt;
+
+    &lt;ui-button
+      [disabled]&#x3D;&quot;sabed || !!fileError()&quot;
+      (click)&#x3D;&quot;save()&quot;
+      label&#x3D;&quot;Guardar&quot;
+      [icon]&#x3D;&quot;{svgPath: &#x27;svg/save-outline.svg&#x27;}&quot;
+      severity&#x3D;&quot;primary&quot;&gt;
+    &lt;/ui-button&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;ui-loading-bar
+  [visible]&#x3D;&quot;loadbar()&quot;
+  [mask]&#x3D;&quot;{ type: &#x27;dimmed&#x27; }&quot;&gt;
+  Guardando cambios…
+&lt;/ui-loading-bar&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="cl-wrapper" [class.loading]="loading()">  <div class="cl-header">    <small class="muted">      Elige si enlazas un <b>video de YouTube</b> o subes un <b>archivo</b>.    </small>  </div>  <!-- Selector binario (YouTube | Archivo) -->  <div class="switcher" role="tablist" aria-label="Tipo de contenido">    <button      type="button"      class="switcher-btn"      [class.active]="isYouTube()"      (click)="pickYouTube()"      [attr.aria-pressed]="isYouTube()"    >      <span class="icon">        <ui-icon [size]="\'sm\'" [severity]="\'primary\'" [svgPath]="\'svg/youtube.svg\'"></ui-icon>      </span>      <span>YouTube</span>    </button>    <button      type="button"      class="switcher-btn"      [class.active]="isArchivo()"      (click)="pickArchivo()"      [attr.aria-pressed]="isArchivo()"    >      <span class="icon">        <ui-icon [size]="\'sm\'" [severity]="\'primary\'" [svgPath]="\'svg/file.svg\'"></ui-icon>      </span>      <span>Archivo</span>    </button>  </div>  <!-- Panel YouTube -->  <div class="panel" *ngIf="isYouTube()">    <label class="lbl" for="yt-url">Pega la URL de YouTube</label>    <input      id="yt-url"      type="text"      class="input"      [class.invalid]="form.controls.url.touched && form.controls.url.invalid"      placeholder="Busca en YouTube o pega la URL de YouTube"      [formControl]="form.controls.url"      autocomplete="off"      spellcheck="false"    />    <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError(\'youtubeUrl\')">      Ingresa una URL válida de YouTube.    </div>    <div class="preview" *ngIf="isYouTube() && embedSafe()">      <iframe        class="preview-iframe"        [src]="embedSafe()"        title="YouTube video"        frameborder="0"        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"        allowfullscreen>      </iframe>    </div>  </div>  <!-- Panel Archivo -->  <div class="panel panel-file" *ngIf="isArchivo()">    <div class="uploader" [formGroup]="form">      <!-- Zona de arrastrar / soltar + clic -->      <div        class="dropzone"        [class.drag-over]="dragOver()"        (dragover)="onDragOver($event)"        (dragleave)="onDragLeave($event)"        (drop)="onDrop($event)"        (click)="openFileDialog(fileInput)"      >        <div class="dropzone-inner">          <ui-icon            [size]="\'sm\'"            [severity]="\'primary\'"            [svgPath]="\'svg/file.svg\'">          </ui-icon>          <div class="dropzone-text">            <p class="dropzone-title">Suelta un archivo aquí o haz clic para seleccionarlo</p>            <p class="dropzone-subtitle">              Se permite un solo archivo. Tamaño máximo {{ MAX_FILE_MB }} MB.            </p>            <p class="dropzone-subtitle">              Para videos: mínimo {{ MIN_VIDEO_SECONDS }} s y máximo {{ MAX_VIDEO_SECONDS }} s.            </p>          </div>        </div>        <input          #fileInput          type="file"          class="dropzone-input"          (change)="onFileInputChange($event)"        />      </div>      <div class="error" *ngIf="fileError()">        {{ fileError() }}      </div>      <!-- Vista previa tipo Classroom -->      <div class="file-card" *ngIf="filePreviewType() && filePreviewUrl()">        <div class="file-card-header">          <div class="file-card-main">            <ui-icon              [size]="\'sm\'"              [severity]="\'primary\'"              [svgPath]="\'svg/file.svg\'">            </ui-icon>            <div class="file-card-info">              <div class="file-name" [title]="fileName() || \'\'">                {{ fileName() || \'Archivo adjunto\' }}              </div>              <div class="file-meta" *ngIf="fileSizeLabel()">                {{ fileSizeLabel() }}              </div>            </div>          </div>          <div class="file-card-actions">            <button type="button" class="icon-btn" (click)="clearFile()">              <ui-icon                [size]="\'sm\'"                [severity]="\'primary\'"                [svgPath]="\'svg/delete.svg\'">              </ui-icon>            </button>          </div>        </div>        <div class="file-card-body" [ngSwitch]="filePreviewType()">          <figure *ngSwitchCase="\'image\'" class="file-preview-img">            <img [src]="filePreviewUrl()!" alt="Vista previa de la imagen" />          </figure>          <div *ngSwitchCase="\'video\'" class="file-preview-media">            <video [src]="filePreviewUrl()!" controls></video>          </div>          <div *ngSwitchCase="\'audio\'" class="file-preview-media">            <audio [src]="filePreviewUrl()!" controls></audio>          </div>          <div *ngSwitchCase="\'pdf\'" class="file-preview-pdf">            <iframe              *ngIf="fileSafePreviewUrl()"              [src]="fileSafePreviewUrl()!"              title="Vista previa de PDF">            </iframe>          </div>          <div *ngSwitchDefault class="file-preview-generic">            <p>Vista previa no disponible para este tipo de archivo.</p>            <a *ngIf="filePreviewUrl()" [href]="filePreviewUrl()!" target="_blank" rel="noopener">              Abrir archivo en una nueva pestaña            </a>          </div>        </div>      </div>    </div>  </div>  <!-- Acciones -->  <div class="actions">    <ui-button      [disabled]="form.pristine"      (click)="reset()"      label="Restablecer"      [icon]="{svgPath: \'svg/clear-all.svg\'}"      severity="secondary">    </ui-button>    <ui-button      [disabled]="sabed || !!fileError()"      (click)="save()"      label="Guardar"      [icon]="{svgPath: \'svg/save-outline.svg\'}"      severity="primary">    </ui-button>  </div></div><ui-loading-bar  [visible]="loadbar()"  [mask]="{ type: \'dimmed\' }">  Guardando cambios…</ui-loading-bar></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'ContentLearningComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ContentLearningComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

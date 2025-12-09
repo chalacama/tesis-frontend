@@ -1,0 +1,2849 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  StepperInfoComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/personalize/stepper-info/stepper-info.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-stepper-info</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../interfaces/Module.html" target="_self" >ReactiveFormsModule</a></code>
+                                <code><a href="../components/LoadingBarComponent.html" target="_self" >LoadingBarComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./stepper-info.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./stepper-info.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#asistenciaDiscOptions" >asistenciaDiscOptions</a>
+                            </li>
+                            <li>
+                                <a href="#cantons" >cantons</a>
+                            </li>
+                            <li>
+                                <a href="#canUpdateUsername" >canUpdateUsername</a>
+                            </li>
+                            <li>
+                                <a href="#currentUser" >currentUser</a>
+                            </li>
+                            <li>
+                                <a href="#currentUsername" >currentUsername</a>
+                            </li>
+                            <li>
+                                <a href="#discapacidadOptions" >discapacidadOptions</a>
+                            </li>
+                            <li>
+                                <a href="#discapacidadPermanenteOptions" >discapacidadPermanenteOptions</a>
+                            </li>
+                            <li>
+                                <a href="#estadoCivilOptions" >estadoCivilOptions</a>
+                            </li>
+                            <li>
+                                <a href="#infoForm" >infoForm</a>
+                            </li>
+                            <li>
+                                <a href="#isLoading" >isLoading</a>
+                            </li>
+                            <li>
+                                <a href="#parishes" >parishes</a>
+                            </li>
+                            <li>
+                                <a href="#provinces" >provinces</a>
+                            </li>
+                            <li>
+                                <a href="#saving" >saving</a>
+                            </li>
+                            <li>
+                                <a href="#selectedCountryCode" >selectedCountryCode</a>
+                            </li>
+                            <li>
+                                <a href="#sexoOptions" >sexoOptions</a>
+                            </li>
+                            <li>
+                                <a href="#skeletonRows" >skeletonRows</a>
+                            </li>
+                            <li>
+                                <a href="#usernameAvailable" >usernameAvailable</a>
+                            </li>
+                            <li>
+                                <a href="#usernameError" >usernameError</a>
+                            </li>
+                            <li>
+                                <a href="#usernameForm" >usernameForm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#backendPhoneToLocalFormatted" >backendPhoneToLocalFormatted</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildForms" >buildForms</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#ecPhoneValidator" >ecPhoneValidator</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#fillInfoForm" >fillInfoForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#formatLocalPhone" >formatLocalPhone</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleDiscapacidadChanges" >handleDiscapacidadChanges</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadInitialData" >loadInitialData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#localToBackendPhone" >localToBackendPhone</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onCantonChange" >onCantonChange</a>
+                            </li>
+                            <li>
+                                <a href="#onPhoneInput" >onPhoneInput</a>
+                            </li>
+                            <li>
+                                <a href="#onProvinceChange" >onProvinceChange</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmitInfo" >onSubmitInfo</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmitUsername" >onSubmitUsername</a>
+                            </li>
+                            <li>
+                                <a href="#onValidateUsername" >onValidateUsername</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#toDateInput" >toDateInput</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#phoneLocalControl" >phoneLocalControl</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder, informationService: <a href="../injectables/InformationService.html" target="_self">InformationService</a>, locationService: <a href="../injectables/LocationService.html" target="_self">LocationService</a>, userService: <a href="../injectables/UserService.html" target="_self">UserService</a>, authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, personalize: <a href="../components/PersonalizeComponent.html" target="_self">PersonalizeComponent</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:111</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>informationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/InformationService.html" target="_self" >InformationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>locationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/LocationService.html" target="_self" >LocationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UserService.html" target="_self" >UserService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>personalize</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../components/PersonalizeComponent.html" target="_self" >PersonalizeComponent</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="backendPhoneToLocalFormatted"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>backendPhoneToLocalFormatted</b></span>
+                        <a href="#backendPhoneToLocalFormatted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>backendPhoneToLocalFormatted(phone: string | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="525"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:525</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>phone</td>
+                                            <td>
+                                                        <code>string | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildForms"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildForms</b></span>
+                        <a href="#buildForms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildForms()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="131"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:131</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ecPhoneValidator"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>ecPhoneValidator</b></span>
+                        <a href="#ecPhoneValidator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ecPhoneValidator()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="481"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:481</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fillInfoForm"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>fillInfoForm</b></span>
+                        <a href="#fillInfoForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fillInfoForm(info: UserInformation | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="222"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:222</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>info</td>
+                                            <td>
+                                                        <code>UserInformation | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatLocalPhone"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>formatLocalPhone</b></span>
+                        <a href="#formatLocalPhone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>formatLocalPhone(digits: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="513"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:513</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>digits</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleDiscapacidadChanges"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>handleDiscapacidadChanges</b></span>
+                        <a href="#handleDiscapacidadChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleDiscapacidadChanges()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="165"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:165</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadInitialData"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadInitialData</b></span>
+                        <a href="#loadInitialData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadInitialData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="localToBackendPhone"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>localToBackendPhone</b></span>
+                        <a href="#localToBackendPhone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>localToBackendPhone(localFormatted: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="537"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:537</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>localFormatted</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:122</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCantonChange"></a>
+                    <span class="name">
+                        <span ><b>onCantonChange</b></span>
+                        <a href="#onCantonChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCantonChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="314"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:314</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onPhoneInput"></a>
+                    <span class="name">
+                        <span ><b>onPhoneInput</b></span>
+                        <a href="#onPhoneInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onPhoneInput(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="502"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:502</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onProvinceChange"></a>
+                    <span class="name">
+                        <span ><b>onProvinceChange</b></span>
+                        <a href="#onProvinceChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onProvinceChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="285"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:285</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmitInfo"></a>
+                    <span class="name">
+                        <span ><b>onSubmitInfo</b></span>
+                        <a href="#onSubmitInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmitInfo()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="342"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:342</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmitUsername"></a>
+                    <span class="name">
+                        <span ><b>onSubmitUsername</b></span>
+                        <a href="#onSubmitUsername"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmitUsername()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="429"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:429</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onValidateUsername"></a>
+                    <span class="name">
+                        <span ><b>onValidateUsername</b></span>
+                        <a href="#onValidateUsername"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onValidateUsername()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="395"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:395</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toDateInput"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>toDateInput</b></span>
+                        <a href="#toDateInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toDateInput(date: string | Date | null | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="470"
+                                    class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:470</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>date</td>
+                                            <td>
+                                                        <code>string | Date | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="asistenciaDiscOptions"></a>
+                    <span class="name">
+                        <span ><b>asistenciaDiscOptions</b></span>
+                        <a href="#asistenciaDiscOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { value: &#x27;si&#x27;, label: &#x27;Sí&#x27; },
+    { value: &#x27;no&#x27;, label: &#x27;No&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cantons"></a>
+                    <span class="name">
+                        <span ><b>cantons</b></span>
+                        <a href="#cantons"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/LocationItem.html" target="_self" >LocationItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canUpdateUsername"></a>
+                    <span class="name">
+                        <span ><b>canUpdateUsername</b></span>
+                        <a href="#canUpdateUsername"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentUser"></a>
+                    <span class="name">
+                        <span ><b>currentUser</b></span>
+                        <a href="#currentUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>User | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentUsername"></a>
+                    <span class="name">
+                        <span ><b>currentUsername</b></span>
+                        <a href="#currentUsername"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="discapacidadOptions"></a>
+                    <span class="name">
+                        <span ><b>discapacidadOptions</b></span>
+                        <a href="#discapacidadOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { value: &#x27;si&#x27;, label: &#x27;Sí&#x27; },
+    { value: &#x27;no&#x27;, label: &#x27;No&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="discapacidadPermanenteOptions"></a>
+                    <span class="name">
+                        <span ><b>discapacidadPermanenteOptions</b></span>
+                        <a href="#discapacidadPermanenteOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &#x27;intelectual (retraso mental)&#x27;,
+    &#x27;físico-motora (parálisis y amputaciones)&#x27;,
+    &#x27;visual (ceguera)&#x27;,
+    &#x27;auditiva (sordera)&#x27;,
+    &#x27;mental (enfermedades psiquiátricas)&#x27;,
+    &#x27;otro tipo&#x27;,
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="99" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="estadoCivilOptions"></a>
+                    <span class="name">
+                        <span ><b>estadoCivilOptions</b></span>
+                        <a href="#estadoCivilOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { value: &#x27;casado/a&#x27;, label: &#x27;Casado/a&#x27; },
+    { value: &#x27;unido/a&#x27;, label: &#x27;Unido/a&#x27; },
+    { value: &#x27;separado/a&#x27;, label: &#x27;Separado/a&#x27; },
+    { value: &#x27;divorciado/a&#x27;, label: &#x27;Divorciado/a&#x27; },
+    { value: &#x27;viudo/a&#x27;, label: &#x27;Viudo/a&#x27; },
+    { value: &#x27;soltero/a&#x27;, label: &#x27;Soltero/a&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="infoForm"></a>
+                    <span class="name">
+                        <span ><b>infoForm</b></span>
+                        <a href="#infoForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLoading"></a>
+                    <span class="name">
+                        <span ><b>isLoading</b></span>
+                        <a href="#isLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parishes"></a>
+                    <span class="name">
+                        <span ><b>parishes</b></span>
+                        <a href="#parishes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/LocationItem.html" target="_self" >LocationItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="provinces"></a>
+                    <span class="name">
+                        <span ><b>provinces</b></span>
+                        <a href="#provinces"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/LocationItem.html" target="_self" >LocationItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saving"></a>
+                    <span class="name">
+                        <span ><b>saving</b></span>
+                        <a href="#saving"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedCountryCode"></a>
+                    <span class="name">
+                        <span ><b>selectedCountryCode</b></span>
+                        <a href="#selectedCountryCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/CountryCode.html" target="_self" >CountryCode</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    name: &#x27;Ecuador&#x27;,
+    code: &#x27;EC&#x27;,
+    phoneCode: &#x27;+593&#x27;,
+    flagEmoji: &#x27;🇪🇨&#x27;
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sexoOptions"></a>
+                    <span class="name">
+                        <span ><b>sexoOptions</b></span>
+                        <a href="#sexoOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { value: &#x27;masculino&#x27;, label: &#x27;Masculino&#x27; },
+    { value: &#x27;femenino&#x27;, label: &#x27;Femenino&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skeletonRows"></a>
+                    <span class="name">
+                        <span ><b>skeletonRows</b></span>
+                        <a href="#skeletonRows"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Array.from({ length: 8 }).map((_, i) &#x3D;&gt; i)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="usernameAvailable"></a>
+                    <span class="name">
+                        <span ><b>usernameAvailable</b></span>
+                        <a href="#usernameAvailable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="usernameError"></a>
+                    <span class="name">
+                        <span ><b>usernameError</b></span>
+                        <a href="#usernameError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="usernameForm"></a>
+                    <span class="name">
+                        <span ><b>usernameForm</b></span>
+                        <a href="#usernameForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="phoneLocalControl"></a>
+                        <span class="name"><b>phoneLocalControl</b><a href="#phoneLocalControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>phoneLocalControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="497" class="link-to-prism">src/app/pages/private/personalize/stepper-info/stepper-info.component.ts:497</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  OnInit,
+  signal
+} from &#x27;@angular/core&#x27;;
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidatorFn,
+} from &#x27;@angular/forms&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+
+import { LoadingBarComponent } from &#x27;../../../../shared/UI/components/overlay/loading-bar/loading-bar.component&#x27;;
+
+import {
+  InformationRequest,
+  UserInformation
+} from &#x27;../../../../core/api/profile/information.interface&#x27;;
+import { InformationService } from &#x27;../../../../core/api/profile/information.service&#x27;;
+
+import { CountryCode } from &#x27;../../../../core/services/code-country/code.country&#x27;;
+
+import { UserService } from &#x27;../../../../core/api/profile/user.service&#x27;;
+import { AuthService } from &#x27;../../../../core/api/auth/auth.service&#x27;;
+import { User } from &#x27;../../../../core/api/auth/auth.interfaces&#x27;;
+
+import { forkJoin, of, catchError } from &#x27;rxjs&#x27;;
+
+import { LocationService } from &#x27;../../../../core/api/location/location.service&#x27;;
+import { LocationItem } from &#x27;../../../../core/api/location/location.interfaces&#x27;;
+
+import { PersonalizeComponent } from &#x27;../personalize.component&#x27;;
+
+@Component({
+  selector: &#x27;app-stepper-info&#x27;,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, LoadingBarComponent],
+  templateUrl: &#x27;./stepper-info.component.html&#x27;,
+  styleUrl: &#x27;./stepper-info.component.css&#x27;
+})
+export class StepperInfoComponent implements OnInit {
+
+  // Loader barra superior
+  saving &#x3D; signal(false);
+
+  // Skeleton de carga inicial
+  isLoading &#x3D; signal(true);
+  skeletonRows &#x3D; Array.from({ length: 8 }).map((_, i) &#x3D;&gt; i);
+
+  // Formularios
+  infoForm!: FormGroup;
+  usernameForm!: FormGroup;
+
+  // Datos auxiliares de ubicación (nuevo servicio)
+  provinces: LocationItem[] &#x3D; [];
+  cantons: LocationItem[] &#x3D; [];
+  parishes: LocationItem[] &#x3D; [];
+
+  // Fijo a Ecuador 🇪🇨
+  selectedCountryCode: CountryCode &#x3D; {
+    name: &#x27;Ecuador&#x27;,
+    code: &#x27;EC&#x27;,
+    phoneCode: &#x27;+593&#x27;,
+    flagEmoji: &#x27;🇪🇨&#x27;
+  };
+
+  // Control de errores UI username
+  usernameError: string | null &#x3D; null;
+  usernameAvailable: boolean | null &#x3D; null;
+
+  // Usuario actual
+  currentUser: User | null &#x3D; null;
+  canUpdateUsername &#x3D; false;
+  currentUsername &#x3D; &#x27;&#x27;;
+
+  // Opciones estáticas
+  sexoOptions &#x3D; [
+    { value: &#x27;masculino&#x27;, label: &#x27;Masculino&#x27; },
+    { value: &#x27;femenino&#x27;, label: &#x27;Femenino&#x27; },
+  ];
+
+  estadoCivilOptions &#x3D; [
+    { value: &#x27;casado/a&#x27;, label: &#x27;Casado/a&#x27; },
+    { value: &#x27;unido/a&#x27;, label: &#x27;Unido/a&#x27; },
+    { value: &#x27;separado/a&#x27;, label: &#x27;Separado/a&#x27; },
+    { value: &#x27;divorciado/a&#x27;, label: &#x27;Divorciado/a&#x27; },
+    { value: &#x27;viudo/a&#x27;, label: &#x27;Viudo/a&#x27; },
+    { value: &#x27;soltero/a&#x27;, label: &#x27;Soltero/a&#x27; },
+  ];
+
+  discapacidadOptions &#x3D; [
+    { value: &#x27;si&#x27;, label: &#x27;Sí&#x27; },
+    { value: &#x27;no&#x27;, label: &#x27;No&#x27; },
+  ];
+
+  discapacidadPermanenteOptions: string[] &#x3D; [
+    &#x27;intelectual (retraso mental)&#x27;,
+    &#x27;físico-motora (parálisis y amputaciones)&#x27;,
+    &#x27;visual (ceguera)&#x27;,
+    &#x27;auditiva (sordera)&#x27;,
+    &#x27;mental (enfermedades psiquiátricas)&#x27;,
+    &#x27;otro tipo&#x27;,
+  ];
+
+  asistenciaDiscOptions &#x3D; [
+    { value: &#x27;si&#x27;, label: &#x27;Sí&#x27; },
+    { value: &#x27;no&#x27;, label: &#x27;No&#x27; },
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private informationService: InformationService,
+    private locationService: LocationService,
+    private userService: UserService,
+    private authService: AuthService,
+    private personalize: PersonalizeComponent
+  ) {}
+
+  ngOnInit(): void {
+    this.buildForms();
+    this.handleDiscapacidadChanges();
+    this.loadInitialData();
+  }
+
+  // ------------------------
+  // Construcción de formularios
+  // ------------------------
+  private buildForms(): void {
+    this.infoForm &#x3D; this.fb.group({
+      birthdate: [&#x27;&#x27;, Validators.required],
+      phone_local: [&#x27;&#x27;, [Validators.required, this.ecPhoneValidator()]],
+
+      // IDs de ubicación (string en el form, number al enviar)
+      province_id: [null, Validators.required],
+      canton_id: [null, Validators.required],
+      parish_id: [null, Validators.required],
+
+      sexo: [null, Validators.required],
+      estado_civil: [null, Validators.required],
+      discapacidad: [&#x27;no&#x27;, Validators.required],
+      discapacidad_permanente: [null],
+      asistencia_establecimiento_discapacidad: [null],
+    });
+
+    this.currentUser &#x3D; this.authService.getCurrentUser();
+    this.canUpdateUsername &#x3D; !!this.currentUser?.can_update_username;
+    this.currentUsername &#x3D; this.currentUser?.username ?? &#x27;&#x27;;
+
+    this.usernameForm &#x3D; this.fb.group({
+      username: [
+        this.currentUsername,
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+          Validators.pattern(/^[a-z0-9._-]+$/),
+        ],
+      ],
+    });
+  }
+
+  private handleDiscapacidadChanges(): void {
+    const discCtrl &#x3D; this.infoForm.get(&#x27;discapacidad&#x27;);
+    const discPermCtrl &#x3D; this.infoForm.get(&#x27;discapacidad_permanente&#x27;);
+    const asistCtrl &#x3D; this.infoForm.get(&#x27;asistencia_establecimiento_discapacidad&#x27;);
+
+    discCtrl?.valueChanges.subscribe((value: &#x27;si&#x27; | &#x27;no&#x27;) &#x3D;&gt; {
+      if (!discPermCtrl || !asistCtrl) return;
+
+      if (value &#x3D;&#x3D;&#x3D; &#x27;si&#x27;) {
+        discPermCtrl.setValidators([Validators.required]);
+        asistCtrl.setValidators([Validators.required]);
+      } else {
+        discPermCtrl.clearValidators();
+        asistCtrl.clearValidators();
+        discPermCtrl.setValue(null);
+        asistCtrl.setValue(null);
+      }
+
+      discPermCtrl.updateValueAndValidity();
+      asistCtrl.updateValueAndValidity();
+    });
+  }
+
+  // ------------------------
+  // Carga inicial (skeleton)
+  // ------------------------
+  private loadInitialData(): void {
+    this.isLoading.set(true);
+
+    const provinces$ &#x3D; this.locationService.getProvinces();
+    const userInfo$ &#x3D; this.informationService.show().pipe(
+      catchError(err &#x3D;&gt; {
+        console.warn(&#x27;No hay información previa de usuario o hubo error:&#x27;, err);
+        return of(null);
+      })
+    );
+
+    forkJoin({
+      provinces: provinces$,
+      userInfo: userInfo$,
+    }).subscribe({
+      next: ({ provinces, userInfo }) &#x3D;&gt; {
+        this.provinces &#x3D; provinces;
+
+        const info: UserInformation | null &#x3D;
+          userInfo &amp;&amp; userInfo.userInformation ? userInfo.userInformation : null;
+
+        this.fillInfoForm(info);
+        this.isLoading.set(false);
+      },
+      error: (error) &#x3D;&gt; {
+        console.error(&#x27;Error cargando datos iniciales&#x27;, error);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  private fillInfoForm(info: UserInformation | null): void {
+    if (!info) return;
+
+    // Fecha al formato YYYY-MM-DD para el input date
+    const birthdate &#x3D; this.toDateInput(info.birthdate);
+
+    // Teléfono local formateado 096 385 6048
+    const phoneLocal &#x3D; this.backendPhoneToLocalFormatted(info.phone_number);
+
+    // IDs como string en el formulario
+    const provinceId &#x3D; info.province_id !&#x3D; null ? String(info.province_id) : null;
+    const cantonId &#x3D; info.canton_id !&#x3D; null ? String(info.canton_id) : null;
+    const parishId &#x3D; info.parish_id !&#x3D; null ? String(info.parish_id) : null;
+
+    this.infoForm.patchValue(
+      {
+        birthdate,
+        phone_local: phoneLocal,
+        province_id: provinceId,
+        canton_id: cantonId,
+        parish_id: parishId,
+        sexo: info.sexo,
+        estado_civil: info.estado_civil,
+        discapacidad: info.discapacidad,
+        discapacidad_permanente: info.discapacidad_permanente,
+        asistencia_establecimiento_discapacidad:
+          info.asistencia_establecimiento_discapacidad,
+      },
+      { emitEvent: false }
+    );
+
+    // Cargar combos dependientes
+    if (info.province_id) {
+      this.locationService.getCantons(info.province_id).subscribe({
+        next: (cantons) &#x3D;&gt; {
+          this.cantons &#x3D; cantons;
+
+          this.infoForm.patchValue(
+            { canton_id: cantonId },
+            { emitEvent: false }
+          );
+
+          if (info.canton_id) {
+            this.locationService
+              .getParishes(info.province_id, info.canton_id)
+              .subscribe({
+                next: (parishes) &#x3D;&gt; {
+                  this.parishes &#x3D; parishes;
+                  this.infoForm.patchValue(
+                    { parish_id: parishId },
+                    { emitEvent: false }
+                  );
+                },
+              });
+          }
+        },
+      });
+    }
+  }
+
+  // ------------------------
+  // Selects dependientes ubicación
+  // ------------------------
+  onProvinceChange(): void {
+    const provinceId &#x3D; this.infoForm.get(&#x27;province_id&#x27;)?.value;
+
+    if (!provinceId) {
+      this.cantons &#x3D; [];
+      this.parishes &#x3D; [];
+      this.infoForm.patchValue({
+        canton_id: null,
+        parish_id: null,
+      });
+      return;
+    }
+
+    this.locationService.getCantons(provinceId).subscribe({
+      next: (cantons) &#x3D;&gt; {
+        this.cantons &#x3D; cantons;
+        this.parishes &#x3D; [];
+        this.infoForm.patchValue({
+          canton_id: null,
+          parish_id: null,
+        });
+      },
+      error: () &#x3D;&gt; {
+        this.cantons &#x3D; [];
+        this.parishes &#x3D; [];
+      },
+    });
+  }
+
+  onCantonChange(): void {
+    const provinceId &#x3D; this.infoForm.get(&#x27;province_id&#x27;)?.value;
+    const cantonId &#x3D; this.infoForm.get(&#x27;canton_id&#x27;)?.value;
+
+    if (!provinceId || !cantonId) {
+      this.parishes &#x3D; [];
+      this.infoForm.patchValue({
+        parish_id: null,
+      });
+      return;
+    }
+
+    this.locationService.getParishes(provinceId, cantonId).subscribe({
+      next: (parishes) &#x3D;&gt; {
+        this.parishes &#x3D; parishes;
+        this.infoForm.patchValue({
+          parish_id: null,
+        });
+      },
+      error: () &#x3D;&gt; {
+        this.parishes &#x3D; [];
+      },
+    });
+  }
+
+  // ------------------------
+  // Submit información personal
+  // ------------------------
+  onSubmitInfo(): void {
+    if (this.infoForm.invalid) {
+      this.infoForm.markAllAsTouched();
+      return;
+    }
+
+    const value &#x3D; this.infoForm.value;
+
+    const payload: InformationRequest &#x3D; {
+      birthdate: value.birthdate,
+      phone_number: this.localToBackendPhone(value.phone_local),
+
+      province_id: Number(value.province_id),
+      canton_id: Number(value.canton_id),
+      parish_id: Number(value.parish_id),
+
+      sexo: value.sexo,
+      estado_civil: value.estado_civil,
+      discapacidad: value.discapacidad,
+      discapacidad_permanente:
+        value.discapacidad &#x3D;&#x3D;&#x3D; &#x27;si&#x27;
+          ? value.discapacidad_permanente ?? null
+          : null,
+      asistencia_establecimiento_discapacidad:
+        value.discapacidad &#x3D;&#x3D;&#x3D; &#x27;si&#x27;
+          ? value.asistencia_establecimiento_discapacidad ?? null
+          : null,
+    };
+
+    this.saving.set(true);
+
+    this.informationService.update(payload).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.saving.set(false);
+
+        // marcar flag en el usuario actual (para el stepper padre)
+        this.authService.updateCurrentUser({
+          has_user_information: true,
+        });
+
+        // avisar al componente padre que el paso &quot;info&quot; se completó
+        this.personalize.onStepCompleted(&#x27;info&#x27;);
+      },
+      error: (error) &#x3D;&gt; {
+        this.saving.set(false);
+        console.error(&#x27;Error al actualizar información&#x27;, error);
+      },
+    });
+  }
+
+  // ------------------------
+  // Username: validar y actualizar
+  // ------------------------
+  onValidateUsername(): void {
+    this.usernameError &#x3D; null;
+    this.usernameAvailable &#x3D; null;
+
+    if (!this.canUpdateUsername) {
+      return;
+    }
+
+    if (this.usernameForm.invalid) {
+      this.usernameError &#x3D; &#x27;El username no cumple el formato requerido.&#x27;;
+      return;
+    }
+
+    const desired &#x3D; this.usernameForm.value.username?.trim();
+    if (!desired || desired &#x3D;&#x3D;&#x3D; this.currentUsername) {
+      return;
+    }
+
+    this.userService.validateUsername({ username: desired }).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.usernameAvailable &#x3D; res.is_available;
+        if (!res.is_available) {
+          this.usernameError &#x3D;
+            res.message || &#x27;El nombre de usuario no está disponible.&#x27;;
+        }
+      },
+      error: (err) &#x3D;&gt; {
+        this.usernameAvailable &#x3D; null;
+        this.usernameError &#x3D;
+          err.message || &#x27;No se pudo validar el username.&#x27;;
+      },
+    });
+  }
+
+  onSubmitUsername(): void {
+    if (!this.canUpdateUsername) return;
+
+    this.usernameError &#x3D; null;
+
+    if (this.usernameForm.invalid) {
+      this.usernameForm.markAllAsTouched();
+      this.usernameError &#x3D; &#x27;Revisa el username.&#x27;;
+      return;
+    }
+
+    const desired &#x3D; this.usernameForm.value.username?.trim();
+    if (!desired || desired &#x3D;&#x3D;&#x3D; this.currentUsername) {
+      this.usernameError &#x3D; &#x27;Ingresa un username diferente al actual.&#x27;;
+      return;
+    }
+
+    if (this.usernameAvailable &#x3D;&#x3D;&#x3D; false) {
+      this.usernameError &#x3D; &#x27;El username no está disponible.&#x27;;
+      return;
+    }
+
+    this.saving.set(true);
+    this.userService.updateUsername({ username: desired }).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.saving.set(false);
+        this.currentUsername &#x3D; res.username;
+        this.canUpdateUsername &#x3D; false;
+        this.usernameAvailable &#x3D; null;
+      },
+      error: (err) &#x3D;&gt; {
+        this.saving.set(false);
+        this.usernameError &#x3D;
+          err.message || &#x27;No se pudo actualizar el username.&#x27;;
+      },
+    });
+  }
+
+  // ------------------------
+  // Helpers fecha y teléfono
+  // ------------------------
+  private toDateInput(date: string | Date | null | undefined): string {
+    if (!date) return &#x27;&#x27;;
+    const d &#x3D; new Date(date);
+    if (isNaN(d.getTime())) return &#x27;&#x27;;
+    const year &#x3D; d.getFullYear();
+    const month &#x3D; &#x60;${d.getMonth() + 1}&#x60;.padStart(2, &#x27;0&#x27;);
+    const day &#x3D; &#x60;${d.getDate()}&#x60;.padStart(2, &#x27;0&#x27;);
+    return &#x60;${year}-${month}-${day}&#x60;;
+  }
+
+  // Validador de teléfono local ecuatoriano: 10 dígitos, empieza en 0
+  private ecPhoneValidator(): ValidatorFn {
+    return (control: AbstractControl) &#x3D;&gt; {
+      const raw &#x3D; (control.value || &#x27;&#x27;).toString();
+      const digits &#x3D; raw.replace(/\D/g, &#x27;&#x27;);
+
+      if (!digits) return { ecPhone: true };
+
+      // 10 dígitos, empezando en 0 (ej: 0963856048)
+      if (digits.length !&#x3D;&#x3D; 10 || !digits.startsWith(&#x27;0&#x27;)) {
+        return { ecPhone: true };
+      }
+
+      return null;
+    };
+  }
+
+  get phoneLocalControl(): AbstractControl | null {
+    return this.infoForm.get(&#x27;phone_local&#x27;);
+  }
+
+  // formatea mientras el usuario escribe → 096 385 6048
+  onPhoneInput(event: Event): void {
+    const input &#x3D; event.target as HTMLInputElement;
+    const digits &#x3D; input.value.replace(/\D/g, &#x27;&#x27;).slice(0, 10); // máx 10 dígitos
+    const formatted &#x3D; this.formatLocalPhone(digits);
+
+    this.infoForm.patchValue(
+      { phone_local: formatted },
+      { emitEvent: false }
+    );
+  }
+
+  private formatLocalPhone(digits: string): string {
+    if (!digits) return &#x27;&#x27;;
+
+    const part1 &#x3D; digits.slice(0, 3);
+    const part2 &#x3D; digits.slice(3, 6);
+    const part3 &#x3D; digits.slice(6, 10);
+
+    if (digits.length &lt;&#x3D; 3) return part1;
+    if (digits.length &lt;&#x3D; 6) return &#x60;${part1} ${part2}&#x60;;
+    return &#x60;${part1} ${part2} ${part3}&#x60;;
+  }
+
+  private backendPhoneToLocalFormatted(phone: string | null): string {
+    if (!phone) return &#x27;&#x27;;
+
+    // ejemplo esperado: +593963856048
+    const match &#x3D; phone.match(/^\+593(\d{9})$/);
+    if (!match) return &#x27;&#x27;;
+
+    const withoutPrefix &#x3D; match[1]; // &#x27;963856048&#x27;
+    const local &#x3D; &#x27;0&#x27; + withoutPrefix; // &#x27;0963856048&#x27;
+    return this.formatLocalPhone(local);
+  }
+
+  private localToBackendPhone(localFormatted: string): string {
+    const digits &#x3D; localFormatted.replace(/\D/g, &#x27;&#x27;);
+    if (digits.length !&#x3D;&#x3D; 10 || !digits.startsWith(&#x27;0&#x27;)) {
+      return &#x27;&#x27;;
+    }
+    const withoutZero &#x3D; digits.slice(1);
+    return &#x60;+593${withoutZero}&#x60;;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Barra de carga global para los submits --&gt;
+&lt;ui-loading-bar [visible]&#x3D;&quot;saving()&quot; [mask]&#x3D;&quot;{ type: &#x27;dimmed&#x27; }&quot;&gt;
+&lt;/ui-loading-bar&gt;
+
+&lt;div class&#x3D;&quot;stepper-info stepper-info-container&quot;&gt;
+
+  &lt;!-- Encabezado --&gt;
+  &lt;header class&#x3D;&quot;stepper-info-header&quot;&gt;
+    &lt;h1&gt;Información personal&lt;/h1&gt;
+    &lt;p&gt;
+      Completa tus datos básicos para personalizar tu experiencia en DigiMentor y generar certificados correctamente.
+    &lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;!-- SKELETON --&gt;
+  &lt;ng-container *ngIf&#x3D;&quot;isLoading(); else contentTpl&quot;&gt;
+    &lt;div class&#x3D;&quot;info-skeleton-card&quot; *ngFor&#x3D;&quot;let r of skeletonRows&quot;&gt;
+      &lt;div class&#x3D;&quot;skeleton-header skeleton-box&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-row&quot;&gt;
+        &lt;div class&#x3D;&quot;skeleton-box&quot;&gt;&lt;/div&gt;
+        &lt;div class&#x3D;&quot;skeleton-box&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/ng-container&gt;
+
+  &lt;ng-template #contentTpl&gt;
+
+    &lt;!-- CARD USERNAME --&gt;
+    &lt;section class&#x3D;&quot;info-card username-section&quot;&gt;
+      &lt;div class&#x3D;&quot;card-header&quot;&gt;
+        &lt;h2&gt;Nombre de usuario&lt;/h2&gt;
+        &lt;p class&#x3D;&quot;hint&quot;&gt;
+          Tu nombre de usuario actual es &lt;strong&gt;{{ currentUsername }}&lt;/strong&gt;.
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;ng-container *ngIf&#x3D;&quot;canUpdateUsername; else cannotUpdateTpl&quot;&gt;
+
+        &lt;form [formGroup]&#x3D;&quot;usernameForm&quot; (ngSubmit)&#x3D;&quot;onSubmitUsername()&quot;&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;username&quot;&gt;Nuevo username&lt;/label&gt;
+            &lt;input
+              id&#x3D;&quot;username&quot;
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;username&quot;
+              (blur)&#x3D;&quot;onValidateUsername()&quot;
+              placeholder&#x3D;&quot;ej: jandry.dev&quot;
+            /&gt;
+
+            &lt;small
+              class&#x3D;&quot;hint&quot;
+              *ngIf&#x3D;&quot;usernameForm.get(&#x27;username&#x27;)?.valid &amp;&amp; usernameAvailable &#x3D;&#x3D;&#x3D; true&quot;&gt;
+              ✅ Nombre de usuario disponible
+            &lt;/small&gt;
+
+            &lt;small class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;usernameError&quot;&gt;
+              {{ usernameError }}
+            &lt;/small&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;actions&quot;&gt;
+            &lt;button
+              type&#x3D;&quot;submit&quot;
+              [disabled]&#x3D;&quot;usernameForm.invalid || saving() || usernameAvailable &#x3D;&#x3D;&#x3D; false&quot;&gt;
+              Guardar username
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+
+      &lt;/ng-container&gt;
+
+      &lt;ng-template #cannotUpdateTpl&gt;
+        &lt;p class&#x3D;&quot;hint hint-block&quot;&gt;
+          Ya has actualizado tu nombre de usuario previamente.&lt;br /&gt;
+          Por políticas de la plataforma, esta acción sólo se permite una vez.
+        &lt;/p&gt;
+      &lt;/ng-template&gt;
+    &lt;/section&gt;
+
+    &lt;!-- CARD DATOS PERSONALES --&gt;
+    &lt;section class&#x3D;&quot;info-card&quot;&gt;
+      &lt;div class&#x3D;&quot;card-header&quot;&gt;
+        &lt;h2&gt;Datos personales&lt;/h2&gt;
+        &lt;p class&#x3D;&quot;hint&quot;&gt;
+          Estos datos se usan para certificados, estadísticas y adaptar mejor los contenidos a tu contexto.
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- FORMULARIO INFORMACIÓN PERSONAL --&gt;
+      &lt;form
+        [formGroup]&#x3D;&quot;infoForm&quot;
+        (ngSubmit)&#x3D;&quot;onSubmitInfo()&quot;
+        class&#x3D;&quot;info-form&quot;&gt;
+
+        &lt;div class&#x3D;&quot;fields-grid&quot;&gt;
+
+          &lt;!-- Fecha de nacimiento --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;birthdate&quot;&gt;Fecha de nacimiento&lt;/label&gt;
+            &lt;input
+              id&#x3D;&quot;birthdate&quot;
+              type&#x3D;&quot;date&quot;
+              formControlName&#x3D;&quot;birthdate&quot;
+            /&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Teléfono --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;phone_local&quot;&gt;Teléfono&lt;/label&gt;
+            &lt;div class&#x3D;&quot;phone-wrapper&quot;&gt;
+              &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;phone-code&quot;&gt;
+                {{ selectedCountryCode.flagEmoji }} {{ selectedCountryCode.phoneCode }}
+              &lt;/button&gt;
+              &lt;input
+                id&#x3D;&quot;phone_local&quot;
+                type&#x3D;&quot;tel&quot;
+                inputmode&#x3D;&quot;numeric&quot;
+                autocomplete&#x3D;&quot;tel&quot;
+                formControlName&#x3D;&quot;phone_local&quot;
+                placeholder&#x3D;&quot;096 385 6048&quot;
+                (input)&#x3D;&quot;onPhoneInput($event)&quot;
+              /&gt;
+            &lt;/div&gt;
+            &lt;small
+              class&#x3D;&quot;error&quot;
+              *ngIf&#x3D;&quot;phoneLocalControl?.invalid &amp;&amp; phoneLocalControl?.touched&quot;&gt;
+              Ingresa un número válido de 10 dígitos que empiece en 0.
+            &lt;/small&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Provincia --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;province_id&quot;&gt;Provincia&lt;/label&gt;
+            &lt;select
+              id&#x3D;&quot;province_id&quot;
+              formControlName&#x3D;&quot;province_id&quot;
+              (change)&#x3D;&quot;onProvinceChange()&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una provincia&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let prov of provinces&quot; [ngValue]&#x3D;&quot;prov.id&quot;&gt;
+                {{ prov.name }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Cantón --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;canton_id&quot;&gt;Cantón&lt;/label&gt;
+            &lt;select
+              id&#x3D;&quot;canton_id&quot;
+              formControlName&#x3D;&quot;canton_id&quot;
+              (change)&#x3D;&quot;onCantonChange()&quot;
+              [disabled]&#x3D;&quot;!infoForm.get(&#x27;province_id&#x27;)?.value&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona un cantón&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let canton of cantons&quot; [ngValue]&#x3D;&quot;canton.id&quot;&gt;
+                {{ canton.name }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Parroquia --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;parish_id&quot;&gt;Parroquia&lt;/label&gt;
+            &lt;select
+              id&#x3D;&quot;parish_id&quot;
+              formControlName&#x3D;&quot;parish_id&quot;
+              [disabled]&#x3D;&quot;!infoForm.get(&#x27;canton_id&#x27;)?.value&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una parroquia&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let parr of parishes&quot; [ngValue]&#x3D;&quot;parr.id&quot;&gt;
+                {{ parr.name }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Sexo --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;sexo&quot;&gt;Sexo&lt;/label&gt;
+            &lt;select id&#x3D;&quot;sexo&quot; formControlName&#x3D;&quot;sexo&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una opción&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let opt of sexoOptions&quot; [value]&#x3D;&quot;opt.value&quot;&gt;
+                {{ opt.label }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Estado civil --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;estado_civil&quot;&gt;Estado civil&lt;/label&gt;
+            &lt;select id&#x3D;&quot;estado_civil&quot; formControlName&#x3D;&quot;estado_civil&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una opción&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let opt of estadoCivilOptions&quot; [value]&#x3D;&quot;opt.value&quot;&gt;
+                {{ opt.label }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Discapacidad --&gt;
+          &lt;div class&#x3D;&quot;field&quot;&gt;
+            &lt;label for&#x3D;&quot;discapacidad&quot;&gt;¿Tiene discapacidad?&lt;/label&gt;
+            &lt;select id&#x3D;&quot;discapacidad&quot; formControlName&#x3D;&quot;discapacidad&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una opción&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let opt of discapacidadOptions&quot; [value]&#x3D;&quot;opt.value&quot;&gt;
+                {{ opt.label }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Tipo de discapacidad --&gt;
+          &lt;div class&#x3D;&quot;field&quot; *ngIf&#x3D;&quot;infoForm.get(&#x27;discapacidad&#x27;)?.value &#x3D;&#x3D;&#x3D; &#x27;si&#x27;&quot;&gt;
+            &lt;label for&#x3D;&quot;discapacidad_permanente&quot;&gt;Tipo de discapacidad&lt;/label&gt;
+            &lt;select
+              id&#x3D;&quot;discapacidad_permanente&quot;
+              formControlName&#x3D;&quot;discapacidad_permanente&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una opción&lt;/option&gt;
+              &lt;option
+                *ngFor&#x3D;&quot;let opt of discapacidadPermanenteOptions&quot;
+                [value]&#x3D;&quot;opt&quot;&gt;
+                {{ opt }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Asistencia a establecimiento --&gt;
+          &lt;div class&#x3D;&quot;field&quot; *ngIf&#x3D;&quot;infoForm.get(&#x27;discapacidad&#x27;)?.value &#x3D;&#x3D;&#x3D; &#x27;si&#x27;&quot;&gt;
+            &lt;label for&#x3D;&quot;asistencia_establecimiento_discapacidad&quot;&gt;
+              ¿Asiste a algún establecimiento de discapacidad?
+            &lt;/label&gt;
+            &lt;select
+              id&#x3D;&quot;asistencia_establecimiento_discapacidad&quot;
+              formControlName&#x3D;&quot;asistencia_establecimiento_discapacidad&quot;&gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una opción&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let opt of asistenciaDiscOptions&quot; [value]&#x3D;&quot;opt.value&quot;&gt;
+                {{ opt.label }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;info-actions&quot;&gt;
+          &lt;button
+            type&#x3D;&quot;submit&quot;
+            [disabled]&#x3D;&quot;infoForm.invalid || saving()&quot;&gt;
+            Guardar información
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/section&gt;
+
+  &lt;/ng-template&gt;
+
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Barra de carga global para los submits --><ui-loading-bar [visible]="saving()" [mask]="{ type: \'dimmed\' }"></ui-loading-bar><div class="stepper-info stepper-info-container">  <!-- Encabezado -->  <header class="stepper-info-header">    <h1>Información personal</h1>    <p>      Completa tus datos básicos para personalizar tu experiencia en DigiMentor y generar certificados correctamente.    </p>  </header>  <!-- SKELETON -->  <ng-container *ngIf="isLoading(); else contentTpl">    <div class="info-skeleton-card" *ngFor="let r of skeletonRows">      <div class="skeleton-header skeleton-box"></div>      <div class="skeleton-row">        <div class="skeleton-box"></div>        <div class="skeleton-box"></div>      </div>    </div>  </ng-container>  <ng-template #contentTpl>    <!-- CARD USERNAME -->    <section class="info-card username-section">      <div class="card-header">        <h2>Nombre de usuario</h2>        <p class="hint">          Tu nombre de usuario actual es <strong>{{ currentUsername }}</strong>.        </p>      </div>      <ng-container *ngIf="canUpdateUsername; else cannotUpdateTpl">        <form [formGroup]="usernameForm" (ngSubmit)="onSubmitUsername()">          <div class="field">            <label for="username">Nuevo username</label>            <input              id="username"              type="text"              formControlName="username"              (blur)="onValidateUsername()"              placeholder="ej: jandry.dev"            />            <small              class="hint"              *ngIf="usernameForm.get(\'username\')?.valid && usernameAvailable === true">              ✅ Nombre de usuario disponible            </small>            <small class="error" *ngIf="usernameError">              {{ usernameError }}            </small>          </div>          <div class="actions">            <button              type="submit"              [disabled]="usernameForm.invalid || saving() || usernameAvailable === false">              Guardar username            </button>          </div>        </form>      </ng-container>      <ng-template #cannotUpdateTpl>        <p class="hint hint-block">          Ya has actualizado tu nombre de usuario previamente.<br />          Por políticas de la plataforma, esta acción sólo se permite una vez.        </p>      </ng-template>    </section>    <!-- CARD DATOS PERSONALES -->    <section class="info-card">      <div class="card-header">        <h2>Datos personales</h2>        <p class="hint">          Estos datos se usan para certificados, estadísticas y adaptar mejor los contenidos a tu contexto.        </p>      </div>      <!-- FORMULARIO INFORMACIÓN PERSONAL -->      <form        [formGroup]="infoForm"        (ngSubmit)="onSubmitInfo()"        class="info-form">        <div class="fields-grid">          <!-- Fecha de nacimiento -->          <div class="field">            <label for="birthdate">Fecha de nacimiento</label>            <input              id="birthdate"              type="date"              formControlName="birthdate"            />          </div>          <!-- Teléfono -->          <div class="field">            <label for="phone_local">Teléfono</label>            <div class="phone-wrapper">              <button type="button" class="phone-code">                {{ selectedCountryCode.flagEmoji }} {{ selectedCountryCode.phoneCode }}              </button>              <input                id="phone_local"                type="tel"                inputmode="numeric"                autocomplete="tel"                formControlName="phone_local"                placeholder="096 385 6048"                (input)="onPhoneInput($event)"              />            </div>            <small              class="error"              *ngIf="phoneLocalControl?.invalid && phoneLocalControl?.touched">              Ingresa un número válido de 10 dígitos que empiece en 0.            </small>          </div>          <!-- Provincia -->          <div class="field">            <label for="province_id">Provincia</label>            <select              id="province_id"              formControlName="province_id"              (change)="onProvinceChange()">              <option [ngValue]="null">Selecciona una provincia</option>              <option *ngFor="let prov of provinces" [ngValue]="prov.id">                {{ prov.name }}              </option>            </select>          </div>          <!-- Cantón -->          <div class="field">            <label for="canton_id">Cantón</label>            <select              id="canton_id"              formControlName="canton_id"              (change)="onCantonChange()"              [disabled]="!infoForm.get(\'province_id\')?.value">              <option [ngValue]="null">Selecciona un cantón</option>              <option *ngFor="let canton of cantons" [ngValue]="canton.id">                {{ canton.name }}              </option>            </select>          </div>          <!-- Parroquia -->          <div class="field">            <label for="parish_id">Parroquia</label>            <select              id="parish_id"              formControlName="parish_id"              [disabled]="!infoForm.get(\'canton_id\')?.value">              <option [ngValue]="null">Selecciona una parroquia</option>              <option *ngFor="let parr of parishes" [ngValue]="parr.id">                {{ parr.name }}              </option>            </select>          </div>          <!-- Sexo -->          <div class="field">            <label for="sexo">Sexo</label>            <select id="sexo" formControlName="sexo">              <option [ngValue]="null">Selecciona una opción</option>              <option *ngFor="let opt of sexoOptions" [value]="opt.value">                {{ opt.label }}              </option>            </select>          </div>          <!-- Estado civil -->          <div class="field">            <label for="estado_civil">Estado civil</label>            <select id="estado_civil" formControlName="estado_civil">              <option [ngValue]="null">Selecciona una opción</option>              <option *ngFor="let opt of estadoCivilOptions" [value]="opt.value">                {{ opt.label }}              </option>            </select>          </div>          <!-- Discapacidad -->          <div class="field">            <label for="discapacidad">¿Tiene discapacidad?</label>            <select id="discapacidad" formControlName="discapacidad">              <option [ngValue]="null">Selecciona una opción</option>              <option *ngFor="let opt of discapacidadOptions" [value]="opt.value">                {{ opt.label }}              </option>            </select>          </div>          <!-- Tipo de discapacidad -->          <div class="field" *ngIf="infoForm.get(\'discapacidad\')?.value === \'si\'">            <label for="discapacidad_permanente">Tipo de discapacidad</label>            <select              id="discapacidad_permanente"              formControlName="discapacidad_permanente">              <option [ngValue]="null">Selecciona una opción</option>              <option                *ngFor="let opt of discapacidadPermanenteOptions"                [value]="opt">                {{ opt }}              </option>            </select>          </div>          <!-- Asistencia a establecimiento -->          <div class="field" *ngIf="infoForm.get(\'discapacidad\')?.value === \'si\'">            <label for="asistencia_establecimiento_discapacidad">              ¿Asiste a algún establecimiento de discapacidad?            </label>            <select              id="asistencia_establecimiento_discapacidad"              formControlName="asistencia_establecimiento_discapacidad">              <option [ngValue]="null">Selecciona una opción</option>              <option *ngFor="let opt of asistenciaDiscOptions" [value]="opt.value">                {{ opt.label }}              </option>            </select>          </div>        </div>        <div class="info-actions">          <button            type="submit"            [disabled]="infoForm.invalid || saving()">            Guardar información          </button>        </div>      </form>    </section>  </ng-template></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'StepperInfoComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'StepperInfoComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

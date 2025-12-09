@@ -1,0 +1,2311 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  EducationComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/learning/profile/education/education.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-education</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../interfaces/Module.html" target="_self" >ReactiveFormsModule</a></code>
+                                <code><a href="../components/IconComponent.html" target="_self" >IconComponent</a></code>
+                                <code><a href="../components/ToastComponent.html" target="_self" >ToastComponent</a></code>
+                                <code><a href="../components/LoadingBarComponent.html" target="_self" >LoadingBarComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./education.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./education.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#availableCareers" >availableCareers</a>
+                            </li>
+                            <li>
+                                <a href="#availableEducationalLevels" >availableEducationalLevels</a>
+                            </li>
+                            <li>
+                                <a href="#confirmVisible" >confirmVisible</a>
+                            </li>
+                            <li>
+                                <a href="#editing" >editing</a>
+                            </li>
+                            <li>
+                                <a href="#educationalUser" >educationalUser</a>
+                            </li>
+                            <li>
+                                <a href="#form" >form</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#maxLevelAllowed" >maxLevelAllowed</a>
+                            </li>
+                            <li>
+                                <a href="#save" >save</a>
+                            </li>
+                            <li>
+                                <a href="#sedes" >sedes</a>
+                            </li>
+                            <li>
+                                <a href="#selectedSede" >selectedSede</a>
+                            </li>
+                            <li>
+                                <a href="#skeletonRows" >skeletonRows</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#hasError" >hasError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#initForm" >initForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadData" >loadData</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onCancel" >onCancel</a>
+                            </li>
+                            <li>
+                                <a href="#onChangeCareer" >onChangeCareer</a>
+                            </li>
+                            <li>
+                                <a href="#onChangeEducationalLevel" >onChangeEducationalLevel</a>
+                            </li>
+                            <li>
+                                <a href="#onChangeSede" >onChangeSede</a>
+                            </li>
+                            <li>
+                                <a href="#onConfirmUpdate" >onConfirmUpdate</a>
+                            </li>
+                            <li>
+                                <a href="#onEdit" >onEdit</a>
+                            </li>
+                            <li>
+                                <a href="#onSubmit" >onSubmit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#patchFormFromUser" >patchFormFromUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateDerivedLists" >updateDerivedLists</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateLevelValidation" >updateLevelValidation</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#hasEducationalInfo" >hasEducationalInfo</a>
+                                </li>
+                                <li>
+                                    <a href="#selectedEducationalLevel" >selectedEducationalLevel</a>
+                                </li>
+                                <li>
+                                    <a href="#selectedCareer" >selectedCareer</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder, educationService: <a href="../injectables/EducationService.html" target="_self">EducationService</a>, sedeService: <a href="../injectables/SedeService.html" target="_self">SedeService</a>, toast: <a href="../injectables/UiToastService.html" target="_self">UiToastService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:75</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>educationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EducationService.html" target="_self" >EducationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>sedeService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SedeService.html" target="_self" >SedeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>toast</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UiToastService.html" target="_self" >UiToastService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasError"></a>
+                    <span class="name">
+                        <span ><b>hasError</b></span>
+                        <a href="#hasError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasError(controlName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="338"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:338</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>controlName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initForm"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>initForm</b></span>
+                        <a href="#initForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>initForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="93"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:93</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadData"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadData</b></span>
+                        <a href="#loadData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:102</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:84</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCancel"></a>
+                    <span class="name">
+                        <span ><b>onCancel</b></span>
+                        <a href="#onCancel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCancel()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:187</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChangeCareer"></a>
+                    <span class="name">
+                        <span ><b>onChangeCareer</b></span>
+                        <a href="#onChangeCareer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onChangeCareer(value: string | number)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="219"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:219</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                        <code>string | number</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChangeEducationalLevel"></a>
+                    <span class="name">
+                        <span ><b>onChangeEducationalLevel</b></span>
+                        <a href="#onChangeEducationalLevel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onChangeEducationalLevel(value: string | number)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                        <code>string | number</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChangeSede"></a>
+                    <span class="name">
+                        <span ><b>onChangeSede</b></span>
+                        <a href="#onChangeSede"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onChangeSede(value: string | number)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="197"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:197</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                        <code>string | number</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onConfirmUpdate"></a>
+                    <span class="name">
+                        <span ><b>onConfirmUpdate</b></span>
+                        <a href="#onConfirmUpdate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onConfirmUpdate()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="304"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:304</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onEdit"></a>
+                    <span class="name">
+                        <span ><b>onEdit</b></span>
+                        <a href="#onEdit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onEdit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="182"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:182</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                        <span ><b>onSubmit</b></span>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSubmit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="289"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:289</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="patchFormFromUser"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>patchFormFromUser</b></span>
+                        <a href="#patchFormFromUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>patchFormFromUser()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateDerivedLists"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>updateDerivedLists</b></span>
+                        <a href="#updateDerivedLists"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateDerivedLists()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:225</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateLevelValidation"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>updateLevelValidation</b></span>
+                        <a href="#updateLevelValidation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateLevelValidation()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="250"
+                                    class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:250</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="availableCareers"></a>
+                    <span class="name">
+                        <span ><b>availableCareers</b></span>
+                        <a href="#availableCareers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Career[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="availableEducationalLevels"></a>
+                    <span class="name">
+                        <span ><b>availableEducationalLevels</b></span>
+                        <a href="#availableEducationalLevels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>SedeEducationalLevel[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmVisible"></a>
+                    <span class="name">
+                        <span ><b>confirmVisible</b></span>
+                        <a href="#confirmVisible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="editing"></a>
+                    <span class="name">
+                        <span ><b>editing</b></span>
+                        <a href="#editing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="educationalUser"></a>
+                    <span class="name">
+                        <span ><b>educationalUser</b></span>
+                        <a href="#educationalUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EducationalUser | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="form"></a>
+                    <span class="name">
+                        <span ><b>form</b></span>
+                        <a href="#form"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="maxLevelAllowed"></a>
+                    <span class="name">
+                        <span ><b>maxLevelAllowed</b></span>
+                        <a href="#maxLevelAllowed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="save"></a>
+                    <span class="name">
+                        <span ><b>save</b></span>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sedes"></a>
+                    <span class="name">
+                        <span ><b>sedes</b></span>
+                        <a href="#sedes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Sede[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedSede"></a>
+                    <span class="name">
+                        <span ><b>selectedSede</b></span>
+                        <a href="#selectedSede"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Sede | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skeletonRows"></a>
+                    <span class="name">
+                        <span ><b>skeletonRows</b></span>
+                        <a href="#skeletonRows"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[1, 2, 3]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="hasEducationalInfo"></a>
+                        <span class="name"><b>hasEducationalInfo</b><a href="#hasEducationalInfo"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>hasEducationalInfo()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="178" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:178</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selectedEducationalLevel"></a>
+                        <span class="name"><b>selectedEducationalLevel</b><a href="#selectedEducationalLevel"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>selectedEducationalLevel()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="236" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:236</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selectedCareer"></a>
+                        <span class="name"><b>selectedCareer</b><a href="#selectedCareer"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>selectedCareer()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="244" class="link-to-prism">src/app/pages/private/learning/profile/education/education.component.ts:244</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from &#x27;@angular/forms&#x27;;
+
+import { IconComponent } from &#x27;../../../../../shared/UI/components/button/icon/icon.component&#x27;;
+import { ToastComponent } from &#x27;../../../../../shared/UI/components/overlay/toast/toast.component&#x27;;
+import { LoadingBarComponent } from &#x27;../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component&#x27;;
+
+import {
+  EducationalUser,
+  EducationalRequest
+} from &#x27;../../../../../core/api/profile/education.interface&#x27;;
+import {
+  Sede,
+  Career,
+  EducationalLevel as SedeEducationalLevel
+} from &#x27;../../../../../core/api/sede/sede.interface&#x27;;
+
+import { EducationService } from &#x27;../../../../../core/api/profile/education.service&#x27;;
+import { SedeService } from &#x27;../../../../../core/api/sede/sede.service&#x27;;
+import { UiToastService } from &#x27;../../../../../shared/services/ui-toast.service&#x27;;
+
+@Component({
+  selector: &#x27;app-education&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    IconComponent,
+    ToastComponent,
+    LoadingBarComponent
+  ],
+  templateUrl: &#x27;./education.component.html&#x27;,
+  styleUrl: &#x27;./education.component.css&#x27;
+})
+export class EducationComponent implements OnInit {
+
+  // Barra de carga al guardar
+  save &#x3D; false;
+
+  // Carga inicial (skeletor)
+  loading &#x3D; true;
+
+  // Modo edición
+  editing &#x3D; false;
+
+  // Modal de confirmación
+  confirmVisible &#x3D; false;
+
+  // Datos actuales del usuario
+  educationalUser: EducationalUser | null &#x3D; null;
+
+  // Listado de sedes visibles para el usuario
+  sedes: Sede[] &#x3D; [];
+
+  // Sede seleccionada en el formulario
+  selectedSede: Sede | null &#x3D; null;
+
+  // Carreras y niveles educativos disponibles según la sede
+  availableCareers: Career[] &#x3D; [];
+  availableEducationalLevels: SedeEducationalLevel[] &#x3D; [];
+
+  // Límite máximo permitido para el nivel
+  maxLevelAllowed: number | null &#x3D; null;
+
+  // Formulario reactivo
+  form!: FormGroup;
+
+  // Skeleton rows
+  skeletonRows &#x3D; [1, 2, 3];
+
+  constructor(
+    private fb: FormBuilder,
+    private educationService: EducationService,
+    private sedeService: SedeService,
+    private toast: UiToastService
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
+    this.loadData();
+  }
+
+  // ---------------------------------------------------------
+  // Inicialización
+  // ---------------------------------------------------------
+
+  private initForm(): void {
+    this.form &#x3D; this.fb.group({
+      sede_id: [null, Validators.required],
+      career_id: [null], // requerido solo si la sede tiene carreras y se escoge una
+      educational_level_id: [null, Validators.required],
+      level: [null] // requisitos dinámicos según maxLevelAllowed
+    });
+  }
+
+  private loadData(): void {
+    this.loading &#x3D; true;
+
+    // Carga en paralelo: perfil educativo + sedes
+    this.sedeService.getSedes().subscribe({
+      next: sedes &#x3D;&gt; {
+        this.sedes &#x3D; sedes ?? [];
+
+        this.educationService.getEducationalProfile().subscribe({
+          next: eduUser &#x3D;&gt; {
+            this.educationalUser &#x3D; eduUser;
+            this.patchFormFromUser();
+            this.loading &#x3D; false;
+          },
+          error: () &#x3D;&gt; {
+            this.loading &#x3D; false;
+            this.toast.add({
+              severity: &#x27;danger&#x27;,
+              summary: &#x27;Error&#x27;,
+              message: &#x27;No se pudo cargar tu información educativa.&#x27;
+            });
+          }
+        });
+      },
+      error: () &#x3D;&gt; {
+        this.loading &#x3D; false;
+        this.toast.add({
+          severity: &#x27;danger&#x27;,
+          summary: &#x27;Error&#x27;,
+          message: &#x27;No se pudieron cargar las sedes disponibles.&#x27;
+        });
+      }
+    });
+  }
+
+  private patchFormFromUser(): void {
+    if (!this.educationalUser) {
+      // Sin datos aún: dejamos el formulario vacío
+      this.form.reset({
+        sede_id: null,
+        career_id: null,
+        educational_level_id: null,
+        level: null
+      });
+      this.selectedSede &#x3D; null;
+      this.availableCareers &#x3D; [];
+      this.availableEducationalLevels &#x3D; [];
+      this.maxLevelAllowed &#x3D; null;
+      return;
+    }
+
+    const u &#x3D; this.educationalUser;
+
+    this.form.patchValue({
+      sede_id: u.sede_id ?? null,
+      career_id: u.career_id ?? null,
+      educational_level_id: u.educational_level_id ?? null,
+      level: u.level ?? null
+    });
+
+    // Configuramos sede seleccionada + listas derivadas
+    if (u.sede_id) {
+      this.selectedSede &#x3D;
+        this.sedes.find(s &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; u.sede_id) ?? null;
+    } else {
+      this.selectedSede &#x3D; null;
+    }
+
+    this.updateDerivedLists();
+    this.updateLevelValidation();
+  }
+
+  // ---------------------------------------------------------
+  // Helpers para modo vista / edición
+  // ---------------------------------------------------------
+
+  get hasEducationalInfo(): boolean {
+    return !!this.educationalUser;
+  }
+
+  onEdit(): void {
+    this.editing &#x3D; true;
+    this.patchFormFromUser();
+  }
+
+  onCancel(): void {
+    this.editing &#x3D; false;
+    this.confirmVisible &#x3D; false;
+    this.patchFormFromUser();
+  }
+
+  // ---------------------------------------------------------
+  // Cambio de sede / nivel / carrera
+  // ---------------------------------------------------------
+
+  onChangeSede(value: string | number): void {
+    const sedeId &#x3D; Number(value) || null;
+    this.form.patchValue({
+      sede_id: sedeId,
+      career_id: null,
+      educational_level_id: null,
+      level: null
+    });
+
+    this.selectedSede &#x3D;
+      this.sedes.find(s &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; sedeId) ?? null;
+
+    this.updateDerivedLists();
+    this.updateLevelValidation();
+  }
+
+  onChangeEducationalLevel(value: string | number): void {
+    const levelId &#x3D; Number(value) || null;
+    this.form.patchValue({ educational_level_id: levelId, level: null });
+    this.updateLevelValidation();
+  }
+
+  onChangeCareer(value: string | number): void {
+    const careerId &#x3D; Number(value) || null;
+    this.form.patchValue({ career_id: careerId, level: null });
+    this.updateLevelValidation();
+  }
+
+  private updateDerivedLists(): void {
+    if (this.selectedSede &amp;&amp; this.selectedSede.educational_unit) {
+      this.availableEducationalLevels &#x3D;
+        this.selectedSede.educational_unit.educational_levels ?? [];
+    } else {
+      this.availableEducationalLevels &#x3D; [];
+    }
+
+    this.availableCareers &#x3D; this.selectedSede?.careers ?? [];
+  }
+  // public selectedEducationalLevel: EducationalLevel | null &#x3D; null;
+  public get selectedEducationalLevel(): SedeEducationalLevel | null {
+  const id &#x3D; this.form.get(&#x27;educational_level_id&#x27;)?.value;
+  if (!id || !this.availableEducationalLevels) return null;
+  return (
+    this.availableEducationalLevels.find(l &#x3D;&gt; l.id &#x3D;&#x3D;&#x3D; id) ?? null
+  );
+}
+
+  private get selectedCareer(): Career | null {
+    const id &#x3D; this.form.get(&#x27;career_id&#x27;)?.value;
+    if (!id || !this.availableCareers) return null;
+    return this.availableCareers.find(c &#x3D;&gt; c.id &#x3D;&#x3D;&#x3D; id) ?? null;
+  }
+
+  private updateLevelValidation(): void {
+    const ctrl &#x3D; this.form.get(&#x27;level&#x27;);
+    if (!ctrl) return;
+
+    const eduLevel &#x3D; this.selectedEducationalLevel;
+    const career &#x3D; this.selectedCareer;
+
+    // Si el nivel educativo no tiene max_periods, asumimos que no se requiere nivel
+    if (!eduLevel || !eduLevel.max_periods || eduLevel.max_periods &lt;&#x3D; 0) {
+      this.maxLevelAllowed &#x3D; null;
+      ctrl.clearValidators();
+      ctrl.setValue(null);
+      ctrl.updateValueAndValidity({ emitEvent: false });
+      return;
+    }
+
+    let max &#x3D; eduLevel.max_periods;
+
+    if (career &amp;&amp; career.max_semesters &amp;&amp; career.max_semesters &gt; 0) {
+      max &#x3D; Math.min(max, career.max_semesters);
+    }
+
+    this.maxLevelAllowed &#x3D; max;
+
+    const validators &#x3D; [Validators.required, Validators.min(1), Validators.max(max)];
+    ctrl.setValidators(validators);
+
+    const currentVal &#x3D; ctrl.value;
+    if (currentVal !&#x3D; null &amp;&amp; (currentVal &lt; 1 || currentVal &gt; max)) {
+      ctrl.setValue(max);
+    }
+
+    ctrl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  // ---------------------------------------------------------
+  // Submit + Confirmación
+  // ---------------------------------------------------------
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toast.add({
+        severity: &#x27;warn&#x27;,
+        summary: &#x27;Validación&#x27;,
+        message: &#x27;Revisa los campos marcados antes de guardar.&#x27;
+      });
+      return;
+    }
+
+    // Abrimos ventana de confirmación
+    this.confirmVisible &#x3D; true;
+  }
+
+  onConfirmUpdate(): void {
+    this.confirmVisible &#x3D; false;
+    const payload: EducationalRequest &#x3D; {
+      sede_id: this.form.value.sede_id ?? null,
+      career_id: this.form.value.career_id ?? null,
+      educational_level_id: this.form.value.educational_level_id ?? null,
+      level: this.form.value.level ?? null
+    };
+
+    this.save &#x3D; true;
+
+    this.educationService.updateEducationalProfile(payload).subscribe({
+      next: updated &#x3D;&gt; {
+        this.educationalUser &#x3D; updated;
+        this.save &#x3D; false;
+        this.editing &#x3D; false;
+        this.toast.add({
+          severity: &#x27;primary&#x27;,
+          summary: &#x27;Actualizado&#x27;,
+          message: &#x27;Tu información educativa se actualizó correctamente.&#x27;
+        });
+      },
+      error: () &#x3D;&gt; {
+        this.save &#x3D; false;
+        this.toast.add({
+          severity: &#x27;danger&#x27;,
+          summary: &#x27;Error&#x27;,
+          message: &#x27;No se pudo actualizar tu información educativa.&#x27;
+        });
+      }
+    });
+  }
+
+  // Helpers de template para errores
+  hasError(controlName: string, error: string): boolean {
+    const ctrl &#x3D; this.form.get(controlName);
+    return !!ctrl &amp;&amp; ctrl.touched &amp;&amp; ctrl.hasError(error);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Barra de carga global al guardar --&gt;
+&lt;ui-loading-bar
+  [visible]&#x3D;&quot;save&quot;
+  [mask]&#x3D;&quot;{ type: &#x27;dimmed&#x27; }&quot;
+&gt;&lt;/ui-loading-bar&gt;
+
+&lt;!-- Toast global --&gt;
+&lt;ui-toast&gt;&lt;/ui-toast&gt;
+
+&lt;div class&#x3D;&quot;education-container&quot;&gt;
+
+  &lt;!-- Encabezado --&gt;
+  &lt;header class&#x3D;&quot;education-header&quot;&gt;
+    &lt;div&gt;
+      &lt;h1&gt;Información educativa&lt;/h1&gt;
+      &lt;p&gt;
+        Registra tu sede, nivel educativo y carrera para personalizar tu experiencia en DigiMentor.
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;button
+      *ngIf&#x3D;&quot;!loading &amp;&amp; hasEducationalInfo &amp;&amp; !editing&quot;
+      class&#x3D;&quot;btn btn-primary&quot;
+      type&#x3D;&quot;button&quot;
+      (click)&#x3D;&quot;onEdit()&quot;
+    &gt;
+      &lt;ui-icon [size]&#x3D;&quot;&#x27;sm&#x27;&quot; [severity]&#x3D;&quot;&#x27;contrast&#x27;&quot; [svgPath]&#x3D;&quot;&#x27;svg/rename.svg&#x27;&quot;&gt;&lt;/ui-icon&gt;
+      &lt;span&gt;Editar&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;button
+      *ngIf&#x3D;&quot;!loading &amp;&amp; !hasEducationalInfo &amp;&amp; !editing&quot;
+      class&#x3D;&quot;btn btn-primary&quot;
+      type&#x3D;&quot;button&quot;
+      (click)&#x3D;&quot;editing &#x3D; true&quot;
+    &gt;
+      &lt;ui-icon [size]&#x3D;&quot;&#x27;sm&#x27;&quot; [severity]&#x3D;&quot;&#x27;contrast&#x27;&quot; [svgPath]&#x3D;&quot;&#x27;svg/rename.svg&#x27;&quot;&gt;&lt;/ui-icon&gt;
+      &lt;span&gt;Completar información&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/header&gt;
+
+  &lt;!-- SKELETON --&gt;
+  &lt;ng-container *ngIf&#x3D;&quot;loading; else contentTpl&quot;&gt;
+    &lt;div class&#x3D;&quot;info-skeleton-card&quot; *ngFor&#x3D;&quot;let r of skeletonRows&quot;&gt;
+      &lt;div class&#x3D;&quot;skeleton-header skeleton-box&quot;&gt;&lt;/div&gt;
+      &lt;div class&#x3D;&quot;skeleton-row&quot;&gt;
+        &lt;div class&#x3D;&quot;skeleton-box&quot;&gt;&lt;/div&gt;
+        &lt;div class&#x3D;&quot;skeleton-box&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/ng-container&gt;
+
+  &lt;ng-template #contentTpl&gt;
+
+    &lt;!-- MODO VISTA --&gt;
+    &lt;section *ngIf&#x3D;&quot;!editing; else editTpl&quot; class&#x3D;&quot;education-card&quot;&gt;
+      &lt;ng-container *ngIf&#x3D;&quot;hasEducationalInfo; else noInfoTpl&quot;&gt;
+        &lt;div class&#x3D;&quot;education-row&quot;&gt;
+          &lt;div class&#x3D;&quot;label&quot;&gt;Sede / Unidad educativa&lt;/div&gt;
+          &lt;div class&#x3D;&quot;value&quot;&gt;
+            {{ educationalUser?.sede?.educational_unit?.name || &#x27;Sin sede registrada&#x27; }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;education-row&quot;&gt;
+          &lt;div class&#x3D;&quot;label&quot;&gt;Provincia / Cantón&lt;/div&gt;
+          &lt;div class&#x3D;&quot;value&quot;&gt;
+            &lt;span *ngIf&#x3D;&quot;educationalUser?.sede&quot;&gt;
+              {{ educationalUser?.sede?.province_name || &#x27;-&#x27; }} /
+              {{ educationalUser?.sede?.canton_name || &#x27;-&#x27; }}
+            &lt;/span&gt;
+            &lt;span *ngIf&#x3D;&quot;!educationalUser?.sede&quot;&gt;-&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;education-row&quot;&gt;
+          &lt;div class&#x3D;&quot;label&quot;&gt;Nivel educativo&lt;/div&gt;
+          &lt;div class&#x3D;&quot;value&quot;&gt;
+            {{ educationalUser?.educational_level?.name || &#x27;No especificado&#x27; }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;education-row&quot;&gt;
+          &lt;div class&#x3D;&quot;label&quot;&gt;Carrera&lt;/div&gt;
+          &lt;div class&#x3D;&quot;value&quot;&gt;
+            {{ educationalUser?.career?.name || &#x27;Sin carrera&#x27; }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;education-row&quot;&gt;
+          &lt;div class&#x3D;&quot;label&quot;&gt;Nivel actual&lt;/div&gt;
+          &lt;div class&#x3D;&quot;value&quot;&gt;
+            &lt;ng-container *ngIf&#x3D;&quot;educationalUser?.level; else noLevelTpl&quot;&gt;
+              {{ educationalUser?.level }}
+              &lt;span *ngIf&#x3D;&quot;educationalUser?.educational_level?.period&quot;&gt;
+                / {{ educationalUser?.educational_level?.period }}
+              &lt;/span&gt;
+            &lt;/ng-container&gt;
+            &lt;ng-template #noLevelTpl&gt; No especificado &lt;/ng-template&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/ng-container&gt;
+
+      &lt;ng-template #noInfoTpl&gt;
+        &lt;p class&#x3D;&quot;empty-text&quot;&gt;
+          Aún no has registrado tu información educativa. Haz clic en
+          &lt;strong&gt;&quot;Completar información&quot;&lt;/strong&gt; para agregarla.
+        &lt;/p&gt;
+      &lt;/ng-template&gt;
+    &lt;/section&gt;
+
+    &lt;!-- MODO EDICIÓN --&gt;
+    &lt;ng-template #editTpl&gt;
+      &lt;section class&#x3D;&quot;education-card&quot;&gt;
+        &lt;form [formGroup]&#x3D;&quot;form&quot; (ngSubmit)&#x3D;&quot;onSubmit()&quot;&gt;
+
+          &lt;!-- Sede --&gt;
+          &lt;div class&#x3D;&quot;form-row&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;sede&quot;&gt;
+              Sede / Unidad educativa &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+            &lt;/label&gt;
+
+            &lt;select
+              id&#x3D;&quot;sede&quot;
+              class&#x3D;&quot;form-control&quot;
+              formControlName&#x3D;&quot;sede_id&quot;
+              (change)&#x3D;&quot;onChangeSede($any($event.target).value)&quot;
+            &gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona una sede&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let sede of sedes&quot; [value]&#x3D;&quot;sede.id&quot;&gt;
+                {{ sede.educational_unit?.name || &#x27;Unidad sin nombre&#x27; }}
+                -
+                {{ sede.province_name || &#x27;Provincia&#x27; }}
+                /
+                {{ sede.canton_name || &#x27;Cantón&#x27; }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+
+            &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;hasError(&#x27;sede_id&#x27;, &#x27;required&#x27;)&quot;&gt;
+              La sede es obligatoria.
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Info extra de la sede --&gt;
+          &lt;div class&#x3D;&quot;form-row hint&quot; *ngIf&#x3D;&quot;selectedSede?.educational_unit&quot;&gt;
+            &lt;div class&#x3D;&quot;hint-title&quot;&gt;
+              Unidad seleccionada:
+              &lt;strong&gt;{{ selectedSede?.educational_unit?.name }}&lt;/strong&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Carrera (solo si la sede tiene carreras) --&gt;
+          &lt;div class&#x3D;&quot;form-row&quot; *ngIf&#x3D;&quot;availableCareers.length &gt; 0&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;career&quot;&gt;
+              Carrera (opcional)
+            &lt;/label&gt;
+
+            &lt;select
+              id&#x3D;&quot;career&quot;
+              class&#x3D;&quot;form-control&quot;
+              formControlName&#x3D;&quot;career_id&quot;
+              (change)&#x3D;&quot;onChangeCareer($any($event.target).value)&quot;
+            &gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Sin carrera&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let career of availableCareers&quot; [value]&#x3D;&quot;career.id&quot;&gt;
+                {{ career.name }} (máx. {{ career.max_semesters }} niveles)
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;form-row&quot; *ngIf&#x3D;&quot;selectedSede &amp;&amp; availableCareers.length &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+            &lt;span class&#x3D;&quot;hint&quot;&gt;
+              Esta sede no tiene carreras registradas.
+            &lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Nivel educativo --&gt;
+          &lt;div class&#x3D;&quot;form-row&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;educational_level&quot;&gt;
+              Nivel educativo &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+            &lt;/label&gt;
+
+            &lt;select
+              id&#x3D;&quot;educational_level&quot;
+              class&#x3D;&quot;form-control&quot;
+              formControlName&#x3D;&quot;educational_level_id&quot;
+              (change)&#x3D;&quot;onChangeEducationalLevel($any($event.target).value)&quot;
+            &gt;
+              &lt;option [ngValue]&#x3D;&quot;null&quot;&gt;Selecciona un nivel educativo&lt;/option&gt;
+              &lt;option
+                *ngFor&#x3D;&quot;let level of availableEducationalLevels&quot;
+                [value]&#x3D;&quot;level.id&quot;
+              &gt;
+                {{ level.name }}
+                &lt;ng-container *ngIf&#x3D;&quot;level.max_periods &amp;&amp; level.max_periods &gt; 0&quot;&gt;
+                  (máx. {{ level.max_periods }} niveles)
+                &lt;/ng-container&gt;
+              &lt;/option&gt;
+            &lt;/select&gt;
+
+            &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;hasError(&#x27;educational_level_id&#x27;, &#x27;required&#x27;)&quot;&gt;
+              El nivel educativo es obligatorio.
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Nivel actual (solo si hay maxLevelAllowed) --&gt;
+          &lt;div class&#x3D;&quot;form-row&quot; *ngIf&#x3D;&quot;maxLevelAllowed&quot;&gt;
+            &lt;label class&#x3D;&quot;form-label&quot; for&#x3D;&quot;level&quot;&gt;
+              Nivel actual &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+            &lt;/label&gt;
+
+            &lt;input
+              id&#x3D;&quot;level&quot;
+              type&#x3D;&quot;number&quot;
+              class&#x3D;&quot;form-control&quot;
+              formControlName&#x3D;&quot;level&quot;
+              [min]&#x3D;&quot;1&quot;
+              [max]&#x3D;&quot;maxLevelAllowed || 1&quot;
+              placeholder&#x3D;&quot;Ej: 1, 2, 3...&quot;
+            /&gt;
+
+            &lt;div class&#x3D;&quot;hint&quot;&gt;
+              Debe estar entre &lt;strong&gt;1&lt;/strong&gt; y
+              &lt;strong&gt;{{ maxLevelAllowed }}&lt;/strong&gt;.
+                &lt;span *ngIf&#x3D;&quot;selectedEducationalLevel?.period&quot;&gt;
+                ({{ selectedEducationalLevel?.period }})
+                &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;hasError(&#x27;level&#x27;, &#x27;required&#x27;)&quot;&gt;
+              El nivel es obligatorio.
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;hasError(&#x27;level&#x27;, &#x27;min&#x27;)&quot;&gt;
+              El nivel mínimo permitido es 1.
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;hasError(&#x27;level&#x27;, &#x27;max&#x27;)&quot;&gt;
+              El nivel máximo permitido es {{ maxLevelAllowed }}.
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Botones --&gt;
+          &lt;div class&#x3D;&quot;form-actions&quot;&gt;
+            &lt;button
+              type&#x3D;&quot;button&quot;
+              class&#x3D;&quot;btn btn-secondary&quot;
+              (click)&#x3D;&quot;onCancel()&quot;
+            &gt;
+              Cancelar
+            &lt;/button&gt;
+
+            &lt;button
+              type&#x3D;&quot;submit&quot;
+              class&#x3D;&quot;btn btn-primary&quot;
+            &gt;
+              Guardar cambios
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/section&gt;
+    &lt;/ng-template&gt;
+  &lt;/ng-template&gt;
+
+  &lt;!-- MODAL DE CONFIRMACIÓN --&gt;
+  &lt;div class&#x3D;&quot;modal-backdrop&quot; *ngIf&#x3D;&quot;confirmVisible&quot;&gt;
+    &lt;div class&#x3D;&quot;modal&quot;&gt;
+      &lt;h2&gt;Confirmar actualización&lt;/h2&gt;
+      &lt;p&gt;
+        ¿Estás seguro de que deseas actualizar tu información educativa?
+      &lt;/p&gt;
+
+      &lt;div class&#x3D;&quot;modal-actions&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;confirmVisible &#x3D; false&quot;
+        &gt;
+          Cancelar
+        &lt;/button&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-primary&quot;
+          (click)&#x3D;&quot;onConfirmUpdate()&quot;
+        &gt;
+          Sí, actualizar
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Barra de carga global al guardar --><ui-loading-bar  [visible]="save"  [mask]="{ type: \'dimmed\' }"></ui-loading-bar><!-- Toast global --><ui-toast></ui-toast><div class="education-container">  <!-- Encabezado -->  <header class="education-header">    <div>      <h1>Información educativa</h1>      <p>        Registra tu sede, nivel educativo y carrera para personalizar tu experiencia en DigiMentor.      </p>    </div>    <button      *ngIf="!loading && hasEducationalInfo && !editing"      class="btn btn-primary"      type="button"      (click)="onEdit()"    >      <ui-icon [size]="\'sm\'" [severity]="\'contrast\'" [svgPath]="\'svg/rename.svg\'"></ui-icon>      <span>Editar</span>    </button>    <button      *ngIf="!loading && !hasEducationalInfo && !editing"      class="btn btn-primary"      type="button"      (click)="editing = true"    >      <ui-icon [size]="\'sm\'" [severity]="\'contrast\'" [svgPath]="\'svg/rename.svg\'"></ui-icon>      <span>Completar información</span>    </button>  </header>  <!-- SKELETON -->  <ng-container *ngIf="loading; else contentTpl">    <div class="info-skeleton-card" *ngFor="let r of skeletonRows">      <div class="skeleton-header skeleton-box"></div>      <div class="skeleton-row">        <div class="skeleton-box"></div>        <div class="skeleton-box"></div>      </div>    </div>  </ng-container>  <ng-template #contentTpl>    <!-- MODO VISTA -->    <section *ngIf="!editing; else editTpl" class="education-card">      <ng-container *ngIf="hasEducationalInfo; else noInfoTpl">        <div class="education-row">          <div class="label">Sede / Unidad educativa</div>          <div class="value">            {{ educationalUser?.sede?.educational_unit?.name || \'Sin sede registrada\' }}          </div>        </div>        <div class="education-row">          <div class="label">Provincia / Cantón</div>          <div class="value">            <span *ngIf="educationalUser?.sede">              {{ educationalUser?.sede?.province_name || \'-\' }} /              {{ educationalUser?.sede?.canton_name || \'-\' }}            </span>            <span *ngIf="!educationalUser?.sede">-</span>          </div>        </div>        <div class="education-row">          <div class="label">Nivel educativo</div>          <div class="value">            {{ educationalUser?.educational_level?.name || \'No especificado\' }}          </div>        </div>        <div class="education-row">          <div class="label">Carrera</div>          <div class="value">            {{ educationalUser?.career?.name || \'Sin carrera\' }}          </div>        </div>        <div class="education-row">          <div class="label">Nivel actual</div>          <div class="value">            <ng-container *ngIf="educationalUser?.level; else noLevelTpl">              {{ educationalUser?.level }}              <span *ngIf="educationalUser?.educational_level?.period">                / {{ educationalUser?.educational_level?.period }}              </span>            </ng-container>            <ng-template #noLevelTpl> No especificado </ng-template>          </div>        </div>      </ng-container>      <ng-template #noInfoTpl>        <p class="empty-text">          Aún no has registrado tu información educativa. Haz clic en          <strong>"Completar información"</strong> para agregarla.        </p>      </ng-template>    </section>    <!-- MODO EDICIÓN -->    <ng-template #editTpl>      <section class="education-card">        <form [formGroup]="form" (ngSubmit)="onSubmit()">          <!-- Sede -->          <div class="form-row">            <label class="form-label" for="sede">              Sede / Unidad educativa <span class="required">*</span>            </label>            <select              id="sede"              class="form-control"              formControlName="sede_id"              (change)="onChangeSede($any($event.target).value)"            >              <option [ngValue]="null">Selecciona una sede</option>              <option *ngFor="let sede of sedes" [value]="sede.id">                {{ sede.educational_unit?.name || \'Unidad sin nombre\' }}                -                {{ sede.province_name || \'Provincia\' }}                /                {{ sede.canton_name || \'Cantón\' }}              </option>            </select>            <div class="error" *ngIf="hasError(\'sede_id\', \'required\')">              La sede es obligatoria.            </div>          </div>          <!-- Info extra de la sede -->          <div class="form-row hint" *ngIf="selectedSede?.educational_unit">            <div class="hint-title">              Unidad seleccionada:              <strong>{{ selectedSede?.educational_unit?.name }}</strong>            </div>          </div>          <!-- Carrera (solo si la sede tiene carreras) -->          <div class="form-row" *ngIf="availableCareers.length > 0">            <label class="form-label" for="career">              Carrera (opcional)            </label>            <select              id="career"              class="form-control"              formControlName="career_id"              (change)="onChangeCareer($any($event.target).value)"            >              <option [ngValue]="null">Sin carrera</option>              <option *ngFor="let career of availableCareers" [value]="career.id">                {{ career.name }} (máx. {{ career.max_semesters }} niveles)              </option>            </select>          </div>          <div class="form-row" *ngIf="selectedSede && availableCareers.length === 0">            <span class="hint">              Esta sede no tiene carreras registradas.            </span>          </div>          <!-- Nivel educativo -->          <div class="form-row">            <label class="form-label" for="educational_level">              Nivel educativo <span class="required">*</span>            </label>            <select              id="educational_level"              class="form-control"              formControlName="educational_level_id"              (change)="onChangeEducationalLevel($any($event.target).value)"            >              <option [ngValue]="null">Selecciona un nivel educativo</option>              <option                *ngFor="let level of availableEducationalLevels"                [value]="level.id"              >                {{ level.name }}                <ng-container *ngIf="level.max_periods && level.max_periods > 0">                  (máx. {{ level.max_periods }} niveles)                </ng-container>              </option>            </select>            <div class="error" *ngIf="hasError(\'educational_level_id\', \'required\')">              El nivel educativo es obligatorio.            </div>          </div>          <!-- Nivel actual (solo si hay maxLevelAllowed) -->          <div class="form-row" *ngIf="maxLevelAllowed">            <label class="form-label" for="level">              Nivel actual <span class="required">*</span>            </label>            <input              id="level"              type="number"              class="form-control"              formControlName="level"              [min]="1"              [max]="maxLevelAllowed || 1"              placeholder="Ej: 1, 2, 3..."            />            <div class="hint">              Debe estar entre <strong>1</strong> y              <strong>{{ maxLevelAllowed }}</strong>.                <span *ngIf="selectedEducationalLevel?.period">                ({{ selectedEducationalLevel?.period }})                </span>            </div>            <div class="error" *ngIf="hasError(\'level\', \'required\')">              El nivel es obligatorio.            </div>            <div class="error" *ngIf="hasError(\'level\', \'min\')">              El nivel mínimo permitido es 1.            </div>            <div class="error" *ngIf="hasError(\'level\', \'max\')">              El nivel máximo permitido es {{ maxLevelAllowed }}.            </div>          </div>          <!-- Botones -->          <div class="form-actions">            <button              type="button"              class="btn btn-secondary"              (click)="onCancel()"            >              Cancelar            </button>            <button              type="submit"              class="btn btn-primary"            >              Guardar cambios            </button>          </div>        </form>      </section>    </ng-template>  </ng-template>  <!-- MODAL DE CONFIRMACIÓN -->  <div class="modal-backdrop" *ngIf="confirmVisible">    <div class="modal">      <h2>Confirmar actualización</h2>      <p>        ¿Estás seguro de que deseas actualizar tu información educativa?      </p>      <div class="modal-actions">        <button          type="button"          class="btn btn-secondary"          (click)="confirmVisible = false"        >          Cancelar        </button>        <button          type="button"          class="btn btn-primary"          (click)="onConfirmUpdate()"        >          Sí, actualizar        </button>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'EducationComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'EducationComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

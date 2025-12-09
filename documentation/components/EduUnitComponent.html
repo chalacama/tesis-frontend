@@ -1,0 +1,2759 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  EduUnitComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-edu-unit</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../interfaces/Module.html" target="_self" >ReactiveFormsModule</a></code>
+                                <code><a href="../components/IconComponent.html" target="_self" >IconComponent</a></code>
+                                <code><a href="../components/LoadingBarComponent.html" target="_self" >LoadingBarComponent</a></code>
+                                <code><a href="../components/ToastComponent.html" target="_self" >ToastComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./edu-unit.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./edu-unit.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#currentPage" >currentPage</a>
+                            </li>
+                            <li>
+                                <a href="#deleteTarget" >deleteTarget</a>
+                            </li>
+                            <li>
+                                <a href="#dialogMode" >dialogMode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#filteredUnits" >filteredUnits</a>
+                            </li>
+                            <li>
+                                <a href="#filterForm" >filterForm</a>
+                            </li>
+                            <li>
+                                <a href="#levels" >levels</a>
+                            </li>
+                            <li>
+                                <a href="#loadingLevels" >loadingLevels</a>
+                            </li>
+                            <li>
+                                <a href="#loadingTable" >loadingTable</a>
+                            </li>
+                            <li>
+                                <a href="#meta" >meta</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#perPage" >perPage</a>
+                            </li>
+                            <li>
+                                <a href="#rows" >rows</a>
+                            </li>
+                            <li>
+                                <a href="#save" >save</a>
+                            </li>
+                            <li>
+                                <a href="#selectedUnit" >selectedUnit</a>
+                            </li>
+                            <li>
+                                <a href="#showDeleteDialog" >showDeleteDialog</a>
+                            </li>
+                            <li>
+                                <a href="#skeletonRows" >skeletonRows</a>
+                            </li>
+                            <li>
+                                <a href="#unitForm" >unitForm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#applyFilters" >applyFilters</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildForms" >buildForms</a>
+                            </li>
+                            <li>
+                                <a href="#cancelDelete" >cancelDelete</a>
+                            </li>
+                            <li>
+                                <a href="#closeUnitDialog" >closeUnitDialog</a>
+                            </li>
+                            <li>
+                                <a href="#confirmDelete" >confirmDelete</a>
+                            </li>
+                            <li>
+                                <a href="#goToNextPage" >goToNextPage</a>
+                            </li>
+                            <li>
+                                <a href="#goToPrevPage" >goToPrevPage</a>
+                            </li>
+                            <li>
+                                <a href="#hasUnitError" >hasUnitError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadLevels" >loadLevels</a>
+                            </li>
+                            <li>
+                                <a href="#loadPage" >loadPage</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#openCreateDialog" >openCreateDialog</a>
+                            </li>
+                            <li>
+                                <a href="#openDeleteDialog" >openDeleteDialog</a>
+                            </li>
+                            <li>
+                                <a href="#openEditDialog" >openEditDialog</a>
+                            </li>
+                            <li>
+                                <a href="#resetFilters" >resetFilters</a>
+                            </li>
+                            <li>
+                                <a href="#submitUnit" >submitUnit</a>
+                            </li>
+                            <li>
+                                <a href="#trackById" >trackById</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: FormBuilder, eduUnitService: <a href="../injectables/EduUnitService.html" target="_self">EduUnitService</a>, eduLevelService: <a href="../injectables/EduLevelService.html" target="_self">EduLevelService</a>, toast: <a href="../injectables/UiToastService.html" target="_self">UiToastService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:77</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                    <code>FormBuilder</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>eduUnitService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EduUnitService.html" target="_self" >EduUnitService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>eduLevelService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EduLevelService.html" target="_self" >EduLevelService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>toast</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UiToastService.html" target="_self" >UiToastService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyFilters"></a>
+                    <span class="name">
+                        <span ><b>applyFilters</b></span>
+                        <a href="#applyFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>applyFilters()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="167"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:167</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildForms"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildForms</b></span>
+                        <a href="#buildForms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildForms()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cancelDelete"></a>
+                    <span class="name">
+                        <span ><b>cancelDelete</b></span>
+                        <a href="#cancelDelete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cancelDelete()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="320"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:320</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeUnitDialog"></a>
+                    <span class="name">
+                        <span ><b>closeUnitDialog</b></span>
+                        <a href="#closeUnitDialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeUnitDialog()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="222"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:222</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmDelete"></a>
+                    <span class="name">
+                        <span ><b>confirmDelete</b></span>
+                        <a href="#confirmDelete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>confirmDelete()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="325"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:325</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToNextPage"></a>
+                    <span class="name">
+                        <span ><b>goToNextPage</b></span>
+                        <a href="#goToNextPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToNextPage()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:188</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToPrevPage"></a>
+                    <span class="name">
+                        <span ><b>goToPrevPage</b></span>
+                        <a href="#goToPrevPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToPrevPage()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="182"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:182</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasUnitError"></a>
+                    <span class="name">
+                        <span ><b>hasUnitError</b></span>
+                        <a href="#hasUnitError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasUnitError(controlName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="308"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:308</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>controlName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;required&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadLevels"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadLevels</b></span>
+                        <a href="#loadLevels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadLevels()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:111</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadPage"></a>
+                    <span class="name">
+                        <span ><b>loadPage</b></span>
+                        <a href="#loadPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadPage(page: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="132"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:132</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>page</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="86"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:86</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openCreateDialog"></a>
+                    <span class="name">
+                        <span ><b>openCreateDialog</b></span>
+                        <a href="#openCreateDialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openCreateDialog()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="196"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:196</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openDeleteDialog"></a>
+                    <span class="name">
+                        <span ><b>openDeleteDialog</b></span>
+                        <a href="#openDeleteDialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openDeleteDialog(unit: <a href="../interfaces/EduUnitAdmin.html" target="_self">EduUnitAdmin</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="315"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:315</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>unit</td>
+                                            <td>
+                                                            <code><a href="../interfaces/EduUnitAdmin.html" target="_self" >EduUnitAdmin</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openEditDialog"></a>
+                    <span class="name">
+                        <span ><b>openEditDialog</b></span>
+                        <a href="#openEditDialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openEditDialog(unit: <a href="../interfaces/EduUnitAdmin.html" target="_self">EduUnitAdmin</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="208"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:208</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>unit</td>
+                                            <td>
+                                                            <code><a href="../interfaces/EduUnitAdmin.html" target="_self" >EduUnitAdmin</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resetFilters"></a>
+                    <span class="name">
+                        <span ><b>resetFilters</b></span>
+                        <a href="#resetFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resetFilters()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:171</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitUnit"></a>
+                    <span class="name">
+                        <span ><b>submitUnit</b></span>
+                        <a href="#submitUnit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>submitUnit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:228</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackById"></a>
+                    <span class="name">
+                        <span ><b>trackById</b></span>
+                        <a href="#trackById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>trackById(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, item: <a href="../interfaces/EduUnitAdmin.html" target="_self">EduUnitAdmin</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="367"
+                                    class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:367</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>item</td>
+                                            <td>
+                                                            <code><a href="../interfaces/EduUnitAdmin.html" target="_self" >EduUnitAdmin</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentPage"></a>
+                    <span class="name">
+                        <span ><b>currentPage</b></span>
+                        <a href="#currentPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>1</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteTarget"></a>
+                    <span class="name">
+                        <span ><b>deleteTarget</b></span>
+                        <a href="#deleteTarget"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EduUnitAdmin | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dialogMode"></a>
+                    <span class="name">
+                        <span ><b>dialogMode</b></span>
+                        <a href="#dialogMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>&quot;create&quot; | &quot;edit&quot; | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Modal crear/editar</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filteredUnits"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>filteredUnits</b></span>
+                        <a href="#filteredUnits"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const units &#x3D; this.rows || [];
+    const selected &#x3D; (this.filterForm?.get(&#x27;educational_level_ids&#x27;)?.value ??
+      []) as (string | number)[];
+
+    if (!selected || selected.length &#x3D;&#x3D;&#x3D; 0) {
+      return units;
+    }
+
+    const ids &#x3D; selected
+      .map((v) &#x3D;&gt; Number(v))
+      .filter((v) &#x3D;&gt; !Number.isNaN(v));
+
+    if (ids.length &#x3D;&#x3D;&#x3D; 0) return units;
+
+    return units.filter((u) &#x3D;&gt;
+      u.educational_levels.some((lvl) &#x3D;&gt; ids.includes(lvl.id))
+    );
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Estado derivado: filas filtradas por educational_level_ids en el frontend</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterForm"></a>
+                    <span class="name">
+                        <span ><b>filterForm</b></span>
+                        <a href="#filterForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Formularios</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="levels"></a>
+                    <span class="name">
+                        <span ><b>levels</b></span>
+                        <a href="#levels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/EduLevel.html" target="_self" >EduLevel[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Niveles educativos para filtros y formularios</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingLevels"></a>
+                    <span class="name">
+                        <span ><b>loadingLevels</b></span>
+                        <a href="#loadingLevels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingTable"></a>
+                    <span class="name">
+                        <span ><b>loadingTable</b></span>
+                        <a href="#loadingTable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Skeleton de la tabla</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="meta"></a>
+                    <span class="name">
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EduUnitAdminMeta | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="perPage"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>perPage</b></span>
+                        <a href="#perPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rows"></a>
+                    <span class="name">
+                        <span ><b>rows</b></span>
+                        <a href="#rows"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EduUnitAdmin[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Datos de la tabla (respuesta index-admin)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="save"></a>
+                    <span class="name">
+                        <span ><b>save</b></span>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Barra de carga global para submits</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedUnit"></a>
+                    <span class="name">
+                        <span ><b>selectedUnit</b></span>
+                        <a href="#selectedUnit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EduUnitAdmin | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showDeleteDialog"></a>
+                    <span class="name">
+                        <span ><b>showDeleteDialog</b></span>
+                        <a href="#showDeleteDialog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Modal eliminar</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skeletonRows"></a>
+                    <span class="name">
+                        <span ><b>skeletonRows</b></span>
+                        <a href="#skeletonRows"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Array.from({ length: 6 })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="unitForm"></a>
+                    <span class="name">
+                        <span ><b>unitForm</b></span>
+                        <a href="#unitForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FormGroup</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/pages/private/studio/manage.setting/edu-unit/edu-unit.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, OnInit, computed, signal } from &#x27;@angular/core&#x27;;
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from &#x27;@angular/forms&#x27;;
+
+import { IconComponent } from &#x27;../../../../../shared/UI/components/button/icon/icon.component&#x27;;
+import { ToastComponent } from &#x27;../../../../../shared/UI/components/overlay/toast/toast.component&#x27;;
+import { LoadingBarComponent } from &#x27;../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component&#x27;;
+
+import {
+  EduUnitAdmin,
+  EduUnitAdminMeta,
+  EduUnitPayload,
+} from &#x27;../../../../../core/api/edu-unit/edu-unit.interface&#x27;;
+import { EduUnitService } from &#x27;../../../../../core/api/edu-unit/edu-unit.service&#x27;;
+
+import { EduLevel } from &#x27;../../../../../core/api/edu-level/edu-level.interface&#x27;;
+import { EduLevelService } from &#x27;../../../../../core/api/edu-level/edu-level.service&#x27;;
+
+import { UiToastService } from &#x27;../../../../../shared/services/ui-toast.service&#x27;;
+
+@Component({
+  selector: &#x27;app-edu-unit&#x27;,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, LoadingBarComponent, ToastComponent],
+  templateUrl: &#x27;./edu-unit.component.html&#x27;,
+  styleUrl: &#x27;./edu-unit.component.css&#x27;,
+})
+export class EduUnitComponent implements OnInit {
+  /** Barra de carga global para submits */
+  save &#x3D; false;
+
+  /** Skeleton de la tabla */
+  loadingTable &#x3D; true;
+  skeletonRows &#x3D; Array.from({ length: 6 });
+
+  /** Datos de la tabla (respuesta index-admin) */
+  rows: EduUnitAdmin[] &#x3D; [];
+  meta: EduUnitAdminMeta | null &#x3D; null;
+  currentPage &#x3D; 1;
+  readonly perPage &#x3D; 10;
+
+  /** Niveles educativos para filtros y formularios */
+  levels: EduLevel[] &#x3D; [];
+  loadingLevels &#x3D; true;
+
+  /** Formularios */
+  filterForm!: FormGroup;
+  unitForm!: FormGroup;
+
+  /** Modal crear/editar */
+  dialogMode: &#x27;create&#x27; | &#x27;edit&#x27; | null &#x3D; null;
+  selectedUnit: EduUnitAdmin | null &#x3D; null;
+
+  /** Modal eliminar */
+  showDeleteDialog &#x3D; false;
+  deleteTarget: EduUnitAdmin | null &#x3D; null;
+
+  /** Estado derivado: filas filtradas por educational_level_ids en el frontend */
+  readonly filteredUnits &#x3D; computed(() &#x3D;&gt; {
+    const units &#x3D; this.rows || [];
+    const selected &#x3D; (this.filterForm?.get(&#x27;educational_level_ids&#x27;)?.value ??
+      []) as (string | number)[];
+
+    if (!selected || selected.length &#x3D;&#x3D;&#x3D; 0) {
+      return units;
+    }
+
+    const ids &#x3D; selected
+      .map((v) &#x3D;&gt; Number(v))
+      .filter((v) &#x3D;&gt; !Number.isNaN(v));
+
+    if (ids.length &#x3D;&#x3D;&#x3D; 0) return units;
+
+    return units.filter((u) &#x3D;&gt;
+      u.educational_levels.some((lvl) &#x3D;&gt; ids.includes(lvl.id))
+    );
+  });
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly eduUnitService: EduUnitService,
+    private readonly eduLevelService: EduLevelService,
+    private readonly toast: UiToastService
+  ) {}
+
+  ngOnInit(): void {
+    this.buildForms();
+    this.loadLevels();
+    this.loadPage(1);
+  }
+
+  // ---------- Forms ----------
+
+  private buildForms() {
+    this.filterForm &#x3D; this.fb.group({
+      name: [&#x27;&#x27;],
+      organization_domain: [&#x27;&#x27;],
+      educational_level_ids: [[] as (string | number)[]], // solo para filtro (front)
+    });
+
+    this.unitForm &#x3D; this.fb.group({
+      name: [&#x27;&#x27;, [Validators.required, Validators.minLength(3)]],
+      organization_domain: [&#x27;&#x27;],
+      url_logo: [&#x27;&#x27;, [Validators.required]],
+      educational_level_ids: [[], [Validators.required]],
+    });
+  }
+
+  // ---------- Carga de datos ----------
+
+  private loadLevels() {
+    this.loadingLevels &#x3D; true;
+    this.eduLevelService.getAll().subscribe({
+      next: (levels) &#x3D;&gt; {
+        this.levels &#x3D; levels;
+        this.loadingLevels &#x3D; false;
+      },
+      error: (err) &#x3D;&gt; {
+        this.loadingLevels &#x3D; false;
+        const msg &#x3D;
+          err?.friendlyMessage ||
+          &#x27;Error al obtener los niveles educativos. Intenta nuevamente.&#x27;;
+        this.toast.add({
+          severity: &#x27;danger&#x27;,
+          summary: &#x27;Error&#x27;,
+          message: msg,
+        });
+      },
+    });
+  }
+
+  loadPage(page: number) {
+    this.loadingTable &#x3D; true;
+    this.currentPage &#x3D; page;
+
+    const { name, organization_domain } &#x3D; this.filterForm.value;
+
+    this.eduUnitService
+      .getAdmin({
+        page,
+        per_page: this.perPage,
+        name: name?.trim() || undefined,
+        organization_domain: organization_domain?.trim() || undefined,
+      })
+      .subscribe({
+        next: (res) &#x3D;&gt; {
+          this.rows &#x3D; res.data ?? [];
+          this.meta &#x3D; res.meta;
+          this.loadingTable &#x3D; false;
+        },
+        error: (err) &#x3D;&gt; {
+          this.loadingTable &#x3D; false;
+          const msg &#x3D;
+            err?.friendlyMessage ||
+            &#x27;Error al obtener las unidades educativas. Intenta nuevamente.&#x27;;
+          this.toast.add({
+            severity: &#x27;danger&#x27;,
+            summary: &#x27;Error&#x27;,
+            message: msg,
+          });
+        },
+      });
+  }
+
+  // ---------- Filtros ----------
+
+  applyFilters() {
+    this.loadPage(1);
+  }
+
+  resetFilters() {
+    this.filterForm.reset({
+      name: &#x27;&#x27;,
+      organization_domain: &#x27;&#x27;,
+      educational_level_ids: [],
+    });
+    this.loadPage(1);
+  }
+
+  // ---------- Paginación ----------
+
+  goToPrevPage() {
+    if (!this.meta) return;
+    if (this.meta.current_page &lt;&#x3D; 1) return;
+    this.loadPage(this.meta.current_page - 1);
+  }
+
+  goToNextPage() {
+    if (!this.meta) return;
+    if (this.meta.current_page &gt;&#x3D; this.meta.last_page) return;
+    this.loadPage(this.meta.current_page + 1);
+  }
+
+  // ---------- Modal Crear / Editar ----------
+
+  openCreateDialog() {
+    this.dialogMode &#x3D; &#x27;create&#x27;;
+    this.selectedUnit &#x3D; null;
+
+    this.unitForm.reset({
+      name: &#x27;&#x27;,
+      organization_domain: &#x27;&#x27;,
+      url_logo: &#x27;&#x27;,
+      educational_level_ids: [],
+    });
+  }
+
+  openEditDialog(unit: EduUnitAdmin) {
+    this.dialogMode &#x3D; &#x27;edit&#x27;;
+    this.selectedUnit &#x3D; unit;
+
+    const levelIds &#x3D; unit.educational_levels.map((lvl) &#x3D;&gt; lvl.id.toString());
+
+    this.unitForm.reset({
+      name: unit.name,
+      organization_domain: unit.organization_domain ?? &#x27;&#x27;,
+      url_logo: unit.url_logo ?? &#x27;&#x27;,
+      educational_level_ids: levelIds,
+    });
+  }
+
+  closeUnitDialog() {
+    this.dialogMode &#x3D; null;
+    this.selectedUnit &#x3D; null;
+    this.unitForm.reset();
+  }
+
+  submitUnit() {
+    if (this.unitForm.invalid) {
+      this.unitForm.markAllAsTouched();
+      return;
+    }
+
+    const raw &#x3D; this.unitForm.value;
+
+    let selectedIds &#x3D; (raw.educational_level_ids ??
+      []) as (string | number)[];
+    const educational_level_ids &#x3D; selectedIds
+      .map((v) &#x3D;&gt; Number(v))
+      .filter((v) &#x3D;&gt; !Number.isNaN(v));
+
+    if (!educational_level_ids.length) {
+      this.unitForm.get(&#x27;educational_level_ids&#x27;)?.setErrors({ required: true });
+      this.unitForm.get(&#x27;educational_level_ids&#x27;)?.markAsTouched();
+      return;
+    }
+
+    const payload: EduUnitPayload &#x3D; {
+      name: raw.name!.trim(),
+      url_logo: raw.url_logo!.trim(),
+      organization_domain: raw.organization_domain?.trim() || null,
+      educational_level_ids,
+    };
+
+    this.save &#x3D; true;
+
+    if (this.dialogMode &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) {
+      this.eduUnitService.create(payload).subscribe({
+        next: () &#x3D;&gt; {
+          this.save &#x3D; false;
+          this.toast.add({
+            severity: &#x27;primary&#x27;,
+            summary: &#x27;Unidad creada&#x27;,
+            message: &#x27;La unidad educativa se creó correctamente.&#x27;,
+          });
+          this.closeUnitDialog();
+          this.loadPage(this.currentPage);
+        },
+        error: (err) &#x3D;&gt; {
+          this.save &#x3D; false;
+          const msg &#x3D;
+            err?.friendlyMessage ||
+            &#x27;Error al crear la unidad educativa. Intenta nuevamente.&#x27;;
+          this.toast.add({
+            severity: &#x27;danger&#x27;,
+            summary: &#x27;Error&#x27;,
+            message: msg,
+          });
+        },
+      });
+    } else if (this.dialogMode &#x3D;&#x3D;&#x3D; &#x27;edit&#x27; &amp;&amp; this.selectedUnit) {
+      this.eduUnitService.update(this.selectedUnit.id, payload).subscribe({
+        next: () &#x3D;&gt; {
+          this.save &#x3D; false;
+          this.toast.add({
+            severity: &#x27;primary&#x27;,
+            summary: &#x27;Unidad actualizada&#x27;,
+            message: &#x27;La unidad educativa se actualizó correctamente.&#x27;,
+          });
+          this.closeUnitDialog();
+          this.loadPage(this.currentPage);
+        },
+        error: (err) &#x3D;&gt; {
+          this.save &#x3D; false;
+          const msg &#x3D;
+            err?.friendlyMessage ||
+            &#x27;Error al actualizar la unidad educativa. Intenta nuevamente.&#x27;;
+          this.toast.add({
+            severity: &#x27;danger&#x27;,
+            summary: &#x27;Error&#x27;,
+            message: msg,
+          });
+        },
+      });
+    }
+  }
+
+  hasUnitError(controlName: string, error &#x3D; &#x27;required&#x27;): boolean {
+    const ctrl &#x3D; this.unitForm.get(controlName);
+    return !!ctrl &amp;&amp; ctrl.touched &amp;&amp; ctrl.hasError(error);
+  }
+
+  // ---------- Modal Eliminar ----------
+
+  openDeleteDialog(unit: EduUnitAdmin) {
+    this.deleteTarget &#x3D; unit;
+    this.showDeleteDialog &#x3D; true;
+  }
+
+  cancelDelete() {
+    this.showDeleteDialog &#x3D; false;
+    this.deleteTarget &#x3D; null;
+  }
+
+  confirmDelete() {
+    if (!this.deleteTarget) return;
+
+    this.save &#x3D; true;
+
+    this.eduUnitService.delete(this.deleteTarget.id).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.save &#x3D; false;
+        this.showDeleteDialog &#x3D; false;
+
+        this.toast.add({
+          severity: &#x27;primary&#x27;,
+          summary: &#x27;Unidad eliminada&#x27;,
+          message:
+            res?.message || &#x27;La unidad educativa se eliminó correctamente.&#x27;,
+        });
+
+        this.deleteTarget &#x3D; null;
+        // Si la página actual se queda sin elementos, podríamos retroceder una página
+        this.loadPage(
+          this.meta &amp;&amp; this.meta.current_page &gt; 1 &amp;&amp; this.rows.length &#x3D;&#x3D;&#x3D; 1
+            ? this.meta.current_page - 1
+            : this.currentPage
+        );
+      },
+      error: (err) &#x3D;&gt; {
+        this.save &#x3D; false;
+        this.showDeleteDialog &#x3D; false;
+        const msg &#x3D;
+          err?.friendlyMessage ||
+          &#x27;Error al eliminar la unidad educativa. Intenta nuevamente.&#x27;;
+        this.toast.add({
+          severity: &#x27;danger&#x27;,
+          summary: &#x27;Error&#x27;,
+          message: msg,
+        });
+      },
+    });
+  }
+
+  // ---------- Util ----------
+
+  trackById(index: number, item: EduUnitAdmin) {
+    return item.id;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Barra de carga global para submits (store / update / delete) --&gt;
+&lt;ui-loading-bar
+  [visible]&#x3D;&quot;save&quot;
+  [mask]&#x3D;&quot;{ type: &#x27;dimmed&#x27; }&quot;
+&gt;&lt;/ui-loading-bar&gt;
+
+&lt;!-- Toast global --&gt;
+&lt;ui-toast&gt;&lt;/ui-toast&gt;
+
+&lt;div class&#x3D;&quot;edu-unit-page&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;header class&#x3D;&quot;edu-unit-header&quot;&gt;
+    &lt;div&gt;
+      &lt;h1 class&#x3D;&quot;page-title&quot;&gt;Unidades educativas&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;page-subtitle&quot;&gt;
+        Administra las instituciones, sus niveles educativos y sus usuarios
+        asociados.
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;button
+      type&#x3D;&quot;button&quot;
+      class&#x3D;&quot;btn btn-primary&quot;
+      (click)&#x3D;&quot;openCreateDialog()&quot;
+    &gt;
+      &lt;ui-icon
+        [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+        [severity]&#x3D;&quot;&#x27;contrast&#x27;&quot;
+        [svgPath]&#x3D;&quot;&#x27;svg/create.svg&#x27;&quot;
+      &gt;&lt;/ui-icon&gt;
+      &lt;span&gt;Nueva unidad&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/header&gt;
+
+  &lt;!-- Filtros --&gt;
+  &lt;section class&#x3D;&quot;card filters-card&quot;&gt;
+    &lt;form
+      class&#x3D;&quot;filters-form&quot;
+      [formGroup]&#x3D;&quot;filterForm&quot;
+      (ngSubmit)&#x3D;&quot;applyFilters()&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;filters-grid&quot;&gt;
+        &lt;div class&#x3D;&quot;filter-field&quot;&gt;
+          &lt;label for&#x3D;&quot;f-name&quot;&gt;Nombre&lt;/label&gt;
+          &lt;input
+            id&#x3D;&quot;f-name&quot;
+            type&#x3D;&quot;text&quot;
+            class&#x3D;&quot;dm-input&quot;
+            formControlName&#x3D;&quot;name&quot;
+            placeholder&#x3D;&quot;Buscar por nombre...&quot;
+          /&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;filter-field&quot;&gt;
+          &lt;label for&#x3D;&quot;f-domain&quot;&gt;Dominio&lt;/label&gt;
+          &lt;input
+            id&#x3D;&quot;f-domain&quot;
+            type&#x3D;&quot;text&quot;
+            class&#x3D;&quot;dm-input&quot;
+            formControlName&#x3D;&quot;organization_domain&quot;
+            placeholder&#x3D;&quot;ej. colegio.edu.ec&quot;
+          /&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;filter-field&quot;&gt;
+          &lt;label for&#x3D;&quot;f-levels&quot;&gt;Niveles educativos&lt;/label&gt;
+          &lt;select
+            id&#x3D;&quot;f-levels&quot;
+            multiple
+            class&#x3D;&quot;dm-select dm-select-multiple&quot;
+            formControlName&#x3D;&quot;educational_level_ids&quot;
+            [disabled]&#x3D;&quot;loadingLevels&quot;
+          &gt;
+            &lt;option
+              *ngFor&#x3D;&quot;let lvl of levels&quot;
+              [value]&#x3D;&quot;lvl.id&quot;
+            &gt;
+              {{ lvl.name }}
+            &lt;/option&gt;
+          &lt;/select&gt;
+          &lt;small class&#x3D;&quot;hint&quot;
+            &gt;Filtra por niveles solo en el resultado actual
+            (frontend).&lt;/small
+          &gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;filters-actions&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;resetFilters()&quot;
+        &gt;
+          Limpiar
+        &lt;/button&gt;
+        &lt;button type&#x3D;&quot;submit&quot; class&#x3D;&quot;btn btn-primary-outline&quot;&gt;
+          Aplicar filtros
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/section&gt;
+
+  &lt;!-- Tabla --&gt;
+  &lt;section class&#x3D;&quot;card table-card&quot;&gt;
+    &lt;div class&#x3D;&quot;table-header&quot;&gt;
+      &lt;h2 class&#x3D;&quot;table-title&quot;&gt;Listado administrativo&lt;/h2&gt;
+      &lt;p class&#x3D;&quot;table-subtitle&quot;&gt;
+        {{
+          meta
+            ? &#x27;Mostrando &#x27; +
+              (meta.from || 0) +
+              &#x27; - &#x27; +
+              (meta.to || 0) +
+              &#x27; de &#x27; +
+              meta.total +
+              &#x27; registros&#x27;
+            : &#x27; &#x27;
+        }}
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;table-wrapper&quot;&gt;
+      &lt;table class&#x3D;&quot;edu-table&quot;&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th class&#x3D;&quot;col-logo&quot;&gt;Logo&lt;/th&gt;
+            &lt;th class&#x3D;&quot;col-name&quot;&gt;Unidad educativa&lt;/th&gt;
+            &lt;th class&#x3D;&quot;col-levels&quot;&gt;Niveles educativos&lt;/th&gt;
+            &lt;th class&#x3D;&quot;col-count&quot;&gt;Sedes&lt;/th&gt;
+            &lt;th class&#x3D;&quot;col-count&quot;&gt;Usuarios&lt;/th&gt;
+            &lt;th class&#x3D;&quot;col-actions&quot;&gt;Acciones&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+
+        &lt;tbody&gt;
+          &lt;!-- Skeleton --&gt;
+          &lt;ng-container *ngIf&#x3D;&quot;loadingTable; else tableBody&quot;&gt;
+            &lt;tr *ngFor&#x3D;&quot;let s of skeletonRows&quot;&gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-logo&quot;&gt;&lt;/div&gt;
+              &lt;/td&gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-text&quot;&gt;&lt;/div&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-text-line&quot;&gt;&lt;/div&gt;
+              &lt;/td&gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-chips&quot;&gt;&lt;/div&gt;
+              &lt;/td&gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-count&quot;&gt;&lt;/div&gt;
+              &lt;/td&gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-count&quot;&gt;&lt;/div&gt;
+              &lt;/td&gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;skeleton-box skeleton-actions&quot;&gt;&lt;/div&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/ng-container&gt;
+
+          &lt;!-- Cuerpo real --&gt;
+          &lt;ng-template #tableBody&gt;
+            &lt;tr
+              *ngFor&#x3D;&quot;let unit of filteredUnits(); trackBy: trackById&quot;
+              class&#x3D;&quot;data-row&quot;
+            &gt;
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;logo-wrapper&quot;&gt;
+                  &lt;img
+                    *ngIf&#x3D;&quot;unit.url_logo; else noLogoTpl&quot;
+                    [src]&#x3D;&quot;unit.url_logo&quot;
+                    [alt]&#x3D;&quot;unit.name&quot;
+                    class&#x3D;&quot;logo-img&quot;
+                  /&gt;
+                  &lt;ng-template #noLogoTpl&gt;
+                    &lt;div class&#x3D;&quot;logo-placeholder&quot;&gt;
+                      {{ unit.name[0] | uppercase }}
+                    &lt;/div&gt;
+                  &lt;/ng-template&gt;
+                &lt;/div&gt;
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;unit-name&quot;&gt;{{ unit.name }}&lt;/div&gt;
+                &lt;div class&#x3D;&quot;unit-domain&quot; *ngIf&#x3D;&quot;unit.organization_domain; else noDom&quot;&gt;
+                  {{ unit.organization_domain }}
+                &lt;/div&gt;
+                &lt;ng-template #noDom&gt;
+                  &lt;span class&#x3D;&quot;unit-domain muted&quot;&gt;Sin dominio&lt;/span&gt;
+                &lt;/ng-template&gt;
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;level-chips&quot;&gt;
+                  &lt;span
+                    class&#x3D;&quot;chip&quot;
+                    *ngFor&#x3D;&quot;let lvl of unit.educational_levels&quot;
+                  &gt;
+                    {{ lvl.name }}
+                  &lt;/span&gt;
+                  &lt;span
+                    class&#x3D;&quot;chip chip-empty&quot;
+                    *ngIf&#x3D;&quot;unit.educational_levels.length &#x3D;&#x3D;&#x3D; 0&quot;
+                  &gt;
+                    Sin niveles
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                &lt;span class&#x3D;&quot;badge&quot;&gt;{{ unit.sedes_count }}&lt;/span&gt;
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                &lt;span class&#x3D;&quot;badge&quot;&gt;{{ unit.users_count }}&lt;/span&gt;
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                &lt;div class&#x3D;&quot;actions&quot;&gt;
+                  &lt;button
+                    type&#x3D;&quot;button&quot;
+                    class&#x3D;&quot;icon-button&quot;
+                    (click)&#x3D;&quot;openEditDialog(unit)&quot;
+                  &gt;
+                    &lt;ui-icon
+                      [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+                      [severity]&#x3D;&quot;&#x27;primary&#x27;&quot;
+                      [svgPath]&#x3D;&quot;&#x27;svg/rename.svg&#x27;&quot;
+                    &gt;&lt;/ui-icon&gt;
+                  &lt;/button&gt;
+
+                  &lt;button
+                    type&#x3D;&quot;button&quot;
+                    class&#x3D;&quot;icon-button danger&quot;
+                    (click)&#x3D;&quot;openDeleteDialog(unit)&quot;
+                  &gt;
+                    &lt;ui-icon
+                      [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+                      [severity]&#x3D;&quot;&#x27;danger&#x27;&quot;
+                      [svgPath]&#x3D;&quot;&#x27;svg/delete.svg&#x27;&quot;
+                    &gt;&lt;/ui-icon&gt;
+                  &lt;/button&gt;
+                &lt;/div&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+
+            &lt;tr *ngIf&#x3D;&quot;!filteredUnits().length &amp;&amp; !loadingTable&quot;&gt;
+              &lt;td colspan&#x3D;&quot;6&quot; class&#x3D;&quot;empty-state&quot;&gt;
+                No se encontraron unidades educativas con los filtros
+                actuales.
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/ng-template&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Paginación --&gt;
+    &lt;div class&#x3D;&quot;pagination-bar&quot; *ngIf&#x3D;&quot;meta&quot;&gt;
+      &lt;div class&#x3D;&quot;pagination-info&quot;&gt;
+        Página
+        &lt;strong&gt;{{ meta.current_page }}&lt;/strong&gt;
+        de
+        &lt;strong&gt;{{ meta.last_page }}&lt;/strong&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;pagination-controls&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;goToPrevPage()&quot;
+          [disabled]&#x3D;&quot;loadingTable || meta.current_page &lt;&#x3D; 1&quot;
+        &gt;
+          Anterior
+        &lt;/button&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;goToNextPage()&quot;
+          [disabled]&#x3D;&quot;
+            loadingTable || meta.current_page &gt;&#x3D; meta.last_page
+          &quot;
+        &gt;
+          Siguiente
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/div&gt;
+
+&lt;!-- Modal Crear/Editar --&gt;
+&lt;div class&#x3D;&quot;modal-backdrop&quot; *ngIf&#x3D;&quot;dialogMode&quot;&gt;
+  &lt;div class&#x3D;&quot;modal&quot;&gt;
+    &lt;header class&#x3D;&quot;modal-header&quot;&gt;
+      &lt;h2 class&#x3D;&quot;modal-title&quot;&gt;
+        {{ dialogMode &#x3D;&#x3D;&#x3D; &#x27;create&#x27; ? &#x27;Nueva unidad educativa&#x27; : &#x27;Editar unidad educativa&#x27; }}
+      &lt;/h2&gt;
+    &lt;/header&gt;
+
+    &lt;form
+      class&#x3D;&quot;modal-body&quot;
+      [formGroup]&#x3D;&quot;unitForm&quot;
+      (ngSubmit)&#x3D;&quot;submitUnit()&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;form-grid&quot;&gt;
+        &lt;div class&#x3D;&quot;form-field&quot;&gt;
+          &lt;label for&#x3D;&quot;u-name&quot;&gt;Nombre&lt;/label&gt;
+          &lt;input
+            id&#x3D;&quot;u-name&quot;
+            type&#x3D;&quot;text&quot;
+            class&#x3D;&quot;dm-input&quot;
+            formControlName&#x3D;&quot;name&quot;
+            placeholder&#x3D;&quot;Nombre de la institución&quot;
+          /&gt;
+          &lt;small
+            class&#x3D;&quot;field-error&quot;
+            *ngIf&#x3D;&quot;hasUnitError(&#x27;name&#x27;)&quot;
+          &gt;
+            El nombre es obligatorio (mínimo 3 caracteres).
+          &lt;/small&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;form-field&quot;&gt;
+          &lt;label for&#x3D;&quot;u-domain&quot;&gt;Dominio institucional&lt;/label&gt;
+          &lt;input
+            id&#x3D;&quot;u-domain&quot;
+            type&#x3D;&quot;text&quot;
+            class&#x3D;&quot;dm-input&quot;
+            formControlName&#x3D;&quot;organization_domain&quot;
+            placeholder&#x3D;&quot;ej. colegio.edu.ec (opcional)&quot;
+          /&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;form-field&quot;&gt;
+          &lt;label for&#x3D;&quot;u-logo&quot;&gt;URL del logo&lt;/label&gt;
+          &lt;input
+            id&#x3D;&quot;u-logo&quot;
+            type&#x3D;&quot;text&quot;
+            class&#x3D;&quot;dm-input&quot;
+            formControlName&#x3D;&quot;url_logo&quot;
+            placeholder&#x3D;&quot;https://...&quot;
+          /&gt;
+          &lt;small
+            class&#x3D;&quot;field-error&quot;
+            *ngIf&#x3D;&quot;hasUnitError(&#x27;url_logo&#x27;)&quot;
+          &gt;
+            La URL del logo es obligatoria.
+          &lt;/small&gt;
+
+          &lt;div class&#x3D;&quot;logo-preview&quot; *ngIf&#x3D;&quot;unitForm.get(&#x27;url_logo&#x27;)?.value&quot;&gt;
+            &lt;span&gt;Vista previa:&lt;/span&gt;
+            &lt;div class&#x3D;&quot;logo-wrapper&quot;&gt;
+              &lt;img
+                [src]&#x3D;&quot;unitForm.get(&#x27;url_logo&#x27;)?.value&quot;
+                alt&#x3D;&quot;Logo preview&quot;
+                class&#x3D;&quot;logo-img&quot;
+              /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;form-field&quot;&gt;
+          &lt;label for&#x3D;&quot;u-levels&quot;&gt;Niveles educativos&lt;/label&gt;
+          &lt;select
+            id&#x3D;&quot;u-levels&quot;
+            multiple
+            class&#x3D;&quot;dm-select dm-select-multiple&quot;
+            formControlName&#x3D;&quot;educational_level_ids&quot;
+          &gt;
+            &lt;option
+              *ngFor&#x3D;&quot;let lvl of levels&quot;
+              [value]&#x3D;&quot;lvl.id&quot;
+            &gt;
+              {{ lvl.name }}
+            &lt;/option&gt;
+          &lt;/select&gt;
+          &lt;small
+            class&#x3D;&quot;field-error&quot;
+            *ngIf&#x3D;&quot;hasUnitError(&#x27;educational_level_ids&#x27;)&quot;
+          &gt;
+            Debes seleccionar al menos un nivel educativo.
+          &lt;/small&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;footer class&#x3D;&quot;modal-footer&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn btn-secondary&quot;
+          (click)&#x3D;&quot;closeUnitDialog()&quot;
+        &gt;
+          Cancelar
+        &lt;/button&gt;
+        &lt;button
+          type&#x3D;&quot;submit&quot;
+          class&#x3D;&quot;btn btn-primary&quot;
+          [disabled]&#x3D;&quot;save&quot;
+        &gt;
+          {{ dialogMode &#x3D;&#x3D;&#x3D; &#x27;create&#x27; ? &#x27;Crear&#x27; : &#x27;Guardar cambios&#x27; }}
+        &lt;/button&gt;
+      &lt;/footer&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Modal Eliminar --&gt;
+&lt;div class&#x3D;&quot;modal-backdrop&quot; *ngIf&#x3D;&quot;showDeleteDialog&quot;&gt;
+  &lt;div class&#x3D;&quot;modal modal-sm&quot;&gt;
+    &lt;header class&#x3D;&quot;modal-header&quot;&gt;
+      &lt;h2 class&#x3D;&quot;modal-title&quot;&gt;Eliminar unidad educativa&lt;/h2&gt;
+    &lt;/header&gt;
+
+    &lt;div class&#x3D;&quot;modal-body&quot;&gt;
+      &lt;p class&#x3D;&quot;modal-text&quot;&gt;
+        ¿Estás seguro de eliminar
+        &lt;strong&gt;{{ deleteTarget?.name }}&lt;/strong&gt;?
+        Esta acción no se puede deshacer.
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;footer class&#x3D;&quot;modal-footer&quot;&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;btn btn-secondary&quot;
+        (click)&#x3D;&quot;cancelDelete()&quot;
+        [disabled]&#x3D;&quot;save&quot;
+      &gt;
+        Cancelar
+      &lt;/button&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;btn btn-danger&quot;
+        (click)&#x3D;&quot;confirmDelete()&quot;
+        [disabled]&#x3D;&quot;save&quot;
+      &gt;
+        Eliminar
+      &lt;/button&gt;
+    &lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Barra de carga global para submits (store / update / delete) --><ui-loading-bar  [visible]="save"  [mask]="{ type: \'dimmed\' }"></ui-loading-bar><!-- Toast global --><ui-toast></ui-toast><div class="edu-unit-page">  <!-- Header -->  <header class="edu-unit-header">    <div>      <h1 class="page-title">Unidades educativas</h1>      <p class="page-subtitle">        Administra las instituciones, sus niveles educativos y sus usuarios        asociados.      </p>    </div>    <button      type="button"      class="btn btn-primary"      (click)="openCreateDialog()"    >      <ui-icon        [size]="\'sm\'"        [severity]="\'contrast\'"        [svgPath]="\'svg/create.svg\'"      ></ui-icon>      <span>Nueva unidad</span>    </button>  </header>  <!-- Filtros -->  <section class="card filters-card">    <form      class="filters-form"      [formGroup]="filterForm"      (ngSubmit)="applyFilters()"    >      <div class="filters-grid">        <div class="filter-field">          <label for="f-name">Nombre</label>          <input            id="f-name"            type="text"            class="dm-input"            formControlName="name"            placeholder="Buscar por nombre..."          />        </div>        <div class="filter-field">          <label for="f-domain">Dominio</label>          <input            id="f-domain"            type="text"            class="dm-input"            formControlName="organization_domain"            placeholder="ej. colegio.edu.ec"          />        </div>        <div class="filter-field">          <label for="f-levels">Niveles educativos</label>          <select            id="f-levels"            multiple            class="dm-select dm-select-multiple"            formControlName="educational_level_ids"            [disabled]="loadingLevels"          >            <option              *ngFor="let lvl of levels"              [value]="lvl.id"            >              {{ lvl.name }}            </option>          </select>          <small class="hint"            >Filtra por niveles solo en el resultado actual            (frontend).</small          >        </div>      </div>      <div class="filters-actions">        <button          type="button"          class="btn btn-secondary"          (click)="resetFilters()"        >          Limpiar        </button>        <button type="submit" class="btn btn-primary-outline">          Aplicar filtros        </button>      </div>    </form>  </section>  <!-- Tabla -->  <section class="card table-card">    <div class="table-header">      <h2 class="table-title">Listado administrativo</h2>      <p class="table-subtitle">        {{          meta            ? \'Mostrando \' +              (meta.from || 0) +              \' - \' +              (meta.to || 0) +              \' de \' +              meta.total +              \' registros\'            : \' \'        }}      </p>    </div>    <div class="table-wrapper">      <table class="edu-table">        <thead>          <tr>            <th class="col-logo">Logo</th>            <th class="col-name">Unidad educativa</th>            <th class="col-levels">Niveles educativos</th>            <th class="col-count">Sedes</th>            <th class="col-count">Usuarios</th>            <th class="col-actions">Acciones</th>          </tr>        </thead>        <tbody>          <!-- Skeleton -->          <ng-container *ngIf="loadingTable; else tableBody">            <tr *ngFor="let s of skeletonRows">              <td>                <div class="skeleton-box skeleton-logo"></div>              </td>              <td>                <div class="skeleton-box skeleton-text"></div>                <div class="skeleton-box skeleton-text-line"></div>              </td>              <td>                <div class="skeleton-box skeleton-chips"></div>              </td>              <td>                <div class="skeleton-box skeleton-count"></div>              </td>              <td>                <div class="skeleton-box skeleton-count"></div>              </td>              <td>                <div class="skeleton-box skeleton-actions"></div>              </td>            </tr>          </ng-container>          <!-- Cuerpo real -->          <ng-template #tableBody>            <tr              *ngFor="let unit of filteredUnits(); trackBy: trackById"              class="data-row"            >              <td>                <div class="logo-wrapper">                  <img                    *ngIf="unit.url_logo; else noLogoTpl"                    [src]="unit.url_logo"                    [alt]="unit.name"                    class="logo-img"                  />                  <ng-template #noLogoTpl>                    <div class="logo-placeholder">                      {{ unit.name[0] | uppercase }}                    </div>                  </ng-template>                </div>              </td>              <td>                <div class="unit-name">{{ unit.name }}</div>                <div class="unit-domain" *ngIf="unit.organization_domain; else noDom">                  {{ unit.organization_domain }}                </div>                <ng-template #noDom>                  <span class="unit-domain muted">Sin dominio</span>                </ng-template>              </td>              <td>                <div class="level-chips">                  <span                    class="chip"                    *ngFor="let lvl of unit.educational_levels"                  >                    {{ lvl.name }}                  </span>                  <span                    class="chip chip-empty"                    *ngIf="unit.educational_levels.length === 0"                  >                    Sin niveles                  </span>                </div>              </td>              <td>                <span class="badge">{{ unit.sedes_count }}</span>              </td>              <td>                <span class="badge">{{ unit.users_count }}</span>              </td>              <td>                <div class="actions">                  <button                    type="button"                    class="icon-button"                    (click)="openEditDialog(unit)"                  >                    <ui-icon                      [size]="\'sm\'"                      [severity]="\'primary\'"                      [svgPath]="\'svg/rename.svg\'"                    ></ui-icon>                  </button>                  <button                    type="button"                    class="icon-button danger"                    (click)="openDeleteDialog(unit)"                  >                    <ui-icon                      [size]="\'sm\'"                      [severity]="\'danger\'"                      [svgPath]="\'svg/delete.svg\'"                    ></ui-icon>                  </button>                </div>              </td>            </tr>            <tr *ngIf="!filteredUnits().length && !loadingTable">              <td colspan="6" class="empty-state">                No se encontraron unidades educativas con los filtros                actuales.              </td>            </tr>          </ng-template>        </tbody>      </table>    </div>    <!-- Paginación -->    <div class="pagination-bar" *ngIf="meta">      <div class="pagination-info">        Página        <strong>{{ meta.current_page }}</strong>        de        <strong>{{ meta.last_page }}</strong>      </div>      <div class="pagination-controls">        <button          type="button"          class="btn btn-secondary"          (click)="goToPrevPage()"          [disabled]="loadingTable || meta.current_page <= 1"        >          Anterior        </button>        <button          type="button"          class="btn btn-secondary"          (click)="goToNextPage()"          [disabled]="            loadingTable || meta.current_page >= meta.last_page          "        >          Siguiente        </button>      </div>    </div>  </section></div><!-- Modal Crear/Editar --><div class="modal-backdrop" *ngIf="dialogMode">  <div class="modal">    <header class="modal-header">      <h2 class="modal-title">        {{ dialogMode === \'create\' ? \'Nueva unidad educativa\' : \'Editar unidad educativa\' }}      </h2>    </header>    <form      class="modal-body"      [formGroup]="unitForm"      (ngSubmit)="submitUnit()"    >      <div class="form-grid">        <div class="form-field">          <label for="u-name">Nombre</label>          <input            id="u-name"            type="text"            class="dm-input"            formControlName="name"            placeholder="Nombre de la institución"          />          <small            class="field-error"            *ngIf="hasUnitError(\'name\')"          >            El nombre es obligatorio (mínimo 3 caracteres).          </small>        </div>        <div class="form-field">          <label for="u-domain">Dominio institucional</label>          <input            id="u-domain"            type="text"            class="dm-input"            formControlName="organization_domain"            placeholder="ej. colegio.edu.ec (opcional)"          />        </div>        <div class="form-field">          <label for="u-logo">URL del logo</label>          <input            id="u-logo"            type="text"            class="dm-input"            formControlName="url_logo"            placeholder="https://..."          />          <small            class="field-error"            *ngIf="hasUnitError(\'url_logo\')"          >            La URL del logo es obligatoria.          </small>          <div class="logo-preview" *ngIf="unitForm.get(\'url_logo\')?.value">            <span>Vista previa:</span>            <div class="logo-wrapper">              <img                [src]="unitForm.get(\'url_logo\')?.value"                alt="Logo preview"                class="logo-img"              />            </div>          </div>        </div>        <div class="form-field">          <label for="u-levels">Niveles educativos</label>          <select            id="u-levels"            multiple            class="dm-select dm-select-multiple"            formControlName="educational_level_ids"          >            <option              *ngFor="let lvl of levels"              [value]="lvl.id"            >              {{ lvl.name }}            </option>          </select>          <small            class="field-error"            *ngIf="hasUnitError(\'educational_level_ids\')"          >            Debes seleccionar al menos un nivel educativo.          </small>        </div>      </div>      <footer class="modal-footer">        <button          type="button"          class="btn btn-secondary"          (click)="closeUnitDialog()"        >          Cancelar        </button>        <button          type="submit"          class="btn btn-primary"          [disabled]="save"        >          {{ dialogMode === \'create\' ? \'Crear\' : \'Guardar cambios\' }}        </button>      </footer>    </form>  </div></div><!-- Modal Eliminar --><div class="modal-backdrop" *ngIf="showDeleteDialog">  <div class="modal modal-sm">    <header class="modal-header">      <h2 class="modal-title">Eliminar unidad educativa</h2>    </header>    <div class="modal-body">      <p class="modal-text">        ¿Estás seguro de eliminar        <strong>{{ deleteTarget?.name }}</strong>?        Esta acción no se puede deshacer.      </p>    </div>    <footer class="modal-footer">      <button        type="button"        class="btn btn-secondary"        (click)="cancelDelete()"        [disabled]="save"      >        Cancelar      </button>      <button        type="button"        class="btn btn-danger"        (click)="confirmDelete()"        [disabled]="save"      >        Eliminar      </button>    </footer>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'EduUnitComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'EduUnitComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

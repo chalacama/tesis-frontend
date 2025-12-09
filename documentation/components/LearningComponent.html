@@ -1,0 +1,1981 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  LearningComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/learning/learning.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-learning</code></td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>RouterOutlet</code>
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../components/SearchComponent.html" target="_self" >SearchComponent</a></code>
+                                <code><a href="../components/NotificationComponent.html" target="_self" >NotificationComponent</a></code>
+                                <code><a href="../components/AvatarComponent.html" target="_self" >AvatarComponent</a></code>
+                                <code><a href="../components/ExploreComponent.html" target="_self" >ExploreComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./learning.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./learning.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#currentRoute" >currentRoute</a>
+                            </li>
+                            <li>
+                                <a href="#currentTheme" >currentTheme</a>
+                            </li>
+                            <li>
+                                <a href="#datosUsuario$" >datosUsuario$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#destroy$" >destroy$</a>
+                            </li>
+                            <li>
+                                <a href="#isdrawer" >isdrawer</a>
+                            </li>
+                            <li>
+                                <a href="#isMobile" >isMobile</a>
+                            </li>
+                            <li>
+                                <a href="#isProfileMenuOpen" >isProfileMenuOpen</a>
+                            </li>
+                            <li>
+                                <a href="#isSidebarClose" >isSidebarClose</a>
+                            </li>
+                            <li>
+                                <a href="#isSidebarCollapsed" >isSidebarCollapsed</a>
+                            </li>
+                            <li>
+                                <a href="#isTablet" >isTablet</a>
+                            </li>
+                            <li>
+                                <a href="#prefersDarkMode" >prefersDarkMode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#isTutor" >isTutor</a>
+                            </li>
+                            <li>
+                                <a href="#logoutAndRedirect" >logoutAndRedirect</a>
+                            </li>
+                            <li>
+                                <a href="#myPortfolio" >myPortfolio</a>
+                            </li>
+                            <li>
+                                <a href="#navigateTo" >navigateTo</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#onDocumentClick" >onDocumentClick</a>
+                            </li>
+                            <li>
+                                <a href="#switchTheme" >switchTheme</a>
+                            </li>
+                            <li>
+                                <a href="#toggleProfileMenu" >toggleProfileMenu</a>
+                            </li>
+                            <li>
+                                <a href="#toggleSidebar" >toggleSidebar</a>
+                            </li>
+                            <li>
+                                <a href="#viewPortfolio" >viewPortfolio</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>HostListeners</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#document:click" >document:click</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(themeService: <a href="../injectables/ThemeService.html" target="_self">ThemeService</a>, platformId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>, router: Router, authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, breakpointObserver: BreakpointObserver, renderer: Renderer2, appRef: ApplicationRef)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:37</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>themeService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ThemeService.html" target="_self" >ThemeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>platformId</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank" >Object</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>breakpointObserver</td>
+                                                  
+                                                        <td>
+                                                                    <code>BreakpointObserver</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>renderer</td>
+                                                  
+                                                        <td>
+                                                                    <code>Renderer2</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>appRef</td>
+                                                  
+                                                        <td>
+                                                                    <code>ApplicationRef</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-methods">
+    <h3>HostListeners</h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="document:click"></a>
+                    <span class="name">
+                        <span ><b>document:click</b></span>
+                        <a href="#document:click"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <i>Arguments : </i><code>'$event' </code>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>document:click(event: MouseEvent)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:174</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTutor"></a>
+                    <span class="name">
+                        <span ><b>isTutor</b></span>
+                        <a href="#isTutor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isTutor()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="192"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:192</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logoutAndRedirect"></a>
+                    <span class="name">
+                        <span ><b>logoutAndRedirect</b></span>
+                        <a href="#logoutAndRedirect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>logoutAndRedirect()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:152</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="myPortfolio"></a>
+                    <span class="name">
+                        <span ><b>myPortfolio</b></span>
+                        <a href="#myPortfolio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>myPortfolio()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="184"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:184</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="navigateTo"></a>
+                    <span class="name">
+                        <span ><b>navigateTo</b></span>
+                        <a href="#navigateTo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>navigateTo(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="125"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:125</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onDocumentClick"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>onDocumentClick</b></span>
+                        <a href="#onDocumentClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onDocumentClick(event: MouseEvent)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HostListener(&#x27;document:click&#x27;, [&#x27;$event&#x27;])<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:174</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>MouseEvent</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="switchTheme"></a>
+                    <span class="name">
+                        <span ><b>switchTheme</b></span>
+                        <a href="#switchTheme"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>switchTheme(theme: "light" | "dark" | "system")</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>theme</td>
+                                            <td>
+                                                        <code>&quot;light&quot; | &quot;dark&quot; | &quot;system&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleProfileMenu"></a>
+                    <span class="name">
+                        <span ><b>toggleProfileMenu</b></span>
+                        <a href="#toggleProfileMenu"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleProfileMenu()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="168"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:168</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleSidebar"></a>
+                    <span class="name">
+                        <span ><b>toggleSidebar</b></span>
+                        <a href="#toggleSidebar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleSidebar()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewPortfolio"></a>
+                    <span class="name">
+                        <span ><b>viewPortfolio</b></span>
+                        <a href="#viewPortfolio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>viewPortfolio(username: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">src/app/pages/private/learning/learning.component.ts:180</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>username</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentRoute"></a>
+                    <span class="name">
+                        <span ><b>currentRoute</b></span>
+                        <a href="#currentRoute"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentTheme"></a>
+                    <span class="name">
+                        <span ><b>currentTheme</b></span>
+                        <a href="#currentTheme"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>&quot;light&quot; | &quot;dark&quot; | &quot;system&quot;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;system&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="datosUsuario$"></a>
+                    <span class="name">
+                        <span ><b>datosUsuario$</b></span>
+                        <a href="#datosUsuario$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Observable&lt;User | null&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroy$"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>destroy$</b></span>
+                        <a href="#destroy$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subject&lt;void&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isdrawer"></a>
+                    <span class="name">
+                        <span ><b>isdrawer</b></span>
+                        <a href="#isdrawer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isMobile"></a>
+                    <span class="name">
+                        <span ><b>isMobile</b></span>
+                        <a href="#isMobile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isProfileMenuOpen"></a>
+                    <span class="name">
+                        <span ><b>isProfileMenuOpen</b></span>
+                        <a href="#isProfileMenuOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="166" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:166</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSidebarClose"></a>
+                    <span class="name">
+                        <span ><b>isSidebarClose</b></span>
+                        <a href="#isSidebarClose"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSidebarCollapsed"></a>
+                    <span class="name">
+                        <span ><b>isSidebarCollapsed</b></span>
+                        <a href="#isSidebarCollapsed"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTablet"></a>
+                    <span class="name">
+                        <span ><b>isTablet</b></span>
+                        <a href="#isTablet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prefersDarkMode"></a>
+                    <span class="name">
+                        <span ><b>prefersDarkMode</b></span>
+                        <a href="#prefersDarkMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/private/learning/learning.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApplicationRef, Component, inject, Inject, PLATFORM_ID, Renderer2 } from &#x27;@angular/core&#x27;;
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from &#x27;@angular/router&#x27;;
+import { ThemeService } from &#x27;../../../shared/services/theme.service&#x27;;
+import { CommonModule, isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import { filter, Observable, Subject, tap } from &#x27;rxjs&#x27;;
+import { AuthService } from &#x27;../../../core/api/auth/auth.service&#x27;;
+import { User } from &#x27;../../../core/api/auth/auth.interfaces&#x27;;
+import { BreakpointObserver, Breakpoints } from &#x27;@angular/cdk/layout&#x27;;
+import { takeUntil, map, first} from &#x27;rxjs/operators&#x27;;
+import { HostListener } from &#x27;@angular/core&#x27;;
+import { ViewChild, ElementRef } from &#x27;@angular/core&#x27;;
+import { debounceTime, distinctUntilChanged } from &#x27;rxjs/operators&#x27;;
+import { SearchComponent } from &#x27;../../../shared/UI/components/data/search/search.component&#x27;;
+import { NotificationComponent } from &#x27;../../../shared/UI/components/data/notification/notification.component&#x27;;
+import { AvatarComponent } from &#x27;../../../shared/UI/components/media/avatar/avatar.component&#x27;;
+import { ExploreComponent } from &#x27;../../../shared/UI/components/data/explore/explore.component&#x27;;
+@Component({
+  selector: &#x27;app-learning&#x27;,
+  imports: [RouterOutlet, CommonModule, 
+
+    SearchComponent, NotificationComponent , AvatarComponent, ExploreComponent
+  ],
+  templateUrl: &#x27;./learning.component.html&#x27;,
+  styleUrl: &#x27;./learning.component.css&#x27;
+})
+export class LearningComponent {
+  datosUsuario$!: Observable&lt;User | null&gt;;
+  currentTheme: &#x27;light&#x27; | &#x27;dark&#x27; | &#x27;system&#x27; &#x3D; &#x27;system&#x27;;
+  currentRoute: string &#x3D; &#x27;&#x27;;
+  isSidebarCollapsed &#x3D; false;
+  isSidebarClose &#x3D; true;
+  prefersDarkMode: boolean &#x3D; false;
+  isdrawer &#x3D; false;
+  isMobile &#x3D; false;
+  isTablet &#x3D; false;
+  private destroy$ &#x3D; new Subject&lt;void&gt;();
+private readonly route &#x3D; inject(ActivatedRoute);
+
+  constructor(
+    private themeService: ThemeService,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private authService: AuthService,
+    private breakpointObserver: BreakpointObserver,
+    private renderer: Renderer2,
+    private appRef : ApplicationRef
+  ) {
+    // this.router.events
+    //   .pipe(filter((event): event is NavigationEnd &#x3D;&gt; event instanceof NavigationEnd))
+    //   .subscribe((event: NavigationEnd) &#x3D;&gt; {
+    //     // Remove leading slash
+    //     this.currentRoute &#x3D; event.urlAfterRedirects.replace(/^\/+/, &#x27;&#x27;);
+    //   });
+    this.router.events
+ .pipe(filter((event): event is NavigationEnd &#x3D;&gt; event instanceof NavigationEnd))
+ .subscribe((event: NavigationEnd) &#x3D;&gt; {
+ // Remove leading slash
+ this.currentRoute &#x3D; event.urlAfterRedirects.replace(/^\/+/, &#x27;&#x27;);
+
+ // --- INICIO DE LA NUEVA LÓGICA ---
+ // Comprueba si la ruta actual comienza con &#x27;learning/course/&#x27;
+ if (this.currentRoute.startsWith(&#x27;learning/course/&#x27;)) {
+ // Si es una ruta de curso, fuerza el colapso del sidebar
+this.isSidebarCollapsed &#x3D; true;
+ } else {
+// Si NO es una ruta de curso, revierte al comportamiento por defecto
+ // (colapsado en tablet, abierto en PC)
+ // Usamos this.isTablet, que es actualizado por el BreakpointObserver
+ this.isSidebarCollapsed &#x3D; this.isTablet;
+ }
+ // --- FIN DE LA NUEVA LÓGICA ---
+});
+  }
+
+  
+  ngOnInit() {
+    
+
+    
+    
+
+    this.datosUsuario$ &#x3D; this.authService.currentUser;
+    this.currentTheme &#x3D; this.themeService.getCurrentTheme();
+    this.prefersDarkMode &#x3D; this.themeService.getSystemPrefersDark();
+
+    this.themeService.onSystemThemeChange((isDark) &#x3D;&gt; {
+      this.prefersDarkMode &#x3D; isDark;
+    });
+    
+
+    this.breakpointObserver
+      .observe([Breakpoints.Handset])
+      .pipe(
+        map(result &#x3D;&gt; result.matches),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(isMobile &#x3D;&gt; {
+        this.isMobile &#x3D; isMobile;
+        if (this.isMobile) {
+          /* this.isSidebarCollapsed &#x3D; true */;
+        }
+      });
+
+    this.breakpointObserver
+      .observe([Breakpoints.Tablet])
+      .pipe(
+        map(result &#x3D;&gt; result.matches),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(isTablet &#x3D;&gt; {
+        this.isTablet &#x3D; isTablet;
+        if (this.isTablet) {
+          this.isSidebarCollapsed &#x3D; true;
+        }
+      });
+    
+    this.appRef.isStable
+  .pipe(first(isStable &#x3D;&gt; isStable &#x3D;&#x3D;&#x3D; true))
+  .subscribe(() &#x3D;&gt; {
+    this.renderer.removeClass(document.body, &#x27;app-loading&#x27;);
+  });
+  
+
+  }
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
+  switchTheme(theme: &#x27;light&#x27; | &#x27;dark&#x27; | &#x27;system&#x27;) {
+    this.themeService.setTheme(theme);
+    this.currentTheme &#x3D; theme;
+    console.log(&#x27;Theme switched to:&#x27;, this.currentTheme);
+  }
+  toggleSidebar() {
+    if (this.isMobile &#x3D;&#x3D;&#x3D; false &amp;&amp; this.isTablet &#x3D;&#x3D;&#x3D; false) {
+      this.isSidebarCollapsed &#x3D; !this.isSidebarCollapsed;
+      console.log(&#x27;pc&#x27;);
+    } if (this.isMobile) {
+      this.isSidebarClose &#x3D; !this.isSidebarClose;
+      this.isdrawer &#x3D; !this.isdrawer;
+      console.log(&#x27;Movil&#x27;);
+    } else if (this.isTablet) {
+      this.isSidebarCollapsed &#x3D; !this.isSidebarCollapsed;
+      this.isdrawer &#x3D; !this.isdrawer;
+      console.log(&#x27;Tablet&#x27;);
+    }
+
+  }
+  /* closeSidebar() {
+    this.isSidebarClose &#x3D; ! this.isSidebarClose ;
+    console.log(this.isSidebarClose)
+  } */
+  logoutAndRedirect(): void {
+    this.authService.logout().subscribe({
+      next: () &#x3D;&gt; {
+        if (this.platformId &amp;&amp; typeof window !&#x3D;&#x3D; &#x27;undefined&#x27;) {
+          window.location.href &#x3D; &#x27;/auth&#x27;;
+        }
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;Error cerrando sesión:&#x27;, err);
+      }
+    });
+  }
+
+
+  isProfileMenuOpen &#x3D; false;
+
+toggleProfileMenu() {
+  this.isProfileMenuOpen &#x3D; !this.isProfileMenuOpen;
+}
+
+
+@HostListener(&#x27;document:click&#x27;, [&#x27;$event&#x27;])
+onDocumentClick(event: MouseEvent) {
+  const target &#x3D; event.target as HTMLElement;
+  if (!target.closest(&#x27;.profile-panel&#x27;)) {
+    this.isProfileMenuOpen &#x3D; false;
+  }
+}
+viewPortfolio(username: string) {
+    this.router.navigate([&#x27;/learning/portfolio/@&#x27;+username]);
+}
+
+myPortfolio() {
+    this.datosUsuario$.subscribe((user) &#x3D;&gt; {
+      if (user) {
+        this.router.navigate([&#x27;/learning/portfolio&#x27;,&#x27;@&#x27;+ user.username]);
+      }
+    });
+  }
+  
+  isTutor(): boolean {
+    return this.authService.hasRole(&#x27;tutor&#x27;) || this.authService.hasRole(&#x27;admin&#x27;);
+  }
+
+
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;content&quot; *ngIf&#x3D;&quot;datosUsuario$ | async as usuario&quot;&gt;
+    &lt;div (click)&#x3D;&quot;toggleSidebar()&quot; class&#x3D;&quot;drawer-bg&quot; *ngIf&#x3D;&quot;isdrawer&quot;&gt;
+
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;sidebar&quot; *ngIf&#x3D;&quot;!isSidebarClose || !isMobile&quot; [class.sidebar-mobile]&#x3D;&quot;!isSidebarClose&quot;
+        [class.collapsed]&#x3D;&quot;isSidebarCollapsed&quot;&gt;
+        &lt;div onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; class&#x3D;&quot;didebar-header&quot; (click)&#x3D;&quot;toggleSidebar()&quot;&gt;
+            &lt;div class&#x3D;&quot;content-logo&quot;&gt;
+                &lt;img class&#x3D;&quot;logo-digimentor&quot; src&#x3D;&quot;img\logo\png\lefth\digi-mentor-solo-buho.png&quot; alt&#x3D;&quot;DigiMentor&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;content-logo-label&quot; [class.content-logo-label-collapsed]&#x3D;&quot;isSidebarCollapsed&quot;&gt;
+                
+
+                &lt;div class&#x3D;&quot;content-digimentor-label&quot;&gt;
+                    &lt;img class&#x3D;&quot;digimentor-label&quot; src&#x3D;&quot;img\logo\png\digi-mentor-label.png&quot; alt&#x3D;&quot;DigiMentor&quot; /&gt;
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+            
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;content-search&quot;&gt;
+            &lt;button class&#x3D;&quot;button-search&quot;&gt;
+                &lt;svg class&#x3D;&quot;svgIcon icon-color&quot; viewBox&#x3D;&quot;0 0 512 512&quot; height&#x3D;&quot;1em&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot;&gt;
+                    &lt;path
+                        d&#x3D;&quot;M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z&quot;&gt;
+                    &lt;/path&gt;
+                &lt;/svg&gt;
+                &lt;div class&#x3D;&quot;label-navegation&quot;&gt;
+                    &lt;label for&#x3D;&quot;&quot;&gt;Explore&lt;/label&gt;
+                &lt;/div&gt;
+            &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;content-navegation&quot;&gt;
+            &lt;label onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; class&#x3D;&quot;navegation-route&quot; (click)&#x3D;&quot;navigateTo(&#x27;learning&#x27;)&quot;&gt;
+                &lt;input name&#x3D;&quot;page&quot; type&#x3D;&quot;radio&quot; [checked]&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning&#x27;&quot; /&gt;
+                &lt;div class&#x3D;&quot;icon-navegation&quot;&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute !&#x3D;&#x3D; &#x27;learning&#x27;&quot; class&#x3D;&quot;sng-icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;200&quot; height&#x3D;&quot;200&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;&lt;g fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;1.5&quot;&gt;&lt;path d&#x3D;&quot;M2 12.204c0-2.289 0-3.433.52-4.381c.518-.949 1.467-1.537 3.364-2.715l2-1.241C9.889 2.622 10.892 2 12 2c1.108 0 2.11.622 4.116 1.867l2 1.241c1.897 1.178 2.846 1.766 3.365 2.715c.519.948.519 2.092.519 4.38v1.522c0 3.9 0 5.851-1.172 7.063C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.212C2 19.576 2 17.626 2 13.725v-1.521Z&quot;/&gt;&lt;path stroke-linecap&#x3D;&quot;round&quot; d&#x3D;&quot;M12 15v3&quot;/&gt;&lt;/g&gt;&lt;/svg&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning&#x27;&quot; class&#x3D;&quot;sng-icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 21 20&quot; class&#x3D;&quot;icon home&quot;&gt;
+                        &lt;path fill&#x3D;&quot;inherit&quot;
+                            d&#x3D;&quot;M18.9999 6.01002L12.4499 0.770018C11.1699 -0.249982 9.16988 -0.259982 7.89988 0.760018L1.34988 6.01002C0.409885 6.76002 -0.160115 8.26002 0.0398848 9.44002L1.29988 16.98C1.58988 18.67 3.15988 20 4.86988 20H15.4699C17.1599 20 18.7599 18.64 19.0499 16.97L20.3099 9.43002C20.4899 8.26002 19.9199 6.76002 18.9999 6.01002ZM10.9199 16C10.9199 16.41 10.5799 16.75 10.1699 16.75C9.75988 16.75 9.41988 16.41 9.41988 16V13C9.41988 12.59 9.75988 12.25 10.1699 12.25C10.5799 12.25 10.9199 12.59 10.9199 13V16Z&quot;&gt;
+                        &lt;/path&gt;
+                    &lt;/svg&gt;
+                    &lt;span class&#x3D;&quot;underline&quot;&gt;&lt;/span&gt; &lt;!-- barra debajo del ícono --&gt;
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;label-navegation&quot;&gt;
+                    &lt;span class&#x3D;&quot;label-txt&quot;&gt;Home&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/label&gt;
+            &lt;label onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; class&#x3D;&quot;navegation-route&quot; (click)&#x3D;&quot;navigateTo(&#x27;learning/me/historial&#x27;)&quot;&gt;
+                &lt;input name&#x3D;&quot;page&quot; type&#x3D;&quot;radio&quot; [checked]&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/me/historial&#x27; || currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/me/guardados&#x27; || currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/me/completados&#x27; &quot; /&gt;
+                &lt;div class&#x3D;&quot;icon-navegation&quot;&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute !&#x3D;&#x3D; &#x27;learning/me/historial&#x27; &amp;&amp; currentRoute !&#x3D;&#x3D; &#x27;learning/me/guardados&#x27; &amp;&amp; currentRoute !&#x3D;&#x3D; &#x27;learning/me/completados&#x27; &quot; class&#x3D;&quot;sng-icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;&lt;path fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; stroke-linecap&#x3D;&quot;round&quot; stroke-linejoin&#x3D;&quot;round&quot; stroke-width&#x3D;&quot;1.5&quot; d&#x3D;&quot;m9 19l-5.21 1.737a.6.6 0 0 1-.79-.57V5.433a.6.6 0 0 1 .41-.569L9 3m0 16l6 2m-6-2V3m6 18l5.59-1.863a.6.6 0 0 0 .41-.57V3.832a.6.6 0 0 0-.79-.569L15 5m0 16V5m0 0L9 3&quot;/&gt;&lt;/svg&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/me/historial&#x27; || currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/me/guardados&#x27; || currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/me/completados&#x27; &quot; class&#x3D;&quot;sng-icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 16 16&quot;&gt;
+                        &lt;path fill&#x3D;&quot;inherit&quot; d&#x3D;&quot;m0 3l5-2v12l-5 2zM6 .5l5 3V15l-5-2.5zm6 3l4-3v12l-4 3z&quot; /&gt;
+                    &lt;/svg&gt;
+                    &lt;span class&#x3D;&quot;underline&quot;&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;label-navegation&quot;&gt;
+                    &lt;span class&#x3D;&quot;label-txt&quot;&gt;Trayectoria&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/label&gt;
+            &lt;label onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; class&#x3D;&quot;navegation-route&quot; (click)&#x3D;&quot;navigateTo(&#x27;learning/certification&#x27;)&quot;&gt;
+                &lt;input name&#x3D;&quot;page&quot; type&#x3D;&quot;radio&quot; [checked]&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/certification&#x27;&quot; /&gt;
+                &lt;div class&#x3D;&quot;icon-navegation&quot;&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute !&#x3D;&#x3D; &#x27;learning/certification&#x27;&quot; class&#x3D;&quot;sng-icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot;
+                        viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                        &lt;path fill&#x3D;&quot;currentColor&quot;
+                            d&#x3D;&quot;M2.06 14.68a1 1 0 0 0 .46.6l1.91 1.11v2.2a1 1 0 0 0 1 1h2.2l1.11 1.91a1 1 0 0 0 .86.5a1 1 0 0 0 .51-.14l1.9-1.1l1.91 1.1a1 1 0 0 0 1.37-.36l1.1-1.91h2.2a1 1 0 0 0 1-1v-2.2l1.91-1.11a1 1 0 0 0 .37-1.36L20.76 12l1.11-1.91a1 1 0 0 0-.37-1.36l-1.91-1.1v-2.2a1 1 0 0 0-1-1h-2.2l-1.1-1.91a1 1 0 0 0-.61-.46a1 1 0 0 0-.76.1L12 3.26l-1.9-1.1a1 1 0 0 0-1.36.36L7.63 4.43h-2.2a1 1 0 0 0-1 1v2.2l-1.9 1.1a1 1 0 0 0-.37 1.37l1.1 1.9l-1.1 1.91a1 1 0 0 0-.1.77zm3.22-3.17L4.39 10l1.55-.9a1 1 0 0 0 .49-.86V6.43h1.78a1 1 0 0 0 .87-.5L10 4.39l1.54.89a1 1 0 0 0 1 0l1.55-.89l.91 1.54a1 1 0 0 0 .87.5h1.77v1.78a1 1 0 0 0 .5.86l1.54.9l-.89 1.54a1 1 0 0 0 0 1l.89 1.54l-1.54.9a1 1 0 0 0-.5.86v1.78h-1.83a1 1 0 0 0-.86.5l-.89 1.54l-1.55-.89a1 1 0 0 0-1 0l-1.51.89l-.89-1.54a1 1 0 0 0-.87-.5H6.43v-1.78a1 1 0 0 0-.49-.81l-1.55-.9l.89-1.54a1 1 0 0 0 0-1.05z&quot; /&gt;
+                    &lt;/svg&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/certification&#x27;&quot; class&#x3D;&quot;sng-icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                        &lt;path fill&#x3D;&quot;inherit&quot;
+                            d&#x3D;&quot;M2.047 14.667a.992.992 0 0 0 .466.607l1.909 1.104v2.199a1 1 0 0 0 1 1h2.199l1.104 1.91a1.002 1.002 0 0 0 1.366.366L12 20.75l1.91 1.104a1.002 1.002 0 0 0 1.366-.366l1.103-1.909h2.199a1 1 0 0 0 1-1V16.38l1.909-1.104a.999.999 0 0 0 .366-1.366L20.75 12l1.104-1.909a1 1 0 0 0-.366-1.366l-1.909-1.104V5.422a1 1 0 0 0-1-1H16.38l-1.103-1.909a1.004 1.004 0 0 0-.607-.466a.994.994 0 0 0-.759.1L12 3.25l-1.909-1.104a.998.998 0 0 0-1.366.365l-1.104 1.91H5.422a1 1 0 0 0-1 1V7.62L2.513 8.725a1.001 1.001 0 0 0-.365 1.366L3.251 12l-1.104 1.909a1.003 1.003 0 0 0-.1.758z&quot; /&gt;
+                    &lt;/svg&gt;
+                    &lt;span class&#x3D;&quot;underline&quot;&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;label-navegation&quot;&gt;
+                    &lt;span class&#x3D;&quot;label-txt&quot;&gt;Certificaciones&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/label&gt;
+            &lt;!-- &lt;div *ngIf&#x3D;&quot;datosUsuario$ | async as usuario&quot;&gt;
+                    &lt;img class&#x3D;&quot;profile-photo&quot; [src]&#x3D;&quot;usuario.profile_picture_url&quot; alt&#x3D;&quot;profile&quot;&gt;
+                    &lt;div *ngIf&#x3D;&quot;usuario.profile_picture_url &#x3D;&#x3D;&#x3D; null&quot; class&#x3D;&quot;profile-photo-name&quot;&gt;
+                        &lt;label&gt;{{ usuario.name.charAt(0) | uppercase }}&lt;/label&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt; --&gt;
+            
+            &lt;label *ngIf&#x3D;&quot;isTutor()&quot;  onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; class&#x3D;&quot;navegation-route&quot; (click)&#x3D;&quot;viewPortfolio(usuario.username)&quot;&gt;
+
+                &lt;input name&#x3D;&quot;page&quot; type&#x3D;&quot;radio&quot;
+                    [checked]&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/portfolio/@&#x27; + usuario.username&quot; /&gt;
+                &lt;div class&#x3D;&quot;icon-navegation&quot;&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute !&#x3D;&#x3D; &#x27;learning/portfolio/@&#x27; + usuario.username&quot; class&#x3D;&quot;sng-icon&quot;
+                        xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                        &lt;g fill&#x3D;&quot;none&quot; fill-rule&#x3D;&quot;evenodd&quot;&gt;
+                            &lt;path
+                                d&#x3D;&quot;M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z&quot; /&gt;
+                            &lt;path fill&#x3D;&quot;currentColor&quot;
+                                d&#x3D;&quot;M12 2c5.523 0 10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33l.02.022l-.132.112A9.978 9.978 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.958 9.958 0 0 1 2 12C2 6.477 6.477 2 12 2Zm0 15c-1.86 0-3.541.592-4.793 1.405A7.965 7.965 0 0 0 12 20a7.965 7.965 0 0 0 4.793-1.595A8.897 8.897 0 0 0 12 17Zm0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4Zm0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z&quot; /&gt;
+                        &lt;/g&gt;
+                    &lt;/svg&gt;
+                    &lt;svg *ngIf&#x3D;&quot;currentRoute &#x3D;&#x3D;&#x3D; &#x27;learning/portfolio/@&#x27; + usuario.username&quot; class&#x3D;&quot;sng-icon&quot;
+                        xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                        &lt;g fill&#x3D;&quot;none&quot; fill-rule&#x3D;&quot;evenodd&quot;&gt;
+                            &lt;path
+                                d&#x3D;&quot;M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z&quot; /&gt;
+                            &lt;path fill&#x3D;&quot;currentColor&quot;
+                                d&#x3D;&quot;M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2ZM8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0Zm9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984Z&quot; /&gt;
+                        &lt;/g&gt;
+                    &lt;/svg&gt;
+                    &lt;span class&#x3D;&quot;underline&quot;&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;label-navegation&quot;&gt;
+                    &lt;span class&#x3D;&quot;label-txt&quot;&gt;Portafolio&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/label&gt;
+
+        &lt;/div&gt;
+        &lt;div onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot;  *ngIf&#x3D;&quot;isSidebarCollapsed&quot; class&#x3D;&quot;content-arrow&quot; (click)&#x3D;&quot;toggleSidebar()&quot;&gt;
+            &lt;svg xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;30&quot; height&#x3D;&quot;30&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path fill&#x3D;&quot;currentColor&quot; fill-rule&#x3D;&quot;evenodd&quot;
+                    d&#x3D;&quot;M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm8.293 2.293a1 1 0 1 0 1.414 1.414l3-3a1 1 0 0 0 0-1.414l-3-3a1 1 0 1 0-1.414 1.414L12.586 12l-2.293 2.293Z&quot;
+                    clip-rule&#x3D;&quot;evenodd&quot; /&gt;
+            &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; *ngIf&#x3D;&quot;!isSidebarCollapsed&quot; class&#x3D;&quot;content-arrow&quot; (click)&#x3D;&quot;toggleSidebar()&quot;&gt;
+            &lt;svg xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;30&quot; height&#x3D;&quot;30&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path fill&#x3D;&quot;currentColor&quot; fill-rule&#x3D;&quot;evenodd&quot;
+                    d&#x3D;&quot;M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm11.707-2.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 0 0 1.414-1.414L11.414 12l2.293-2.293Z&quot;
+                    clip-rule&#x3D;&quot;evenodd&quot; /&gt;
+            &lt;/svg&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;nav&quot; [class.nav-collapsed]&#x3D;&quot;isSidebarCollapsed&quot;&gt;
+        &lt;div class&#x3D;&quot;nav-left&quot;&gt;
+            &lt;div (click)&#x3D;&quot;toggleSidebar()&quot;&gt;
+
+                &lt;svg xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;40&quot; height&#x3D;&quot;40&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                    &lt;path fill&#x3D;&quot;currentColor&quot;
+                        d&#x3D;&quot;M4 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m0 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2z&quot; /&gt;
+                &lt;/svg&gt;
+
+            &lt;/div&gt;
+
+
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;nav-center&quot;&gt;
+
+            &lt;app-search&gt;&lt;/app-search&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;nav-right&quot;&gt;
+
+            &lt;div class&#x3D;&quot;explore-nav&quot;&gt;
+                &lt;app-explore&gt;   &lt;/app-explore&gt;
+            &lt;/div&gt;
+
+            &lt;div class&#x3D;&quot;noti-content&quot;&gt;
+                &lt;app-notification /&gt;
+            &lt;/div&gt;
+
+            &lt;div *ngIf&#x3D;&quot;datosUsuario$ | async as usuario&quot; class&#x3D;&quot;profile-panel&quot; 
+                style&#x3D;&quot;position: relative;&quot;&gt;
+                &lt;ui-avatar (click)&#x3D;&quot;toggleProfileMenu()&quot; [style]&#x3D;&quot;{cursor: &#x27;pointer&#x27;}&quot; [src]&#x3D;&quot;usuario.profile_picture_url || &#x27;&#x27;&quot; [name]&#x3D;&quot;usuario.name + &#x27; &#x27; + usuario.lastname&quot; severity&#x3D;&quot;primary&quot; size&#x3D;&quot;md&quot;
+                    &gt;
+                &lt;/ui-avatar&gt;
+
+                &lt;div *ngIf&#x3D;&quot;isProfileMenuOpen&quot; class&#x3D;&quot;profile-dropdown&quot;&gt;
+                    &lt;div&gt;
+                        &lt;div class&#x3D;&quot;dropdown_header&quot;&gt;
+                            &lt;div  class&#x3D;&quot;dropdown_header_left&quot;&gt;
+                                &lt;ui-avatar (click)&#x3D;&quot;toggleProfileMenu()&quot; [style]&#x3D;&quot;{cursor: &#x27;pointer&#x27;}&quot; [src]&#x3D;&quot;usuario.profile_picture_url || &#x27;&#x27;&quot; [name]&#x3D;&quot;usuario.name + &#x27; &#x27; + usuario.lastname&quot; severity&#x3D;&quot;primary&quot; size&#x3D;&quot;sm&quot;&gt;
+                                &lt;/ui-avatar&gt;
+                            &lt;/div&gt;
+                            &lt;div class&#x3D;&quot;dropdown_header_right&quot;&gt;
+                                &lt;div class&#x3D;&quot;dropdown_header_right_name&quot;&gt;
+                                    &lt;p&gt;{{ usuario.name }}&lt;/p&gt;
+                                    &lt;p&gt;{{ usuario.lastname }}&lt;/p&gt;
+                                &lt;/div&gt;
+                                &lt;div class&#x3D;&quot;dropdown_header_right_username&quot;&gt;
+                                    &lt;p&gt;&amp;commat;{{ usuario.username }}&lt;/p&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class&#x3D;&quot;dropdown_body&quot;&gt;
+                            &lt;div onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; (click)&#x3D;&quot;navigateTo(&#x27;learning/profile/information&#x27;)&quot; class&#x3D;&quot;dropdown_item&quot;&gt;
+                                &lt;div class&#x3D;&quot;dropdown_item_icon&quot;&gt;
+                                    &lt;svg class&#x3D;&quot;dropdown_icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                                        &lt;path fill&#x3D;&quot;currentColor&quot; fill-rule&#x3D;&quot;evenodd&quot;
+                                            d&#x3D;&quot;M4 4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 5c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m-8-5a3 3 0 1 1 6 0a3 3 0 0 1-6 0m2 4a3 3 0 0 0-3 2v.2c0 .1-.1.2 0 .2v.2c.3.2.6.4.9.4h6c.3 0 .6-.2.8-.4l.2-.2v-.2l-.1-.1A3 3 0 0 0 10 14H7.9Z&quot;
+                                            clip-rule&#x3D;&quot;evenodd&quot; /&gt;
+                                    &lt;/svg&gt;
+                                &lt;/div&gt;
+                                &lt;div class&#x3D;&quot;dropdown_item_label&quot;&gt;
+                                    &lt;p class&#x3D;&quot;dropdown_label&quot;&gt;Ver perfil&lt;/p&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;div *ngIf&#x3D;&quot;isTutor()&quot; onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; (click)&#x3D;&quot;myPortfolio()&quot; class&#x3D;&quot;dropdown_item&quot;&gt;
+                                &lt;div class&#x3D;&quot;dropdown_item_icon&quot;&gt;
+                                    &lt;svg class&#x3D;&quot;dropdown_icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;200&quot;
+                                        height&#x3D;&quot;200&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                                        &lt;g fill&#x3D;&quot;none&quot; fill-rule&#x3D;&quot;evenodd&quot;&gt;
+                                            &lt;path
+                                                d&#x3D;&quot;M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z&quot; /&gt;
+                                            &lt;path fill&#x3D;&quot;currentColor&quot;
+                                                d&#x3D;&quot;M12 2c5.523 0 10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33l.02.022l-.132.112A9.978 9.978 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.958 9.958 0 0 1 2 12C2 6.477 6.477 2 12 2Zm0 15c-1.86 0-3.541.592-4.793 1.405A7.965 7.965 0 0 0 12 20a7.965 7.965 0 0 0 4.793-1.595A8.897 8.897 0 0 0 12 17Zm0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4Zm0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z&quot; /&gt;
+                                        &lt;/g&gt;
+                                    &lt;/svg&gt;
+                                &lt;/div&gt;
+                                &lt;div class&#x3D;&quot;dropdown_item_label&quot;&gt;
+                                    &lt;p class&#x3D;&quot;dropdown_label&quot;&gt;Mi portafolio&lt;/p&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;div onkeydown&#x3D;&quot;if(event.key &#x3D;&#x3D;&#x3D; &#x27;Enter&#x27;){ this.click(); }&quot; tabindex&#x3D;&quot;0&quot; (click)&#x3D;&quot;logoutAndRedirect()&quot; class&#x3D;&quot;dropdown_item dropdown_item-border&quot;&gt;
+                                &lt;div class&#x3D;&quot;dropdown_item_icon&quot;&gt;
+                                    &lt;svg class&#x3D;&quot;dropdown_icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;200&quot;
+                                        height&#x3D;&quot;200&quot; viewBox&#x3D;&quot;0 0 1025 1024&quot;&gt;
+                                        &lt;path fill&#x3D;&quot;currentColor&quot;
+                                            d&#x3D;&quot;m1006.428 555l-163 200q-11 12-29.5 12.5t-32-7.5t-13.5-19V640h-128q-26 0-45-18.5t-19-45.5V448q0-27 19-45.5t45-18.5h128V284q0-12 13.5-20t32-7.5t29.5 12.5l163 199q18 18 18 43.5t-18 43.5zm-365.5-299q-26.5 0-45.5-19t-19-45.5t-18.5-45t-45.5-18.5h-320q-26 0-45 18.5t-19 45.5v640q0 26 19 45t45 19h320q27 0 45.5-19t18.5-45.5t19-45t45.5-18.5t45 18.5t18.5 45.5v64q0 53-37.5 90.5t-90.5 37.5h-448q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5h448q53 0 90.5 37.5t37.5 90.5v64q0 26-18.5 45t-45 19z&quot; /&gt;
+                                    &lt;/svg&gt;
+                                &lt;/div&gt;
+                                &lt;div class&#x3D;&quot;dropdown_item_label&quot;&gt;
+                                    &lt;p class&#x3D;&quot;dropdown_label&quot;&gt;Cerrar sesión&lt;/p&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;!-- &lt;div class&#x3D;&quot;dropdown_item&quot;&gt;
+                            &lt;div class&#x3D;&quot;dropdown_item_icon&quot;&gt;
+                                &lt;svg class&#x3D;&quot;dropdown_icon&quot; xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot; width&#x3D;&quot;200&quot; height&#x3D;&quot;200&quot; viewBox&#x3D;&quot;0 0 1025 1024&quot;&gt;&lt;path fill&#x3D;&quot;currentColor&quot; d&#x3D;&quot;m1006.428 555l-163 200q-11 12-29.5 12.5t-32-7.5t-13.5-19V640h-128q-26 0-45-18.5t-19-45.5V448q0-27 19-45.5t45-18.5h128V284q0-12 13.5-20t32-7.5t29.5 12.5l163 199q18 18 18 43.5t-18 43.5zm-365.5-299q-26.5 0-45.5-19t-19-45.5t-18.5-45t-45.5-18.5h-320q-26 0-45 18.5t-19 45.5v640q0 26 19 45t45 19h320q27 0 45.5-19t18.5-45.5t19-45t45.5-18.5t45 18.5t18.5 45.5v64q0 53-37.5 90.5t-90.5 37.5h-448q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5h448q53 0 90.5 37.5t37.5 90.5v64q0 26-18.5 45t-45 19z&quot;/&gt;&lt;/svg&gt;
+                            &lt;/div&gt;
+                            &lt;div class&#x3D;&quot;dropdown_item_label&quot;&gt;
+                                &lt;p class&#x3D;&quot;dropdown_label&quot;&gt;Aspecto&lt;/p&gt;
+                            &lt;/div&gt; 
+                            &lt;/div&gt; --&gt;
+
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;dropdown-footer&quot;&gt;
+                        &lt;div role&#x3D;&quot;radiogroup&quot; class&#x3D;&quot;theme-switcher&quot;&gt;
+                            &lt;button type&#x3D;&quot;button&quot; role&#x3D;&quot;radio&quot; data-theme-switcher&#x3D;&quot;true&quot;
+                                [attr.data-active]&#x3D;&quot;currentTheme &#x3D;&#x3D;&#x3D; &#x27;light&#x27;&quot;
+                                [attr.aria-checked]&#x3D;&quot;currentTheme &#x3D;&#x3D;&#x3D; &#x27;light&#x27;&quot; class&#x3D;&quot;theme-switcher_switch&quot;
+                                aria-label&#x3D;&quot;Switch to light theme&quot; (click)&#x3D;&quot;switchTheme(&#x27;light&#x27;)&quot;&gt;
+                                &lt;svg style&#x3D;&quot;color: currentcolor; width: 16px; height: 16px;&quot; width&#x3D;&quot;24&quot;
+                                    viewBox&#x3D;&quot;0 0 24 24&quot; stroke-width&#x3D;&quot;1.5&quot; stroke-linejoin&#x3D;&quot;round&quot;
+                                    stroke-linecap&#x3D;&quot;round&quot; stroke&#x3D;&quot;currentColor&quot; shape-rendering&#x3D;&quot;geometricPrecision&quot;
+                                    height&#x3D;&quot;24&quot; fill&#x3D;&quot;none&quot; data-testid&#x3D;&quot;geist-icon&quot; class&#x3D;&quot;icon&quot;&gt;
+                                    &lt;circle r&#x3D;&quot;5&quot; cy&#x3D;&quot;12&quot; cx&#x3D;&quot;12&quot;&gt;&lt;/circle&gt;
+                                    &lt;path d&#x3D;&quot;M12 1v2&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M12 21v2&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M4.22 4.22l1.42 1.42&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M18.36 18.36l1.42 1.42&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M1 12h2&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M21 12h2&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M4.22 19.78l1.42-1.42&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M18.36 5.64l1.42-1.42&quot;&gt;&lt;/path&gt;
+                                &lt;/svg&gt;
+                            &lt;/button&gt;
+                            &lt;button type&#x3D;&quot;button&quot; role&#x3D;&quot;radio&quot; data-theme-switcher&#x3D;&quot;true&quot;
+                                [attr.data-active]&#x3D;&quot;currentTheme &#x3D;&#x3D;&#x3D; &#x27;system&#x27;&quot;
+                                [attr.aria-checked]&#x3D;&quot;currentTheme &#x3D;&#x3D;&#x3D; &#x27;system&#x27;&quot; class&#x3D;&quot;theme-switcher_switch&quot;
+                                aria-label&#x3D;&quot;Switch to system theme&quot; (click)&#x3D;&quot;switchTheme(&#x27;system&#x27;)&quot;&gt;
+                                &lt;svg style&#x3D;&quot;color: currentcolor; width: 16px; height: 16px;&quot; width&#x3D;&quot;24&quot;
+                                    viewBox&#x3D;&quot;0 0 24 24&quot; stroke-width&#x3D;&quot;1.5&quot; stroke-linejoin&#x3D;&quot;round&quot;
+                                    stroke-linecap&#x3D;&quot;round&quot; stroke&#x3D;&quot;currentColor&quot; shape-rendering&#x3D;&quot;geometricPrecision&quot;
+                                    height&#x3D;&quot;24&quot; fill&#x3D;&quot;none&quot; data-testid&#x3D;&quot;geist-icon&quot; class&#x3D;&quot;icon&quot;&gt;
+                                    &lt;rect ry&#x3D;&quot;2&quot; rx&#x3D;&quot;2&quot; height&#x3D;&quot;14&quot; width&#x3D;&quot;20&quot; y&#x3D;&quot;3&quot; x&#x3D;&quot;2&quot;&gt;&lt;/rect&gt;
+                                    &lt;path d&#x3D;&quot;M8 21h8&quot;&gt;&lt;/path&gt;
+                                    &lt;path d&#x3D;&quot;M12 17v4&quot;&gt;&lt;/path&gt;
+                                &lt;/svg&gt;
+                            &lt;/button&gt;
+                            &lt;button type&#x3D;&quot;button&quot; role&#x3D;&quot;radio&quot; data-theme-switcher&#x3D;&quot;true&quot;
+                                [attr.data-active]&#x3D;&quot;currentTheme &#x3D;&#x3D;&#x3D; &#x27;dark&#x27;&quot;
+                                [attr.aria-checked]&#x3D;&quot;currentTheme &#x3D;&#x3D;&#x3D; &#x27;dark&#x27;&quot; class&#x3D;&quot;theme-switcher_switch&quot;
+                                aria-label&#x3D;&quot;Switch to dark theme&quot; (click)&#x3D;&quot;switchTheme(&#x27;dark&#x27;)&quot;&gt;
+                                &lt;svg style&#x3D;&quot;color: currentcolor; width: 16px; height: 16px;&quot; width&#x3D;&quot;24&quot;
+                                    viewBox&#x3D;&quot;0 0 24 24&quot; stroke-width&#x3D;&quot;1.5&quot; stroke-linejoin&#x3D;&quot;round&quot;
+                                    stroke-linecap&#x3D;&quot;round&quot; stroke&#x3D;&quot;currentColor&quot; shape-rendering&#x3D;&quot;geometricPrecision&quot;
+                                    height&#x3D;&quot;24&quot; fill&#x3D;&quot;none&quot; data-testid&#x3D;&quot;geist-icon&quot; class&#x3D;&quot;icon&quot;&gt;
+                                    &lt;path d&#x3D;&quot;M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z&quot;&gt;&lt;/path&gt;
+                                &lt;/svg&gt;
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+    &lt;div [class.content-main-collapsed]&#x3D;&quot;isSidebarCollapsed&quot; class&#x3D;&quot;content-main&quot;&gt;
+        &lt;router-outlet&gt;&lt;/router-outlet&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="content" *ngIf="datosUsuario$ | async as usuario">    <div (click)="toggleSidebar()" class="drawer-bg" *ngIf="isdrawer">    </div>    <div class="sidebar" *ngIf="!isSidebarClose || !isMobile" [class.sidebar-mobile]="!isSidebarClose"        [class.collapsed]="isSidebarCollapsed">        <div onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" class="didebar-header" (click)="toggleSidebar()">            <div class="content-logo">                <img class="logo-digimentor" src="img\logo\png\lefth\digi-mentor-solo-buho.png" alt="DigiMentor" />            </div>            <div class="content-logo-label" [class.content-logo-label-collapsed]="isSidebarCollapsed">                                <div class="content-digimentor-label">                    <img class="digimentor-label" src="img\logo\png\digi-mentor-label.png" alt="DigiMentor" />                </div>            </div>                    </div>        <div class="content-search">            <button class="button-search">                <svg class="svgIcon icon-color" viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg">                    <path                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm50.7-186.9L162.4 380.6c-19.4 7.5-38.5-11.6-31-31l55.5-144.3c3.3-8.5 9.9-15.1 18.4-18.4l144.3-55.5c19.4-7.5 38.5 11.6 31 31L325.1 306.7c-3.2 8.5-9.9 15.1-18.4 18.4zM288 256a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z">                    </path>                </svg>                <div class="label-navegation">                    <label for="">Explore</label>                </div>            </button>        </div>        <div class="content-navegation">            <label onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo(\'learning\')">                <input name="page" type="radio" [checked]="currentRoute === \'learning\'" />                <div class="icon-navegation">                    <svg *ngIf="currentRoute !== \'learning\'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12.204c0-2.289 0-3.433.52-4.381c.518-.949 1.467-1.537 3.364-2.715l2-1.241C9.889 2.622 10.892 2 12 2c1.108 0 2.11.622 4.116 1.867l2 1.241c1.897 1.178 2.846 1.766 3.365 2.715c.519.948.519 2.092.519 4.38v1.522c0 3.9 0 5.851-1.172 7.063C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.212C2 19.576 2 17.626 2 13.725v-1.521Z"/><path stroke-linecap="round" d="M12 15v3"/></g></svg>                    <svg *ngIf="currentRoute === \'learning\'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" class="icon home">                        <path fill="inherit"                            d="M18.9999 6.01002L12.4499 0.770018C11.1699 -0.249982 9.16988 -0.259982 7.89988 0.760018L1.34988 6.01002C0.409885 6.76002 -0.160115 8.26002 0.0398848 9.44002L1.29988 16.98C1.58988 18.67 3.15988 20 4.86988 20H15.4699C17.1599 20 18.7599 18.64 19.0499 16.97L20.3099 9.43002C20.4899 8.26002 19.9199 6.76002 18.9999 6.01002ZM10.9199 16C10.9199 16.41 10.5799 16.75 10.1699 16.75C9.75988 16.75 9.41988 16.41 9.41988 16V13C9.41988 12.59 9.75988 12.25 10.1699 12.25C10.5799 12.25 10.9199 12.59 10.9199 13V16Z">                        </path>                    </svg>                    <span class="underline"></span> <!-- barra debajo del ícono -->                </div>                <div class="label-navegation">                    <span class="label-txt">Home</span>                </div>            </label>            <label onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo(\'learning/me/historial\')">                <input name="page" type="radio" [checked]="currentRoute === \'learning/me/historial\' || currentRoute === \'learning/me/guardados\' || currentRoute === \'learning/me/completados\' " />                <div class="icon-navegation">                    <svg *ngIf="currentRoute !== \'learning/me/historial\' && currentRoute !== \'learning/me/guardados\' && currentRoute !== \'learning/me/completados\' " class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 19l-5.21 1.737a.6.6 0 0 1-.79-.57V5.433a.6.6 0 0 1 .41-.569L9 3m0 16l6 2m-6-2V3m6 18l5.59-1.863a.6.6 0 0 0 .41-.57V3.832a.6.6 0 0 0-.79-.569L15 5m0 16V5m0 0L9 3"/></svg>                    <svg *ngIf="currentRoute === \'learning/me/historial\' || currentRoute === \'learning/me/guardados\' || currentRoute === \'learning/me/completados\' " class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">                        <path fill="inherit" d="m0 3l5-2v12l-5 2zM6 .5l5 3V15l-5-2.5zm6 3l4-3v12l-4 3z" />                    </svg>                    <span class="underline"></span>                </div>                <div class="label-navegation">                    <span class="label-txt">Trayectoria</span>                </div>            </label>            <label onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" class="navegation-route" (click)="navigateTo(\'learning/certification\')">                <input name="page" type="radio" [checked]="currentRoute === \'learning/certification\'" />                <div class="icon-navegation">                    <svg *ngIf="currentRoute !== \'learning/certification\'" class="sng-icon" xmlns="http://www.w3.org/2000/svg"                        viewBox="0 0 24 24">                        <path fill="currentColor"                            d="M2.06 14.68a1 1 0 0 0 .46.6l1.91 1.11v2.2a1 1 0 0 0 1 1h2.2l1.11 1.91a1 1 0 0 0 .86.5a1 1 0 0 0 .51-.14l1.9-1.1l1.91 1.1a1 1 0 0 0 1.37-.36l1.1-1.91h2.2a1 1 0 0 0 1-1v-2.2l1.91-1.11a1 1 0 0 0 .37-1.36L20.76 12l1.11-1.91a1 1 0 0 0-.37-1.36l-1.91-1.1v-2.2a1 1 0 0 0-1-1h-2.2l-1.1-1.91a1 1 0 0 0-.61-.46a1 1 0 0 0-.76.1L12 3.26l-1.9-1.1a1 1 0 0 0-1.36.36L7.63 4.43h-2.2a1 1 0 0 0-1 1v2.2l-1.9 1.1a1 1 0 0 0-.37 1.37l1.1 1.9l-1.1 1.91a1 1 0 0 0-.1.77zm3.22-3.17L4.39 10l1.55-.9a1 1 0 0 0 .49-.86V6.43h1.78a1 1 0 0 0 .87-.5L10 4.39l1.54.89a1 1 0 0 0 1 0l1.55-.89l.91 1.54a1 1 0 0 0 .87.5h1.77v1.78a1 1 0 0 0 .5.86l1.54.9l-.89 1.54a1 1 0 0 0 0 1l.89 1.54l-1.54.9a1 1 0 0 0-.5.86v1.78h-1.83a1 1 0 0 0-.86.5l-.89 1.54l-1.55-.89a1 1 0 0 0-1 0l-1.51.89l-.89-1.54a1 1 0 0 0-.87-.5H6.43v-1.78a1 1 0 0 0-.49-.81l-1.55-.9l.89-1.54a1 1 0 0 0 0-1.05z" />                    </svg>                    <svg *ngIf="currentRoute === \'learning/certification\'" class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">                        <path fill="inherit"                            d="M2.047 14.667a.992.992 0 0 0 .466.607l1.909 1.104v2.199a1 1 0 0 0 1 1h2.199l1.104 1.91a1.002 1.002 0 0 0 1.366.366L12 20.75l1.91 1.104a1.002 1.002 0 0 0 1.366-.366l1.103-1.909h2.199a1 1 0 0 0 1-1V16.38l1.909-1.104a.999.999 0 0 0 .366-1.366L20.75 12l1.104-1.909a1 1 0 0 0-.366-1.366l-1.909-1.104V5.422a1 1 0 0 0-1-1H16.38l-1.103-1.909a1.004 1.004 0 0 0-.607-.466a.994.994 0 0 0-.759.1L12 3.25l-1.909-1.104a.998.998 0 0 0-1.366.365l-1.104 1.91H5.422a1 1 0 0 0-1 1V7.62L2.513 8.725a1.001 1.001 0 0 0-.365 1.366L3.251 12l-1.104 1.909a1.003 1.003 0 0 0-.1.758z" />                    </svg>                    <span class="underline"></span>                </div>                <div class="label-navegation">                    <span class="label-txt">Certificaciones</span>                </div>            </label>            <!-- <div *ngIf="datosUsuario$ | async as usuario">                    <img class="profile-photo" [src]="usuario.profile_picture_url" alt="profile">                    <div *ngIf="usuario.profile_picture_url === null" class="profile-photo-name">                        <label>{{ usuario.name.charAt(0) | uppercase }}</label>                    </div>                </div> -->                        <label *ngIf="isTutor()"  onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" class="navegation-route" (click)="viewPortfolio(usuario.username)">                <input name="page" type="radio"                    [checked]="currentRoute === \'learning/portfolio/@\' + usuario.username" />                <div class="icon-navegation">                    <svg *ngIf="currentRoute !== \'learning/portfolio/@\' + usuario.username" class="sng-icon"                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">                        <g fill="none" fill-rule="evenodd">                            <path                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />                            <path fill="currentColor"                                d="M12 2c5.523 0 10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33l.02.022l-.132.112A9.978 9.978 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.958 9.958 0 0 1 2 12C2 6.477 6.477 2 12 2Zm0 15c-1.86 0-3.541.592-4.793 1.405A7.965 7.965 0 0 0 12 20a7.965 7.965 0 0 0 4.793-1.595A8.897 8.897 0 0 0 12 17Zm0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4Zm0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z" />                        </g>                    </svg>                    <svg *ngIf="currentRoute === \'learning/portfolio/@\' + usuario.username" class="sng-icon"                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">                        <g fill="none" fill-rule="evenodd">                            <path                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />                            <path fill="currentColor"                                d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2ZM8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0Zm9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984Z" />                        </g>                    </svg>                    <span class="underline"></span>                </div>                <div class="label-navegation">                    <span class="label-txt">Portafolio</span>                </div>            </label>        </div>        <div onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0"  *ngIf="isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">                <path fill="currentColor" fill-rule="evenodd"                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm8.293 2.293a1 1 0 1 0 1.414 1.414l3-3a1 1 0 0 0 0-1.414l-3-3a1 1 0 1 0-1.414 1.414L12.586 12l-2.293 2.293Z"                    clip-rule="evenodd" />            </svg>        </div>        <div onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" *ngIf="!isSidebarCollapsed" class="content-arrow" (click)="toggleSidebar()">            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">                <path fill="currentColor" fill-rule="evenodd"                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12Zm11.707-2.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 0 0 1.414-1.414L11.414 12l2.293-2.293Z"                    clip-rule="evenodd" />            </svg>        </div>    </div>    <div class="nav" [class.nav-collapsed]="isSidebarCollapsed">        <div class="nav-left">            <div (click)="toggleSidebar()">                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">                    <path fill="currentColor"                        d="M4 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m0 6a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1m1 5a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2z" />                </svg>            </div>        </div>        <div class="nav-center">            <app-search></app-search>        </div>        <div class="nav-right">            <div class="explore-nav">                <app-explore>   </app-explore>            </div>            <div class="noti-content">                <app-notification />            </div>            <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel"                 style="position: relative;">                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: \'pointer\'}" [src]="usuario.profile_picture_url || \'\'" [name]="usuario.name + \' \' + usuario.lastname" severity="primary" size="md"                    >                </ui-avatar>                <div *ngIf="isProfileMenuOpen" class="profile-dropdown">                    <div>                        <div class="dropdown_header">                            <div  class="dropdown_header_left">                                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: \'pointer\'}" [src]="usuario.profile_picture_url || \'\'" [name]="usuario.name + \' \' + usuario.lastname" severity="primary" size="sm">                                </ui-avatar>                            </div>                            <div class="dropdown_header_right">                                <div class="dropdown_header_right_name">                                    <p>{{ usuario.name }}</p>                                    <p>{{ usuario.lastname }}</p>                                </div>                                <div class="dropdown_header_right_username">                                    <p>&commat;{{ usuario.username }}</p>                                </div>                            </div>                        </div>                        <div class="dropdown_body">                            <div onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" (click)="navigateTo(\'learning/profile/information\')" class="dropdown_item">                                <div class="dropdown_item_icon">                                    <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">                                        <path fill="currentColor" fill-rule="evenodd"                                            d="M4 4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 5c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m0 3c0-.6.4-1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1m-8-5a3 3 0 1 1 6 0a3 3 0 0 1-6 0m2 4a3 3 0 0 0-3 2v.2c0 .1-.1.2 0 .2v.2c.3.2.6.4.9.4h6c.3 0 .6-.2.8-.4l.2-.2v-.2l-.1-.1A3 3 0 0 0 10 14H7.9Z"                                            clip-rule="evenodd" />                                    </svg>                                </div>                                <div class="dropdown_item_label">                                    <p class="dropdown_label">Ver perfil</p>                                </div>                            </div>                            <div *ngIf="isTutor()" onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" (click)="myPortfolio()" class="dropdown_item">                                <div class="dropdown_item_icon">                                    <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"                                        height="200" viewBox="0 0 24 24">                                        <g fill="none" fill-rule="evenodd">                                            <path                                                d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z" />                                            <path fill="currentColor"                                                d="M12 2c5.523 0 10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33l.02.022l-.132.112A9.978 9.978 0 0 1 12 22c-2.95 0-5.6-1.277-7.43-3.307l-.2-.23l-.132-.11l.02-.024A9.958 9.958 0 0 1 2 12C2 6.477 6.477 2 12 2Zm0 15c-1.86 0-3.541.592-4.793 1.405A7.965 7.965 0 0 0 12 20a7.965 7.965 0 0 0 4.793-1.595A8.897 8.897 0 0 0 12 17Zm0-13a8 8 0 0 0-6.258 12.984C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984A8 8 0 0 0 12 4Zm0 2a4 4 0 1 1 0 8a4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4a2 2 0 0 0 0-4Z" />                                        </g>                                    </svg>                                </div>                                <div class="dropdown_item_label">                                    <p class="dropdown_label">Mi portafolio</p>                                </div>                            </div>                            <div onkeydown="if(event.key === \'Enter\'){ this.click(); }" tabindex="0" (click)="logoutAndRedirect()" class="dropdown_item dropdown_item-border">                                <div class="dropdown_item_icon">                                    <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200"                                        height="200" viewBox="0 0 1025 1024">                                        <path fill="currentColor"                                            d="m1006.428 555l-163 200q-11 12-29.5 12.5t-32-7.5t-13.5-19V640h-128q-26 0-45-18.5t-19-45.5V448q0-27 19-45.5t45-18.5h128V284q0-12 13.5-20t32-7.5t29.5 12.5l163 199q18 18 18 43.5t-18 43.5zm-365.5-299q-26.5 0-45.5-19t-19-45.5t-18.5-45t-45.5-18.5h-320q-26 0-45 18.5t-19 45.5v640q0 26 19 45t45 19h320q27 0 45.5-19t18.5-45.5t19-45t45.5-18.5t45 18.5t18.5 45.5v64q0 53-37.5 90.5t-90.5 37.5h-448q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5h448q53 0 90.5 37.5t37.5 90.5v64q0 26-18.5 45t-45 19z" />                                    </svg>                                </div>                                <div class="dropdown_item_label">                                    <p class="dropdown_label">Cerrar sesión</p>                                </div>                            </div>                            <!-- <div class="dropdown_item">                            <div class="dropdown_item_icon">                                <svg class="dropdown_icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1025 1024"><path fill="currentColor" d="m1006.428 555l-163 200q-11 12-29.5 12.5t-32-7.5t-13.5-19V640h-128q-26 0-45-18.5t-19-45.5V448q0-27 19-45.5t45-18.5h128V284q0-12 13.5-20t32-7.5t29.5 12.5l163 199q18 18 18 43.5t-18 43.5zm-365.5-299q-26.5 0-45.5-19t-19-45.5t-18.5-45t-45.5-18.5h-320q-26 0-45 18.5t-19 45.5v640q0 26 19 45t45 19h320q27 0 45.5-19t18.5-45.5t19-45t45.5-18.5t45 18.5t18.5 45.5v64q0 53-37.5 90.5t-90.5 37.5h-448q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5h448q53 0 90.5 37.5t37.5 90.5v64q0 26-18.5 45t-45 19z"/></svg>                            </div>                            <div class="dropdown_item_label">                                <p class="dropdown_label">Aspecto</p>                            </div>                             </div> -->                        </div>                    </div>                    <div class="dropdown-footer">                        <div role="radiogroup" class="theme-switcher">                            <button type="button" role="radio" data-theme-switcher="true"                                [attr.data-active]="currentTheme === \'light\'"                                [attr.aria-checked]="currentTheme === \'light\'" class="theme-switcher_switch"                                aria-label="Switch to light theme" (click)="switchTheme(\'light\')">                                <svg style="color: currentcolor; width: 16px; height: 16px;" width="24"                                    viewBox="0 0 24 24" stroke-width="1.5" stroke-linejoin="round"                                    stroke-linecap="round" stroke="currentColor" shape-rendering="geometricPrecision"                                    height="24" fill="none" data-testid="geist-icon" class="icon">                                    <circle r="5" cy="12" cx="12"></circle>                                    <path d="M12 1v2"></path>                                    <path d="M12 21v2"></path>                                    <path d="M4.22 4.22l1.42 1.42"></path>                                    <path d="M18.36 18.36l1.42 1.42"></path>                                    <path d="M1 12h2"></path>                                    <path d="M21 12h2"></path>                                    <path d="M4.22 19.78l1.42-1.42"></path>                                    <path d="M18.36 5.64l1.42-1.42"></path>                                </svg>                            </button>                            <button type="button" role="radio" data-theme-switcher="true"                                [attr.data-active]="currentTheme === \'system\'"                                [attr.aria-checked]="currentTheme === \'system\'" class="theme-switcher_switch"                                aria-label="Switch to system theme" (click)="switchTheme(\'system\')">                                <svg style="color: currentcolor; width: 16px; height: 16px;" width="24"                                    viewBox="0 0 24 24" stroke-width="1.5" stroke-linejoin="round"                                    stroke-linecap="round" stroke="currentColor" shape-rendering="geometricPrecision"                                    height="24" fill="none" data-testid="geist-icon" class="icon">                                    <rect ry="2" rx="2" height="14" width="20" y="3" x="2"></rect>                                    <path d="M8 21h8"></path>                                    <path d="M12 17v4"></path>                                </svg>                            </button>                            <button type="button" role="radio" data-theme-switcher="true"                                [attr.data-active]="currentTheme === \'dark\'"                                [attr.aria-checked]="currentTheme === \'dark\'" class="theme-switcher_switch"                                aria-label="Switch to dark theme" (click)="switchTheme(\'dark\')">                                <svg style="color: currentcolor; width: 16px; height: 16px;" width="24"                                    viewBox="0 0 24 24" stroke-width="1.5" stroke-linejoin="round"                                    stroke-linecap="round" stroke="currentColor" shape-rendering="geometricPrecision"                                    height="24" fill="none" data-testid="geist-icon" class="icon">                                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>                                </svg>                            </button>                        </div>                    </div>                </div>            </div>        </div>    </div>    <div [class.content-main-collapsed]="isSidebarCollapsed" class="content-main">        <router-outlet></router-outlet>    </div></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'LearningComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'LearningComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

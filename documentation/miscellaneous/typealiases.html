@@ -1,0 +1,1524 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-typealiases">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Type aliases</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#AcceptInvitationResponse" title="src/app/core/api/course/invitation.interface.ts" ><b>AcceptInvitationResponse</b>&nbsp;&nbsp;&nbsp;(src/.../invitation.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AcceptState" title="src/app/pages/public/accept/accept.component.ts" ><b>AcceptState</b>&nbsp;&nbsp;&nbsp;(src/.../accept.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AnswerForm" title="src/app/pages/private/studio/manage.course/module/chapter/question/question.component.ts" ><b>AnswerForm</b>&nbsp;&nbsp;&nbsp;(src/.../question.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AsistenciaEstablecimiento" title="src/app/core/api/profile/information.interface.ts" ><b>AsistenciaEstablecimiento</b>&nbsp;&nbsp;&nbsp;(src/.../information.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BtnTypes" title="src/app/shared/UI/interfaces/ui-button.interface.ts" ><b>BtnTypes</b>&nbsp;&nbsp;&nbsp;(src/.../ui-button.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CareerDeleteResponse" title="src/app/core/api/carrer/career.interface.ts" ><b>CareerDeleteResponse</b>&nbsp;&nbsp;&nbsp;(src/.../career.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CareerItemResponse" title="src/app/core/api/carrer/career.interface.ts" ><b>CareerItemResponse</b>&nbsp;&nbsp;&nbsp;(src/.../career.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CareerResponse" title="src/app/core/api/carrer/career.interface.ts" ><b>CareerResponse</b>&nbsp;&nbsp;&nbsp;(src/.../career.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CategoryDetailResponse" title="src/app/core/api/category/category.interface.ts" ><b>CategoryDetailResponse</b>&nbsp;&nbsp;&nbsp;(src/.../category.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CategoryListResponse" title="src/app/core/api/category/category.interface.ts" ><b>CategoryListResponse</b>&nbsp;&nbsp;&nbsp;(src/.../category.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ChapItem" title="src/app/pages/private/studio/manage.course/module/module.component.ts" ><b>ChapItem</b>&nbsp;&nbsp;&nbsp;(src/.../module.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ChapterItem" title="src/app/pages/private/learning/course/course.component.ts" ><b>ChapterItem</b>&nbsp;&nbsp;&nbsp;(src/.../course.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CheckboxType" title="src/app/shared/UI/directive/ui-checkbox.directive.ts" ><b>CheckboxType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-checkbox.directive.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CheckboxType" title="src/app/shared/UI/interfaces/ui-checkbox.interface.ts" ><b>CheckboxType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-checkbox.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CollaboratorSlot" title="src/app/core/api/course/invitation.interface.ts" ><b>CollaboratorSlot</b>&nbsp;&nbsp;&nbsp;(src/.../invitation.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ConfirmActionType" title="src/app/pages/private/studio/manage.course/invitation/invitation.component.ts" ><b>ConfirmActionType</b>&nbsp;&nbsp;&nbsp;(src/.../invitation.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DashboardScope" title="src/app/core/api/dashboard/panel.interfaces.ts" ><b>DashboardScope</b>&nbsp;&nbsp;&nbsp;(src/.../panel.interfaces.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DialogType" title="src/app/shared/UI/interfaces/ui-dialog.interface.ts" ><b>DialogType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-dialog.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Discapacidad" title="src/app/core/api/profile/information.interface.ts" ><b>Discapacidad</b>&nbsp;&nbsp;&nbsp;(src/.../information.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DiscapacidadPermanente" title="src/app/core/api/profile/information.interface.ts" ><b>DiscapacidadPermanente</b>&nbsp;&nbsp;&nbsp;(src/.../information.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EduLevelIndexResponse" title="src/app/core/api/edu-level/edu-level.interface.ts" ><b>EduLevelIndexResponse</b>&nbsp;&nbsp;&nbsp;(src/.../edu-level.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EduLevelSaveResponse" title="src/app/core/api/edu-level/edu-level.interface.ts" ><b>EduLevelSaveResponse</b>&nbsp;&nbsp;&nbsp;(src/.../edu-level.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EduUnitIndexResponse" title="src/app/core/api/edu-unit/edu-unit.interface.ts" ><b>EduUnitIndexResponse</b>&nbsp;&nbsp;&nbsp;(src/.../edu-unit.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EduUnitSaveResponse" title="src/app/core/api/edu-unit/edu-unit.interface.ts" ><b>EduUnitSaveResponse</b>&nbsp;&nbsp;&nbsp;(src/.../edu-unit.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EmptyBody" title="src/app/core/api/feedback/feedback.interface.ts" ><b>EmptyBody</b>&nbsp;&nbsp;&nbsp;(src/.../feedback.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EstadoCivil" title="src/app/core/api/profile/information.interface.ts" ><b>EstadoCivil</b>&nbsp;&nbsp;&nbsp;(src/.../information.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HistoryItem" title="src/app/core/api/history/history.interface.ts" ><b>HistoryItem</b>&nbsp;&nbsp;&nbsp;(src/.../history.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HistoryType" title="src/app/core/api/history/history.interface.ts" ><b>HistoryType</b>&nbsp;&nbsp;&nbsp;(src/.../history.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MaskingType" title="src/app/shared/UI/interfaces/ui-dialog.interface.ts" ><b>MaskingType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-dialog.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MeUser" title="src/app/pages/private/learning/course/comment/comment.component.ts" ><b>MeUser</b>&nbsp;&nbsp;&nbsp;(src/.../comment.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ModItem" title="src/app/pages/private/studio/manage.course/module/module.component.ts" ><b>ModItem</b>&nbsp;&nbsp;&nbsp;(src/.../module.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ModuleItem" title="src/app/pages/private/learning/course/course.component.ts" ><b>ModuleItem</b>&nbsp;&nbsp;&nbsp;(src/.../course.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#NotificationKey" title="src/app/core/api/notification/notification.interface.ts" ><b>NotificationKey</b>&nbsp;&nbsp;&nbsp;(src/.../notification.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PaginationParams" title="src/app/core/api/watching/comment.interface.ts" ><b>PaginationParams</b>&nbsp;&nbsp;&nbsp;(src/.../comment.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PopoverType" title="src/app/shared/UI/interfaces/ui-popover.interface.ts" ><b>PopoverType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-popover.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Primitive" title="src/app/shared/UI/components/form/select/select.component.ts" ><b>Primitive</b>&nbsp;&nbsp;&nbsp;(src/.../select.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#QEditForm" title="src/app/pages/private/studio/manage.course/module/chapter/question/question.component.ts" ><b>QEditForm</b>&nbsp;&nbsp;&nbsp;(src/.../question.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#QuestionFilters" title="src/app/core/api/chapter/chapter.interface.ts" ><b>QuestionFilters</b>&nbsp;&nbsp;&nbsp;(src/.../chapter.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#QuestionTypeKey" title="src/app/core/api/watching/test.interface.ts" ><b>QuestionTypeKey</b>&nbsp;&nbsp;&nbsp;(src/.../test.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RegisterCourseRequest" title="src/app/core/api/feedback/feedback.interface.ts" ><b>RegisterCourseRequest</b>&nbsp;&nbsp;&nbsp;(src/.../feedback.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ReplyState" title="src/app/pages/private/learning/course/comment/comment.component.ts" ><b>ReplyState</b>&nbsp;&nbsp;&nbsp;(src/.../comment.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SedeDeleteResponse" title="src/app/core/api/sede/sede.interface.ts" ><b>SedeDeleteResponse</b>&nbsp;&nbsp;&nbsp;(src/.../sede.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SedeItemResponse" title="src/app/core/api/sede/sede.interface.ts" ><b>SedeItemResponse</b>&nbsp;&nbsp;&nbsp;(src/.../sede.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SelectType" title="src/app/shared/UI/directive/ui-select.directive.ts" ><b>SelectType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-select.directive.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SelectType" title="src/app/shared/UI/interfaces/ui-select.interface.ts" ><b>SelectType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-select.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Sexo" title="src/app/core/api/profile/information.interface.ts" ><b>Sexo</b>&nbsp;&nbsp;&nbsp;(src/.../information.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TabKey" title="src/app/pages/private/studio/manage.course/module/chapter/chapter.component.ts" ><b>TabKey</b>&nbsp;&nbsp;&nbsp;(src/.../chapter.component.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ToggWType" title="src/app/shared/UI/interfaces/ui-toogle-witch.ts" ><b>ToggWType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-toogle-witch.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiCorner" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiCorner</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiFileFormat" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiFileFormat</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiFileType" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiFileType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiInputType" title="src/app/shared/UI/interfaces/ui-input-label.interface.ts" ><b>UiInputType</b>&nbsp;&nbsp;&nbsp;(src/.../ui-input-label.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiNeumorphism" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiNeumorphism</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiOrientation" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiOrientation</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiPosition" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiPosition</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiSeverity" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiSeverity</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiSize" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiSize</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiTypeBg" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiTypeBg</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UiVariant" title="src/app/shared/UI/interfaces/ui-presets.interface.ts" ><b>UiVariant</b>&nbsp;&nbsp;&nbsp;(src/.../ui-presets.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UserSort" title="src/app/core/api/user/user.interfaces.ts" ><b>UserSort</b>&nbsp;&nbsp;&nbsp;(src/.../user.interfaces.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#VisibleChangeEvent" title="src/app/shared/UI/directive/ui-dialog.directive.ts" ><b>VisibleChangeEvent</b>&nbsp;&nbsp;&nbsp;(src/.../ui-dialog.directive.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/app/core/api/course/invitation.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AcceptInvitationResponse"></a>
+                    <span class="name "><b>AcceptInvitationResponse</b><a href="#AcceptInvitationResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>AcceptInvitationUserNotFoundResponse | AcceptInvitationSuccessResponse</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CollaboratorSlot"></a>
+                    <span class="name "><b>CollaboratorSlot</b><a href="#CollaboratorSlot"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>CollaboratorUserSlot | CollaboratorInvitationSlot | null</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/public/accept/accept.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AcceptState"></a>
+                    <span class="name "><b>AcceptState</b><a href="#AcceptState"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;loading&quot; | &quot;success&quot; | &quot;user_not_found&quot; | &quot;error&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/private/studio/manage.course/module/chapter/question/question.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AnswerForm"></a>
+                    <span class="name "><b>AnswerForm</b><a href="#AnswerForm"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>FormGroup&lt;literal type&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="QEditForm"></a>
+                    <span class="name "><b>QEditForm</b><a href="#QEditForm"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>FormGroup&lt;literal type&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/profile/information.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AsistenciaEstablecimiento"></a>
+                    <span class="name "><b>AsistenciaEstablecimiento</b><a href="#AsistenciaEstablecimiento"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;si&quot; | &quot;no&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Discapacidad"></a>
+                    <span class="name "><b>Discapacidad</b><a href="#Discapacidad"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;si&quot; | &quot;no&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DiscapacidadPermanente"></a>
+                    <span class="name "><b>DiscapacidadPermanente</b><a href="#DiscapacidadPermanente"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;intelectual (retraso mental)&quot; | &quot;físico-motora (parálisis y amputaciones)&quot; | &quot;visual (ceguera)&quot; | &quot;auditiva (sordera)&quot; | &quot;mental (enfermedades psiquiátricas)&quot; | &quot;otro tipo&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EstadoCivil"></a>
+                    <span class="name "><b>EstadoCivil</b><a href="#EstadoCivil"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;casado/a&quot; | &quot;unido/a&quot; | &quot;separado/a&quot; | &quot;divorciado/a&quot; | &quot;viudo/a&quot; | &quot;soltero/a&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Sexo"></a>
+                    <span class="name "><b>Sexo</b><a href="#Sexo"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tipos auxiliares para campos de catálogo</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;masculino&quot; | &quot;femenino&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-button.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BtnTypes"></a>
+                    <span class="name "><b>BtnTypes</b><a href="#BtnTypes"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;button&quot; | &quot;submit&quot; | &quot;reset&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/carrer/career.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CareerDeleteResponse"></a>
+                    <span class="name "><b>CareerDeleteResponse</b><a href="#CareerDeleteResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta para destroy (no devuelve data)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CareerItemResponse"></a>
+                    <span class="name "><b>CareerItemResponse</b><a href="#CareerItemResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta para store / update: una sola carrera</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;Career&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CareerResponse"></a>
+                    <span class="name "><b>CareerResponse</b><a href="#CareerResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta para listado simple de carreras (index)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;Career[]&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/category/category.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CategoryDetailResponse"></a>
+                    <span class="name "><b>CategoryDetailResponse</b><a href="#CategoryDetailResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta para una sola categoría (store/update/show si lo tuvieras)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;Category&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CategoryListResponse"></a>
+                    <span class="name "><b>CategoryListResponse</b><a href="#CategoryListResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta para listado de categorías</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;Category[]&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/private/studio/manage.course/module/module.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ChapItem"></a>
+                    <span class="name "><b>ChapItem</b><a href="#ChapItem"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ModItem"></a>
+                    <span class="name "><b>ModItem</b><a href="#ModItem"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/private/learning/course/course.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ChapterItem"></a>
+                    <span class="name "><b>ChapterItem</b><a href="#ChapterItem"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ModuleItem"></a>
+                    <span class="name "><b>ModuleItem</b><a href="#ModuleItem"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/directive/ui-checkbox.directive.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CheckboxType"></a>
+                    <span class="name "><b>CheckboxType</b><a href="#CheckboxType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-checkbox.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CheckboxType"></a>
+                    <span class="name "><b>CheckboxType</b><a href="#CheckboxType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;row&quot; | &quot;column&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/private/studio/manage.course/invitation/invitation.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ConfirmActionType"></a>
+                    <span class="name "><b>ConfirmActionType</b><a href="#ConfirmActionType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;leave&quot; | &quot;change&quot; | &quot;deleteCollaborator&quot; | &quot;deleteOwner&quot; | &quot;cancelInvitation&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/dashboard/panel.interfaces.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DashboardScope"></a>
+                    <span class="name "><b>DashboardScope</b><a href="#DashboardScope"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;admin&quot; | &quot;tutor&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-dialog.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DialogType"></a>
+                    <span class="name "><b>DialogType</b><a href="#DialogType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;image&quot; | &quot;free&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MaskingType"></a>
+                    <span class="name "><b>MaskingType</b><a href="#MaskingType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;transparent&quot; | &quot;dimmed&quot; | &quot;blur&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/edu-level/edu-level.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EduLevelIndexResponse"></a>
+                    <span class="name "><b>EduLevelIndexResponse</b><a href="#EduLevelIndexResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta de index (ligero)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;EduLevel[]&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EduLevelSaveResponse"></a>
+                    <span class="name "><b>EduLevelSaveResponse</b><a href="#EduLevelSaveResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta de store / update: una sola entidad</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;EduLevel&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/edu-unit/edu-unit.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EduUnitIndexResponse"></a>
+                    <span class="name "><b>EduUnitIndexResponse</b><a href="#EduUnitIndexResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta de index (ligero)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;EduUnit[]&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EduUnitSaveResponse"></a>
+                    <span class="name "><b>EduUnitSaveResponse</b><a href="#EduUnitSaveResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Respuesta de store/update</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ApiResponse&lt;EduUnitWithLevels&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/feedback/feedback.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EmptyBody"></a>
+                    <span class="name "><b>EmptyBody</b><a href="#EmptyBody"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>Record&lt;string | never&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RegisterCourseRequest"></a>
+                    <span class="name "><b>RegisterCourseRequest</b><a href="#RegisterCourseRequest"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Inscripción SIN código (cursos públicos y activos)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/typealiases.html#EmptyBody" target="_self" >EmptyBody</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/history/history.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HistoryItem"></a>
+                    <span class="name "><b>HistoryItem</b><a href="#HistoryItem"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Unión “flexible”: puedes usar discriminación por response.type.
+Si prefieres, crea tres respuestas separadas por tipo.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/typealiases.html#HistoryItem" target="_self" >HistoryItemHistorial | HistoryItemGuardados | HistoryItemCompletados</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HistoryType"></a>
+                    <span class="name "><b>HistoryType</b><a href="#HistoryType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;historial&quot; | &quot;guardados&quot; | &quot;completados&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/private/learning/course/comment/comment.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MeUser"></a>
+                    <span class="name "><b>MeUser</b><a href="#MeUser"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ReplyState"></a>
+                    <span class="name "><b>ReplyState</b><a href="#ReplyState"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/notification/notification.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="NotificationKey"></a>
+                    <span class="name "><b>NotificationKey</b><a href="#NotificationKey"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;certificate.obtained&quot; | &quot;course.updated&quot; | &quot;course.new_content&quot; | &quot;course.commented&quot; | &quot;comment.replied&quot; | string</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/watching/comment.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PaginationParams"></a>
+                    <span class="name "><b>PaginationParams</b><a href="#PaginationParams"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Params de paginación</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-popover.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PopoverType"></a>
+                    <span class="name "><b>PopoverType</b><a href="#PopoverType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;pointer&quot; | &quot;plain&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/components/form/select/select.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Primitive"></a>
+                    <span class="name "><b>Primitive</b><a href="#Primitive"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>string | number | boolean | null | undefined</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/chapter/chapter.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="QuestionFilters"></a>
+                    <span class="name "><b>QuestionFilters</b><a href="#QuestionFilters"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/watching/test.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="QuestionTypeKey"></a>
+                    <span class="name "><b>QuestionTypeKey</b><a href="#QuestionTypeKey"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;single&quot; | &quot;multiple&quot; | null</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/sede/sede.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SedeDeleteResponse"></a>
+                    <span class="name "><b>SedeDeleteResponse</b><a href="#SedeDeleteResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>SedeApiBaseResponse&lt;void&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SedeItemResponse"></a>
+                    <span class="name "><b>SedeItemResponse</b><a href="#SedeItemResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>SedeApiBaseResponse&lt;SedeWithUsersCount&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/directive/ui-select.directive.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SelectType"></a>
+                    <span class="name "><b>SelectType</b><a href="#SelectType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;disappear&quot; | &quot;ifta&quot; | &quot;float&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-select.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SelectType"></a>
+                    <span class="name "><b>SelectType</b><a href="#SelectType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;disappear&quot; | &quot;ifta&quot; | &quot;float&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/pages/private/studio/manage.course/module/chapter/chapter.component.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TabKey"></a>
+                    <span class="name "><b>TabKey</b><a href="#TabKey"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;detail&quot; | &quot;content&quot; | &quot;test&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-toogle-witch.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ToggWType"></a>
+                    <span class="name "><b>ToggWType</b><a href="#ToggWType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;switch&quot; | &quot;button&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-presets.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiCorner"></a>
+                    <span class="name "><b>UiCorner</b><a href="#UiCorner"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;top-left&quot; | &quot;top-right&quot; | &quot;bottom-left&quot; | &quot;bottom-right&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiFileFormat"></a>
+                    <span class="name "><b>UiFileFormat</b><a href="#UiFileFormat"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;pdf&quot; | &quot;mp4&quot; | &quot;jpg&quot; | &quot;png&quot; | &quot;gif&quot; | &quot;webp&quot; | &quot;jpeg&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiFileType"></a>
+                    <span class="name "><b>UiFileType</b><a href="#UiFileType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;document&quot; | &quot;video&quot; | &quot;image&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiNeumorphism"></a>
+                    <span class="name "><b>UiNeumorphism</b><a href="#UiNeumorphism"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;flat&quot; | &quot;pressed&quot; | &quot;raised&quot; | &quot;convex&quot; | &quot;concave&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiOrientation"></a>
+                    <span class="name "><b>UiOrientation</b><a href="#UiOrientation"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;horizontal&quot; | &quot;vertical&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiPosition"></a>
+                    <span class="name "><b>UiPosition</b><a href="#UiPosition"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/typealiases.html#UiCorner" target="_self" >&quot;top&quot; | &quot;right&quot; | &quot;bottom&quot; | &quot;left&quot; | &quot;center&quot; | UiCorner</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiSeverity"></a>
+                    <span class="name "><b>UiSeverity</b><a href="#UiSeverity"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;primary&quot; | &quot;secondary&quot; | &quot;info&quot; | &quot;warn&quot; | &quot;help&quot; | &quot;danger&quot; | &quot;contrast&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiSize"></a>
+                    <span class="name "><b>UiSize</b><a href="#UiSize"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiTypeBg"></a>
+                    <span class="name "><b>UiTypeBg</b><a href="#UiTypeBg"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;solid&quot; | &quot;transparent&quot; | &quot;gradient&quot; | &quot;none&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiVariant"></a>
+                    <span class="name "><b>UiVariant</b><a href="#UiVariant"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;flat&quot; | &quot;filled&quot; | &quot;outlined&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/interfaces/ui-input-label.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UiInputType"></a>
+                    <span class="name "><b>UiInputType</b><a href="#UiInputType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;text&quot; | &quot;textarea&quot; | &quot;password&quot; | &quot;search&quot; | &quot;email&quot; | &quot;url&quot; | &quot;tel&quot; | &quot;number&quot; | &quot;range&quot; | &quot;date&quot; | &quot;datetime-local&quot; | &quot;month&quot; | &quot;week&quot; | &quot;time&quot; | &quot;checkbox&quot; | &quot;radio&quot; | &quot;select&quot; | &quot;file&quot; | &quot;image&quot; | &quot;color&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/core/api/user/user.interfaces.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UserSort"></a>
+                    <span class="name "><b>UserSort</b><a href="#UserSort"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Parámetros de filtro/orden para listar usuarios</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;recent&quot; | &quot;oldest&quot; | &quot;alpha_asc&quot; | &quot;alpha_desc&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/app/shared/UI/directive/ui-dialog.directive.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="VisibleChangeEvent"></a>
+                    <span class="name "><b>VisibleChangeEvent</b><a href="#VisibleChangeEvent"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-typealiases';
+            var COMPODOC_CURRENT_PAGE_URL = 'typealiases.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -159,7 +159,7 @@
 
             <div *ngIf="datosUsuario$ | async as usuario" class="profile-panel" 
                 style="position: relative;">
-                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url || ''" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
+                <ui-avatar (click)="toggleProfileMenu()" [style]="{cursor: 'pointer'}" [src]="usuario.profile_picture_url" [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="md"
                     >
                 </ui-avatar>
 

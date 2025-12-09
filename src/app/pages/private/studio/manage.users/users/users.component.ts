@@ -18,6 +18,7 @@ import { RoleItem } from '../../../../../core/api/user/role.interfaces';
 import { RoleService } from '../../../../../core/api/user/role.service';
 
 import { UiToastService } from '../../../../../shared/services/ui-toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -60,7 +61,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private roleService: RoleService,
-    private toast: UiToastService
+    private toast: UiToastService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -235,6 +237,9 @@ export class UsersComponent implements OnInit {
 
   getTotalPagesText(): string {
     return `${this.currentPage} / ${this.lastPage}`;
+  }
+  goToPorfolio(user: any) {
+    this.router.navigate([`/learning/portfolio/@${user.username}`]);
   }
 }
 

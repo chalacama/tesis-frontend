@@ -1,0 +1,1326 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  PortfolioComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/learning/portfolio/portfolio.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">host</td>
+                <td class="col-md-9"><code>{<br>}</code></td>
+            </tr>
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-portfolio</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                            <code>NgOptimizedImage</code>
+                                <code><a href="../components/IconComponent.html" target="_self" >IconComponent</a></code>
+                            <code>RouterLink</code>
+                            <code>RouterLinkActive</code>
+                            <code>RouterOutlet</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./portfolio.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./portfolio.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#avatarUrl" >avatarUrl</a>
+                            </li>
+                            <li>
+                                <a href="#canManage" >canManage</a>
+                            </li>
+                            <li>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#gmailChatUrl" >gmailChatUrl</a>
+                            </li>
+                            <li>
+                                <a href="#initials" >initials</a>
+                            </li>
+                            <li>
+                                <a href="#isAdmin" >isAdmin</a>
+                            </li>
+                            <li>
+                                <a href="#isOwner" >isOwner</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#portfolio" >portfolio</a>
+                            </li>
+                            <li>
+                                <a href="#verifiedByRole" >verifiedByRole</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#getGmailComposeUrl" >getGmailComposeUrl</a>
+                            </li>
+                            <li>
+                                <a href="#goToCourses" >goToCourses</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onSearchClick" >onSearchClick</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(router: Router, portfolioService: <a href="../injectables/PortfolioService.html" target="_self">PortfolioService</a>, route: ActivatedRoute, authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, portfolioBridge: <a href="../injectables/PortfolioBridgeService.html" target="_self">PortfolioBridgeService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:65</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                    <code>Router</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>portfolioService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PortfolioService.html" target="_self" >PortfolioService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>route</td>
+                                                  
+                                                        <td>
+                                                                    <code>ActivatedRoute</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>portfolioBridge</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PortfolioBridgeService.html" target="_self" >PortfolioBridgeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getGmailComposeUrl"></a>
+                    <span class="name">
+                        <span ><b>getGmailComposeUrl</b></span>
+                        <a href="#getGmailComposeUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getGmailComposeUrl(email: string | null | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="113"
+                                    class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:113</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Enlace directo a redactar correo en Gmail al dueño del portafolio</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>email</td>
+                                            <td>
+                                                        <code>string | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToCourses"></a>
+                    <span class="name">
+                        <span ><b>goToCourses</b></span>
+                        <a href="#goToCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToCourses()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSearchClick"></a>
+                    <span class="name">
+                        <span ><b>onSearchClick</b></span>
+                        <a href="#onSearchClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSearchClick()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:119</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Click en la lupa: por ahora abre un prompt y manda el término al bridge</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="avatarUrl"></a>
+                    <span class="name">
+                        <span ><b>avatarUrl</b></span>
+                        <a href="#avatarUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.portfolio()?.profile_picture_url || &#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canManage"></a>
+                    <span class="name">
+                        <span ><b>canManage</b></span>
+                        <a href="#canManage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.isOwner() || this.isAdmin())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="gmailChatUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>gmailChatUrl</b></span>
+                        <a href="#gmailChatUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;https://mail.google.com/chat/u/0/#chat/home&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initials"></a>
+                    <span class="name">
+                        <span ><b>initials</b></span>
+                        <a href="#initials"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const p &#x3D; this.portfolio();
+    if (!p) return &#x27;&#x27;;
+    const n &#x3D; &#x60;${p.name ?? &#x27;&#x27;} ${p.lastname ?? &#x27;&#x27;}&#x60;.trim();
+    return n
+      .split(&#x27; &#x27;)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(s &#x3D;&gt; s[0]?.toUpperCase() ?? &#x27;&#x27;)
+      .join(&#x27;&#x27;);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isAdmin"></a>
+                    <span class="name">
+                        <span ><b>isAdmin</b></span>
+                        <a href="#isAdmin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const user &#x3D; this.authService.getCurrentUser();
+    return !!user &amp;&amp; !!user.roles?.some(r &#x3D;&gt; r.name &#x3D;&#x3D;&#x3D; &#x27;admin&#x27;);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isOwner"></a>
+                    <span class="name">
+                        <span ><b>isOwner</b></span>
+                        <a href="#isOwner"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const user &#x3D; this.authService.getCurrentUser();
+    const viewed &#x3D; this.portfolio();
+    return !!user &amp;&amp; !!viewed &amp;&amp; user.username &#x3D;&#x3D;&#x3D; viewed.username;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="portfolio"></a>
+                    <span class="name">
+                        <span ><b>portfolio</b></span>
+                        <a href="#portfolio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Portfolio | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifiedByRole"></a>
+                    <span class="name">
+                        <span ><b>verifiedByRole</b></span>
+                        <a href="#verifiedByRole"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const p &#x3D; this.portfolio();
+    // Marca &quot;verificado&quot; para admin o tutor (ajústalo a tu lógica)
+    return !!p &amp;&amp; [&#x27;admin&#x27;, &#x27;tutor&#x27;].includes(p.role?.toLowerCase?.() ?? &#x27;&#x27;);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/pages/private/learning/portfolio/portfolio.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, computed, signal } from &#x27;@angular/core&#x27;;
+import { CommonModule, DatePipe, NgOptimizedImage } from &#x27;@angular/common&#x27;;
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from &#x27;@angular/router&#x27;;
+
+import { PortfolioService } from &#x27;../../../../core/api/profile/portfolio.service&#x27;;
+import { AuthService } from &#x27;../../../../core/api/auth/auth.service&#x27;;
+import { Portfolio } from &#x27;../../../../core/api/profile/portfolio.interface&#x27;;
+import { IconComponent } from &#x27;../../../../shared/UI/components/button/icon/icon.component&#x27;;
+import { PortfolioBridgeService } from &#x27;../../../../core/api/profile/portfolio-bridge.service&#x27;;
+
+@Component({
+  selector: &#x27;app-portfolio&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    NgOptimizedImage,
+    IconComponent,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet
+  ],
+  templateUrl: &#x27;./portfolio.component.html&#x27;,
+  styleUrl: &#x27;./portfolio.component.css&#x27;,
+  host: { class: &#x27;portfolio-page&#x27; }
+})
+export class PortfolioComponent implements OnInit {
+  portfolio &#x3D; signal&lt;Portfolio | null&gt;(null);
+  loading &#x3D; signal(true);
+  error &#x3D; signal&lt;string | null&gt;(null);
+
+  // Derivados útiles
+  isOwner &#x3D; computed(() &#x3D;&gt; {
+    const user &#x3D; this.authService.getCurrentUser();
+    const viewed &#x3D; this.portfolio();
+    return !!user &amp;&amp; !!viewed &amp;&amp; user.username &#x3D;&#x3D;&#x3D; viewed.username;
+  });
+
+  isAdmin &#x3D; computed(() &#x3D;&gt; {
+    const user &#x3D; this.authService.getCurrentUser();
+    return !!user &amp;&amp; !!user.roles?.some(r &#x3D;&gt; r.name &#x3D;&#x3D;&#x3D; &#x27;admin&#x27;);
+  });
+
+  canManage &#x3D; computed(() &#x3D;&gt; this.isOwner() || this.isAdmin());
+
+  // UI helpers
+  verifiedByRole &#x3D; computed(() &#x3D;&gt; {
+    const p &#x3D; this.portfolio();
+    // Marca &quot;verificado&quot; para admin o tutor (ajústalo a tu lógica)
+    return !!p &amp;&amp; [&#x27;admin&#x27;, &#x27;tutor&#x27;].includes(p.role?.toLowerCase?.() ?? &#x27;&#x27;);
+  });
+
+  avatarUrl &#x3D; computed(() &#x3D;&gt; this.portfolio()?.profile_picture_url || &#x27;&#x27;);
+  initials &#x3D; computed(() &#x3D;&gt; {
+    const p &#x3D; this.portfolio();
+    if (!p) return &#x27;&#x27;;
+    const n &#x3D; &#x60;${p.name ?? &#x27;&#x27;} ${p.lastname ?? &#x27;&#x27;}&#x60;.trim();
+    return n
+      .split(&#x27; &#x27;)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(s &#x3D;&gt; s[0]?.toUpperCase() ?? &#x27;&#x27;)
+      .join(&#x27;&#x27;);
+  });
+
+  readonly gmailChatUrl &#x3D; &#x27;https://mail.google.com/chat/u/0/#chat/home&#x27;;
+
+  constructor(
+    private router: Router,
+    private portfolioService: PortfolioService,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private portfolioBridge: PortfolioBridgeService
+  ) {}
+
+  ngOnInit(): void {
+    const username &#x3D; this.route.snapshot.paramMap.get(&#x27;username&#x27;);
+    if (!username) {
+      this.error.set(&#x27;Nombre de usuario inválido.&#x27;);
+      this.loading.set(false);
+      return;
+    }
+
+    this.portfolioService.getPortfolioByUsername(username).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.portfolio.set(res.portfolio);
+        this.loading.set(false);
+      },
+      error: () &#x3D;&gt; {
+        this.error.set(&#x27;No se pudo cargar el portafolio.&#x27;);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  goToCourses() {
+    const currentUser &#x3D; this.authService.getCurrentUser();
+    const viewedUser &#x3D; this.portfolio();
+    if (!currentUser || !viewedUser) return;
+
+    const isOwner &#x3D; currentUser.username &#x3D;&#x3D;&#x3D; viewedUser.username;
+    const isAdmin &#x3D; currentUser.roles?.some(r &#x3D;&gt; r.name &#x3D;&#x3D;&#x3D; &#x27;admin&#x27;);
+
+    if (isOwner) {
+      this.router.navigate([&#x27;/studio/courses&#x27;]);
+    } else if (isAdmin) {
+      this.router.navigate([&#x60;/studio/@${viewedUser.username}/courses&#x60;]);
+    } else {
+      alert(&#x27;No tienes permisos para gestionar estos cursos.&#x27;);
+    }
+  }
+
+  /** Enlace directo a redactar correo en Gmail al dueño del portafolio */
+  getGmailComposeUrl(email: string | null | undefined): string {
+    if (!email) return &#x27;https://mail.google.com/&#x27;;
+    return &#x60;https://mail.google.com/mail/?view&#x3D;cm&amp;fs&#x3D;1&amp;to&#x3D;${encodeURIComponent(email)}&#x60;;
+  }
+
+  /** Click en la lupa: por ahora abre un prompt y manda el término al bridge */
+  onSearchClick(): void {
+    const term &#x3D; window.prompt(&#x27;Buscar curso por nombre:&#x27;) ?? &#x27;&#x27;;
+    this.portfolioBridge.setSearchTerm(term.trim());
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Loading / Error --&gt;
+&lt;div class&#x3D;&quot;content-portfolio&quot;&gt;
+  &lt;div class&#x3D;&quot;state&quot; *ngIf&#x3D;&quot;loading()&quot;&gt;
+    &lt;div class&#x3D;&quot;skeleton header&quot;&gt;&lt;/div&gt;
+    &lt;div class&#x3D;&quot;skeleton tabs&quot;&gt;&lt;/div&gt;
+    &lt;div class&#x3D;&quot;skeleton card&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;p class&#x3D;&quot;error&quot; *ngIf&#x3D;&quot;!loading() &amp;&amp; error()&quot;&gt;{{ error() }}&lt;/p&gt;
+
+  &lt;section *ngIf&#x3D;&quot;!loading() &amp;&amp; !error() &amp;&amp; portfolio() as p&quot; class&#x3D;&quot;container&quot;&gt;
+
+    &lt;!-- Channel Header --&gt;
+    &lt;div class&#x3D;&quot;channel-header card&quot;&gt;
+      &lt;div class&#x3D;&quot;profile-section&quot;&gt;
+        &lt;div class&#x3D;&quot;profile-image&quot;&gt;
+          &lt;ng-container *ngIf&#x3D;&quot;avatarUrl(); else initialsAvatar&quot;&gt;
+            &lt;img
+              [ngSrc]&#x3D;&quot;avatarUrl()!&quot;
+              alt&#x3D;&quot;{{ p.name }} {{ p.lastname }}&quot;
+              width&#x3D;&quot;160&quot; height&#x3D;&quot;160&quot;
+            /&gt;
+          &lt;/ng-container&gt;
+          &lt;ng-template #initialsAvatar&gt;
+            &lt;div class&#x3D;&quot;avatar-fallback&quot; aria-hidden&#x3D;&quot;true&quot;&gt;{{ initials() }}&lt;/div&gt;
+          &lt;/ng-template&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;channel-info&quot;&gt;
+          &lt;div class&#x3D;&quot;channel-name&quot;&gt;
+            &lt;h1&gt;{{ p.name }} {{ p.lastname }}&lt;/h1&gt;
+
+            &lt;svg *ngIf&#x3D;&quot;verifiedByRole()&quot; class&#x3D;&quot;verified-badge&quot; width&#x3D;&quot;16&quot; height&#x3D;&quot;16&quot; viewBox&#x3D;&quot;0 0 16 16&quot; fill&#x3D;&quot;none&quot; aria-label&#x3D;&quot;Verificado&quot;&gt;
+              &lt;circle cx&#x3D;&quot;8&quot; cy&#x3D;&quot;8&quot; r&#x3D;&quot;8&quot; fill&#x3D;&quot;currentColor&quot;&gt;&lt;/circle&gt;
+              &lt;path d&#x3D;&quot;M6 8L7.5 9.5L10 6.5&quot; stroke&#x3D;&quot;black&quot; stroke-width&#x3D;&quot;1.5&quot; stroke-linecap&#x3D;&quot;round&quot; stroke-linejoin&#x3D;&quot;round&quot;&gt;&lt;/path&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;channel-stats&quot;&gt;
+            &lt;span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;{{ &#x27;@&#x27;+ p.username }}&lt;/span&gt;&lt;/span&gt;
+            &lt;span class&#x3D;&quot;dot&quot;&gt;·&lt;/span&gt;
+            &lt;span&gt;{{ p.role | titlecase }}&lt;/span&gt;
+            &lt;span class&#x3D;&quot;dot&quot;&gt;·&lt;/span&gt;
+            &lt;span&gt;{{ p.active_courses_count }} cursos activos&lt;/span&gt;
+            &lt;span class&#x3D;&quot;dot&quot;&gt;·&lt;/span&gt;
+            &lt;span&gt;Miembro desde {{ p.joined_at }}&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;channel-description&quot;&gt;
+            &lt;p *ngIf&#x3D;&quot;p.career || p.sede&quot;&gt;
+              &lt;span *ngIf&#x3D;&quot;p.career&quot;&gt;
+                Carrera: &lt;strong&gt;{{ p.career.name }}&lt;/strong&gt;
+              &lt;/span&gt;
+              &lt;span *ngIf&#x3D;&quot;p.career &amp;&amp; p.sede&quot; class&#x3D;&quot;dot&quot;&gt;·&lt;/span&gt;
+
+              &lt;!-- Unidad educativa antes de Sede --&gt;
+              &lt;span *ngIf&#x3D;&quot;p.sede.educational_unit&quot;&gt;
+                Unidad educativa:
+                &lt;strong&gt;{{ p.sede.educational_unit.name }}&lt;/strong&gt;
+              &lt;/span&gt;
+
+              &lt;span *ngIf&#x3D;&quot;p.sede&quot; class&#x3D;&quot;dot&quot;&gt;·&lt;/span&gt;
+              &lt;span *ngIf&#x3D;&quot;p.sede&quot;&gt;
+                Sede:
+                &lt;strong&gt;{{ p.sede.canton }}, {{ p.sede.province }}&lt;/strong&gt;
+              &lt;/span&gt;
+            &lt;/p&gt;
+
+            &lt;!-- Íconos de contacto por Gmail / Chat (sin mostrar email) --&gt;
+            &lt;div class&#x3D;&quot;contact-icons&quot; *ngIf&#x3D;&quot;p.email&quot;&gt;
+              &lt;a
+                class&#x3D;&quot;icon-link&quot;
+                [href]&#x3D;&quot;getGmailComposeUrl(p.email)&quot;
+                target&#x3D;&quot;_blank&quot;
+                rel&#x3D;&quot;noopener noreferrer&quot;
+                aria-label&#x3D;&quot;Enviar correo por Gmail&quot;
+              &gt;
+                &lt;ui-icon
+                  [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+                  [svgPath]&#x3D;&quot;&#x27;svg/google-gmail.svg&#x27;&quot;&gt;
+                &lt;/ui-icon&gt;
+              &lt;/a&gt;
+
+              &lt;a
+                class&#x3D;&quot;icon-link&quot;
+                [href]&#x3D;&quot;gmailChatUrl&quot;
+                target&#x3D;&quot;_blank&quot;
+                rel&#x3D;&quot;noopener noreferrer&quot;
+                aria-label&#x3D;&quot;Abrir Google Chat&quot;
+              &gt;
+                &lt;ui-icon
+                  [size]&#x3D;&quot;&#x27;sm&#x27;&quot;
+                  [svgPath]&#x3D;&quot;&#x27;svg/chat-filled.svg&#x27;&quot;&gt;
+                &lt;/ui-icon&gt;
+              &lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;channel-actions&quot;&gt;
+            &lt;!-- Solo dejamos gestionar cursos --&gt;
+            &lt;button class&#x3D;&quot;manage-btn&quot; *ngIf&#x3D;&quot;canManage()&quot; (click)&#x3D;&quot;goToCourses()&quot;&gt;
+              Gestionar cursos
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Navigation Tabs (solo Cursos / Colaboraciones) --&gt;
+    &lt;nav class&#x3D;&quot;channel-nav&quot;&gt;
+      &lt;div class&#x3D;&quot;nav-items&quot;&gt;
+        &lt;button
+          class&#x3D;&quot;nav-item&quot;
+          type&#x3D;&quot;button&quot;
+          [routerLink]&#x3D;&quot;[&#x27;./courses&#x27;]&quot;
+          routerLinkActive&#x3D;&quot;active&quot;
+          [routerLinkActiveOptions]&#x3D;&quot;{ exact: true }&quot;
+        &gt;
+          Cursos
+        &lt;/button&gt;
+
+        &lt;button
+          class&#x3D;&quot;nav-item&quot;
+          type&#x3D;&quot;button&quot;
+          [routerLink]&#x3D;&quot;[&#x27;./collaborations&#x27;]&quot;
+          routerLinkActive&#x3D;&quot;active&quot;
+        &gt;
+          Colaboraciones
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;button
+        class&#x3D;&quot;search-btn&quot;
+        type&#x3D;&quot;button&quot;
+        aria-label&#x3D;&quot;Buscar en el portafolio&quot;
+        (click)&#x3D;&quot;onSearchClick()&quot;
+      &gt;
+        &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot; aria-hidden&#x3D;&quot;true&quot;&gt;
+          &lt;circle cx&#x3D;&quot;11&quot; cy&#x3D;&quot;11&quot; r&#x3D;&quot;7&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot;&gt;&lt;/circle&gt;
+          &lt;path d&#x3D;&quot;M20 20L16 16&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; stroke-linecap&#x3D;&quot;round&quot;&gt;&lt;/path&gt;
+        &lt;/svg&gt;
+      &lt;/button&gt;
+    &lt;/nav&gt;
+
+    
+    &lt;!-- Contenido de las pestañas (Cursos / Colaboraciones) --&gt;
+    &lt;router-outlet&gt;&lt;/router-outlet&gt;
+
+  &lt;/section&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Loading / Error --><div class="content-portfolio">  <div class="state" *ngIf="loading()">    <div class="skeleton header"></div>    <div class="skeleton tabs"></div>    <div class="skeleton card"></div>  </div>  <p class="error" *ngIf="!loading() && error()">{{ error() }}</p>  <section *ngIf="!loading() && !error() && portfolio() as p" class="container">    <!-- Channel Header -->    <div class="channel-header card">      <div class="profile-section">        <div class="profile-image">          <ng-container *ngIf="avatarUrl(); else initialsAvatar">            <img              [ngSrc]="avatarUrl()!"              alt="{{ p.name }} {{ p.lastname }}"              width="160" height="160"            />          </ng-container>          <ng-template #initialsAvatar>            <div class="avatar-fallback" aria-hidden="true">{{ initials() }}</div>          </ng-template>        </div>        <div class="channel-info">          <div class="channel-name">            <h1>{{ p.name }} {{ p.lastname }}</h1>            <svg *ngIf="verifiedByRole()" class="verified-badge" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-label="Verificado">              <circle cx="8" cy="8" r="8" fill="currentColor"></circle>              <path d="M6 8L7.5 9.5L10 6.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>            </svg>          </div>          <div class="channel-stats">            <span><span></span><span>{{ \'@\'+ p.username }}</span></span>            <span class="dot">·</span>            <span>{{ p.role | titlecase }}</span>            <span class="dot">·</span>            <span>{{ p.active_courses_count }} cursos activos</span>            <span class="dot">·</span>            <span>Miembro desde {{ p.joined_at }}</span>          </div>          <div class="channel-description">            <p *ngIf="p.career || p.sede">              <span *ngIf="p.career">                Carrera: <strong>{{ p.career.name }}</strong>              </span>              <span *ngIf="p.career && p.sede" class="dot">·</span>              <!-- Unidad educativa antes de Sede -->              <span *ngIf="p.sede.educational_unit">                Unidad educativa:                <strong>{{ p.sede.educational_unit.name }}</strong>              </span>              <span *ngIf="p.sede" class="dot">·</span>              <span *ngIf="p.sede">                Sede:                <strong>{{ p.sede.canton }}, {{ p.sede.province }}</strong>              </span>            </p>            <!-- Íconos de contacto por Gmail / Chat (sin mostrar email) -->            <div class="contact-icons" *ngIf="p.email">              <a                class="icon-link"                [href]="getGmailComposeUrl(p.email)"                target="_blank"                rel="noopener noreferrer"                aria-label="Enviar correo por Gmail"              >                <ui-icon                  [size]="\'sm\'"                  [svgPath]="\'svg/google-gmail.svg\'">                </ui-icon>              </a>              <a                class="icon-link"                [href]="gmailChatUrl"                target="_blank"                rel="noopener noreferrer"                aria-label="Abrir Google Chat"              >                <ui-icon                  [size]="\'sm\'"                  [svgPath]="\'svg/chat-filled.svg\'">                </ui-icon>              </a>            </div>          </div>          <div class="channel-actions">            <!-- Solo dejamos gestionar cursos -->            <button class="manage-btn" *ngIf="canManage()" (click)="goToCourses()">              Gestionar cursos            </button>          </div>        </div>      </div>    </div>    <!-- Navigation Tabs (solo Cursos / Colaboraciones) -->    <nav class="channel-nav">      <div class="nav-items">        <button          class="nav-item"          type="button"          [routerLink]="[\'./courses\']"          routerLinkActive="active"          [routerLinkActiveOptions]="{ exact: true }"        >          Cursos        </button>        <button          class="nav-item"          type="button"          [routerLink]="[\'./collaborations\']"          routerLinkActive="active"        >          Colaboraciones        </button>      </div>      <button        class="search-btn"        type="button"        aria-label="Buscar en el portafolio"        (click)="onSearchClick()"      >        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>          <path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>        </svg>      </button>    </nav>        <!-- Contenido de las pestañas (Cursos / Colaboraciones) -->    <router-outlet></router-outlet>  </section></div></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'PortfolioComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'PortfolioComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

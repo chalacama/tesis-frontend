@@ -1,0 +1,2865 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>tesis-forntend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">tesis-forntend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  TestComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/pages/private/learning/course/test/test.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-test</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="../interfaces/Module.html" target="_self" >CommonModule</a></code>
+                                <code><a href="../components/ButtonComponent.html" target="_self" >ButtonComponent</a></code>
+                                <code><a href="../components/LoadingBarComponent.html" target="_self" >LoadingBarComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./test.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./test.component.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#attemptsCompleted" >attemptsCompleted</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#autosaveQueue$" >autosaveQueue$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bridge" >bridge</a>
+                            </li>
+                            <li>
+                                <a href="#canRetry" >canRetry</a>
+                            </li>
+                            <li>
+                                <a href="#canView" >canView</a>
+                            </li>
+                            <li>
+                                <a href="#chapterId" >chapterId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#destroyRef" >destroyRef</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#feedbackApi" >feedbackApi</a>
+                            </li>
+                            <li>
+                                <a href="#headerChapter" >headerChapter</a>
+                            </li>
+                            <li>
+                                <a href="#headerCourse" >headerCourse</a>
+                            </li>
+                            <li>
+                                <a href="#inProgressId" >inProgressId</a>
+                            </li>
+                            <li>
+                                <a href="#isAnswer" >isAnswer</a>
+                            </li>
+                            <li>
+                                <a href="#isHub" >isHub</a>
+                            </li>
+                            <li>
+                                <a href="#isReview" >isReview</a>
+                            </li>
+                            <li>
+                                <a href="#lastCompletedAt" >lastCompletedAt</a>
+                            </li>
+                            <li>
+                                <a href="#lastScore" >lastScore</a>
+                            </li>
+                            <li>
+                                <a href="#limit" >limit</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#mode" >mode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#notificationBridge" >notificationBridge</a>
+                            </li>
+                            <li>
+                                <a href="#page" >page</a>
+                            </li>
+                            <li>
+                                <a href="#perPage" >perPage</a>
+                            </li>
+                            <li>
+                                <a href="#pg" >pg</a>
+                            </li>
+                            <li>
+                                <a href="#questions" >questions</a>
+                            </li>
+                            <li>
+                                <a href="#questionsCount" >questionsCount</a>
+                            </li>
+                            <li>
+                                <a href="#resp" >resp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                            <li>
+                                <a href="#selection" >selection</a>
+                            </li>
+                            <li>
+                                <a href="#showData" >showData</a>
+                            </li>
+                            <li>
+                                <a href="#showResp" >showResp</a>
+                            </li>
+                            <li>
+                                <a href="#submitting" >submitting</a>
+                            </li>
+                            <li>
+                                <a href="#testViewId" >testViewId</a>
+                            </li>
+                            <li>
+                                <a href="#trackA" >trackA</a>
+                            </li>
+                            <li>
+                                <a href="#trackQ" >trackQ</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#watchingApi" >watchingApi</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#backToHub" >backToHub</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#bootstrap" >bootstrap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#fetchPage" >fetchPage</a>
+                            </li>
+                            <li>
+                                <a href="#isMultiple" >isMultiple</a>
+                            </li>
+                            <li>
+                                <a href="#isSingle" >isSingle</a>
+                            </li>
+                            <li>
+                                <a href="#nextPage" >nextPage</a>
+                            </li>
+                            <li>
+                                <a href="#onCheckboxToggle" >onCheckboxToggle</a>
+                            </li>
+                            <li>
+                                <a href="#onRadioSelect" >onRadioSelect</a>
+                            </li>
+                            <li>
+                                <a href="#prevPage" >prevPage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#queueAutosave" >queueAutosave</a>
+                            </li>
+                            <li>
+                                <a href="#startAnswer" >startAnswer</a>
+                            </li>
+                            <li>
+                                <a href="#startReview" >startReview</a>
+                            </li>
+                            <li>
+                                <a href="#submit" >submit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:65</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="backToHub"></a>
+                    <span class="name">
+                        <span ><b>backToHub</b></span>
+                        <a href="#backToHub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>backToHub()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:226</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bootstrap"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>bootstrap</b></span>
+                        <a href="#bootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>bootstrap()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchPage"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>fetchPage</b></span>
+                        <a href="#fetchPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchPage(chapterId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, params: <a href="../interfaces/TestPageQuery.html" target="_self">TestPageQuery</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:147</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>chapterId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TestPageQuery.html" target="_self" >TestPageQuery</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isMultiple"></a>
+                    <span class="name">
+                        <span ><b>isMultiple</b></span>
+                        <a href="#isMultiple"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isMultiple(q: <a href="../interfaces/TestQuestion.html" target="_self">TestQuestion</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:170</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>q</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TestQuestion.html" target="_self" >TestQuestion</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSingle"></a>
+                    <span class="name">
+                        <span ><b>isSingle</b></span>
+                        <a href="#isSingle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isSingle(q: <a href="../interfaces/TestQuestion.html" target="_self">TestQuestion</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:169</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>q</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TestQuestion.html" target="_self" >TestQuestion</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nextPage"></a>
+                    <span class="name">
+                        <span ><b>nextPage</b></span>
+                        <a href="#nextPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>nextPage()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="201"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:201</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCheckboxToggle"></a>
+                    <span class="name">
+                        <span ><b>onCheckboxToggle</b></span>
+                        <a href="#onCheckboxToggle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCheckboxToggle(q: <a href="../interfaces/TestQuestion.html" target="_self">TestQuestion</a>, answerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, checked: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="181"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:181</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>q</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TestQuestion.html" target="_self" >TestQuestion</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>answerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>checked</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onRadioSelect"></a>
+                    <span class="name">
+                        <span ><b>onRadioSelect</b></span>
+                        <a href="#onRadioSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onRadioSelect(q: <a href="../interfaces/TestQuestion.html" target="_self">TestQuestion</a>, answerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:173</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>q</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TestQuestion.html" target="_self" >TestQuestion</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>answerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prevPage"></a>
+                    <span class="name">
+                        <span ><b>prevPage</b></span>
+                        <a href="#prevPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>prevPage()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="197"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:197</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="queueAutosave"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>queueAutosave</b></span>
+                        <a href="#queueAutosave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>queueAutosave(questionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, answerIds: number[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>questionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>answerIds</td>
+                                            <td>
+                                                        <code>number[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startAnswer"></a>
+                    <span class="name">
+                        <span ><b>startAnswer</b></span>
+                        <a href="#startAnswer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startAnswer()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="208"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:208</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startReview"></a>
+                    <span class="name">
+                        <span ><b>startReview</b></span>
+                        <a href="#startReview"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startReview()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="216"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:216</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submit"></a>
+                    <span class="name">
+                        <span ><b>submit</b></span>
+                        <a href="#submit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>submit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="234"
+                                    class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:234</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attemptsCompleted"></a>
+                    <span class="name">
+                        <span ><b>attemptsCompleted</b></span>
+                        <a href="#attemptsCompleted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.attempts.completed ?? 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="279" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:279</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="autosaveQueue$"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>autosaveQueue$</b></span>
+                        <a href="#autosaveQueue$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subject&lt;{ question_id: number; answer_ids: number[] }&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bridge"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bridge</b></span>
+                        <a href="#bridge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CourseBridge)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canRetry"></a>
+                    <span class="name">
+                        <span ><b>canRetry</b></span>
+                        <a href="#canRetry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.attempts.can_retry ?? false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="270" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:270</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canView"></a>
+                    <span class="name">
+                        <span ><b>canView</b></span>
+                        <a href="#canView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.can_view_last_answers ?? false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="271" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:271</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="chapterId"></a>
+                    <span class="name">
+                        <span ><b>chapterId</b></span>
+                        <a href="#chapterId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroyRef"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>destroyRef</b></span>
+                        <a href="#destroyRef"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(DestroyRef)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feedbackApi"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>feedbackApi</b></span>
+                        <a href="#feedbackApi"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FeedbackService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="headerChapter"></a>
+                    <span class="name">
+                        <span ><b>headerChapter</b></span>
+                        <a href="#headerChapter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.chapter_title ?? &#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="276" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:276</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="headerCourse"></a>
+                    <span class="name">
+                        <span ><b>headerCourse</b></span>
+                        <a href="#headerCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.course_title ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="275" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:275</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inProgressId"></a>
+                    <span class="name">
+                        <span ><b>inProgressId</b></span>
+                        <a href="#inProgressId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.attempts.in_progress_test_view_id ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="272" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:272</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isAnswer"></a>
+                    <span class="name">
+                        <span ><b>isAnswer</b></span>
+                        <a href="#isAnswer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.mode() &#x3D;&#x3D;&#x3D; &#x27;answer&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="285" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:285</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isHub"></a>
+                    <span class="name">
+                        <span ><b>isHub</b></span>
+                        <a href="#isHub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.mode() &#x3D;&#x3D;&#x3D; &#x27;hub&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="286" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:286</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isReview"></a>
+                    <span class="name">
+                        <span ><b>isReview</b></span>
+                        <a href="#isReview"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.mode() &#x3D;&#x3D;&#x3D; &#x27;review&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="284" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:284</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastCompletedAt"></a>
+                    <span class="name">
+                        <span ><b>lastCompletedAt</b></span>
+                        <a href="#lastCompletedAt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.last_completed_at ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="281" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:281</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastScore"></a>
+                    <span class="name">
+                        <span ><b>lastScore</b></span>
+                        <a href="#lastScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.last_score ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="280" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:280</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="limit"></a>
+                    <span class="name">
+                        <span ><b>limit</b></span>
+                        <a href="#limit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.test.limited ?? 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="278" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:278</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mode"></a>
+                    <span class="name">
+                        <span ><b>mode</b></span>
+                        <a href="#mode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;&#x27;hub&#x27; | &#x27;answer&#x27; | &#x27;review&#x27;&gt;(&#x27;hub&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="notificationBridge"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>notificationBridge</b></span>
+                        <a href="#notificationBridge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationBridgeService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="page"></a>
+                    <span class="name">
+                        <span ><b>page</b></span>
+                        <a href="#page"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number&gt;(1)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="perPage"></a>
+                    <span class="name">
+                        <span ><b>perPage</b></span>
+                        <a href="#perPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number&gt;(5)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pg"></a>
+                    <span class="name">
+                        <span ><b>pg</b></span>
+                        <a href="#pg"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.resp()?.pagination ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="questions"></a>
+                    <span class="name">
+                        <span ><b>questions</b></span>
+                        <a href="#questions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.resp()?.data.questions ?? [])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="questionsCount"></a>
+                    <span class="name">
+                        <span ><b>questionsCount</b></span>
+                        <a href="#questionsCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.showData()?.test.questions_count ?? 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="277" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:277</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resp"></a>
+                    <span class="name">
+                        <span ><b>resp</b></span>
+                        <a href="#resp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;TestIndexResponse | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selection"></a>
+                    <span class="name">
+                        <span ><b>selection</b></span>
+                        <a href="#selection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Partial&lt;Record&lt;number, number[]&gt;&gt;&gt;({})</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showData"></a>
+                    <span class="name">
+                        <span ><b>showData</b></span>
+                        <a href="#showData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;TestShowData | null&gt;(() &#x3D;&gt; this.showResp()?.data ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showResp"></a>
+                    <span class="name">
+                        <span ><b>showResp</b></span>
+                        <a href="#showResp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;TestShowResponse | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitting"></a>
+                    <span class="name">
+                        <span ><b>submitting</b></span>
+                        <a href="#submitting"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="testViewId"></a>
+                    <span class="name">
+                        <span ><b>testViewId</b></span>
+                        <a href="#testViewId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackA"></a>
+                    <span class="name">
+                        <span ><b>trackA</b></span>
+                        <a href="#trackA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="267" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:267</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackQ"></a>
+                    <span class="name">
+                        <span ><b>trackQ</b></span>
+                        <a href="#trackQ"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="266" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:266</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="watchingApi"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>watchingApi</b></span>
+                        <a href="#watchingApi"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(WatchingService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/pages/private/learning/course/test/test.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, DestroyRef, computed, effect, inject, signal } from &#x27;@angular/core&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
+import { takeUntilDestroyed } from &#x27;@angular/core/rxjs-interop&#x27;;
+import { Subject, of } from &#x27;rxjs&#x27;;
+import { concatMap, catchError, tap } from &#x27;rxjs/operators&#x27;;
+
+import { ButtonComponent } from &#x27;../../../../../shared/UI/components/button/button/button.component&#x27;;
+import { LoadingBarComponent } from &#x27;../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component&#x27;;
+
+import { WatchingService } from &#x27;../../../../../core/api/watching/watching.service&#x27;;
+import { FeedbackService } from &#x27;../../../../../core/api/feedback/feedback.service&#x27;;
+
+import {
+  TestIndexResponse,
+  TestQuestion,
+  TestPageQuery,
+  TestShowResponse,
+  TestShowData
+} from &#x27;../../../../../core/api/watching/test.interface&#x27;;
+import { CourseBridge } from &#x27;../../../../../core/api/watching/course-bridge.service&#x27;;
+import { NotificationBridgeService } from &#x27;../../../../../core/api/notification/notification-bridge.service&#x27;;
+import { ToastComponent } from &#x27;../../../../../shared/UI/components/overlay/toast/toast.component&#x27;;
+
+@Component({
+  selector: &#x27;app-test&#x27;,
+  standalone: true,
+  imports: [CommonModule, ButtonComponent, LoadingBarComponent],
+  templateUrl: &#x27;./test.component.html&#x27;,
+  styleUrl: &#x27;./test.component.css&#x27;
+})
+export class TestComponent {
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly watchingApi &#x3D; inject(WatchingService);
+  private readonly feedbackApi &#x3D; inject(FeedbackService);
+  private readonly destroyRef &#x3D; inject(DestroyRef);
+   private readonly bridge &#x3D; inject(CourseBridge);
+   private readonly notificationBridge &#x3D; inject(NotificationBridgeService); // 👈 NUEVO
+  
+  // ---- state base ----
+  loading    &#x3D; signal&lt;boolean&gt;(false);
+  submitting &#x3D; signal&lt;boolean&gt;(false);
+  chapterId  &#x3D; signal&lt;number | null&gt;(null);
+  page       &#x3D; signal&lt;number&gt;(1);
+  perPage    &#x3D; signal&lt;number&gt;(5);
+
+  // modos: &#x27;hub&#x27; | &#x27;answer&#x27; | &#x27;review&#x27;
+  mode &#x3D; signal&lt;&#x27;hub&#x27; | &#x27;answer&#x27; | &#x27;review&#x27;&gt;(&#x27;hub&#x27;);
+
+  // show() → header + intents + flags
+  showResp &#x3D; signal&lt;TestShowResponse | null&gt;(null);
+  showData &#x3D; computed&lt;TestShowData | null&gt;(() &#x3D;&gt; this.showResp()?.data ?? null);
+
+  // index() → preguntas (paginadas)
+  resp &#x3D; signal&lt;TestIndexResponse | null&gt;(null);
+  testViewId &#x3D; signal&lt;number | null&gt;(null);
+
+  questions &#x3D; computed(() &#x3D;&gt; this.resp()?.data.questions ?? []);
+  pg        &#x3D; computed(() &#x3D;&gt; this.resp()?.pagination ?? null);
+
+  // selección por pregunta
+  selection &#x3D; signal&lt;Partial&lt;Record&lt;number, number[]&gt;&gt;&gt;({});
+
+  // cola de autosaves
+  private autosaveQueue$ &#x3D; new Subject&lt;{ question_id: number; answer_ids: number[] }&gt;();
+
+  constructor() {
+    // ChapterId desde la ruta
+    effect(() &#x3D;&gt; {
+      const parent &#x3D; this.route.parent;
+      const chapterIdParam &#x3D;
+        parent?.snapshot.paramMap.get(&#x27;chapterId&#x27;) ??
+        this.route.snapshot.paramMap.get(&#x27;chapterId&#x27;);
+      if (chapterIdParam) {
+        const cid &#x3D; Number(chapterIdParam);
+        if (!Number.isNaN(cid)) {
+          this.chapterId.set(cid);
+          this.page.set(1);
+          this.bootstrap(); // carga show y decide modo inicial
+        }
+      }
+    });
+
+    // Cargar página del cuestionario cuando: chapterId/page cambien y el modo sea answer|review
+    effect(() &#x3D;&gt; {
+      const cid  &#x3D; this.chapterId();
+      const p    &#x3D; this.page();
+      const mode &#x3D; this.mode();
+      if (!cid) return;
+      if (mode &#x3D;&#x3D;&#x3D; &#x27;answer&#x27; || mode &#x3D;&#x3D;&#x3D; &#x27;review&#x27;) {
+        this.fetchPage(cid, {
+          page: p,
+          per_page: this.perPage(),
+          review_last: mode &#x3D;&#x3D;&#x3D; &#x27;review&#x27;
+        });
+      }
+    });
+
+    // Procesar autosaves (solo en modo &#x27;answer&#x27;)
+    this.autosaveQueue$
+      .pipe(
+        concatMap((payload) &#x3D;&gt; {
+          if (this.mode() !&#x3D;&#x3D; &#x27;answer&#x27;) return of(null);
+          const tvId &#x3D; this.testViewId();
+          if (!tvId) return of(null);
+          return this.watchingApi.autosaveAnswer(tvId, { ...payload, mode: &#x27;replace&#x27; }).pipe(
+            tap(() &#x3D;&gt; { /* ok */ }),
+            catchError((err) &#x3D;&gt; {
+              console.error(&#x27;Autosave ERROR&#x27;, err);
+              return of(null);
+            })
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
+  }
+
+  // ---- bootstrap: carga show y decide modo ----
+  private bootstrap() {
+    const cid &#x3D; this.chapterId();
+    if (!cid) return;
+
+    this.loading.set(true);
+    this.watchingApi.getTestShow(cid).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.showResp.set(res);
+        // Si hay intento en progreso → entrar a responder automáticamente
+        const inProgressId &#x3D; res.data.attempts.in_progress_test_view_id;
+        if (inProgressId) {
+          this.mode.set(&#x27;answer&#x27;);
+          this.page.set(1); // asegúrate de empezar desde la primera página
+        } else {
+          // Hub por defecto (inicio o ya completado)
+          this.mode.set(&#x27;hub&#x27;);
+          this.resp.set(null);
+          this.testViewId.set(null);
+          this.selection.set({});
+        }
+        this.loading.set(false);
+      },
+      error: () &#x3D;&gt; this.loading.set(false),
+    });
+  }
+
+  // ---- API index ----
+  private fetchPage(chapterId: number, params: TestPageQuery) {
+    this.loading.set(true);
+    this.watchingApi.getTestPage(chapterId, params).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.resp.set(res);
+        if (res?.context?.test_view_id) this.testViewId.set(res.context.test_view_id);
+
+        // Inyectar selección actual
+        const merged &#x3D; { ...this.selection() };
+        for (const q of res.data.questions) {
+          const marked &#x3D; q.answers.filter(a &#x3D;&gt; !!a.selected).map(a &#x3D;&gt; a.id);
+          merged[q.question_id] &#x3D; marked;
+        }
+        this.selection.set(merged);
+
+        this.loading.set(false);
+      },
+      error: () &#x3D;&gt; this.loading.set(false),
+    });
+  }
+
+  // ---- helpers de tipo ----
+  isSingle(q: TestQuestion)   { return q.type?.key &#x3D;&#x3D;&#x3D; &#x27;single&#x27;; }
+  isMultiple(q: TestQuestion) { return q.type?.key &#x3D;&#x3D;&#x3D; &#x27;multiple&#x27;; }
+
+  // ---- selección (bloquea en review) ----
+  onRadioSelect(q: TestQuestion, answerId: number) {
+    if (this.mode() !&#x3D;&#x3D; &#x27;answer&#x27;) return;
+    const next &#x3D; { ...this.selection() };
+    next[q.question_id] &#x3D; [answerId];
+    this.selection.set(next);
+    this.queueAutosave(q.question_id, next[q.question_id]!);
+  }
+
+  onCheckboxToggle(q: TestQuestion, answerId: number, checked: boolean) {
+    if (this.mode() !&#x3D;&#x3D; &#x27;answer&#x27;) return;
+    const current &#x3D; { ...this.selection() };
+    const set &#x3D; new Set(current[q.question_id] ?? []);
+    if (checked) set.add(answerId); else set.delete(answerId);
+    current[q.question_id] &#x3D; Array.from(set);
+    this.selection.set(current);
+    this.queueAutosave(q.question_id, current[q.question_id]!);
+  }
+
+  private queueAutosave(questionId: number, answerIds: number[]) {
+    if (!this.testViewId()) return;
+    this.autosaveQueue$.next({ question_id: questionId, answer_ids: answerIds });
+  }
+
+  // ---- paginación ----
+  prevPage() {
+    const p &#x3D; this.page();
+    if (p &gt; 1 &amp;&amp; !this.loading()) this.page.set(p - 1);
+  }
+  nextPage() {
+    const p &#x3D; this.page();
+    const last &#x3D; this.pg()?.last_page ?? 1;
+    if (p &lt; last &amp;&amp; !this.loading()) this.page.set(p + 1);
+  }
+
+  // ---- acciones de modo ----
+  startAnswer() {
+    const cid &#x3D; this.chapterId();
+    if (!cid) return;
+    this.mode.set(&#x27;answer&#x27;);
+    this.page.set(1);
+    // fetchPage se dispara por effect()
+  }
+
+  startReview() {
+    const data &#x3D; this.showData();
+    if (!data?.can_view_last_answers) return;
+    const cid &#x3D; this.chapterId();
+    if (!cid) return;
+    this.mode.set(&#x27;review&#x27;);
+    this.page.set(1);
+    // fetchPage se dispara por effect()
+  }
+
+  backToHub() {
+    this.mode.set(&#x27;hub&#x27;);
+    this.page.set(1);
+    // refrescar header (scores, flags)
+    this.bootstrap();
+  }
+
+  // ---- enviar (finalizar intento) ----
+   submit() {
+    const tvId &#x3D; this.testViewId();
+    const chapterId &#x3D; this.chapterId();
+    if (!tvId) return;
+
+    this.submitting.set(true);
+    this.feedbackApi.completeTest(tvId).subscribe({
+      next: (res) &#x3D;&gt; {
+        this.submitting.set(false);
+
+        // ⚠️ Ajusta esta parte a la estructura real de tu respuesta
+        const completed &#x3D; res?.data?.chapter_completed ?? true; // si tu API ya controla el aprobado
+        if (completed &amp;&amp; chapterId) {
+          this.bridge.markChapterCompleted(chapterId);
+        }
+        if (res.data?.certificate_issued) {
+        this.notificationBridge.increment(1);
+        this.bridge.notifyCertificateIssued();
+        
+      }
+
+        // Volver al hub y refrescar meta (score, attempts, flags)
+        this.backToHub();
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;completeTest ERROR&#x27;, err);
+        this.submitting.set(false);
+      }
+    });
+  }
+
+  // ---- UI helpers ----
+  trackQ &#x3D; (_: number, q: TestQuestion) &#x3D;&gt; q.question_id;
+  trackA &#x3D; (_: number, a: { id: number }) &#x3D;&gt; a.id;
+
+  // estados para template
+  canRetry &#x3D; computed(() &#x3D;&gt; this.showData()?.attempts.can_retry ?? false);
+  canView  &#x3D; computed(() &#x3D;&gt; this.showData()?.can_view_last_answers ?? false);
+  inProgressId &#x3D; computed(() &#x3D;&gt; this.showData()?.attempts.in_progress_test_view_id ?? null);
+
+  // flags de header
+  headerCourse &#x3D; computed(() &#x3D;&gt; this.showData()?.course_title ?? null);
+  headerChapter &#x3D; computed(() &#x3D;&gt; this.showData()?.chapter_title ?? &#x27;&#x27;);
+  questionsCount &#x3D; computed(() &#x3D;&gt; this.showData()?.test.questions_count ?? 0);
+  limit &#x3D; computed(() &#x3D;&gt; this.showData()?.test.limited ?? 0);
+  attemptsCompleted &#x3D; computed(() &#x3D;&gt; this.showData()?.attempts.completed ?? 0);
+  lastScore &#x3D; computed(() &#x3D;&gt; this.showData()?.last_score ?? null);
+  lastCompletedAt &#x3D; computed(() &#x3D;&gt; this.showData()?.last_completed_at ?? null);
+
+  // para template
+  isReview &#x3D; computed(() &#x3D;&gt; this.mode() &#x3D;&#x3D;&#x3D; &#x27;review&#x27;);
+  isAnswer &#x3D; computed(() &#x3D;&gt; this.mode() &#x3D;&#x3D;&#x3D; &#x27;answer&#x27;);
+  isHub    &#x3D; computed(() &#x3D;&gt; this.mode() &#x3D;&#x3D;&#x3D; &#x27;hub&#x27;);
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;test-shell&quot; [class.loading]&#x3D;&quot;loading() || submitting()&quot;&gt;
+  &lt;!-- HEADER --&gt;
+  &lt;header class&#x3D;&quot;test-header&quot;&gt;
+    &lt;div class&#x3D;&quot;titles&quot;&gt;
+      &lt;h3 class&#x3D;&quot;course&quot; *ngIf&#x3D;&quot;headerCourse() as ct&quot;&gt;{{ ct }}&lt;/h3&gt;
+      &lt;h1 class&#x3D;&quot;chapter&quot;&gt;{{ headerChapter() }}&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;muted&quot;&gt;
+        Preguntas: &lt;b&gt;{{ questionsCount() }}&lt;/b&gt;
+        &lt;span class&#x3D;&quot;sep&quot;&gt;•&lt;/span&gt;
+        &lt;ng-container *ngIf&#x3D;&quot;limit() &#x3D;&#x3D;&#x3D; 0; else hasLimit&quot;&gt;Intentos ilimitados&lt;/ng-container&gt;
+        &lt;ng-template #hasLimit&gt; Límite: {{ limit() }} &lt;/ng-template&gt;
+        &lt;span class&#x3D;&quot;sep&quot;&gt;•&lt;/span&gt;
+        Completados: &lt;b&gt;{{ attemptsCompleted() }}&lt;/b&gt;
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;muted&quot; *ngIf&#x3D;&quot;lastScore() !&#x3D;&#x3D; null || lastCompletedAt()&quot;&gt;
+        &lt;ng-container *ngIf&#x3D;&quot;lastScore() !&#x3D;&#x3D; null&quot;&gt;Último score: &lt;b&gt;{{ lastScore() }}&lt;/b&gt;&lt;/ng-container&gt;
+        &lt;ng-container *ngIf&#x3D;&quot;lastScore() !&#x3D;&#x3D; null &amp;&amp; lastCompletedAt()&quot;&gt; • &lt;/ng-container&gt;
+        &lt;ng-container *ngIf&#x3D;&quot;lastCompletedAt()&quot;&gt;Completado: &lt;b&gt;{{ lastCompletedAt() | date:&#x27;medium&#x27; }}&lt;/b&gt;&lt;/ng-container&gt;
+      &lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;meta&quot;&gt;
+      &lt;span class&#x3D;&quot;chip&quot; *ngIf&#x3D;&quot;inProgressId()&quot;&gt;Intento en progreso #{{ inProgressId() }}&lt;/span&gt;
+      &lt;span class&#x3D;&quot;chip&quot; [class.ok]&#x3D;&quot;canRetry()&quot; [class.bad]&#x3D;&quot;!canRetry()&quot;&gt;Puede repetir: {{ canRetry() ? &#x27;Sí&#x27; : &#x27;No&#x27; }}&lt;/span&gt;
+      &lt;span class&#x3D;&quot;chip&quot; [class.ok]&#x3D;&quot;canView()&quot; [class.bad]&#x3D;&quot;!canView()&quot;&gt;Puede revisar: {{ canView() ? &#x27;Sí&#x27; : &#x27;No&#x27; }}&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;!-- ACCIONES DE MODO --&gt;
+  &lt;section class&#x3D;&quot;modes&quot; *ngIf&#x3D;&quot;isHub() || isReview()&quot;&gt;
+    &lt;!-- Hub: mostrar acciones según flags --&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;isHub()&quot;&gt;
+      &lt;!-- Si hay en progreso, el flujo ya entra en Answer automático, esto es fallback --&gt;
+      &lt;ui-button
+        *ngIf&#x3D;&quot;inProgressId()&quot;
+        severity&#x3D;&quot;primary&quot; variant&#x3D;&quot;filled&quot; size&#x3D;&quot;sm&quot;
+        label&#x3D;&quot;Continuar test&quot;
+        (click)&#x3D;&quot;startAnswer()&quot;&gt;
+      &lt;/ui-button&gt;
+
+      &lt;ui-button
+        *ngIf&#x3D;&quot;!inProgressId() &amp;&amp; attemptsCompleted() &#x3D;&#x3D;&#x3D; 0&quot;
+        severity&#x3D;&quot;primary&quot; variant&#x3D;&quot;filled&quot; size&#x3D;&quot;sm&quot;
+        label&#x3D;&quot;Realizar test&quot;
+        (click)&#x3D;&quot;startAnswer()&quot;&gt;
+      &lt;/ui-button&gt;
+
+      &lt;ui-button
+        *ngIf&#x3D;&quot;!inProgressId() &amp;&amp; attemptsCompleted() &gt; 0 &amp;&amp; canRetry()&quot;
+        severity&#x3D;&quot;primary&quot; variant&#x3D;&quot;filled&quot; size&#x3D;&quot;sm&quot;
+        label&#x3D;&quot;Repetir test&quot;
+        (click)&#x3D;&quot;startAnswer()&quot;&gt;
+      &lt;/ui-button&gt;
+
+      &lt;ui-button
+        *ngIf&#x3D;&quot;!inProgressId() &amp;&amp; canView()&quot;
+        severity&#x3D;&quot;info&quot; variant&#x3D;&quot;outlined&quot; size&#x3D;&quot;sm&quot;
+        label&#x3D;&quot;Revisar respuestas&quot;
+        (click)&#x3D;&quot;startReview()&quot;&gt;
+      &lt;/ui-button&gt;
+      
+    &lt;/ng-container&gt;
+
+    &lt;!-- Review: solo repetir (si puede) y volver --&gt;
+    &lt;ng-container *ngIf&#x3D;&quot;isReview()&quot;&gt;
+      &lt;ui-button
+        *ngIf&#x3D;&quot;canRetry()&quot;
+        severity&#x3D;&quot;primary&quot; variant&#x3D;&quot;filled&quot; size&#x3D;&quot;sm&quot;
+        label&#x3D;&quot;Repetir test&quot;
+        (click)&#x3D;&quot;startAnswer()&quot;&gt;
+      &lt;/ui-button&gt;
+      &lt;ui-button
+        severity&#x3D;&quot;secondary&quot; variant&#x3D;&quot;flat&quot; size&#x3D;&quot;sm&quot;
+        label&#x3D;&quot;Volver&quot;
+        (click)&#x3D;&quot;backToHub()&quot;&gt;
+      &lt;/ui-button&gt;
+    &lt;/ng-container&gt;
+  &lt;/section&gt;
+
+  &lt;!-- CUESTIONARIO --&gt;
+  &lt;section
+    class&#x3D;&quot;questions&quot;
+    *ngIf&#x3D;&quot;(isAnswer() || isReview()) &amp;&amp; questions().length &gt; 0; else emptyBlock&quot;&gt;
+
+    &lt;article
+      class&#x3D;&quot;question-card&quot;
+      *ngFor&#x3D;&quot;let q of questions(); trackBy: trackQ&quot;
+      [class.readonly]&#x3D;&quot;isReview()&quot;
+      [class.q-correct]&#x3D;&quot;isReview() &amp;&amp; q.is_correct_question &#x3D;&#x3D;&#x3D; true&quot;
+      [class.q-wrong]&#x3D;&quot;isReview() &amp;&amp; q.is_correct_question &#x3D;&#x3D;&#x3D; false&quot;&gt;
+
+      &lt;div class&#x3D;&quot;q-header&quot;&gt;
+        &lt;div class&#x3D;&quot;q-order&quot;&gt;#{{ q.order }}&lt;/div&gt;
+        &lt;div class&#x3D;&quot;q-title&quot;&gt;{{ q.prompt }}&lt;/div&gt;
+
+        &lt;!-- Score por pregunta (solo review y si hay datos) --&gt;
+        &lt;div class&#x3D;&quot;q-score&quot; *ngIf&#x3D;&quot;isReview() &amp;&amp; q.spot !&#x3D;&#x3D; null &amp;&amp; q.correct_spot !&#x3D;&#x3D; null&quot;&gt;
+          {{ q.correct_spot }}/{{ q.spot }}
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Radios --&gt;
+      &lt;div class&#x3D;&quot;answers&quot; *ngIf&#x3D;&quot;q.type?.key &#x3D;&#x3D;&#x3D; &#x27;single&#x27;; else multipleBlock&quot;&gt;
+        &lt;label
+          class&#x3D;&quot;answer&quot;
+          *ngFor&#x3D;&quot;let a of q.answers; trackBy: trackA&quot;
+          [class.sel]&#x3D;&quot;!!a.selected&quot;
+          [class.correct]&#x3D;&quot;isReview() &amp;&amp; a.selected &amp;&amp; a.selected_is_correct &#x3D;&#x3D;&#x3D; true&quot;
+          [class.wrong]&#x3D;&quot;isReview() &amp;&amp; a.selected &amp;&amp; a.selected_is_correct &#x3D;&#x3D;&#x3D; false&quot;
+        &gt;
+          &lt;input
+            type&#x3D;&quot;radio&quot;
+            [name]&#x3D;&quot;&#x27;q-&#x27; + q.question_id&quot;
+            [value]&#x3D;&quot;a.id&quot;
+            [checked]&#x3D;&quot;a.selected || false&quot;
+            (change)&#x3D;&quot;onRadioSelect(q, a.id)&quot;
+            [disabled]&#x3D;&quot;loading() || submitting() || isReview()&quot;
+          /&gt;
+          &lt;span&gt;{{ a.label }}&lt;/span&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Checkboxes --&gt;
+      &lt;ng-template #multipleBlock&gt;
+        &lt;div class&#x3D;&quot;answers&quot;&gt;
+          &lt;label
+            class&#x3D;&quot;answer&quot;
+            *ngFor&#x3D;&quot;let a of q.answers; trackBy: trackA&quot;
+            [class.sel]&#x3D;&quot;!!a.selected&quot;
+            [class.correct]&#x3D;&quot;isReview() &amp;&amp; a.selected &amp;&amp; a.selected_is_correct &#x3D;&#x3D;&#x3D; true&quot;
+            [class.wrong]&#x3D;&quot;isReview() &amp;&amp; a.selected &amp;&amp; a.selected_is_correct &#x3D;&#x3D;&#x3D; false&quot;
+          &gt;
+            &lt;input
+              type&#x3D;&quot;checkbox&quot;
+              [checked]&#x3D;&quot;a.selected || false&quot;
+              (change)&#x3D;&quot;onCheckboxToggle(q, a.id, $any($event.target)?.checked || false)&quot;
+              [disabled]&#x3D;&quot;loading() || submitting() || isReview()&quot;
+            /&gt;
+            &lt;span&gt;{{ a.label }}&lt;/span&gt;
+          &lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/ng-template&gt;
+    &lt;/article&gt;
+  &lt;/section&gt;
+
+  &lt;ng-template #emptyBlock&gt;
+    &lt;div class&#x3D;&quot;empty&quot; *ngIf&#x3D;&quot;isAnswer() || isReview()&quot;&gt;No hay preguntas en esta página.&lt;/div&gt;
+  &lt;/ng-template&gt;
+
+  &lt;!-- FOOTER --&gt;
+  &lt;footer class&#x3D;&quot;toolbar&quot; *ngIf&#x3D;&quot;isAnswer() || isReview()&quot;&gt;
+    &lt;ui-button
+      *ngIf&#x3D;&quot;(pg()?.current_page || 1) &gt; 1&quot;
+      size&#x3D;&quot;sm&quot;
+      [style]&#x3D;&quot;{borderRadius: &#x27;20px&#x27;}&quot;
+      severity&#x3D;&quot;primary&quot;
+      variant&#x3D;&quot;filled&quot;
+      label&#x3D;&quot;Atrás&quot;
+      (click)&#x3D;&quot;prevPage()&quot;
+      [disabled]&#x3D;&quot;loading() || submitting() || (pg()?.current_page || 1) &lt;&#x3D; 1&quot;&gt;
+    &lt;/ui-button&gt;
+
+    &lt;!-- Enviar solo en modo responder y última página --&gt;
+    &lt;ui-button
+      *ngIf&#x3D;&quot;isAnswer() &amp;&amp; !loading() &amp;&amp; (pg()?.current_page || 1) &#x3D;&#x3D;&#x3D; (pg()?.last_page || 1)&quot;
+      size&#x3D;&quot;sm&quot;
+      [style]&#x3D;&quot;{borderRadius: &#x27;20px&#x27;}&quot;
+      severity&#x3D;&quot;primary&quot;
+      variant&#x3D;&quot;filled&quot;
+      label&#x3D;&quot;Enviar&quot;
+      (click)&#x3D;&quot;submit()&quot;
+      [disabled]&#x3D;&quot;loading() || submitting()&quot;&gt;
+    &lt;/ui-button&gt;
+
+    &lt;ui-button
+      *ngIf&#x3D;&quot;(pg()?.current_page || 1) &lt; (pg()?.last_page || 1)&quot;
+      size&#x3D;&quot;sm&quot;
+      [style]&#x3D;&quot;{borderRadius: &#x27;20px&#x27;}&quot;
+      severity&#x3D;&quot;primary&quot;
+      variant&#x3D;&quot;filled&quot;
+      label&#x3D;&quot;Siguiente&quot;
+      (click)&#x3D;&quot;nextPage()&quot;
+      [disabled]&#x3D;&quot;loading() || submitting() || (pg()?.current_page || 1) &gt;&#x3D; (pg()?.last_page || 1)&quot;&gt;
+    &lt;/ui-button&gt;
+  &lt;/footer&gt;
+&lt;/div&gt;
+
+&lt;ui-loading-bar [visible]&#x3D;&quot;submitting()&quot;&gt;&lt;/ui-loading-bar&gt;
+
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="test-shell" [class.loading]="loading() || submitting()">  <!-- HEADER -->  <header class="test-header">    <div class="titles">      <h3 class="course" *ngIf="headerCourse() as ct">{{ ct }}</h3>      <h1 class="chapter">{{ headerChapter() }}</h1>      <p class="muted">        Preguntas: <b>{{ questionsCount() }}</b>        <span class="sep">•</span>        <ng-container *ngIf="limit() === 0; else hasLimit">Intentos ilimitados</ng-container>        <ng-template #hasLimit> Límite: {{ limit() }} </ng-template>        <span class="sep">•</span>        Completados: <b>{{ attemptsCompleted() }}</b>      </p>      <p class="muted" *ngIf="lastScore() !== null || lastCompletedAt()">        <ng-container *ngIf="lastScore() !== null">Último score: <b>{{ lastScore() }}</b></ng-container>        <ng-container *ngIf="lastScore() !== null && lastCompletedAt()"> • </ng-container>        <ng-container *ngIf="lastCompletedAt()">Completado: <b>{{ lastCompletedAt() | date:\'medium\' }}</b></ng-container>      </p>    </div>    <div class="meta">      <span class="chip" *ngIf="inProgressId()">Intento en progreso #{{ inProgressId() }}</span>      <span class="chip" [class.ok]="canRetry()" [class.bad]="!canRetry()">Puede repetir: {{ canRetry() ? \'Sí\' : \'No\' }}</span>      <span class="chip" [class.ok]="canView()" [class.bad]="!canView()">Puede revisar: {{ canView() ? \'Sí\' : \'No\' }}</span>    </div>  </header>  <!-- ACCIONES DE MODO -->  <section class="modes" *ngIf="isHub() || isReview()">    <!-- Hub: mostrar acciones según flags -->    <ng-container *ngIf="isHub()">      <!-- Si hay en progreso, el flujo ya entra en Answer automático, esto es fallback -->      <ui-button        *ngIf="inProgressId()"        severity="primary" variant="filled" size="sm"        label="Continuar test"        (click)="startAnswer()">      </ui-button>      <ui-button        *ngIf="!inProgressId() && attemptsCompleted() === 0"        severity="primary" variant="filled" size="sm"        label="Realizar test"        (click)="startAnswer()">      </ui-button>      <ui-button        *ngIf="!inProgressId() && attemptsCompleted() > 0 && canRetry()"        severity="primary" variant="filled" size="sm"        label="Repetir test"        (click)="startAnswer()">      </ui-button>      <ui-button        *ngIf="!inProgressId() && canView()"        severity="info" variant="outlined" size="sm"        label="Revisar respuestas"        (click)="startReview()">      </ui-button>          </ng-container>    <!-- Review: solo repetir (si puede) y volver -->    <ng-container *ngIf="isReview()">      <ui-button        *ngIf="canRetry()"        severity="primary" variant="filled" size="sm"        label="Repetir test"        (click)="startAnswer()">      </ui-button>      <ui-button        severity="secondary" variant="flat" size="sm"        label="Volver"        (click)="backToHub()">      </ui-button>    </ng-container>  </section>  <!-- CUESTIONARIO -->  <section    class="questions"    *ngIf="(isAnswer() || isReview()) && questions().length > 0; else emptyBlock">    <article      class="question-card"      *ngFor="let q of questions(); trackBy: trackQ"      [class.readonly]="isReview()"      [class.q-correct]="isReview() && q.is_correct_question === true"      [class.q-wrong]="isReview() && q.is_correct_question === false">      <div class="q-header">        <div class="q-order">#{{ q.order }}</div>        <div class="q-title">{{ q.prompt }}</div>        <!-- Score por pregunta (solo review y si hay datos) -->        <div class="q-score" *ngIf="isReview() && q.spot !== null && q.correct_spot !== null">          {{ q.correct_spot }}/{{ q.spot }}        </div>      </div>      <!-- Radios -->      <div class="answers" *ngIf="q.type?.key === \'single\'; else multipleBlock">        <label          class="answer"          *ngFor="let a of q.answers; trackBy: trackA"          [class.sel]="!!a.selected"          [class.correct]="isReview() && a.selected && a.selected_is_correct === true"          [class.wrong]="isReview() && a.selected && a.selected_is_correct === false"        >          <input            type="radio"            [name]="\'q-\' + q.question_id"            [value]="a.id"            [checked]="a.selected || false"            (change)="onRadioSelect(q, a.id)"            [disabled]="loading() || submitting() || isReview()"          />          <span>{{ a.label }}</span>        </label>      </div>      <!-- Checkboxes -->      <ng-template #multipleBlock>        <div class="answers">          <label            class="answer"            *ngFor="let a of q.answers; trackBy: trackA"            [class.sel]="!!a.selected"            [class.correct]="isReview() && a.selected && a.selected_is_correct === true"            [class.wrong]="isReview() && a.selected && a.selected_is_correct === false"          >            <input              type="checkbox"              [checked]="a.selected || false"              (change)="onCheckboxToggle(q, a.id, $any($event.target)?.checked || false)"              [disabled]="loading() || submitting() || isReview()"            />            <span>{{ a.label }}</span>          </label>        </div>      </ng-template>    </article>  </section>  <ng-template #emptyBlock>    <div class="empty" *ngIf="isAnswer() || isReview()">No hay preguntas en esta página.</div>  </ng-template>  <!-- FOOTER -->  <footer class="toolbar" *ngIf="isAnswer() || isReview()">    <ui-button      *ngIf="(pg()?.current_page || 1) > 1"      size="sm"      [style]="{borderRadius: \'20px\'}"      severity="primary"      variant="filled"      label="Atrás"      (click)="prevPage()"      [disabled]="loading() || submitting() || (pg()?.current_page || 1) <= 1">    </ui-button>    <!-- Enviar solo en modo responder y última página -->    <ui-button      *ngIf="isAnswer() && !loading() && (pg()?.current_page || 1) === (pg()?.last_page || 1)"      size="sm"      [style]="{borderRadius: \'20px\'}"      severity="primary"      variant="filled"      label="Enviar"      (click)="submit()"      [disabled]="loading() || submitting()">    </ui-button>    <ui-button      *ngIf="(pg()?.current_page || 1) < (pg()?.last_page || 1)"      size="sm"      [style]="{borderRadius: \'20px\'}"      severity="primary"      variant="filled"      label="Siguiente"      (click)="nextPage()"      [disabled]="loading() || submitting() || (pg()?.current_page || 1) >= (pg()?.last_page || 1)">    </ui-button>  </footer></div><ui-loading-bar [visible]="submitting()"></ui-loading-bar></div>'
+    var COMPONENTS = [{'name': 'AcceptComponent', 'selector': 'app-accept'},{'name': 'AnalyticComponent', 'selector': 'app-analytic'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthComponent', 'selector': 'app-auth'},{'name': 'AvatarComponent', 'selector': 'ui-avatar'},{'name': 'ButtonComponent', 'selector': 'ui-button'},{'name': 'CareerComponent', 'selector': 'app-career'},{'name': 'CategoryComponent', 'selector': 'app-category'},{'name': 'CertificateComponent', 'selector': 'app-certificate'},{'name': 'CertificationComponent', 'selector': 'app-certification'},{'name': 'ChapDetailComponent', 'selector': 'app-chap-detail'},{'name': 'ChapterComponent', 'selector': 'app-chapter'},{'name': 'CheckboxComponent', 'selector': 'ui-checkbox'},{'name': 'CommentComponent', 'selector': 'app-comment'},{'name': 'ContentComponent', 'selector': 'app-content'},{'name': 'ContentLearningComponent', 'selector': 'app-content-learning'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CoursesComponent', 'selector': 'app-courses'},{'name': 'DetailComponent', 'selector': 'app-detail'},{'name': 'DetailsComponent', 'selector': 'app-details'},{'name': 'DialogComponent', 'selector': 'ui-dialog'},{'name': 'EducationComponent', 'selector': 'app-education'},{'name': 'EduLevelComponent', 'selector': 'app-edu-level'},{'name': 'EduUnitComponent', 'selector': 'app-edu-unit'},{'name': 'ExploreComponent', 'selector': 'app-explore'},{'name': 'FileUploadComponent', 'selector': 'ui-file-upload'},{'name': 'HistoryComponent', 'selector': 'app-history'},{'name': 'HomeComponent', 'selector': 'app-home'},{'name': 'IconComponent', 'selector': 'ui-icon'},{'name': 'InformationComponent', 'selector': 'app-information'},{'name': 'InputLabelComponent', 'selector': 'ui-input-label'},{'name': 'InterestComponent', 'selector': 'app-interest'},{'name': 'InvitationComponent', 'selector': 'app-invitation'},{'name': 'LandingComponent', 'selector': 'app-landing'},{'name': 'LearningComponent', 'selector': 'app-learning'},{'name': 'LoadingBarComponent', 'selector': 'ui-loading-bar'},{'name': 'ModuleComponent', 'selector': 'app-module'},{'name': 'NotFoundComponent', 'selector': 'app-not-found'},{'name': 'NotificationComponent', 'selector': 'app-notification'},{'name': 'PanelComponent', 'selector': 'app-panel'},{'name': 'PathComponent', 'selector': 'app-path'},{'name': 'PersonalizeComponent', 'selector': 'app-personalize'},{'name': 'PopoverComponent', 'selector': 'ui-popover'},{'name': 'PortfolioComponent', 'selector': 'app-portfolio'},{'name': 'PreviewComponent', 'selector': 'ui-preview'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'QuestionComponent', 'selector': 'app-question'},{'name': 'RatingComponent', 'selector': 'app-rating'},{'name': 'ResultComponent', 'selector': 'app-result'},{'name': 'SearchComponent', 'selector': 'app-search'},{'name': 'SedeComponent', 'selector': 'app-sede'},{'name': 'SelectButtonComponent', 'selector': 'ui-select-button'},{'name': 'SelectComponent', 'selector': 'ui-select'},{'name': 'SelectDataviewComponent', 'selector': 'ui-select-dataview'},{'name': 'SidebarComponent', 'selector': 'ui-sidebar'},{'name': 'StepperEduComponent', 'selector': 'app-stepper-edu'},{'name': 'StepperInfoComponent', 'selector': 'app-stepper-info'},{'name': 'StepperInteComponent', 'selector': 'app-stepper-inte'},{'name': 'StudioComponent', 'selector': 'app-studio'},{'name': 'TestComponent', 'selector': 'app-test'},{'name': 'TextComponent', 'selector': 'app-text'},{'name': 'ToastComponent', 'selector': 'ui-toast'},{'name': 'ToggleWitchComponent', 'selector': 'ui-toggle-witch'},{'name': 'UserCoursesComponent', 'selector': 'app-user-courses'},{'name': 'UsersComponent', 'selector': 'app-users'}];
+    var DIRECTIVES = [{'name': 'AutosizeDirective', 'selector': 'textarea[autosize]'},{'name': 'UiAvatarDirective', 'selector': '[appUiAvatar]'},{'name': 'UiButtonDirective', 'selector': '[uiButton]'},{'name': 'UiCheckboxDirective', 'selector': '[uiCheckbox]'},{'name': 'UiDialogDirective', 'selector': '[uiDialog]'},{'name': 'UiFileUploadDirective', 'selector': '[uiFileUpload]'},{'name': 'UiIconDirective', 'selector': '[uiIcon]'},{'name': 'UiInputLabelDirective', 'selector': '[uiInputLabel]'},{'name': 'UiLoadingBarDirective', 'selector': '[uiLoadingBar]'},{'name': 'UiPopoverDirective', 'selector': '[uiPopover]'},{'name': 'UiPreviewDirective', 'selector': '[uiPreview]'},{'name': 'UiSelectBottonDirective', 'selector': '[uiSelectBotton]'},{'name': 'UiSelectDataviewDirective', 'selector': '[uiSelectDataview]'},{'name': 'UiSelectDirective', 'selector': '[uiUiSelect]'},{'name': 'UiSidebarDirective', 'selector': '[uiSidebar]'},{'name': 'UiTabsDirective', 'selector': '[appUiTabs]'},{'name': 'UiToogleWitchDirective', 'selector': '[appUiToogleWitch]'}];
+    var ACTUAL_COMPONENT = {'name': 'TestComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'TestComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
