@@ -7,7 +7,7 @@ import { AvatarComponent } from '../../../../shared/UI/components/media/avatar/a
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

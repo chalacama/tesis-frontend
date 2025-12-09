@@ -37,23 +37,10 @@
         <div class="byline">
           <div class="tutor" (click)="$event.stopPropagation(); viewPortfolio(course.tutor?.username)">
             <div class="avatar">
-              <img
-                *ngIf="course.tutor?.profile_picture_url; else avatarFallback"
-                [src]="course.tutor?.profile_picture_url!"
-                alt=""
-                loading="lazy"
-              />
-              <ng-template #avatarFallback>
-                <img
-                  *ngIf="course.tutor?.name; else avatarBuho"
-                  src="img/avatar/default-profile-green.png"
-                  alt=""
-                  loading="lazy"
-                />
-                <ng-template #avatarBuho>
-                  <img src="img/logo/jpg/digi-mentor-solo-buho.jpg" alt="" loading="lazy" />
-                </ng-template>
-              </ng-template>
+              <ui-avatar [style]="{cursor: 'pointer' , width: '30px', height: '30px', fontSize: '10px'}" 
+              [src]="course.tutor?.profile_picture_url" 
+              [name]="course.tutor?.name + ' ' + course.tutor?.lastname" severity="primary" size="md">
+              </ui-avatar>
             </div>
             <span class="tutor-name">{{ course.tutor?.name || 'Digi Mentor' }}</span>
           </div>

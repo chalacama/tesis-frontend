@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StartService } from '../../../../core/api/start/start.service';
 import { Course } from '../../../../core/api/start/start.interfaces';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { AvatarComponent } from '../../../../shared/UI/components/media/avatar/avatar.component';
 
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarComponent],
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.css']
 })

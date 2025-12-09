@@ -51,6 +51,7 @@ export interface Category {
 export interface Tutor {
   id:                  number | null;
   name:                string | null;
+  lastname:            string | null;
   username:            string | null;
-  profile_picture_url: string | null;
+  profile_picture_url: string;
 }
