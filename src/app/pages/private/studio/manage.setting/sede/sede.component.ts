@@ -10,6 +10,8 @@ import {
 import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
 import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 import { ToastComponent } from '../../../../../shared/UI/components/overlay/toast/toast.component';
+import { EduUnit } from '../../../../../core/api/edu-unit/edu-unit.interface';
+import { EduUnitService } from '../../../../../core/api/edu-unit/edu-unit.service';
 
 import {
   SedeWithUsersCount,
@@ -60,6 +62,9 @@ export class SedeComponent implements OnInit {
   lastPage = 1;
   totalItems = 0;
 
+  // Unidades educativas para el select
+  eduUnits: EduUnit[] = [];
+
   // Filtros
   filtersForm!: FormGroup;
   filterProvinces: LocationItem[] = [];
@@ -90,7 +95,8 @@ export class SedeComponent implements OnInit {
     private readonly careerService: CareerService,
     private readonly eduLevelService: EduLevelService,
     private readonly locationService: LocationService,
-    private readonly toast: UiToastService
+    private readonly toast: UiToastService,
+    private readonly eduUnitService: EduUnitService
   ) {}
 
   ngOnInit(): void {
@@ -102,79 +108,96 @@ export class SedeComponent implements OnInit {
   // ----------------------------------------
   // Inicialización formularios
   // ----------------------------------------
-  private initForms(): void {
-    this.filtersForm = this.fb.group({
-      unitName: [''],
-      provinceId: [null],
-      cantonId: [null],
-      educationalLevelId: [null]
-    });
+ private initForms(): void {
+  this.filtersForm = this.fb.group({
+    unitName: [''],
+    provinceId: [null],
+    cantonId: [null],
+    educationalLevelId: [null]
+  });
 
-    this.sedeForm = this.fb.group({
-      province_id: [null, Validators.required],
-      canton_id: [null, Validators.required],
-      educational_unit_id: [null, Validators.required],
-      career_ids: [[]] // opcional
-    });
+  // province_id y canton_id YA NO son obligatorios
+  this.sedeForm = this.fb.group({
+    province_id: [null],                                // sin Validators.required
+    canton_id: [null],                                  // sin Validators.required
+    educational_unit_id: [null, Validators.required],   // sigue siendo obligatorio
+    career_ids: [[]] // opcional
+  });
 
-    // Cuando cambie la provincia en filtros, cargar cantones
-    this.filtersForm.get('provinceId')?.valueChanges.subscribe((id) => {
-      this.onFilterProvinceChange(id);
-    });
+  // Cuando cambie la provincia en filtros, cargar cantones
+  this.filtersForm.get('provinceId')?.valueChanges.subscribe((id) => {
+    this.onFilterProvinceChange(id);
+  });
 
-    // Cuando cambie la provincia en el formulario, cargar cantones
-    this.sedeForm.get('province_id')?.valueChanges.subscribe((id) => {
-      this.onFormProvinceChange(id);
-    });
-  }
+  // Cuando cambie la provincia en el formulario, cargar cantones
+  this.sedeForm.get('province_id')?.valueChanges.subscribe((id) => {
+    this.onFormProvinceChange(id);
+  });
+}
+
 
   // ----------------------------------------
   // Cargar datos auxiliares (provincias, niveles, carreras)
   // ----------------------------------------
   private loadAuxiliaryData(): void {
-    // Provincias para filtros
-    this.locationService.getProvinces().subscribe({
-      next: (provinces) => {
-        this.filterProvinces = provinces;
-        this.formProvinces = provinces;
-      },
-      error: () => {
-        this.toast.add({
-          severity: 'danger',
-          summary: 'Ubicaciones',
-          message: 'No se pudieron cargar las provincias.'
-        });
-      }
-    });
+  // Provincias para filtros y formulario
+  this.locationService.getProvinces().subscribe({
+    next: (provinces) => {
+      this.filterProvinces = provinces;
+      this.formProvinces = provinces;
+    },
+    error: () => {
+      this.toast.add({
+        severity: 'danger',
+        summary: 'Ubicaciones',
+        message: 'No se pudieron cargar las provincias.'
+      });
+    }
+  });
 
-    // Niveles educativos (para filtro educationalLevelId)
-    this.eduLevelService.getAll().subscribe({
-      next: (levels) => {
-        this.eduLevels = levels;
-      },
-      error: () => {
-        this.toast.add({
-          severity: 'danger',
-          summary: 'Niveles educativos',
-          message: 'No se pudieron cargar los niveles educativos.'
-        });
-      }
-    });
+  // Niveles educativos (para filtro educationalLevelId)
+  this.eduLevelService.getAll().subscribe({
+    next: (levels) => {
+      this.eduLevels = levels;
+    },
+    error: () => {
+      this.toast.add({
+        severity: 'danger',
+        summary: 'Niveles educativos',
+        message: 'No se pudieron cargar los niveles educativos.'
+      });
+    }
+  });
 
-    // Todas las carreras (para seleccionar en el modal de sede)
-    this.careerService.getAll().subscribe({
-      next: (careers) => {
-        this.careers = careers;
-      },
-      error: () => {
-        this.toast.add({
-          severity: 'danger',
-          summary: 'Carreras',
-          message: 'No se pudo cargar la lista de carreras.'
-        });
-      }
-    });
-  }
+  // Todas las carreras (para seleccionar en el modal de sede)
+  this.careerService.getAll().subscribe({
+    next: (careers) => {
+      this.careers = careers;
+    },
+    error: () => {
+      this.toast.add({
+        severity: 'danger',
+        summary: 'Carreras',
+        message: 'No se pudo cargar la lista de carreras.'
+      });
+    }
+  });
+
+  // 👇 NUEVO: todas las unidades educativas para el select
+  this.eduUnitService.getAll().subscribe({
+    next: (units) => {
+      this.eduUnits = units;
+    },
+    error: () => {
+      this.toast.add({
+        severity: 'danger',
+        summary: 'Unidades educativas',
+        message: 'No se pudieron cargar las unidades educativas.'
+      });
+    }
+  });
+}
+
 
   // ----------------------------------------
   // Manejo de filtros
@@ -335,11 +358,12 @@ export class SedeComponent implements OnInit {
     }
 
     this.sedeForm.reset({
-      province_id: sede.province_id,
-      canton_id: sede.canton_id,
-      educational_unit_id: sede.educational_unit?.id ?? null,
-      career_ids: sede.careers?.map((c) => c.id) ?? []
-    });
+    province_id: sede.province_id,
+    canton_id: sede.canton_id,
+    educational_unit_id: sede.educational_unit?.id ?? null,
+    career_ids: sede.careers?.map((c) => c.id) ?? []
+  });
+
 
     this.isSedeModalOpen = true;
   }

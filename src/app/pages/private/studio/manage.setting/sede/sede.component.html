@@ -1,8 +1,5 @@
 <!-- Barra de carga global -->
-<ui-loading-bar
-  [visible]="save"
-  [mask]="{ type: 'dimmed' }"
-></ui-loading-bar>
+<ui-loading-bar [visible]="save" [mask]="{ type: 'dimmed' }"></ui-loading-bar>
 
 <!-- Toast global -->
 <ui-toast></ui-toast>
@@ -17,16 +14,8 @@
       </p>
     </div>
 
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="openCreateModal()"
-    >
-      <ui-icon
-        [size]="'sm'"
-        [severity]="'contrast'"
-        [svgPath]="'svg/create.svg'"
-      ></ui-icon>
+    <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+      <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/create.svg'"></ui-icon>
       <span>Nueva sede</span>
     </button>
   </header>
@@ -38,11 +27,7 @@
         <!-- Nombre unidad -->
         <div class="field">
           <label>Unidad educativa</label>
-          <input
-            type="text"
-            formControlName="unitName"
-            placeholder="Buscar por nombre de unidad"
-          />
+          <input type="text" formControlName="unitName" placeholder="Buscar por nombre de unidad" />
         </div>
 
         <!-- Provincia -->
@@ -50,10 +35,7 @@
           <label>Provincia</label>
           <select formControlName="provinceId">
             <option [ngValue]="null">Todas</option>
-            <option
-              *ngFor="let prov of filterProvinces"
-              [ngValue]="prov.id"
-            >
+            <option *ngFor="let prov of filterProvinces" [ngValue]="prov.id">
               {{ prov.name }}
             </option>
           </select>
@@ -64,10 +46,7 @@
           <label>Cantón</label>
           <select formControlName="cantonId">
             <option [ngValue]="null">Todos</option>
-            <option
-              *ngFor="let canton of filterCantons"
-              [ngValue]="canton.id"
-            >
+            <option *ngFor="let canton of filterCantons" [ngValue]="canton.id">
               {{ canton.name }}
             </option>
           </select>
@@ -78,10 +57,7 @@
           <label>Nivel educativo</label>
           <select formControlName="educationalLevelId">
             <option [ngValue]="null">Todos</option>
-            <option
-              *ngFor="let level of eduLevels"
-              [ngValue]="level.id"
-            >
+            <option *ngFor="let level of eduLevels" [ngValue]="level.id">
               {{ level.name }}
             </option>
           </select>
@@ -118,10 +94,7 @@
     </div>
 
     <!-- Tabla expandible -->
-    <table
-      *ngIf="!isTableLoading && sedes.length > 0"
-      class="sede-table"
-    >
+    <table *ngIf="!isTableLoading && sedes.length > 0" class="sede-table">
       <thead>
         <tr>
           <th></th>
@@ -138,17 +111,9 @@
           <!-- Fila principal -->
           <tr class="sede-row" (click)="toggleExpand(sede.id)">
             <td class="col-expand">
-              <button
-                type="button"
-                class="icon-btn"
-                (click)="toggleExpand(sede.id); $event.stopPropagation()"
-              >
-                <ui-icon
-                  [size]="'sm'"
-                  [severity]="'contrast'"
-                  [svgPath]="'svg/arrow-right.svg'"
-                  [ngClass]="{ 'rotated': isExpanded(sede.id) }"
-                ></ui-icon>
+              <button type="button" class="icon-btn" (click)="toggleExpand(sede.id); $event.stopPropagation()">
+                <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/arrow-right.svg'"
+                  [ngClass]="{ 'rotated': isExpanded(sede.id) }"></ui-icon>
               </button>
             </td>
             <td>
@@ -161,29 +126,13 @@
             <td>{{ sede.users_count }}</td>
             <td>{{ sede.careers.length || 0 }}</td>
             <td class="col-actions">
-              <button
-                type="button"
-                class="icon-btn"
-                (click)="openEditModal(sede); $event.stopPropagation()"
-                title="Editar sede"
-              >
-                <ui-icon
-                  [size]="'sm'"
-                  [severity]="'contrast'"
-                  [svgPath]="'svg/rename.svg'"
-                ></ui-icon>
+              <button type="button" class="icon-btn" (click)="openEditModal(sede); $event.stopPropagation()"
+                title="Editar sede">
+                <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/rename.svg'"></ui-icon>
               </button>
-              <button
-                type="button"
-                class="icon-btn danger"
-                (click)="openDeleteModal(sede); $event.stopPropagation()"
-                title="Eliminar sede"
-              >
-                <ui-icon
-                  [size]="'sm'"
-                  [severity]="'contrast'"
-                  [svgPath]="'svg/delete.svg'"
-                ></ui-icon>
+              <button type="button" class="icon-btn danger" (click)="openDeleteModal(sede); $event.stopPropagation()"
+                title="Eliminar sede">
+                <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/delete.svg'"></ui-icon>
               </button>
             </td>
           </tr>
@@ -208,9 +157,7 @@
                 <div class="expanded-section">
                   <h4>Niveles educativos</h4>
                   <ul>
-                    <li
-                      *ngFor="let level of sede.educational_unit?.educational_levels || []"
-                    >
+                    <li *ngFor="let level of sede.educational_unit?.educational_levels || []">
                       {{ level.name }} ({{ level.period }},
                       máx. {{ level.max_periods }})
                     </li>
@@ -233,12 +180,8 @@
                 </div>
 
                 <div class="expanded-footer">
-                  <span
-                    >Creado: {{ sede.created_at | date: 'short' }}</span
-                  >
-                  <span
-                    >Actualizado: {{ sede.updated_at | date: 'short' }}</span
-                  >
+                  <span>Creado: {{ sede.created_at | date: 'short' }}</span>
+                  <span>Actualizado: {{ sede.updated_at | date: 'short' }}</span>
                 </div>
               </div>
             </td>
@@ -256,12 +199,8 @@
       </div>
 
       <div class="pagination-controls">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          [disabled]="currentPage === 1"
-          (click)="goToPage(currentPage - 1)"
-        >
+        <button type="button" class="btn btn-secondary" [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)">
           Anterior
         </button>
 
@@ -269,19 +208,12 @@
           Página {{ currentPage }} de {{ lastPage }}
         </span>
 
-        <button
-          type="button"
-          class="btn btn-secondary"
-          [disabled]="currentPage === lastPage"
-          (click)="goToPage(currentPage + 1)"
-        >
+        <button type="button" class="btn btn-secondary" [disabled]="currentPage === lastPage"
+          (click)="goToPage(currentPage + 1)">
           Siguiente
         </button>
 
-        <select
-          class="per-page-select"
-          (change)="changePerPage(+$any($event.target).value)"
-        >
+        <select class="per-page-select" (change)="changePerPage(+$any($event.target).value)">
           <option value="5" [selected]="perPage === 5">5</option>
           <option value="10" [selected]="perPage === 10">10</option>
           <option value="20" [selected]="perPage === 20">20</option>
@@ -293,10 +225,7 @@
 </div>
 
 <!-- Modal crear / editar sede -->
-<div
-  class="modal-backdrop"
-  *ngIf="isSedeModalOpen"
->
+<div class="modal-backdrop" *ngIf="isSedeModalOpen">
   <div class="modal">
     <header class="modal-header">
       <h2>{{ isEditMode ? 'Editar sede' : 'Crear nueva sede' }}</h2>
@@ -307,77 +236,48 @@
         <div class="field-grid">
           <!-- Provincia -->
           <div class="field">
-            <label>Provincia <span class="req">*</span></label>
+            <label>Provincia</label>
             <select formControlName="province_id">
               <option [ngValue]="null">Selecciona una provincia</option>
-              <option
-                *ngFor="let prov of formProvinces"
-                [ngValue]="prov.id"
-              >
+              <option *ngFor="let prov of formProvinces" [ngValue]="prov.id">
                 {{ prov.name }}
               </option>
             </select>
-            <div
-              class="field-error"
-              *ngIf="sedeForm.get('province_id')?.touched && sedeForm.get('province_id')?.invalid"
-            >
-              La provincia es obligatoria.
-            </div>
           </div>
 
           <!-- Cantón -->
           <div class="field">
-            <label>Cantón <span class="req">*</span></label>
+            <label>Cantón</label>
             <select formControlName="canton_id">
               <option [ngValue]="null">Selecciona un cantón</option>
-              <option
-                *ngFor="let canton of formCantons"
-                [ngValue]="canton.id"
-              >
+              <option *ngFor="let canton of formCantons" [ngValue]="canton.id">
                 {{ canton.name }}
               </option>
             </select>
-            <div
-              class="field-error"
-              *ngIf="sedeForm.get('canton_id')?.touched && sedeForm.get('canton_id')?.invalid"
-            >
-              El cantón es obligatorio.
-            </div>
           </div>
+
 
           <!-- Unidad educativa -->
           <div class="field">
-            <label>ID Unidad educativa <span class="req">*</span></label>
-            <input
-              type="number"
-              min="1"
-              formControlName="educational_unit_id"
-              placeholder="Ej: 1"
-            />
-            <div
-              class="field-error"
-              *ngIf="sedeForm.get('educational_unit_id')?.touched && sedeForm.get('educational_unit_id')?.invalid"
-            >
+            <label>Unidad educativa <span class="req">*</span></label>
+            <select formControlName="educational_unit_id">
+              <option [ngValue]="null">Selecciona una unidad educativa</option>
+              <option *ngFor="let unit of eduUnits" [ngValue]="unit.id">
+                {{ unit.name }}
+              </option>
+            </select>
+            <div class="field-error"
+              *ngIf="sedeForm.get('educational_unit_id')?.touched && sedeForm.get('educational_unit_id')?.invalid">
               La unidad educativa es obligatoria.
             </div>
-            <p class="field-hint">
-              (Enlaza el ID de la unidad educativa existente. Luego puedes
-              mejorar esto con un selector).
-            </p>
           </div>
+
 
           <!-- Carreras -->
           <div class="field field-full">
             <label>Carreras (opcional)</label>
-            <select
-              multiple
-              formControlName="career_ids"
-              size="5"
-            >
-              <option
-                *ngFor="let career of careers"
-                [ngValue]="career.id"
-              >
+            <select multiple formControlName="career_ids" size="5">
+              <option *ngFor="let career of careers" [ngValue]="career.id">
                 {{ career.name }}
               </option>
             </select>
@@ -389,18 +289,10 @@
       </div>
 
       <footer class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="closeSedeModal()"
-        >
+        <button type="button" class="btn btn-secondary" (click)="closeSedeModal()">
           Cancelar
         </button>
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="sedeForm.invalid"
-        >
+        <button type="submit" class="btn btn-primary" [disabled]="sedeForm.invalid">
           {{ isEditMode ? 'Actualizar sede' : 'Crear sede' }}
         </button>
       </footer>
@@ -409,10 +301,7 @@
 </div>
 
 <!-- Modal eliminar -->
-<div
-  class="modal-backdrop"
-  *ngIf="isDeleteModalOpen"
->
+<div class="modal-backdrop" *ngIf="isDeleteModalOpen">
   <div class="modal modal-sm">
     <header class="modal-header">
       <h2>Eliminar sede</h2>
@@ -427,18 +316,10 @@
       </p>
     </div>
     <footer class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="closeDeleteModal()"
-      >
+      <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">
         Cancelar
       </button>
-      <button
-        type="button"
-        class="btn btn-danger"
-        (click)="confirmDelete()"
-      >
+      <button type="button" class="btn btn-danger" (click)="confirmDelete()">
         Eliminar
       </button>
     </footer>
