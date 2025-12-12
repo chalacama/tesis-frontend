@@ -1,17 +1,32 @@
 /* measures.component.css */
 :root{
-   /* ancho & alto */
+   
    --sidebar-width: 250px;
    --nav-height: 58px;
    --sidebar-width-small: 72px;
    --sidebar-width-large: 300px;
-   /* z-index */;
+   
    --z-nav:300;
    --z-drawer:400;
    --z-sidebar:200;
-   --z-dialog:500;
+   --z-dialog:700;
    --z-popover:100;
    --z-mask-drawer:399;
-   --z-toast:700;
-   --z-loading:600;
+   --z-toast:900;
+   --z-loading:800;
 }
+/*  :root{
+   --sidebar-width: 250px;
+   --nav-height: 58px;
+   --sidebar-width-small: 72px;
+
+   
+   --z-sidebar: 300;
+   --z-drawer: 300;      
+   --z-nav: 500;         
+   --z-dialog: 900;      
+   --z-popover: 800;
+   --z-mask-drawer: 499;
+   --z-toast: 1000;
+   --z-loading: 1100;
+} */

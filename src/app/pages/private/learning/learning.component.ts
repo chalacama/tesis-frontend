@@ -52,24 +52,18 @@ private readonly route = inject(ActivatedRoute);
     //     this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
     //   });
     this.router.events
- .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
- .subscribe((event: NavigationEnd) => {
- // Remove leading slash
- this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
+  .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+  .subscribe((event: NavigationEnd) => {
+    this.currentRoute = event.urlAfterRedirects.replace(/^\/+/, '');
 
- // --- INICIO DE LA NUEVA LÓGICA ---
- // Comprueba si la ruta actual comienza con 'learning/course/'
- if (this.currentRoute.startsWith('learning/course/')) {
- // Si es una ruta de curso, fuerza el colapso del sidebar
-this.isSidebarCollapsed = true;
- } else {
-// Si NO es una ruta de curso, revierte al comportamiento por defecto
- // (colapsado en tablet, abierto en PC)
- // Usamos this.isTablet, que es actualizado por el BreakpointObserver
- this.isSidebarCollapsed = this.isTablet;
- }
- // --- FIN DE LA NUEVA LÓGICA ---
-});
+    // Solo caso especial: si entras a un curso, lo colapsas
+    if (this.currentRoute.startsWith('learning/course/')) {
+      this.isSidebarCollapsed = true;
+    }
+    // Caso contrario: NO toques isSidebarCollapsed,
+    // deja que se quede como lo dejó el usuario.
+  });
+
   }
 
   
@@ -123,6 +117,7 @@ this.isSidebarCollapsed = true;
 
   }
   navigateTo(path: string) {
+    
     this.router.navigate([path]);
   }
   switchTheme(theme: 'light' | 'dark' | 'system') {

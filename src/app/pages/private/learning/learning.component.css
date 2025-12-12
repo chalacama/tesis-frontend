@@ -35,7 +35,7 @@
 
 .sidebar {
     position: fixed;
-    z-index: var(--z-drawer);
+     z-index: var(--z-drawer);
     width: var(--sidebar-width);
     height: 100%;
     margin: 0;
@@ -159,6 +159,7 @@
     align-items: center;
     height: 100%;
     gap: 20px;
+    
 }
 .nav-center{
     /* width: 40%; */
@@ -565,7 +566,7 @@
         width: 100%;
         left: 0;
         padding: 0 5px;
-        z-index: 90;
+        /* z-index: 90; */
     }
     .nav-left {
         display: flex;
@@ -599,11 +600,22 @@
     .nav {
         width: calc(100% - var(--sidebar-width-small));
         left: var(--sidebar-width-small);
-        z-index: 10;
+        /* z-index: calc( var(--z-nav) - 100); */
     }
     .content-main {
         padding-left: var(--sidebar-width-small);
     }
+    
+    
+    .sidebar {
+         /* z-index: var(--z-sidebar); */
+         z-index: var(--z-drawer);
+    }
+    .collapsed {
+        z-index: var(--z-sidebar);
+         
+    }
+    
     .drawer-bg {
         display: block;
         position: fixed;
@@ -612,6 +624,10 @@
         background-color: var(--overlay-color);
         z-index: calc(var(--z-drawer) - 1);
     }
+    /* .sidebar-mobile.drawer-bg {
+        
+        display: none;
+    } */
 }
 
 
@@ -621,6 +637,12 @@
     .drawer-bg {
         display: none;
     }
+    
+    .sidebar {
+         z-index: var(--z-sidebar);
+         
+    }
+    
 }
 
 .profile-dropdown {
@@ -733,7 +755,7 @@
 
 }
 .dropdown_item:hover{
-    background-color: rgba(104, 104, 104, 0.292);
+    background-color: var(--background-hover);
     transition: all 0.5s ease;
     
 }
