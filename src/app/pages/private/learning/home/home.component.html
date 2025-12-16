@@ -67,10 +67,6 @@
           <div class="card_content_profile">
             <div (click)="viewPortfolio(course.tutor?.username)" class="card_content_profile_img"
               [class.empty]="course.tutor?.profile_picture_url">
-              <!-- <img *ngIf="course.tutor?.profile_picture_url" [src]="course.tutor?.profile_picture_url" alt="Foto de perfil" />
-              <span *ngIf="!course.tutor?.profile_picture_url">
-                {{ getInitialsFromUser(course.tutor) }}
-              </span> -->
               <ui-avatar [style]="{cursor: 'pointer' , width: '30px', height: '30px', fontSize: '10px'}" 
               [src]="course.tutor?.profile_picture_url" 
               [name]="course.tutor?.name + ' ' + course.tutor?.lastname" severity="primary" size="md">
@@ -84,7 +80,7 @@
                 <p>{{ course.title }}</p>
               </div>
               <div class="card_content_profile_name">
-                <p>{{ course.tutor?.name || 'Digi Mentor' }}</p>
+                <p>{{ course.tutor?.name + ' ' + course.tutor?.lastname }}</p>
               </div>
 
               <!-- NUEVA FILA: fecha + registrados -->

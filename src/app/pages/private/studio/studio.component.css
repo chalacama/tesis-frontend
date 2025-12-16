@@ -179,6 +179,7 @@
     justify-content: right;
     align-items: center;
     height: 100%;
+    gap: 10px;
 }
 .nav-center{
     /* width: 40%; */
@@ -669,12 +670,7 @@
     width: 40px;
     height: 40px;
 }
-.profile-avatar{
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: contain;
-}
+
 .content-thumbnail-avatar {
   position: relative;
   display: inline-block;
@@ -718,14 +714,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: auto;
+    height: 100px;
 }
 .profile-avatar-collapsed{
-    
-    width: 65px;
+    padding: 5px;
     height: 65px;
-    /* border-radius: 50%; */
-    object-fit: contain;
 }
 .miniature-course-collapsed{
     width: 65px;
