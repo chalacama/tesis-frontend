@@ -323,7 +323,7 @@
     margin-left: 20px;
 }
 .content-navegation-item{
-    padding: 5px 10px;
+    padding: 10px;
 }
 .navegation-route {
     display: flex;
@@ -332,9 +332,9 @@
     padding: 8px 0 8px 15px;    
     border-radius: 5px;
     cursor: pointer;
-    position: relative;
+   /*  position: relative; */
     transition: background-color 200ms;
-    margin: 5px 0px;
+    margin: 0;
     
 }
 .navegation-route:hover {
@@ -351,7 +351,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    /* position: relative; */
 }
 
 .icon-navegation svg {
@@ -379,13 +379,15 @@
 /* Línea indicadora */
 
 .underline {
-    display: block;
-    width: 0%;
-    height: 2px;
-    margin-top: 4px;
+    display: none;
+    width: 3px;
+    height: 20px;
+    /* margin-top: 4px; */
     background-color: var(--sev-primary);
-    border-radius: 5px;
+    /* border-radius: 5px; */
     transition: width 200ms ease;
+    position: absolute;
+    left: 0;
 }
 
 
@@ -410,7 +412,8 @@
 }
 
 .navegation-route:has(input:checked) .underline {
-    width: 100%;
+   
+    display: flex;
 }
 
 
@@ -924,11 +927,10 @@
   border-radius: 10px;
 }
 
-.accordion { width: 100%;  }
+.accordion { width: 100%; padding: 2px; border: 1px solid var(--border-color); }
 
 .acc-header{
-  width: calc(100% - 20px);
-  margin: 8px 10px;
+  width: 100%;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -936,7 +938,7 @@
   border-radius:10px;
   background: var(--background-hover);
   color: var(--text-color);
-  border: 1px solid var(--border-color);
+  border: none;
   cursor: pointer;
 }
 
@@ -955,15 +957,16 @@
   max-height: 600px;
 }
 
-.panel-inner{ padding: 0 10px 10px 10px; }
+.panel-inner{ padding: 0px; }
 
 .chapters{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; }
 
 .chapter-btn{
   width: 100%;
-  border: 1px solid var(--border-color);
+  border: none;
+  border-top: 1px solid var(--border-color);
   background: var(--sidebar-bg);
-  border-radius: 10px;
+  /* border-radius: 10px; */
   padding: 10px;
   cursor: pointer;
   color: var(--text-color);
@@ -977,6 +980,7 @@
   display:flex;
   gap:10px;
   align-items:flex-start;
+  
 }
 
 .chapter-underline{
@@ -1002,5 +1006,21 @@
   border: 1px solid var(--border-color);
   background: var(--card-bg);
 }
+.chapter-btn-content{
+  align-items: stretch; /* 👈 permite que el underline estire */
+}
+
+.chapter-underline{
+  align-self: stretch;  /* 👈 fuerza a ocupar el alto disponible */
+  min-height: 34px;     /* 👈 garantiza que se vea siempre */
+  width: 4px;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.chapter-underline-active{
+  background: var(--sev-primary);
+}
+
 
 

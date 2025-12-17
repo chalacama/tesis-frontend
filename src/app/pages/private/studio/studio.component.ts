@@ -505,15 +505,25 @@ isActiveChapter(chapterId: number): boolean {
 }
 
 goToChapter(moduleId: number, chapterId: number): void {
-  // navega a /studio/:id/module/:module/chapter/:chapter
-  this.router.navigate(['./module', moduleId, 'chapter', chapterId], { relativeTo: this.route });
+  const commands = ['./module', moduleId, 'chapter', chapterId, 'content'];
 
-  // UX móvil/tablet: cerrar drawer al navegar
-  if (this.isMobile) {
-    this.isSidebarClose = true;
-    this.isdrawer = false;
-  }
+  // Temporarily disable route reuse so Angular will recreate the component and reload data
+  const rrs: any = this.router.routeReuseStrategy;
+  const oldShouldReuse = rrs.shouldReuseRoute;
+  rrs.shouldReuseRoute = () => false;
+
+  this.router.navigate(commands, { relativeTo: this.route })
+    .finally(() => {
+      // restore original reuse strategy
+      rrs.shouldReuseRoute = oldShouldReuse;
+
+      if (this.isMobile) {
+        this.isSidebarClose = true;
+        this.isdrawer = false;
+      }
+    });
 }
+
 
 trackByModule(_: number, m: ModuleResponse) { return m.id; }
 trackByChapter(_: number, c: Chapters) { return c.id; }
