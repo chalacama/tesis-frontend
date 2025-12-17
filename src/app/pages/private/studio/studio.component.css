@@ -294,11 +294,10 @@
     align-items: center;
     justify-content: center; ;
     width: 100%;
-    /* height: 120px; */
     margin-top: 5px;
 }
 .content-thumbnail-miniature{
-    height: 150px;
+    height: auto;
 }
 /* ==========================================================================
    NAVEGACIÓN LATERAL
@@ -713,11 +712,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 100px;
     height: 100px;
+    margin: 0 auto;
 }
 .profile-avatar-collapsed{
     padding: 5px;
+    width: 65px;
     height: 65px;
 }
 .miniature-course-collapsed{
@@ -839,6 +840,88 @@
     margin: 5px 0; 
     padding: 10px 15px;
     width: 100%;
+}
+
+/* =========================
+   SKELETON
+   ========================= */
+.skel {
+  background: var(--background-skeleton);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--overlay-color-contrast),
+    transparent
+  );
+  animation: skel-move 1.1s infinite;
+}
+
+@keyframes skel-move {
+  from { left: -60%; }
+  to { left: 120%; }
+}
+
+.skel-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+}
+
+.skel-avatar-collapsed {
+  width: 65px;
+  height: 65px;
+}
+
+.skel-line {
+  height: 12px;
+  width: 140px;
+  border-radius: 10px;
+}
+
+.skel-miniature {
+  width: 220px;
+  aspect-ratio: 16 / 9;
+  border-radius: 6px;
+}
+
+.skel-miniature-collapsed {
+  width: 65px;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+}
+
+.skel-acc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 6px 10px;
+  border-radius: 10px;
+}
+
+.skel-pill {
+  height: 12px;
+  width: 26px;
+  border-radius: 999px;
+}
+
+.skel-chapter-row {
+  height: 34px;
+  margin: 6px 10px;
+  border-radius: 10px;
 }
 
 

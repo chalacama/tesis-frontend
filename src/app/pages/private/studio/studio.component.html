@@ -193,48 +193,70 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="hasExternalUser && portfolioData">
-                        <div>
+                    <!-- ✅ SKELETON portfolio/user -->
+                    <div *ngIf="hasExternalUser">
+                        <ng-container *ngIf="!portfolioLoading; else skPortfolio">
                             <div class="content-thumbnail-avatar">
-                                <div class="content-avatar">
-                                    <img [class.profile-avatar-collapsed]="isSidebarCollapsed" class="profile-avatar"
-                                        [src]="portfolioData.profile_picture_url" alt="">
+                                <div class="content-avatar" [class.profile-avatar-collapsed]="isSidebarCollapsed">
+                                    <ui-avatar
+                                        [style]="{cursor: 'pointer' , width: '100%', height: '100%', fontSize: '10px'}"
+                                        [src]="portfolioData?.profile_picture_url"
+                                        [name]="portfolioData?.name + ' ' + portfolioData?.lastname" severity="primary"
+                                        size="lg">
+                                    </ui-avatar>
                                 </div>
-
                             </div>
                             <div class="content-username">
                                 <div *ngIf="!isSidebarCollapsed" class="label-user-name">
-                                    <p>{{ portfolioData.name + ' ' + portfolioData.lastname }}</p>
-
+                                    <p>{{ portfolioData?.name + ' ' + portfolioData?.lastname }}</p>
                                 </div>
-
                             </div>
-                        </div>
+                        </ng-container>
+
+                        <ng-template #skPortfolio>
+                            <div class="content-thumbnail-avatar">
+                                <div class="skel skel-avatar" [class.skel-avatar-collapsed]="isSidebarCollapsed"></div>
+                            </div>
+                            <div class="content-username" *ngIf="!isSidebarCollapsed">
+                                <div class="skel skel-line"></div>
+                            </div>
+                        </ng-template>
                     </div>
+
                 </div>
                 <div class="sidebar-padding" *ngIf="hasExternalCourse">
                     <div class="content-thumbnail-avatar content-thumbnail-miniature">
-                        <div class="miniature-course" [class.miniature-course-collapsed]="isSidebarCollapsed">
-                            <ui-preview [style]="{borderRadius: '5px' ,width:'100%'}"
-                                [src]="miniatureData?.miniature === null ? '' : miniatureData?.miniature?.url"
-                                [types]="'image'" [overlay]="false" [showMask]="true" [severity]="'primary'"
-                                [size]="'sm'" [variant]="'outlined'" [mask]="{ type: 'blur' }">
+                        <ng-container *ngIf="!miniatureLoading; else skMiniature">
+                            <!-- tu ui-preview actual -->
+                            <div class="miniature-course" [class.miniature-course-collapsed]="isSidebarCollapsed">
+                                <ui-preview [style]="{borderRadius: '5px' ,width:'100%'}"
+                                    [src]="miniatureData?.miniature === null ? '' : miniatureData?.miniature?.url"
+                                    [types]="'image'" [overlay]="false" [showMask]="true" [severity]="'primary'"
+                                    [size]="'sm'" [variant]="'outlined'" [mask]="{ type: 'blur' }">
+                                    <ui-button variant="flat" (click)="goToCourse(miniatureData?.course)"
+                                        [style]="{borderRadius: '15px', width: '30px', height: '30px'}"
+                                        severity="primary" [icon]="{svgPath: 'svg/search.svg'}"></ui-button>
+                                </ui-preview>
+                            </div>
+                        </ng-container>
 
-                                <ui-button variant="flat" (click)="goToCourse(miniatureData?.course)"
-                                    [style]="{borderRadius: '15px', width: '30px', height: '30px'}" severity="primary"
-                                    [icon]="{svgPath: 'svg/search.svg'}">
-                                </ui-button>
-                            </ui-preview>
-                        </div>
-
-
-
+                        <ng-template #skMiniature>
+                            <div class="skel skel-miniature" [class.skel-miniature-collapsed]="isSidebarCollapsed">
+                            </div>
+                        </ng-template>
                     </div>
                     <div class="content-username">
-                        <div *ngIf="!isSidebarCollapsed" class="label-user-name">
-                            <p>{{ miniatureData?.course?.title }}</p>
-                        </div>
+                        <ng-container *ngIf="!miniatureLoading; else skMiniTitle">
+                            <div *ngIf="!isSidebarCollapsed" class="label-user-name">
+                                <p>{{ miniatureData?.course?.title }}</p>
+                            </div>
+                        </ng-container>
 
+                        <ng-template #skMiniTitle>
+                            <div *ngIf="!isSidebarCollapsed" class="label-user-name">
+                                <div class="skel skel-line"></div>
+                            </div>
+                        </ng-template>
                     </div>
 
                 </div>
@@ -578,7 +600,7 @@
                     </label>
                 </div>
             <!-- Boton para volver Hacia atras en modulos -->
-                <div  class="content-navegation-item navegation-border">
+                <div *ngIf="hasExternalCourse"  class="content-navegation-item navegation-border">
                         <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
                             class="navegation-route" (click)="navigateToEditor('modules')">
                             <input name="page" type="radio"

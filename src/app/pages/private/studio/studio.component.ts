@@ -49,6 +49,11 @@ export class StudioComponent implements OnInit {
     private destroy$ = new Subject<void>();
     private readonly studioBridge = inject(StudioBridgeService);
 
+    // ✅ NUEVO: loaders (skeleton)
+  portfolioLoading = false;
+  miniatureLoading = false;
+
+
     constructor(
       private themeService: ThemeService,
       @Inject(PLATFORM_ID) private platformId: Object,
@@ -140,10 +145,11 @@ export class StudioComponent implements OnInit {
 
     if (courseId ) {
       this.hasExternalCourse = true;
-
+      this.miniatureLoading = true;
       this.studioService.getMiniature(+courseId).subscribe({
           next: (res) => {
             this.miniatureData = res;
+            this.miniatureLoading = false;
           },
           error: (err) => {
             console.error('Error al obtener la miniatura del curso', err);
@@ -160,10 +166,11 @@ export class StudioComponent implements OnInit {
 
     if (username) {
       this.hasExternalUser = true;
-
+      this.portfolioLoading = true;
       this.studioService.getPortfolioByUsername(username).subscribe({
         next: (res) => {
           this.portfolioData = res.portfolio;
+          this.portfolioLoading = false;
         },
         error: (err) => {
           console.error('Error al obtener datos del portfolio externo', err);
