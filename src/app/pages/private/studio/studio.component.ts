@@ -20,14 +20,18 @@ import { SearchComponent } from '../../../shared/UI/components/data/search/searc
 import { NotificationComponent } from '../../../shared/UI/components/data/notification/notification.component';
 import { ExploreComponent } from '../../../shared/UI/components/data/explore/explore.component';
 import { StudioBridgeService } from '../../../core/api/studio/studio-bridge.service';
+import { OnDestroy } from '@angular/core';
+import { ModuleService } from '../../../core/api/module/module.service';
+import { ModuleResponse, Chapters } from '../../../core/api/module/module.interface';
+import { IconComponent } from '../../../shared/UI/components/button/icon/icon.component';
 
 @Component({
   selector: 'app-studio',
-  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent, AvatarComponent , SearchComponent , NotificationComponent , ExploreComponent],
+  imports: [RouterOutlet, CommonModule , PreviewComponent,ButtonComponent, AvatarComponent , SearchComponent , NotificationComponent , ExploreComponent , IconComponent],
   templateUrl: './studio.component.html',
   styleUrl: './studio.component.css'
 })
-export class StudioComponent implements OnInit {
+export class StudioComponent implements OnInit , OnDestroy {
 
     datosUsuario$!: Observable<User | null>;
     currentTheme: 'light' | 'dark' | 'system' = 'system';
@@ -52,7 +56,33 @@ export class StudioComponent implements OnInit {
     // ✅ NUEVO: loaders (skeleton)
   portfolioLoading = false;
   miniatureLoading = false;
+// ✅ NUEVO: detectar si estamos en ruta de capítulo
+isChapterRoute = false;
 
+// ✅ NUEVO: params activos
+courseId?: number;
+activeModuleId: number | null = null;
+activeChapterId: number | null = null;
+
+// ✅ NUEVO: módulos/capítulos para el acordeón
+courseModules: ModuleResponse[] = [];
+modulesLoading = false;
+modulesError = false;
+
+// ✅ accordion
+openModuleId: number | null = null;
+
+// ✅ skeleton helpers
+skeletonModules = Array.from({ length: 3 });
+skeletonChapters = Array.from({ length: 6 });
+
+// para evitar recargar módulos si ya están cargados para ese curso
+private modulesLoadedForCourseId: number | null = null;
+
+// smallModule = collapsed del sidebar
+get smallModule(): boolean {
+  return this.isSidebarCollapsed;
+}
 
     constructor(
       private themeService: ThemeService,
@@ -65,9 +95,12 @@ export class StudioComponent implements OnInit {
       private route: ActivatedRoute,
       // private courseService: CourseService,
       private studioService: StudioService,
+      private moduleService: ModuleService,
+
     ) {
       this.setupRouterSubscription();
       this.setupStudioBridgeListener();
+      // this.setupChapterRouteListener(); // ✅ nuevo
     }
   
     ngOnInit() {
@@ -85,6 +118,8 @@ export class StudioComponent implements OnInit {
   .subscribe(() => {
     this.renderer.removeClass(document.body, 'app-loading');
   });
+  
+   this.setupChapterRouteListener();
   
     }
     private setupStudioBridgeListener(): void {
@@ -376,5 +411,116 @@ export class StudioComponent implements OnInit {
   goToCourse(course: any) {
     this.router.navigate([`learning/course/${course.title}/${course.id}`]);
   }
-   
+  private setupChapterRouteListener(): void {
+  // Inicial
+  this.syncChapterState();
+
+  // Cada navegación
+  this.router.events
+    .pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    )
+    .subscribe(() => this.syncChapterState());
+}
+
+private syncChapterState(): void {
+  const params = this.collectAllParams(this.route);
+
+  const courseId = this.toNum(params['id']);
+  const moduleId = this.toNum(params['module']);
+  const chapterId = this.toNum(params['chapter']);
+
+  this.courseId = courseId ?? undefined;
+  this.activeModuleId = moduleId;
+  this.activeChapterId = chapterId;
+
+  // ✅ estamos en capítulo si existen :module y :chapter
+  this.isChapterRoute = moduleId != null && chapterId != null;
+
+  // ✅ auto-abrir el módulo activo
+  if (this.isChapterRoute && moduleId != null) {
+    this.openModuleId = moduleId;
+  }
+
+  // ✅ cargar módulos solo cuando estamos en capítulo (y no los tengo cargados aún para ese curso)
+  if (this.isChapterRoute && courseId != null && this.modulesLoadedForCourseId !== courseId) {
+    this.loadModulesByCourse(courseId);
+  }
+}
+
+private collectAllParams(route: ActivatedRoute): Record<string, any> {
+  const out: Record<string, any> = {};
+  let current: ActivatedRoute | null = route;
+  while (current) {
+    Object.assign(out, current.snapshot.params);
+    current = current.firstChild;
+  }
+  return out;
+}
+
+private toNum(v: any): number | null {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+private loadModulesByCourse(courseId: number): void {
+  this.modulesLoading = true;
+  this.modulesError = false;
+  this.courseModules = [];
+  this.modulesLoadedForCourseId = courseId;
+
+  this.moduleService.getByCourse(courseId)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (res) => {
+        this.courseModules = res ?? [];
+        this.modulesLoading = false;
+
+        // asegura que el módulo activo quede abierto
+        if (this.activeModuleId != null) {
+          this.openModuleId = this.activeModuleId;
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando módulos del curso', err);
+        this.modulesLoading = false;
+        this.modulesError = true;
+      }
+    });
+}
+
+reloadModules(): void {
+  if (this.courseId != null) this.loadModulesByCourse(this.courseId);
+}
+toggle(moduleId: number): void {
+  this.openModuleId = this.openModuleId === moduleId ? null : moduleId;
+}
+
+isOpen(moduleId: number): boolean {
+  return this.openModuleId === moduleId;
+}
+
+isActiveChapter(chapterId: number): boolean {
+  return this.activeChapterId === chapterId;
+}
+
+goToChapter(moduleId: number, chapterId: number): void {
+  // navega a /studio/:id/module/:module/chapter/:chapter
+  this.router.navigate(['./module', moduleId, 'chapter', chapterId], { relativeTo: this.route });
+
+  // UX móvil/tablet: cerrar drawer al navegar
+  if (this.isMobile) {
+    this.isSidebarClose = true;
+    this.isdrawer = false;
+  }
+}
+
+trackByModule(_: number, m: ModuleResponse) { return m.id; }
+trackByChapter(_: number, c: Chapters) { return c.id; }
+
+  ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
+
 }

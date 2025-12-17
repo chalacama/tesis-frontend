@@ -177,8 +177,9 @@
                         <div *ngIf="datosUsuario$ | async as usuario">
                             <div class="content-thumbnail-avatar">
                                 <div class="content-avatar" [class.profile-avatar-collapsed]="isSidebarCollapsed">
-                                    
-                                    <ui-avatar [style]="{cursor: 'pointer' , width: '100%', height: '100%', fontSize: '10px'}"
+
+                                    <ui-avatar
+                                        [style]="{cursor: 'pointer' , width: '100%', height: '100%', fontSize: '10px'}"
                                         [src]="usuario.profile_picture_url"
                                         [name]="usuario.name + ' ' + usuario.lastname" severity="primary" size="lg">
                                     </ui-avatar>
@@ -466,7 +467,7 @@
                         </label>
                     </div>
                 </div>
-                <div *ngIf="hasExternalCourse">
+                <div *ngIf="hasExternalCourse && !isChapterRoute">
                     <div class="content-navegation-item">
                         <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
                             class="navegation-route" (click)="navigateToEditor('details')">
@@ -571,6 +572,81 @@
                     </div>
 
                 </div>
+                <div *ngIf="hasExternalCourse && isChapterRoute">
+
+                    <!-- ✅ Skeleton / Error / Data -->
+                    <ng-container *ngIf="!modulesLoading && !modulesError; else skOrErr">
+
+                        <div class="accordion"
+                            *ngFor="let m of courseModules; let modIndex = index; trackBy: trackByModule">
+
+                            <button class="acc-header" type="button" (click)="toggle(m.id)"
+                                [attr.aria-expanded]="isOpen(m.id)" [attr.aria-controls]="'panel-' + m.id">
+
+                                <div class="acc-title">
+                                    <span class="mod-name" *ngIf="!smallModule">{{ m.name }}</span>
+                                    <span class="mod-name-small" *ngIf="smallModule">M{{ modIndex + 1 }}</span>
+                                </div>
+
+                                <ui-icon class="chevron" [class.open]="isOpen(m.id)" [size]="'sm'"
+                                    [severity]="'primary'" [svgPath]="'svg/arrow-down.svg'">
+                                </ui-icon>
+                            </button>
+
+                            <div class="acc-panel" [class.open]="isOpen(m.id)" [id]="'panel-' + m.id">
+                                <div class="panel-inner">
+                                    <ul class="chapters">
+                                        <li class="chapter-item"
+                                            *ngFor="let c of m.chapters; let chapIndex = index; trackBy: trackByChapter">
+
+                                            <button class="chapter-btn" type="button" (click)="goToChapter(m.id, c.id)">
+
+                                                <div class="chapter-btn-content">
+                                                    <span class="chapter-underline"
+                                                        [class.chapter-underline-active]="isActiveChapter(c.id)"></span>
+
+                                                    <div class="chapter-content">
+                                                        <div class="chapter-header">
+                                                            <span class="chapter-title" *ngIf="!smallModule">{{ c.title
+                                                                }}</span>
+                                                            <span class="chapter-title-small" *ngIf="smallModule">C{{
+                                                                chapIndex + 1 }}</span>
+                                                        </div>
+
+                                                        <div class="chapter-meta" *ngIf="!smallModule">
+                                                            <span class="questions">{{ c.questions_count }}
+                                                                preguntas</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+
+                    <ng-template #skOrErr>
+                        <ng-container *ngIf="modulesLoading; else errTpl">
+                            <div class="skel skel-acc-header" *ngFor="let _ of skeletonModules">
+                                <div class="skel skel-line" style="width: 120px"></div>
+                                <div class="skel skel-pill"></div>
+                            </div>
+                            <div class="skel skel-chapter-row" *ngFor="let _ of skeletonChapters"></div>
+                        </ng-container>
+
+                        <ng-template #errTpl>
+                            <div class="modules-error" *ngIf="modulesError">
+                                <p>No se pudieron cargar los módulos.</p>
+                                <button type="button" (click)="reloadModules()">Reintentar</button>
+                            </div>
+                        </ng-template>
+                    </ng-template>
+
+                </div>
 
                 <div *ngIf="!hasExternalCourse" class="content-navegation-item navegation-border">
                     <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route"
@@ -599,33 +675,33 @@
                         </div>
                     </label>
                 </div>
-            <!-- Boton para volver Hacia atras en modulos -->
-                <div *ngIf="hasExternalCourse"  class="content-navegation-item navegation-border">
-                        <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0"
-                            class="navegation-route" (click)="navigateToEditor('modules')">
-                            <input name="page" type="radio"
-                                [checked]="currentRoute === 'studio/'+miniatureData?.course?.id + '/modules'" />
-                            <div class="icon-navegation">
+                <!-- Boton para volver Hacia atras en modulos -->
+                <div *ngIf="hasExternalCourse && isChapterRoute" class="content-navegation-item navegation-border">
+                    <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route"
+                        (click)="navigateToEditor('modules')">
+                        <input name="page" type="radio"
+                            [checked]="currentRoute === 'studio/'+miniatureData?.course?.id + '/modules'" />
+                        <div class="icon-navegation">
 
-                                <svg *ngIf="currentRoute !== 'studio/'+miniatureData?.course?.id + '/modules'"
-                                    class="sng-icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M4 19q-.825 0-1.413-.588T2 17V5q0-.825.588-1.413T4 3l2 4h3L7 3h2l2 4h3l-2-4h2l2 4h3l-2-4h3q.825 0 1.413.588T22 5v4H4v8h8v2H4Zm10 1v-2.125l5.15-5.175l2.15 2.1l-5.175 5.2H14Zm8.025-5.9L19.9 11.975l.7-.7q.3-.3.725-.3t.7.3l.7.725q.275.3.275.713t-.275.687l-.7.7Z" />
-                                </svg>
-                                <svg *ngIf="currentRoute === 'studio/'+miniatureData?.course?.id + '/modules'"
-                                    class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M21.04 11.13c-.14 0-.28.06-.39.17l-1 1l2.05 2.05l1-1c.22-.21.22-.56 0-.77l-1.28-1.28a.533.533 0 0 0-.38-.17m-1.97 1.75L13 18.94V21h2.06l6.06-6.07l-2.05-2.05M11 20H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1l2 4h3L7 4h2l2 4h3l-2-4h2l2 4h3l-2-4h4v4.12l-10 9.99V20Z" />
-                                </svg>
-                                <span class="underline"></span>
-                            </div>
-                            <div class="label-navegation">
-                                <span class="label-txt">Modulos</span>
-                            </div>
-                        </label>
+                            <svg *ngIf="currentRoute !== 'studio/'+miniatureData?.course?.id + '/modules'"
+                                class="sng-icon" xmlns="http://www.w3.org/2000/svg" width="200" height="200"
+                                viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M4 19q-.825 0-1.413-.588T2 17V5q0-.825.588-1.413T4 3l2 4h3L7 3h2l2 4h3l-2-4h2l2 4h3l-2-4h3q.825 0 1.413.588T22 5v4H4v8h8v2H4Zm10 1v-2.125l5.15-5.175l2.15 2.1l-5.175 5.2H14Zm8.025-5.9L19.9 11.975l.7-.7q.3-.3.725-.3t.7.3l.7.725q.275.3.275.713t-.275.687l-.7.7Z" />
+                            </svg>
+                            <svg *ngIf="currentRoute === 'studio/'+miniatureData?.course?.id + '/modules'"
+                                class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M21.04 11.13c-.14 0-.28.06-.39.17l-1 1l2.05 2.05l1-1c.22-.21.22-.56 0-.77l-1.28-1.28a.533.533 0 0 0-.38-.17m-1.97 1.75L13 18.94V21h2.06l6.06-6.07l-2.05-2.05M11 20H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1l2 4h3L7 4h2l2 4h3l-2-4h2l2 4h3l-2-4h4v4.12l-10 9.99V20Z" />
+                            </svg>
+                            <span class="underline"></span>
+                        </div>
+                        <div class="label-navegation">
+                            <span class="label-txt">Modulos</span>
+                        </div>
+                    </label>
                 </div>
-                <div *ngIf="hasExternalCourse" class="content-navegation-item navegation-border">
+                <div *ngIf="hasExternalCourse && !isChapterRoute" class="content-navegation-item navegation-border">
                     <label onkeydown="if(event.key === 'Enter'){ this.click(); }" tabindex="0" class="navegation-route"
                         (click)="goBack()">
                         <input name="page" type="radio" [checked]="currentRoute === 'studio/courses'" />
