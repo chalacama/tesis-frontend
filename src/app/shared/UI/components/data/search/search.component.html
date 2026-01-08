@@ -7,23 +7,23 @@
     </ui-icon>
 
     <input
-      #searchInput
-      type="text"
-      class="search-input"
-      autocomplete="off"
-      spellcheck="false"
-      placeholder="Buscar"
-      [value]="control.value"
-      (input)="control.setValue(searchInput.value)"
-      (focus)="onFocus()"
-      (keydown)="onKeyDown($event)"
+  #searchInput
+  type="text"
+  class="search-input"
+  autocomplete="off"
+  spellcheck="false"
+  placeholder="Buscar"
+  [formControl]="control"
+  (focus)="onFocus()"
+  (keydown)="onKeyDown($event)"
 
-      role="combobox"
-      [attr.aria-autocomplete]="'list'"
-      [attr.aria-haspopup]="'listbox'"
-      [attr.aria-expanded]="open"
-      [attr.aria-controls]="listboxId"
-    />
+  role="combobox"
+  [attr.aria-autocomplete]="'list'"
+  [attr.aria-haspopup]="'listbox'"
+  [attr.aria-expanded]="open"
+  [attr.aria-controls]="listboxId"
+/>
+
 
     <button class="clear-btn" *ngIf="control.value" (click)="clear()" aria-label="Limpiar">
       <ui-icon [size]="'sm'" [severity]="'contrast'" [svgPath]="'svg/record.svg'"></ui-icon>
@@ -48,7 +48,8 @@
         *ngFor="let s of suggestions; let i = index; trackBy: trackByText"
         [class.active]="i === activeIndex"
         role="option"
-        (mousedown)="select(s)"
+        (mousedown)="onPick($event, s)"
+
       >
         <ui-icon
           [size]="'sm'"

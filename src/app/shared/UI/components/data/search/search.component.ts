@@ -91,12 +91,27 @@ export class SearchComponent {
   }
 
   select(item: SuggestionItem) {
-    const q = (item.text || '').trim();
-    if (!q) return;
-    this.start.updateSuggestion(q).subscribe();
-    this.open = false;
-    this.router.navigate(['/learning/results'], { queryParams: { q } });
-  }
+  const q = (item.text || '').trim();
+  if (!q) return;
+
+  // ✅ Pegar y reflejar inmediatamente
+  this.control.setValue(q, { emitEvent: false });
+
+  // (opcional) dejar el cursor al final si el search queda visible en el header
+  queueMicrotask(() => {
+    const el = this.searchInput?.nativeElement;
+    if (!el) return;
+    el.focus();
+    el.setSelectionRange(q.length, q.length);
+  });
+
+  this.open = false;
+  this.start.updateSuggestion(q).subscribe();
+
+  this.router.navigate(['/learning/results'], { queryParams: { q } });
+}
+
+
 
   submit() {
     const q = (this.control.value || '').trim();
@@ -105,6 +120,10 @@ export class SearchComponent {
     this.open = false;
     this.router.navigate(['/learning/results'], { queryParams: { q } });
   }
+  onPick(ev: MouseEvent, item: SuggestionItem) {
+  ev.preventDefault(); // evita que el botón robe el foco
+  this.select(item);
+}
 
   clear() {
     this.control.setValue('');
