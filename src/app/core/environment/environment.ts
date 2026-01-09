@@ -4,5 +4,5 @@
 // };
 export const environment = {
   production: true,
-  apiUrl: 'https://tesis-backend-d240.onrender.com'
+  apiUrl: 'https://tesis-backend-d240.onrender.com/api'
 };
