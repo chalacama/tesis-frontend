@@ -117,8 +117,8 @@ private handleGoogleUser(socialUser: SocialUser): void {
   this.isLoading = true;
 
   // DEBUG: Mira en consola qué token estamos enviando
-  console.log('Usuario recibido de Google:', socialUser);
-  console.log('Token ID:', socialUser.idToken); 
+  // console.log('Usuario recibido de Google:', socialUser);
+  // console.log('Token ID:', socialUser.idToken); 
 
   // Socialite suele funcionar mejor con el idToken para autenticación.
   // Si tu backend espera 'token', enviamos el idToken que ya viene listo.
