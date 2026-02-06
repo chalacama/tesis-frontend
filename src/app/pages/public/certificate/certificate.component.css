@@ -1,12 +1,21 @@
-
-.certificate-page {
-  width: 100%;
+:host{
+  display: block;
   height: 100%;
+  min-height: 0;             /* clave en layouts flex */
+}
+
+.certificate-page{
+  width: 100%;
+  height: 100dvh;            /* viewport real (mejor que 100%) */
+  min-height: 0;             /* clave en flex */
   padding: 2rem 1rem;
+  box-sizing: border-box;
+
   display: flex;
   justify-content: center;
-  color: var(--text-color);
-  overflow-y: auto;
+  align-items: flex-start;   /* evita “centrados raros” */
+  overflow-y: auto;          /* scroll aquí */
+  overflow-x: hidden;
 }
 
 /* ===== ERROR ===== */
@@ -28,13 +37,14 @@
 
 .certificate-card {
   /* width: 100%; */
-  height: 670px;
+  height: auto;
   background: var(--card-bg);
   border-radius: 1.5rem;
-  padding: 2rem 2.5rem 2.5rem;
+  padding: 5px 2.5rem 2.5rem;
   border: 1px solid var(--border-color);
   box-shadow: 0 22px 45px var(--shadow-color);
-  position: relative;
+  /* position: relative; */
+  
   /* overflow: hidden; */
  
 }
@@ -46,7 +56,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2px;
 }
 
 .header-brand {
@@ -420,6 +430,35 @@
     text-align: left;
   }
 }
+.qr-img{
+  width: 130px;
+  height: 130px;
+}
+/* ===== TOOLBAR (FUERA DEL CERTIFICADO) ===== */
 
+.certificate-toolbar{
+  position: fixed;
+  top: 1rem;
+  right: 10px;
+  z-index: 50;
+}
+
+.theme-toggle {
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 22px var(--shadow-color);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px var(--shadow-color);
+}
 
 

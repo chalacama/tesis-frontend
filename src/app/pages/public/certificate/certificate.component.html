@@ -19,32 +19,34 @@
       <div class="skeleton-line half"></div>
     </div>
   </div>
+  <div class="certificate-toolbar" data-html2canvas-ignore="true">
+  <button type="button" class="theme-toggle" (click)="toggleTheme()">
+    <span *ngIf="effectiveTheme() === 'dark'; else toDark">
+      ☀️ Cambiar a claro
+    </span>
+    <ng-template #toDark>🌙 Cambiar a oscuro</ng-template>
+  </button>
+  </div>
 
   <!-- Contenido real -->
   <ng-template #loaded>
     <ng-container *ngIf="certificate() as cert">
-      <article class="certificate-card" #certificateCard>
+      <article class="certificate-card" #certificateCard [attr.data-theme]="effectiveTheme()">
 
         <!-- HEADER -->
         <header class="certificate-header">
           <div class="header-brand">
-            <img
-              src="img\logo\png\lefth\digi-mentor-solo-buho.png"
-              alt="DigiMentor"
-              class="logo logo-digimentor"
-            />
+            <img src="/img/logo/png/lefth/digi-mentor-solo-buho.png" alt="DigiMentor" class="logo logo-digimentor" />
             <div class="brand-text">
               <h1>DigiMentor</h1>
               <p>Plataforma de aprendizaje en línea</p>
             </div>
           </div>
-
+          <div class="qr-box" *ngIf="qrDataUrl() as qr">
+            <img [src]="qr" alt="QR verificación del certificado" class="qr-img" />
+          </div>
           <div class="header-institution">
-            <img
-              src="img\logo\png\espam-mfl-label.png"
-              alt="ESPAM MFL"
-              class="logo logo-espam"
-            />
+            <img src="/img\logo\png\espam-mfl-label.png" alt="ESPAM MFL" class="logo logo-espam" />
             <span class="institution-name">ESPAM MFL</span>
           </div>
         </header>
@@ -63,12 +65,9 @@
             </h3>
 
             <div class="course-tags">
-              
 
-              <span
-                *ngFor="let cat of cert.course.categories"
-                class="tag category"
-              >
+
+              <span *ngFor="let cat of cert.course.categories" class="tag category">
                 {{ cat.name }}
               </span>
             </div>
@@ -80,11 +79,8 @@
             <div class="person-card">
               <div class="person-header">
                 <div class="avatar">
-                  <img
-                    *ngIf="getStudentAvatar(cert) as studentAvatar; else avatarInitialStudent"
-                      [src]="studentAvatar"
-                    alt="Foto estudiante"
-                  />
+                  <img *ngIf="getStudentAvatar(cert) as studentAvatar; else avatarInitialStudent" [src]="studentAvatar"
+                    alt="Foto estudiante" />
                   <ng-template #avatarInitialStudent>
                     <div class="avatar-initial">
                       {{ cert.certificate_owner?.name?.[0] || '?' }}
@@ -114,12 +110,8 @@
                 <div *ngIf="cert.academic_information.career" class="academic-row career-row">
                   <span class="label">Carrera:</span>
                   <div class="value career-value">
-                    <img
-    *ngIf="getCareerLogo(cert) as careerLogo"
-    [src]="careerLogo"
-    alt="Logo carrera"
-    class="career-logo"
-  />
+                    <img *ngIf="getCareerLogo(cert) as careerLogo" [src]="careerLogo" alt="Logo carrera"
+                      class="career-logo" />
                     <span>{{ cert.academic_information.career.name }}</span>
                   </div>
                 </div>
@@ -130,11 +122,8 @@
             <div class="person-card">
               <div class="person-header">
                 <div class="avatar">
-                  <img
-    *ngIf="getTutorAvatar(cert) as tutorAvatar; else avatarInitialTutor"
-    [src]="tutorAvatar"
-    alt="Foto tutor"
-  />
+                  <img *ngIf="getTutorAvatar(cert) as tutorAvatar; else avatarInitialTutor" [src]="tutorAvatar"
+                    alt="Foto tutor" />
                   <ng-template #avatarInitialTutor>
                     <div class="avatar-initial">
                       {{ cert.course_owner?.name?.[0] || 'T' }}
@@ -185,25 +174,20 @@
           </div>
 
           <div class="footer-right">
-      <button
-        type="button"
-        class="btn-download"
-        (click)="onDownload()"
-        [disabled]="!cert.can_download || downloading()"
-        data-html2canvas-ignore="true"
-      >
-        <span *ngIf="!downloading(); else downloadingTpl">
-          Descargar PDF
-        </span>
-        <ng-template #downloadingTpl>
-          Descargando...
-        </ng-template>
-      </button>
+            <button type="button" class="btn-download" (click)="onDownload()"
+              [disabled]="!cert.can_download || downloading()" data-html2canvas-ignore="true">
+              <span *ngIf="!downloading(); else downloadingTpl">
+                Descargar PDF
+              </span>
+              <ng-template #downloadingTpl>
+                Descargando...
+              </ng-template>
+            </button>
 
-      <p *ngIf="!cert.can_download" class="download-hint">
-        Solo el dueño del certificado o un administrador pueden descargar el PDF.
-      </p>
-    </div>
+            <p *ngIf="!cert.can_download" class="download-hint">
+              Solo el dueño del certificado o un administrador pueden descargar el PDF.
+            </p>
+          </div>
         </footer>
       </article>
     </ng-container>
