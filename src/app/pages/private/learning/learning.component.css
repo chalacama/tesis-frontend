@@ -734,11 +734,11 @@
 }
 .dropdown_header_right_name{
     display: flex;
-    font-size: 10px;
+    font-size: 11px;
     align-items: center;
     justify-content: left;
     gap: 5px;
-    
+    font-weight: 700;
 
 }
 .dropdown_label{
@@ -766,10 +766,12 @@
 }
 .dropdown_header_right_username{
     display: flex;
+    flex-direction: column;
     font-size: 10px;
-    align-items: center;
+    /* align-items: center; */
     justify-content: left;
-    gap: 5px;
+    gap: 3px;
+    
 }
 .dropdown_item-border{
     border-bottom: 1px solid var(--border-color);
@@ -784,4 +786,38 @@
     margin: 5px 0; 
     padding: 10px 15px;
     width: 100%;
+}
+/* ✅ Badge de rol */
+.role-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+/* Variantes por rol */
+.role-admin{
+  background: var(--sev-danger);
+  color: var(--text-color-contrast);
+  border-color: transparent;
+}
+
+.role-tutor{
+  background: var(--sev-info);
+  color: var(--text-color-contrast);
+  border-color: transparent;
+}
+.role-student{
+  background: var(--sev-primary);
+  color: var(--text-color-contrast);
+  border-color: transparent;
+}
+.role-unknown{
+  background: var(--sev-secondary);
+  color: var(--text-color);
 }

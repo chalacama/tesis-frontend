@@ -532,5 +532,25 @@ trackByChapter(_: number, c: Chapters) { return c.id; }
   this.destroy$.next();
   this.destroy$.complete();
 }
+// ✅ Rol principal (prioridad)
+getRoleKey(user: User): string {
+  const roles = (user.roles ?? []).map(r => (r.name || '').toLowerCase());
+
+  if (roles.includes('admin')) return 'admin';
+  if (roles.includes('tutor')) return 'tutor';
+  if (roles.includes('student')) return 'student';
+
+  return roles[0] ?? 'unknown';
+}
+
+// ✅ Texto a mostrar (bonito)
+getRoleLabel(user: User): string {
+  switch (this.getRoleKey(user)) {
+    case 'admin': return 'Administrador';
+    case 'tutor': return 'Tutor';
+    case 'student': return 'Estudiante';
+    default: return 'Usuario';
+  }
+}
 
 }

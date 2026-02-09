@@ -62,7 +62,10 @@
                                         }}</p>
                                 </div>
                                 <div class="dropdown_header_right_username">
-                                    <p>&commat;{{ usuario.username }}</p>
+                                    <p>&commat;{{usuario.username }}</p>
+                                    <span class="role-badge" [ngClass]="'role-' + getRoleKey(usuario)">
+                                        {{ getRoleLabel(usuario) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +193,9 @@
                                 <div *ngIf="!isSidebarCollapsed" class="label-user-name">
                                     <p>{{ usuario.name + ' ' + usuario.lastname }}</p>
                                 </div>
-
+                                <span class="role-badge" [ngClass]="'role-' + getRoleKey(usuario)">
+                                        {{ getRoleLabel(usuario) }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -211,6 +216,9 @@
                                 <div *ngIf="!isSidebarCollapsed" class="label-user-name">
                                     <p>{{ portfolioData?.name + ' ' + portfolioData?.lastname }}</p>
                                 </div>
+                                <span class="role-badge role-tutor">
+                                        {{ portfolioData?.role }}
+                                </span>
                             </div>
                         </ng-container>
 
@@ -614,7 +622,7 @@
                                                         </div>
 
                                                         <div class="chapter-meta" *ngIf="!smallModule">
-                                                            
+
                                                             <span class="questions">{{ c.questions_count }}
                                                                 preguntas</span>
                                                         </div>
