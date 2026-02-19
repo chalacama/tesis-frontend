@@ -189,6 +189,7 @@
                       [mask]="{ type: 'blur' }"
                     >
                       <ui-button
+                        (click)="goToCourse(course)"
                         variant="flat"
                         [style]="{
                           borderRadius: '15px',
@@ -241,7 +242,7 @@
                       />
                     </svg>
                   </button>
-                  <button class="btn-analytics btn-action">
+                  <button (click)="goToAnalytics(course.id)" class="btn-analytics btn-action">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="10px"

@@ -432,8 +432,14 @@ export class CoursesComponent {
       this.router.navigate([`/studio/@${this.usernameParam}/${id}/details`]);
     }
   }
+  goToAnalytics(id: number): void {
+    
+      this.router.navigate([`/studio/${id}/analytic`]);
+    
+  }
 
-  goToCourse(){
+  goToCourse( curse:any): void {
+    this.router.navigate([`learning/course/${curse.id}/${curse.slug}`]);
     
   }
 }
