@@ -438,8 +438,11 @@ export class CoursesComponent {
     
   }
 
-  goToCourse( curse:any): void {
-    this.router.navigate([`learning/course/${curse.id}/${curse.slug}`]);
+  goToCourse( course:any): void {
+    this.router.navigate(['/learning/course/' + this.titleCoursePath(course.title) + '/' + course.id]);
     
+  }
+  titleCoursePath(title: string) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
 }
