@@ -194,7 +194,7 @@
                                     <p>{{ usuario.name + ' ' + usuario.lastname }}</p>
                                 </div>
                                 <span class="role-badge" [ngClass]="'role-' + getRoleKey(usuario)">
-                                        {{ getRoleLabel(usuario) }}
+                                    {{ getRoleLabel(usuario) }}
                                 </span>
                             </div>
                         </div>
@@ -217,7 +217,7 @@
                                     <p>{{ portfolioData?.name + ' ' + portfolioData?.lastname }}</p>
                                 </div>
                                 <span class="role-badge role-tutor">
-                                        {{ portfolioData?.role }}
+                                    {{ portfolioData?.role }}
                                 </span>
                             </div>
                         </ng-container>
@@ -560,15 +560,13 @@
                                 [checked]="currentRoute === 'studio/'+miniatureData?.course?.id + '/collaborators'" />
                             <div class="icon-navegation">
                                 <svg *ngIf="currentRoute !== 'studio/'+miniatureData?.course?.id + '/collaborators'"
-                                    class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                                    <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M4.194 8.094a1.86 1.86 0 1 0 0-3.719a1.86 1.86 0 0 0 0 3.719M.523 13.479A3.68 3.68 0 0 1 1 11.704a3.711 3.711 0 0 1 3.195-1.868c1.31.003 2.55.727 3.195 1.868a3.68 3.68 0 0 1 .477 1.774m2.02-12.095v-.82m2.799 1.827l.671-.471m-6.271.471l-.672-.471m5.506 3.139a2.055 2.055 0 0 0-2.077-2.042a2.055 2.055 0 0 0-1.99 2.127a2.067 2.067 0 0 0 1.126 1.73v1a.227.227 0 0 0 .226.22h1.361a.227.227 0 0 0 .227-.22V6.855a2.07 2.07 0 0 0 1.128-1.797Z" />
+                                    xmlns="http://www.w3.org/2000/svg" class="sng-icon" viewBox="0 0 32 32">
+                                    <path fill="currentColor"
+                                        d="M6 21v-1H4v1a7 7 0 0 0 7 7h3v-2h-3a5 5 0 0 1-5-5zm18-10v1h2v-1a7 7 0 0 0-7-7h-3v2h3a5 5 0 0 1 5 5zm-13 0H5a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3zm-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4zm0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2zm19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3zm-7-5a4 4 0 1 0 4-4a4 4 0 0 0-4 4zm6 0a2 2 0 1 1-2-2a2 2 0 0 1 2 2z" />
                                 </svg>
-                                <svg *ngIf="currentRoute === 'studio/'+miniatureData?.course?.id + '/collaborators'"
-                                    xmlns="http://www.w3.org/2000/svg" class="sng-icon" viewBox="0 0 14 14">
+                                <svg *ngIf="currentRoute === 'studio/'+miniatureData?.course?.id + '/collaborators'"  class="sng-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
                                     <path fill="currentColor" fill-rule="evenodd"
-                                        d="M9.887 0c.345 0 .625.28.625.625v.82a.625.625 0 1 1-1.25 0v-.82c0-.345.28-.625.625-.625m-5.84 8.738a2.429 2.429 0 1 0 0-4.857a2.429 2.429 0 0 0 0 4.857M0 13.595a4.048 4.048 0 0 1 8.095 0A.405.405 0 0 1 7.69 14H.405A.405.405 0 0 1 0 13.595M13.716 2.493a.625.625 0 1 0-.718-1.023l-.671.471a.625.625 0 0 0 .718 1.023zm-7.813-.87a.625.625 0 0 0 .152.87l.672.471a.625.625 0 1 0 .718-1.023l-.672-.471a.625.625 0 0 0-.87.152ZM9.84 2.84a2.248 2.248 0 0 1 2.272 2.234c-.01.82-.5 1.6-1.234 1.966v1.113a.248.248 0 0 1-.248.242H9.142a.248.248 0 0 1-.248-.242V7.059a2.261 2.261 0 0 1-1.231-1.892A2.248 2.248 0 0 1 9.84 2.84"
+                                        d="M3.68 4.031c1.013 0 1.582-.57 1.582-1.582S4.692.866 3.68.866s-1.583.57-1.583 1.583s.57 1.581 1.583 1.581Zm7.32.783a.75.75 0 1 0 1.5-.06a50 50 0 0 0-.049-.971A2.65 2.65 0 0 0 9.96 1.29q-.749-.044-1.487-.065a.75.75 0 1 0-.043 1.5q.715.02 1.441.063a1.15 1.15 0 0 1 1.084 1.083q.028.474.046.943Zm-5.605 8.244a.75.75 0 0 0 .046-1.499q-.675-.02-1.361-.061a1.15 1.15 0 0 1-1.084-1.084l-.023-.424a.75.75 0 0 0-1.498.076l.024.437a2.65 2.65 0 0 0 2.492 2.492q.708.043 1.404.063m4.925-2.675c1.303 0 2.197.91 2.382 2.178c.04.273-.189.498-.465.498H8.402c-.276 0-.505-.225-.465-.498c.185-1.269 1.078-2.178 2.382-2.178Zm-4.258-3.5C5.878 5.616 4.984 4.707 3.68 4.707s-2.198.91-2.383 2.178c-.04.273.189.498.465.498h3.836c.276 0 .504-.225.464-.498Zm5.84 1.244c0 1.013-.57 1.583-1.583 1.583s-1.582-.57-1.582-1.583s.57-1.583 1.582-1.583s1.583.57 1.583 1.583"
                                         clip-rule="evenodd" />
                                 </svg>
                                 <span class="underline"></span>
