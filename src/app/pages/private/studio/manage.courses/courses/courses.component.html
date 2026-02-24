@@ -85,8 +85,8 @@
         <div class="header_cell-creator cell-display">
           <th>Creador</th>
         </div>
-        <div class="header_cell-private cell-display">
-          <th>Privado</th>
+        <div class="header_cell-archived cell-display">
+          <th>Archivado</th>
         </div>
         <div class="header_cell-code cell-display">
           <th>Code</th>
@@ -130,7 +130,7 @@
         <ng-template #tableRows>
           <ng-container *ngIf="courses().length > 0; else emptyState">
             <div *ngFor="let course of courses()" class="table_content_body content-padding"
-              [ngClass]="{ 'highlighted-row': highlightedCourseId() === course.id }">
+              [ngClass]="{ 'highlighted-row': highlightedCourseId() === course.id, 'archived-row': !!course.deleted_at }">
 
 
               <div class="body_cell-miniature cell-display">
@@ -152,58 +152,83 @@
                 <div class="cell_label-description">
                   <td>{{ course.description }}</td>
                 </div>
-                <div *ngIf="!course.deleted_at" class="cell-actions">
+                <div class="cell-actions">
+                  <!-- Acciones normales (NO archivado) -->
+                  <ng-container *ngIf="!course.deleted_at; else archivedActions">
 
-                  <button (click)="goToEditCourse(course.id)" class="btn-edit btn-action" title="Editar curso"
-                    aria-label="Editar curso">
-                    <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
-                      height="12px" viewBox="0 0 384 384">
-                      <path fill="currentColor"
-                        d="M0 304L236 68l80 80L80 384H0v-80zM378 86l-39 39l-80-80l39-39q6-6 15-6t15 6l50 50q6 6 6 15t-6 15z" />
-                    </svg>
-                  </button>
+                    <button (click)="goToEditCourse(course.id)" class="btn-edit btn-action" title="Editar curso"
+                      aria-label="Editar curso">
+                      <!-- icon -->
+                      <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
+                        height="12px" viewBox="0 0 384 384">
+                        <path fill="currentColor"
+                          d="M0 304L236 68l80 80L80 384H0v-80zM378 86l-39 39l-80-80l39-39q6-6 15-6t15 6l50 50q6 6 6 15t-6 15z" />
+                      </svg>
+                    </button>
 
-                  <button class="btn-delete btn-action" title="Eliminar curso" aria-label="Eliminar curso">
-                    <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
-                      height="12px" viewBox="0 0 304 384">
-                      <path fill="currentColor"
-                        d="M21 341V85h256v256q0 18-12.5 30.5T235 384H64q-18 0-30.5-12.5T21 341zM299 21v43H0V21h75L96 0h107l21 21h75z" />
-                    </svg>
-                  </button>
+                    <!-- Archivar -->
+                    <button (click)="openConfirm('archive', course)" class="btn-archivate btn-action"
+                      title="Archivar curso" aria-label="Archivar curso">
+                      <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
+                        height="12px" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd"
+                          d="M5 21q-.825 0-1.413-.588T3 19V6.5q0-.375.125-.675t.325-.575l1.4-1.7q.2-.275.5-.413T6 3h12q.35 0 .65.137t.5.413l1.4 1.7q.2.275.325.575T21 6.5V19q0 .825-.588 1.413T19 21H5Zm.4-15h13.2l-.85-1H6.25L5.4 6ZM12 18l4-4l-1.4-1.4l-1.6 1.6V10h-2v4.2l-1.6-1.6L8 14l4 4Z" />
+                      </svg>
+                    </button>
 
-                  <button class="btn-archivate btn-action" title="Archivar curso" aria-label="Archivar curso">
-                    <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
-                      height="12px" viewBox="0 0 24 24">
-                      <path fill="currentColor" fill-rule="evenodd"
-                        d="M5 21q-.825 0-1.413-.588T3 19V6.5q0-.375.125-.675t.325-.575l1.4-1.7q.2-.275.5-.413T6 3h12q.35 0 .65.137t.5.413l1.4 1.7q.2.275.325.575T21 6.5V19q0 .825-.588 1.413T19 21H5Zm.4-15h13.2l-.85-1H6.25L5.4 6ZM12 18l4-4l-1.4-1.4l-1.6 1.6V10h-2v4.2l-1.6-1.6L8 14l4 4Z" />
-                    </svg>
-                  </button>
-                  <button class="btn-restore btn-action" title="Restaurar curso" aria-label="Restaurar curso">
-                    <svg width="12px" height="12px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                      <path fill="currentColor" fill-rule="evenodd"
-                        d="M256 448c-97.974 0-178.808-73.383-190.537-168.183l42.341-5.293c9.123 73.734 71.994 130.809 148.196 130.809c82.475 0 149.333-66.858 149.333-149.333S338.475 106.667 256 106.667c-50.747 0-95.581 25.312-122.567 64h79.9v42.666H64V64h42.667v71.31C141.866 91.812 195.685 64 256 64c106.039 0 192 85.961 192 192s-85.961 192-192 192"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                  <button (click)="goToAnalytics(course.id)" class="btn-analytics btn-action" title="Ver analíticas"
-                    aria-label="Ver analíticas del curso">
-                    <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
-                      height="12px" viewBox="0 0 24 24">
-                      <path fill="currentColor" fill-rule="evenodd"
-                        d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6zm10 2a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0V8zm-4 3a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0v-5zm8 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-
+                    <button (click)="goToAnalytics(course.id)" class="btn-analytics btn-action" title="Ver analíticas"
+                      aria-label="Ver analíticas del curso">
+                      <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
+                        height="12px" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd"
+                          d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6zm10 2a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0V8zm-4 3a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0v-5zm8 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <button (click)="goToCollaborators(course.id)" class="btn-collaborators btn-action"
+                      title="Ver colaboradores" aria-label="Ver colaboradores del curso">
+                      <svg aria-hidden="true" focusable="false" width="12px" height="12px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
+                        <path fill="currentColor" fill-rule="evenodd"
+                          d="M3.68 4.031c1.013 0 1.582-.57 1.582-1.582S4.692.866 3.68.866s-1.583.57-1.583 1.583s.57 1.581 1.583 1.581Zm7.32.783a.75.75 0 1 0 1.5-.06a50 50 0 0 0-.049-.971A2.65 2.65 0 0 0 9.96 1.29q-.749-.044-1.487-.065a.75.75 0 1 0-.043 1.5q.715.02 1.441.063a1.15 1.15 0 0 1 1.084 1.083q.028.474.046.943Zm-5.605 8.244a.75.75 0 0 0 .046-1.499q-.675-.02-1.361-.061a1.15 1.15 0 0 1-1.084-1.084l-.023-.424a.75.75 0 0 0-1.498.076l.024.437a2.65 2.65 0 0 0 2.492 2.492q.708.043 1.404.063m4.925-2.675c1.303 0 2.197.91 2.382 2.178c.04.273-.189.498-.465.498H8.402c-.276 0-.505-.225-.465-.498c.185-1.269 1.078-2.178 2.382-2.178Zm-4.258-3.5C5.878 5.616 4.984 4.707 3.68 4.707s-2.198.91-2.383 2.178c-.04.273.189.498.465.498h3.836c.276 0 .504-.225.464-.498Zm5.84 1.244c0 1.013-.57 1.583-1.583 1.583s-1.582-.57-1.582-1.583s.57-1.583 1.582-1.583s1.583.57 1.583 1.583"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  </ng-container>
+                  <!-- Acciones cuando está ARCHIVADO -->
+                  <ng-template #archivedActions>
+                    <!-- Restaurar -->
+                    <button (click)="openConfirm('restore', course)" class="btn-restore btn-action"
+                      title="Restaurar curso" aria-label="Restaurar curso">
+                      <svg width="12px" height="12px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path fill="currentColor" fill-rule="evenodd"
+                          d="M256 448c-97.974 0-178.808-73.383-190.537-168.183l42.341-5.293c9.123 73.734 71.994 130.809 148.196 130.809c82.475 0 149.333-66.858 149.333-149.333S338.475 106.667 256 106.667c-50.747 0-95.581 25.312-122.567 64h79.9v42.666H64V64h42.667v71.31C141.866 91.812 195.685 64 256 64c106.039 0 192 85.961 192 192s-85.961 192-192 192"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <!-- Eliminar permanente -->
+                    <button (click)="openConfirm('forceDelete', course)" class="btn-delete btn-action"
+                      title="Eliminar permanentemente" aria-label="Eliminar permanentemente">
+                      <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="12px"
+                        height="12px" viewBox="0 0 304 384">
+                        <path fill="currentColor"
+                          d="M21 341V85h256v256q0 18-12.5 30.5T235 384H64q-18 0-30.5-12.5T21 341zM299 21v43H0V21h75L96 0h107l21 21h75z" />
+                      </svg>
+                    </button>
+                  </ng-template>
                 </div>
               </div>
-
               <div class="body_cell-active cell-display">
-                <td>
-                  {{ course.enabled ? 'Sí' : 'No' }}
-                </td>
-              </div>
+                <label class="switch">
+                  <input type="checkbox" role="switch" [checked]="course.enabled"
+                    [disabled]="!!course.deleted_at || actionLoading()" (change)="onToggleEnabled(course, $event)"
+                    [attr.aria-label]="'Cambiar estado activo del curso ' + course.title" />
+                  <span class="slider"></span>
+                </label>
 
+                <span class="sr-only">
+                  {{ course.enabled ? 'Activo' : 'Inactivo' }}
+                </span>
+              </div>
               <div class="body_cell-creator cell-display">
                 <td *ngIf="course.creador; else noOwnerTd">
                   {{ course.creador.name }} {{ course.creador.lastname }}
@@ -215,13 +240,11 @@
                   <td class="text-muted">Sin dueño</td>
                 </ng-template>
               </div>
-
-              <div class="body_cell-private cell-display">
+              <div class="body_cell-archived cell-display">
                 <td>
-                  {{ course.private ? 'Sí' : 'No' }}
+                  {{ course.deleted_at ? (course.deleted_at | date:'dd/MM/yyyy HH:mm') : '—' }}
                 </td>
               </div>
-
               <div class="body_cell-code cell-display">
                 <td>{{ course.code }}</td>
               </div>
@@ -347,6 +370,22 @@
     </form>
   </div>
 </ui-dialog>
+<!-- Confirm dialog acciones -->
+<ui-dialog size="sm" type="free" [closeOnMaskClick]="!actionLoading()" [(visible)]="showConfirmAction"
+  (maskClick)="closeConfirm()">
+  <div style="padding:16px; max-width:420px;">
+    <h4 style="margin:0 0 10px 0;">{{ getConfirmTitle() }}</h4>
+    <p style="margin:0 0 16px 0; font-size:12px; color: var(--text-color-secondary);">
+      {{ getConfirmMessage() }}
+    </p>
 
+    <div style="display:flex; justify-content:flex-end; gap:10px;">
+      <ui-button label="Cancelar" severity="danger" (click)="closeConfirm()" [disabled]="actionLoading()"></ui-button>
+
+      <ui-button [label]="getConfirmButtonLabel()" [severity]="getConfirmButtonSeverity()" (click)="confirmExecute()"
+        [disabled]="actionLoading()"></ui-button>
+    </div>
+  </div>
+</ui-dialog>
 <!-- Loading para guardar -->
-<ui-loading-bar [visible]="saved()" [mask]="{ type: 'dimmed' }"></ui-loading-bar>
+<ui-loading-bar [visible]="saved() || actionLoading()" [mask]="{ type: 'dimmed' }"></ui-loading-bar>

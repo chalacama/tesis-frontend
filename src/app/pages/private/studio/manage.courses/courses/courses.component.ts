@@ -433,9 +433,10 @@ export class CoursesComponent {
     }
   }
   goToAnalytics(id: number): void {
-    
       this.router.navigate([`/studio/${id}/analytic`]);
-    
+  }
+  goToCollaborators(id: number): void {
+    this.router.navigate([`/studio/${id}/collaborators`]);
   }
 
   goToCourse( course:any): void {
@@ -445,4 +446,167 @@ export class CoursesComponent {
   titleCoursePath(title: string) {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
+  // ---- Confirmaciones + LoadingBar para acciones ----
+showConfirmAction = false;
+confirmActionType: 'archive' | 'restore' | 'forceDelete' = 'archive';
+confirmTargetCourse: Course | null = null;
+
+actionLoading = signal<boolean>(false);
+
+// ---- Helpers UI ----
+openConfirm(action: 'archive' | 'restore' | 'forceDelete', course: Course): void {
+  this.confirmActionType = action;
+  this.confirmTargetCourse = course;
+  this.showConfirmAction = true;
+}
+
+closeConfirm(): void {
+  if (this.actionLoading()) return; // evita cerrar mientras ejecuta
+  this.showConfirmAction = false;
+  this.confirmTargetCourse = null;
+}
+
+getConfirmTitle(): string {
+  const c = this.confirmTargetCourse;
+  if (!c) return 'Confirmar acción';
+
+  switch (this.confirmActionType) {
+    case 'archive': return 'Archivar curso';
+    case 'restore': return 'Restaurar curso';
+    case 'forceDelete': return 'Eliminar permanentemente';
+  }
+}
+
+getConfirmMessage(): string {
+  const c = this.confirmTargetCourse;
+  const title = c ? `"${c.title}"` : 'este curso';
+
+  switch (this.confirmActionType) {
+    case 'archive':
+      return `¿Seguro que deseas archivar ${title}? El curso irá a papelería y no podrás editarlo hasta restaurarlo.`;
+    case 'restore':
+      return `¿Seguro que deseas restaurar ${title}? El curso volverá a estar disponible para gestión.`;
+    case 'forceDelete':
+      return `¿Seguro que deseas eliminar permanentemente ${title}? Esta acción NO se puede deshacer y eliminará módulos, capítulos y contenidos asociados (incluyendo archivos).`;
+  }
+}
+
+getConfirmButtonLabel(): string {
+  switch (this.confirmActionType) {
+    case 'archive': return 'Sí, archivar';
+    case 'restore': return 'Sí, restaurar';
+    case 'forceDelete': return 'Sí, eliminar';
+  }
+}
+
+getConfirmButtonSeverity(): 'primary' | 'warn' | 'danger' {
+  switch (this.confirmActionType) {
+    case 'archive': return 'warn';
+    case 'restore': return 'primary';
+    case 'forceDelete': return 'danger';
+  }
+}
+
+// ---- Ejecutar acción confirmada ----
+confirmExecute(): void {
+  const course = this.confirmTargetCourse;
+  if (!course) return;
+
+  this.actionLoading.set(true);
+  this.error.set(null);
+
+  const done = () => this.actionLoading.set(false);
+
+  if (this.confirmActionType === 'archive') {
+    this.courseService.archiveCourse(course.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          // update local rápido
+          this.courses.update(list =>
+            list.map(c => c.id === course.id ? { ...c, deleted_at: new Date().toISOString(), enabled: false } : c)
+          );
+          this.showConfirmAction = false;
+          this.confirmTargetCourse = null;
+          done();
+        },
+        error: (err) => {
+          this.error.set(err.message);
+          done();
+        }
+      });
+    return;
+  }
+
+  if (this.confirmActionType === 'restore') {
+    this.courseService.restoreCourse(course.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.courses.update(list =>
+            list.map(c =>
+              c.id === course.id
+                ? { ...c, deleted_at: res.course.deleted_at, enabled: res.course.enabled }
+                : c
+            )
+          );
+          this.showConfirmAction = false;
+          this.confirmTargetCourse = null;
+          done();
+        },
+        error: (err) => {
+          this.error.set(err.message);
+          done();
+        }
+      });
+    return;
+  }
+
+  // force delete
+  this.courseService.forceDeleteCourse(course.id)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        // mejor: recargar porque afecta paginación
+        this.showConfirmAction = false;
+        this.confirmTargetCourse = null;
+        done();
+        this.loadCourses();
+      },
+      error: (err) => {
+        this.error.set(err.message);
+        done();
+      }
+    });
+}
+
+// ---- Toggle Active (enabled) accesible ----
+onToggleEnabled(course: Course, ev: Event): void {
+  if (course.deleted_at) {
+    // Si está archivado, no permitimos activar/desactivar
+    (ev.target as HTMLInputElement).checked = course.enabled;
+    return;
+  }
+
+  const input = ev.target as HTMLInputElement;
+  const nextValue = input.checked;
+
+  this.actionLoading.set(true);
+  this.courseService.activeCourse(course.id, nextValue)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (res) => {
+        this.courses.update(list =>
+          list.map(c => c.id === course.id ? { ...c, enabled: res.course.enabled } : c)
+        );
+        this.actionLoading.set(false);
+      },
+      error: (err) => {
+        // revertir UI si falla
+        input.checked = course.enabled;
+        this.error.set(err.message);
+        this.actionLoading.set(false);
+      }
+    });
+}
 }
