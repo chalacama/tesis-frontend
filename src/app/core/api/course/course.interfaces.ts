@@ -96,3 +96,24 @@ export interface CourseRouteParams {
   username?: string;
   id?: number;
 }
+
+export interface CourseEnabledResponse {
+  message: string;
+  course: {
+    id: number;
+    enabled: boolean;
+  };
+}
+
+export interface CourseMessageResponse {
+  message: string;
+}
+
+export interface CourseRestoreResponse {
+  message: string;
+  course: {
+    id: number;
+    enabled: boolean;
+    deleted_at: string | null;
+  };
+}

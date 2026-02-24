@@ -16,7 +16,10 @@ import {
   CourseQueryParams,
   CourseRequest,
   CourseResponse,
-  CourseRouteParams
+  CourseRouteParams,
+  CourseEnabledResponse,
+  CourseMessageResponse,
+  CourseRestoreResponse
 } from './course.interfaces';
 import { environment } from '../../environment/environment';
 import { CodeResponse, CourseDetailRequest, CourseDetailResponse } from './course.details.interfaces';
@@ -255,6 +258,49 @@ export class CourseService {
       return throwError(() => new Error(msg));
     })
   );
+}
+activeCourse(courseId: number | string, enabled: boolean): Observable<CourseEnabledResponse> {
+  this.loadingSubject.next(true);
+
+  return this.http
+    .put<CourseEnabledResponse>(`${this.apiUrl}/${courseId}/active`, { enabled })
+    .pipe(
+      finalize(() => this.loadingSubject.next(false)),
+      catchError(this.handleError)
+    );
+}
+
+archiveCourse(courseId: number | string): Observable<CourseMessageResponse> {
+  this.loadingSubject.next(true);
+
+  return this.http
+    .delete<CourseMessageResponse>(`${this.apiUrl}/${courseId}/archived`)
+    .pipe(
+      finalize(() => this.loadingSubject.next(false)),
+      catchError(this.handleError)
+    );
+}
+
+restoreCourse(courseId: number | string): Observable<CourseRestoreResponse> {
+  this.loadingSubject.next(true);
+
+  return this.http
+    .patch<CourseRestoreResponse>(`${this.apiUrl}/${courseId}/restore`, {})
+    .pipe(
+      finalize(() => this.loadingSubject.next(false)),
+      catchError(this.handleError)
+    );
+}
+
+forceDeleteCourse(courseId: number | string): Observable<CourseMessageResponse> {
+  this.loadingSubject.next(true);
+
+  return this.http
+    .delete<CourseMessageResponse>(`${this.apiUrl}/${courseId}/force-delete`)
+    .pipe(
+      finalize(() => this.loadingSubject.next(false)),
+      catchError(this.handleError)
+    );
 }
 
 }

@@ -156,7 +156,7 @@
   cursor: pointer;
   font-size: 13px;
   line-height: 1.5rem;
-  padding: 10px;
+  padding: 9px;
   color: var(--text-color);
   background-color: #00000000;
   font-weight: 600;
@@ -218,6 +218,22 @@
 }
 .btn-delete:hover{
     background-color: var(--sev-danger-hover);
+    color: var(--background-color);
+}
+.btn-archivate{
+    border: 1px solid var(--sev-warn);
+    color: var(--sev-warn);
+}
+.btn-archivate:hover{
+    background-color: var(--sev-warn-hover);
+    color: var(--background-color);
+}
+.btn-restore{
+    border: 1px solid var(--sev-primary);
+    color: var(--sev-primary);
+}
+.btn-restore:hover{
+    background-color: var(--sev-primary-hover);
     color: var(--background-color);
 }
 .btn-analytics{
