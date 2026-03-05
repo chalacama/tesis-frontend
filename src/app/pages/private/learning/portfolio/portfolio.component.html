@@ -15,11 +15,7 @@
       <div class="profile-section">
         <div class="profile-image">
           <ng-container *ngIf="avatarUrl(); else initialsAvatar">
-            <img
-              [ngSrc]="avatarUrl()!"
-              alt="{{ p.name }} {{ p.lastname }}"
-              width="160" height="160"
-            />
+            <img [ngSrc]="avatarUrl()!" alt="{{ p.name }} {{ p.lastname }}" width="160" height="160" />
           </ng-container>
           <ng-template #initialsAvatar>
             <div class="avatar-fallback" aria-hidden="true">{{ initials() }}</div>
@@ -30,9 +26,11 @@
           <div class="channel-name">
             <h1>{{ p.name }} {{ p.lastname }}</h1>
 
-            <svg *ngIf="verifiedByRole()" class="verified-badge" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-label="Verificado">
+            <svg *ngIf="verifiedByRole()" class="verified-badge" width="16" height="16" viewBox="0 0 16 16" fill="none"
+              aria-label="Verificado">
               <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
-              <path d="M6 8L7.5 9.5L10 6.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M6 8L7.5 9.5L10 6.5" stroke="black" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round"></path>
             </svg>
           </div>
 
@@ -68,29 +66,14 @@
 
             <!-- Íconos de contacto por Gmail / Chat (sin mostrar email) -->
             <div class="contact-icons" *ngIf="p.email">
-              <a
-                class="icon-link"
-                [href]="getGmailComposeUrl(p.email)"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Enviar correo por Gmail"
-              >
-                <ui-icon
-                  [size]="'sm'"
-                  [svgPath]="'svg/google-gmail.svg'">
+              <a class="icon-link" [href]="getGmailComposeUrl(p.email)" target="_blank" rel="noopener noreferrer"
+                aria-label="Enviar correo por Gmail">
+                <ui-icon [size]="'sm'" [svgPath]="'svg/google-gmail.svg'">
                 </ui-icon>
               </a>
-
-              <a
-                class="icon-link"
-                [href]="gmailChatUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Abrir Google Chat"
-              >
-                <ui-icon
-                  [size]="'sm'"
-                  [svgPath]="'svg/chat-filled.svg'">
+              <a class="icon-link" [href]="getOutlookComposeUrl(p.email)" target="_blank" rel="noopener noreferrer"
+                aria-label="Enviar correo por Outlook">
+                <ui-icon [size]="'sm'" [svgPath]="'svg/outlook.svg'">
                 </ui-icon>
               </a>
             </div>
@@ -109,32 +92,17 @@
     <!-- Navigation Tabs (solo Cursos / Colaboraciones) -->
     <nav class="channel-nav">
       <div class="nav-items">
-        <button
-          class="nav-item"
-          type="button"
-          [routerLink]="['./courses']"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
+        <button class="nav-item" type="button" [routerLink]="['./courses']" routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
           Cursos
         </button>
 
-        <button
-          class="nav-item"
-          type="button"
-          [routerLink]="['./collaborations']"
-          routerLinkActive="active"
-        >
+        <button class="nav-item" type="button" [routerLink]="['./collaborations']" routerLinkActive="active">
           Colaboraciones
         </button>
       </div>
 
-      <button
-        class="search-btn"
-        type="button"
-        aria-label="Buscar en el portafolio"
-        (click)="onSearchClick()"
-      >
+      <button class="search-btn" type="button" aria-label="Buscar en el portafolio" (click)="onSearchClick()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
           <path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
@@ -142,7 +110,7 @@
       </button>
     </nav>
 
-    
+
     <!-- Contenido de las pestañas (Cursos / Colaboraciones) -->
     <router-outlet></router-outlet>
 

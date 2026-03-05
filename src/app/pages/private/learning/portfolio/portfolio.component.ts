@@ -62,7 +62,7 @@ export class PortfolioComponent implements OnInit {
       .join('');
   });
 
-  readonly gmailChatUrl = 'https://mail.google.com/chat/u/0/#chat/home';
+  
 
   constructor(
     private router: Router,
@@ -113,6 +113,22 @@ export class PortfolioComponent implements OnInit {
   getGmailComposeUrl(email: string | null | undefined): string {
     if (!email) return 'https://mail.google.com/';
     return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+  }
+  /** Enlace directo a redactar correo en Outlook Web al dueño del portafolio */
+  getOutlookComposeUrl(email: string | null | undefined): string {
+    if (!email) return 'https://outlook.office.com/mail/';
+
+    const e = email.trim().toLowerCase();
+
+  // Heurística simple: cuentas Microsoft personales suelen ir mejor con outlook.live.com
+    const isPersonalMicrosoft =
+      e.endsWith('@outlook.com') || e.endsWith('@hotmail.com') || e.endsWith('@live.com');
+
+    const base = isPersonalMicrosoft
+      ? 'https://outlook.live.com/mail/0/deeplink/compose?to='
+      : 'https://outlook.office.com/mail/deeplink/compose?to=';
+
+    return `${base}${encodeURIComponent(email)}`;
   }
 
   /** Click en la lupa: por ahora abre un prompt y manda el término al bridge */
