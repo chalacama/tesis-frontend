@@ -46,6 +46,9 @@ export interface Chapter {
 export interface Learning {
     type: string | null;
     format: string | null;
+    size_mb: number | null;
+    duration_seconds: number | null; 
+    duration_formatted: string | null; 
 }
 export interface CompletedChapter {
     is_completed: boolean;

@@ -325,10 +325,33 @@ export class CourseComponent implements OnInit {
   isActiveChapter = (chapterId: number) => this.activeChapterId() === chapterId;
 
   learningIcon(ch: ChapterItem): string | null {
-    if (ch.format === 'mp4') {
-      return 'svg/youtube.svg';
-    } else {
-      return 'svg/file.svg';
+    // Si no tiene formato, pero tiene preguntas, es un Test
+    if (!ch.format && ch.questions > 0) return 'svg/test.svg'; // Asegúrate de tener este SVG
+    
+    // Convertimos a minúsculas por si acaso
+    const format = ch.format?.toLowerCase();
+
+    switch (format) {
+      case 'youtube':
+        return 'svg/youtube.svg';
+      case 'mp4':
+        return 'svg/video.svg';
+      case 'pdf':
+        return 'svg/pdf.svg'; // Asegúrate de tener un icono para PDF
+      case 'docx':
+        return 'svg/word.svg'; // Asegúrate de tener un icono para Word
+      case 'pptx':
+        return 'svg/powerpoint.svg'; // Y así sucesivamente...
+      case 'xlsx':
+        return 'svg/excel.svg';
+      case 'mp3':
+        return 'svg/audio.svg';
+      case 'zip':
+        return 'svg/zip.svg';
+      case 'rar':
+        return 'svg/rar.svg';
+      default:
+        return 'svg/raw.svg'; // El icono genérico por si no coincide
     }
   }
 

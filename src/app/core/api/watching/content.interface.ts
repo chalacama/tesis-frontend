@@ -32,14 +32,22 @@ export interface LastView {
 export interface LearningContent {
     id:                    number;
     url:                   string;
+    size_mb:               number | null; // <-- NUEVO
+    duration_seconds:      number | null; // <-- NUEVO
     type_content_id:       number;
+    format_id:             number;        // <-- NUEVO
     chapter_id:            number;
     created_at:            string;
     updated_at:            string;
     
     type_learning_content: TypeLearningContent;
+    format?:                Format;       // <-- NUEVO (Relación cargada)
 }
-
+// <-- NUEVA INTERFAZ PARA LA RELACIÓN -->
+export interface Format {
+    id:   number;
+    name: string;
+}
 export interface TypeLearningContent {
     id:   number;
     name: string;
@@ -48,6 +56,9 @@ export interface TypeLearningContent {
 export interface LearningMeta {
     type:   string;
     format: string;
+    size_mb:            number | null; // <-- NUEVO
+    duration_seconds:   number | null; // <-- NUEVO
+    duration_formatted: string | null; // <-- NUEVO
 }
 
 export interface Owner {
