@@ -289,10 +289,8 @@
 
 .doc-icon,
 .raw-icon {
-  width: 32px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--sev-secondary);
+  width: 40px;
+  height: auto;
 }
 
 .doc-title,

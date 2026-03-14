@@ -350,8 +350,15 @@ export class CourseComponent implements OnInit {
         return 'svg/zip.svg';
       case 'rar':
         return 'svg/rar.svg';
+      case 'txt':
+        return 'svg/text.svg';
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+      case 'gif':
+        return 'svg/image.svg';
       default:
-        return 'svg/raw.svg'; // El icono genérico por si no coincide
+        return 'svg/file.svg'; // El icono genérico por si no coincide
     }
   }
 
