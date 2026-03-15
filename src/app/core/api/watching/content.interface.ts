@@ -31,8 +31,9 @@ export interface LastView {
 
 export interface LearningContent {
     id:                    number;
+    name:                  string | null;
     url:                   string;
-    size_mb:               number | null; // <-- NUEVO
+    size:               string | null; // <-- NUEVO
     duration_seconds:      number | null; // <-- NUEVO
     type_content_id:       number;
     format_id:             number;        // <-- NUEVO

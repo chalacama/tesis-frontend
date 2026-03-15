@@ -35,7 +35,6 @@ export interface Module {
 export interface Chapter {
     id:                number;
     title:             string;
-    description:       string;
     order:             number;
     updated_at:        string;
     created_at:        string;
@@ -46,7 +45,7 @@ export interface Chapter {
 export interface Learning {
     type: string | null;
     format: string | null;
-    size_mb: number | null;
+    size: string | null;
     duration_seconds: number | null; 
     duration_formatted: string | null; 
 }
