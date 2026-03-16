@@ -273,10 +273,13 @@ padding-left: 5px;
 }
 
 .icon-slot {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  gap: 4px;
 }
-
+.icon-slot-meta{
+  font-size: 10px;
+}
 .chapter-lock{
   color: var(--sev-info);
 }

@@ -58,51 +58,75 @@ declare global {
   styleUrl: './content.component.css'
 })
 export class ContentComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly watchingSvc = inject(WatchingService);
-  private readonly sanitizer = inject(DomSanitizer);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly feedbackSvc = inject(FeedbackService);
-  private readonly bridge = inject(CourseBridge);
+  private readonly route          = inject(ActivatedRoute);
+  private readonly router         = inject(Router);
+  private readonly watchingSvc    = inject(WatchingService);
+  private readonly sanitizer      = inject(DomSanitizer);
+  private readonly destroyRef     = inject(DestroyRef);
+  private readonly feedbackSvc    = inject(FeedbackService);
+  private readonly bridge         = inject(CourseBridge);
   private readonly notificationBridge = inject(NotificationBridgeService);
-  
 
-  @ViewChild('ytFrame') ytFrame?: ElementRef<HTMLIFrameElement>;
+  @ViewChild('ytFrame')   ytFrame?:   ElementRef<HTMLIFrameElement>;
   @ViewChild('codeInput') codeInput?: ElementRef<HTMLInputElement>;
 
-  // state
-  readonly loading = signal(true);
-  readonly error = signal<string | null>(null);
-  readonly data = signal<ContentResponse | null>(null);
-  readonly liking = signal(false);
-  readonly saving = signal(false);
+  // ── State ──────────────────────────────────────────────────────────────────
+  readonly loading   = signal(true);
+  readonly error     = signal<string | null>(null);
+  readonly data      = signal<ContentResponse | null>(null);
+  readonly liking    = signal(false);
+  readonly saving    = signal(false);
 
   dialogCodeShow = false;
-  dialogPdfShow = false;
+  dialogPdfShow  = false;
 
-  // YouTube embed cache (no re-render en likes/saves)
+  // ── YouTube embed (no re-render en likes/saves) ────────────────────────────
   readonly ytEmbedRaw = signal<string | null>(null);
-  readonly ytSafeSrc = computed<SafeResourceUrl | null>(() => {
+  readonly ytSafeSrc  = computed<SafeResourceUrl | null>(() => {
     const raw = this.ytEmbedRaw();
     return raw ? this.sanitizer.bypassSecurityTrustResourceUrl(raw) : null;
   });
 
-  // helpers tipo de contenido
-  readonly isYouTube = computed(
-    () => (this.data()?.learning_meta?.type || '').toLowerCase() === 'youtube'
-  );
+  readonly pdfSafeSrc = computed<SafeResourceUrl | null>(() => {
+    const d      = this.data();
+    const format = (d?.learning_meta?.format || '').toLowerCase();
+    const url    = d?.learning_content?.url;
+    if (format !== 'pdf' || !url) return null;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
 
+  // ── Helpers de tipo de contenido ──────────────────────────────────────────
+  /**
+   * CAMBIO: el type del TypeLearningContent es ahora "link"
+   * y el format del Format es "youtube".
+   */
+  readonly isYouTube = computed(() => {
+    const meta = this.data()?.learning_meta;
+    return (
+      (meta?.type   || '').toLowerCase() === 'link' &&
+      (meta?.format || '').toLowerCase() === 'youtube'
+    );
+  });
+
+  /**
+   * CAMBIO: el name del TypeLearningContent es ahora "archive" (normalizado).
+   * Se eliminan los alias legacy "archivo" / "file".
+   */
   readonly isArchive = computed(() =>
-    ['archivo', 'archive', 'file'].includes(
-      (this.data()?.learning_meta?.type || '').toLowerCase()
-    )
+    (this.data()?.learning_meta?.type || '').toLowerCase() === 'archive'
   );
 
   readonly isVideoFile = computed(() =>
+    this.isArchive() &&
     ['mp4', 'webm', 'ogg', 'mov', 'm4v'].includes(
       (this.data()?.learning_meta?.format || '').toLowerCase()
     )
+  );
+
+  /** NUEVO: audio MP3 */
+  readonly isAudio = computed(() =>
+    this.isArchive() &&
+    (this.data()?.learning_meta?.format || '').toLowerCase() === 'mp3'
   );
 
   readonly isPdf = computed(() =>
@@ -117,42 +141,56 @@ export class ContentComponent implements OnInit {
     )
   );
 
-  readonly isTmpFile = computed(() =>
+  /** NUEVO: documentos de oficina + texto plano */
+  readonly isDocumentFile = computed(() =>
     this.isArchive() &&
-    (this.data()?.learning_meta?.format || '').toLowerCase() === 'tmp'
+    ['docx', 'pptx', 'xlsx', 'txt'].includes(
+      (this.data()?.learning_meta?.format || '').toLowerCase()
+    )
   );
 
-  readonly pdfSafeSrc = computed<SafeResourceUrl | null>(() => {
-    const d = this.data();
-    const format = (d?.learning_meta?.format || '').toLowerCase();
-    const url = d?.learning_content?.url;
-    if (format !== 'pdf' || !url) return null;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  });
+  /** NUEVO: archivos comprimidos */
+  readonly isCompressedFile = computed(() =>
+    this.isArchive() &&
+    ['zip', 'rar'].includes(
+      (this.data()?.learning_meta?.format || '').toLowerCase()
+    )
+  );
 
-  // ---- Progreso en tiempo real ----
-  private progress$ = new Subject<number>(); // segundos en vivo
-  private lastSentSecond = -1;               // anti-duplicados
-  private ytPlayer: any = null;              // instancia YT.Player
-  private ytTickStop$ = new Subject<void>(); // parar polling YT
+  /** Cualquier otro formato no clasificado */
+  readonly isRawFile = computed(() =>
+    this.isArchive() &&
+    !this.isVideoFile()    &&
+    !this.isAudio()        &&
+    !this.isPdf()          &&
+    !this.isImageFile()    &&
+    !this.isDocumentFile() &&
+    !this.isCompressedFile()
+  );
 
-  private lastHtml5Time = 0; // último segundo visto en <video>
-  private lastYtTime = 0;    // último segundo visto en YouTube
+  // ── Progreso en tiempo real ────────────────────────────────────────────────
+  private progress$          = new Subject<number>();
+  private lastSentSecond     = -1;
+  private ytPlayer: any      = null;
+  private ytTickStop$        = new Subject<void>();
 
-  // ---- Completed Chapter (progreso %)
-  private lastPercentReported = 0;       // último % reportado al backend
-  private readonly minDeltaPercent = 0.5; // evita spam: no mandar deltas < 0.5%
+  private lastHtml5Time      = 0;
+  private lastYtTime         = 0;
 
-  // ---- Registro (código de acceso) ----
+  private lastPercentReported  = 0;
+  private readonly minDeltaPercent = 0.5;
+
+  // ── Registro ──────────────────────────────────────────────────────────────
   readonly codeLength = 7;
-  readonly code = signal<string>('');
-  readonly enrolling = signal(false);
-  readonly codeError = signal<string | null>(null);
+  readonly code       = signal<string>('');
+  readonly enrolling  = signal(false);
+  readonly codeError  = signal<string | null>(null);
 
-  // ---------- Local backup ----------
-  private resumeKey(lcId: number | string) {
-    return `resume:${lcId}`;
-  }
+  isRegistered = computed(() => this.bridge.isRegistered());
+
+  // ── Local backup ──────────────────────────────────────────────────────────
+  private resumeKey(lcId: number | string) { return `resume:${lcId}`; }
+
   private saveResumeLocal(lcId: number | string, sec: number) {
     try {
       localStorage.setItem(
@@ -161,9 +199,8 @@ export class ContentComponent implements OnInit {
       );
     } catch {}
   }
-  private readResumeLocal(
-    lcId: number | string
-  ): { sec: number; ts: number } | null {
+
+  private readResumeLocal(lcId: number | string): { sec: number; ts: number } | null {
     try {
       const raw = localStorage.getItem(this.resumeKey(lcId));
       if (!raw) return null;
@@ -173,13 +210,12 @@ export class ContentComponent implements OnInit {
     return null;
   }
 
-  isRegistered = computed(() => this.bridge.isRegistered());
-
+  // ── Lifecycle ─────────────────────────────────────────────────────────────
   ngOnInit(): void {
-    // a) Canal de progreso con throttling 4s
+    // a) Canal de progreso con throttling 4 s
     this.progress$
       .pipe(
-        map((s) => Math.max(0, Math.floor(s))),
+        map((s)  => Math.max(0, Math.floor(s))),
         distinctUntilChanged(),
         auditTime(4000),
         switchMap((sec) => this.sendProgress(sec)),
@@ -187,7 +223,7 @@ export class ContentComponent implements OnInit {
       )
       .subscribe();
 
-    // b) Cargar contenido por capítulo
+    // b) Cambio de capítulo por paramMap
     const parent = this.route.parent ?? this.route;
 
     parent.paramMap
@@ -195,16 +231,11 @@ export class ContentComponent implements OnInit {
         map((pm) => pm.get('chapterId')),
         filter((id): id is string => !!id),
         distinctUntilChanged(),
-        tap(() => {
-          this.loading.set(true);
-          this.error.set(null);
-        }),
+        tap(() => { this.loading.set(true); this.error.set(null); }),
         switchMap((chapterId) =>
           this.watchingSvc.getChapterContent(chapterId).pipe(
             catchError((err) => {
-              this.error.set(
-                err?.error?.message || 'No se pudo cargar el contenido.'
-              );
+              this.error.set(err?.error?.message || 'No se pudo cargar el contenido.');
               return of(null);
             })
           )
@@ -221,21 +252,16 @@ export class ContentComponent implements OnInit {
     if (initialId) {
       this.loading.set(true);
       this.watchingSvc.getChapterContent(initialId).subscribe({
-        next: (res) => {
-          this.setDataAndPreparePlayers(res);
-          this.loading.set(false);
-        },
+        next: (res) => { this.setDataAndPreparePlayers(res); this.loading.set(false); },
         error: (err) => {
-          this.error.set(
-            err?.error?.message || 'No se pudo cargar el contenido.'
-          );
+          this.error.set(err?.error?.message || 'No se pudo cargar el contenido.');
           this.loading.set(false);
         }
       });
     }
 
-    // d) Flush al ocultar pestaña / salir / navegar
-    const onVisibility = () => this.flushNowFromCurrentPlayer();
+    // d) Flush al ocultar pestaña / cerrar / navegar
+    const onVisibility   = () => this.flushNowFromCurrentPlayer();
     const onBeforeUnload = () => this.flushNowFromCurrentPlayer(true);
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('beforeunload', onBeforeUnload);
@@ -254,27 +280,23 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  // -----------------------------
-  // Carga/prepare players por tipo
-  // -----------------------------
+  // ── Carga / prepare players ───────────────────────────────────────────────
   private setDataAndPreparePlayers(res: ContentResponse) {
-    // reset de memorias por capítulo
     this.lastPercentReported = 0;
-    this.lastHtml5Time = 0;
-    this.lastYtTime = 0;
-    this.lastSentSecond = -1;
+    this.lastHtml5Time       = 0;
+    this.lastYtTime          = 0;
+    this.lastSentSecond      = -1;
 
-    // aplica respaldo local (si es más reciente que servidor)
-    const lcId = res?.learning_content?.id;
+    const lcId      = res?.learning_content?.id;
     const serverSec = res?.last_view?.second_seen ?? 0;
+
     if (lcId != null) {
       const local = this.readResumeLocal(lcId);
       if (local && local.sec >= 0) {
         const useLocal =
-          local.ts >
-            (res?.last_view?.updated_at
-              ? new Date(res.last_view.updated_at).getTime()
-              : 0) || local.sec > serverSec;
+          local.ts > (res?.last_view?.updated_at
+            ? new Date(res.last_view.updated_at).getTime()
+            : 0) || local.sec > serverSec;
 
         if (useLocal) {
           res = {
@@ -282,7 +304,7 @@ export class ContentComponent implements OnInit {
             last_view: {
               ...res.last_view,
               second_seen: local.sec,
-              updated_at: new Date(local.ts).toISOString()
+              updated_at:  new Date(local.ts).toISOString()
             } as any
           };
           this.sendProgress(local.sec).subscribe();
@@ -300,13 +322,11 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  /** Calcula y fija el embed URL de YouTube con enablejsapi y start */
   private updateYouTubeEmbedFromResponse(res: ContentResponse | null): void {
-    if (
-      res &&
-      (res.learning_meta?.type || '').toLowerCase() === 'youtube' &&
-      res.learning_content?.url
-    ) {
+    const type   = (res?.learning_meta?.type   || '').toLowerCase();
+    const format = (res?.learning_meta?.format || '').toLowerCase();
+
+    if (res && type === 'link' && format === 'youtube' && res.learning_content?.url) {
       const start = res.last_view?.second_seen || 0;
       const embed = this.buildYouTubeEmbed(res.learning_content.url, start);
       this.ytEmbedRaw.set(embed);
@@ -315,7 +335,28 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  // ---- UI Actions (optimistic) ----
+  // ── Ícono según formato ────────────────────────────────────────────────────
+  getFileIcon(format: string): string {
+    const icons: Record<string, string> = {
+      pdf:  'svg/pdf-color.svg',
+      docx: 'svg/word-color.svg',
+      pptx: 'svg/powerpoint-color.svg',
+      xlsx: 'svg/excel-color.svg',
+      zip:  'svg/zip-color.svg',
+      rar:  'svg/rar-color.svg',
+      txt:  'svg/text-color.svg',
+      // mp3:  'svg/audio-color.svg',
+      // mp4:  'svg/video-color.svg',
+      // jpg:  'svg/image-color.svg',
+      // jpeg: 'svg/image-color.svg',
+      // png:  'svg/image-color.svg',
+      // gif:  'svg/image-color.svg',
+      // webp: 'svg/image-color.svg',
+    };
+    return icons[(format || '').toLowerCase()] ?? 'svg/file-color.svg';
+  }
+
+  // ── UI Actions (optimistic) ────────────────────────────────────────────────
   toggleLike(): void {
     const d = this.data();
     if (!d) return;
@@ -323,11 +364,11 @@ export class ContentComponent implements OnInit {
     const chapterId = d.chapter.id;
     const prevLiked = d.user_state.liked_chapter;
     const nextLiked = !prevLiked;
-
     const prevLikes = d.likes_total ?? 0;
+
     this.data.set({
       ...d,
-      user_state: { ...d.user_state, liked_chapter: nextLiked },
+      user_state:  { ...d.user_state, liked_chapter: nextLiked },
       likes_total: nextLiked ? prevLikes + 1 : Math.max(0, prevLikes - 1)
     });
 
@@ -340,7 +381,7 @@ export class ContentComponent implements OnInit {
           const likes = cur.likes_total ?? 0;
           this.data.set({
             ...cur,
-            user_state: { ...cur.user_state, liked_chapter: res.liked },
+            user_state:  { ...cur.user_state, liked_chapter: res.liked },
             likes_total: res.liked ? likes + 1 : Math.max(0, likes - 1)
           });
         }
@@ -351,7 +392,7 @@ export class ContentComponent implements OnInit {
         if (!cur) return;
         this.data.set({
           ...cur,
-          user_state: { ...cur.user_state, liked_chapter: prevLiked },
+          user_state:  { ...cur.user_state, liked_chapter: prevLiked },
           likes_total: prevLiked ? prevLikes : Math.max(0, prevLikes)
         });
         this.liking.set(false);
@@ -369,10 +410,7 @@ export class ContentComponent implements OnInit {
     const prevSaved = d.user_state.is_saved;
     const nextSaved = !prevSaved;
 
-    this.data.set({
-      ...d,
-      user_state: { ...d.user_state, is_saved: nextSaved }
-    });
+    this.data.set({ ...d, user_state: { ...d.user_state, is_saved: nextSaved } });
 
     this.saving.set(true);
     this.feedbackSvc.setSaved(routeCourseId, nextSaved).subscribe({
@@ -380,20 +418,14 @@ export class ContentComponent implements OnInit {
         const cur = this.data();
         if (!cur) return;
         if (res.saved !== cur.user_state.is_saved) {
-          this.data.set({
-            ...cur,
-            user_state: { ...cur.user_state, is_saved: res.saved }
-          });
+          this.data.set({ ...cur, user_state: { ...cur.user_state, is_saved: res.saved } });
         }
         this.saving.set(false);
       },
       error: () => {
         const cur = this.data();
         if (!cur) return;
-        this.data.set({
-          ...cur,
-          user_state: { ...cur.user_state, is_saved: prevSaved }
-        });
+        this.data.set({ ...cur, user_state: { ...cur.user_state, is_saved: prevSaved } });
         this.saving.set(false);
       }
     });
@@ -403,35 +435,25 @@ export class ContentComponent implements OnInit {
     const courseId = this.courseId;
     if (!courseId) return;
 
-    // Curso público → registro directo
     if (!isPrivate) {
       this.enrolling.set(true);
       this.feedbackSvc.enrollPublic(courseId).subscribe({
-        next: () => {
-          this.bridge.setRegistered(true);
-          this.enrolling.set(false);
-        },
+        next: () => { this.bridge.setRegistered(true); this.enrolling.set(false); },
         error: (err) => {
-          this.codeError.set(
-            err?.error?.message || 'No se pudo registrar.'
-          );
+          this.codeError.set(err?.error?.message || 'No se pudo registrar.');
           this.enrolling.set(false);
         }
       });
       return;
     }
 
-    // Curso privado → abrir diálogo de código
     this.codeError.set(null);
     this.code.set('');
     this.dialogCodeShow = true;
-
     setTimeout(() => this.focusCodeInput(), 50);
   }
 
-  // -----------------------------
-  // HTML5 video events (archivo)
-  // -----------------------------
+  // ── HTML5 <video> events ───────────────────────────────────────────────────
   onVideoLoadedMetadata(video: HTMLVideoElement): void {
     const start = this.data()?.last_view?.second_seen || 0;
     try {
@@ -443,79 +465,92 @@ export class ContentComponent implements OnInit {
 
   onVideoTimeUpdate(video: HTMLVideoElement): void {
     const t = video.currentTime || 0;
-
-    // Si hay salto grande (adelanto/retroceso), manda inmediato
-    if (Math.abs(t - this.lastHtml5Time) > 1.5) {
-      this.flushProgress(t);
-    }
-
-    this.progress$.next(t); // tick normal (throttling 4s)
+    if (Math.abs(t - this.lastHtml5Time) > 1.5) this.flushProgress(t);
+    this.progress$.next(t);
     this.lastHtml5Time = t;
   }
 
   onVideoSeeked(video: HTMLVideoElement): void {
     const t = video.currentTime || 0;
-    this.lastHtml5Time = t; // sincroniza
-    this.flushProgress(t);  // flush instantáneo
+    this.lastHtml5Time = t;
+    this.flushProgress(t);
   }
 
-  onVideoPause(video: HTMLVideoElement): void {
-    this.flushProgress(video.currentTime);
-  }
+  onVideoPause(video: HTMLVideoElement): void { this.flushProgress(video.currentTime); }
 
   onVideoEnded(video: HTMLVideoElement): void {
-    const endSec = Number.isFinite(video.duration)
-      ? video.duration
-      : video.currentTime;
+    const endSec = Number.isFinite(video.duration) ? video.duration : video.currentTime;
     this.flushProgress(endSec);
   }
 
-  // -----------------------------
-  // Envío de progreso (común)
-  // -----------------------------
+  // ── HTML5 <audio> events (MP3) ─────────────────────────────────────────────
+  onAudioLoadedMetadata(audio: HTMLAudioElement): void {
+    const start = this.data()?.last_view?.second_seen || 0;
+    try {
+      if (start > 0 && audio?.duration && start < audio.duration) {
+        audio.currentTime = start;
+      }
+    } catch {}
+  }
+
+  onAudioTimeUpdate(audio: HTMLAudioElement): void {
+    const t = audio.currentTime || 0;
+    if (Math.abs(t - this.lastHtml5Time) > 1.5) this.flushProgress(t);
+    this.progress$.next(t);
+    this.lastHtml5Time = t;
+  }
+
+  onAudioSeeked(audio: HTMLAudioElement): void {
+    const t = audio.currentTime || 0;
+    this.lastHtml5Time = t;
+    this.flushProgress(t);
+  }
+
+  onAudioPause(audio: HTMLAudioElement): void { this.flushProgress(audio.currentTime); }
+
+  onAudioEnded(audio: HTMLAudioElement): void {
+    const endSec = Number.isFinite(audio.duration) ? audio.duration : audio.currentTime;
+    this.flushProgress(endSec);
+  }
+
+  // ── Envío de progreso ─────────────────────────────────────────────────────
   private get learningContentId(): number | string | null {
     return this.data()?.learning_content?.id ?? null;
   }
 
-  /** Encola el progreso (pasa por throttling de 4s) */
   private sendProgress(sec: number) {
     const lcId = this.learningContentId;
     if (lcId == null) return of(null);
 
     const s = Math.max(0, Math.floor(sec));
-    if (s === this.lastSentSecond) return of(null); // evita duplicados
+    if (s === this.lastSentSecond) return of(null);
     this.lastSentSecond = s;
 
-    // respaldo local por si el usuario recarga muy rápido
     this.saveResumeLocal(lcId, s);
     this.reportCompletedDelta(s);
 
-    return this.feedbackSvc.setContent(lcId, s).pipe(
-      catchError(() => of(null))
-    );
+    return this.feedbackSvc.setContent(lcId, s).pipe(catchError(() => of(null)));
   }
 
-  /** Flush inmediato (pause/seek/end/ocultar/salir/navegar) */
   private flushProgress(currentSec: number) {
     const sec = Math.max(0, Math.floor(currentSec ?? 0));
     this.sendProgress(sec).subscribe();
   }
 
-  /** Detecta player activo y hace flush inmediato */
+  /** Detecta el player activo (YouTube → video → audio) y hace flush */
   private flushNowFromCurrentPlayer(_isUnload = false) {
     if (this.isYouTube() && this.ytPlayer?.getCurrentTime) {
-      const sec = this.ytPlayer.getCurrentTime();
-      this.flushProgress(sec);
+      this.flushProgress(this.ytPlayer.getCurrentTime());
       return;
     }
-    const videoEl =
-      document.querySelector<HTMLVideoElement>('video.video-player');
-    if (videoEl) this.flushProgress(videoEl.currentTime || 0);
+    const videoEl = document.querySelector<HTMLVideoElement>('video.video-player');
+    if (videoEl) { this.flushProgress(videoEl.currentTime || 0); return; }
+
+    const audioEl = document.querySelector<HTMLAudioElement>('audio.audio-player');
+    if (audioEl) this.flushProgress(audioEl.currentTime || 0);
   }
 
-  // -----------------------------
-  // YouTube IFrame API
-  // -----------------------------
+  // ── YouTube IFrame API ────────────────────────────────────────────────────
   private async initYouTubePlayerIfNeeded() {
     if (!this.isYouTube()) return;
     const iframe = this.ytFrame?.nativeElement;
@@ -528,11 +563,7 @@ export class ContentComponent implements OnInit {
       events: {
         onReady: (e: any) => {
           const start = this.data()?.last_view?.second_seen || 0;
-          if (start > 0) {
-            try {
-              e.target.seekTo(start, true);
-            } catch {}
-          }
+          if (start > 0) { try { e.target.seekTo(start, true); } catch {} }
         },
         onStateChange: (e: any) => this.onYouTubeStateChange(e)
       }
@@ -544,18 +575,13 @@ export class ContentComponent implements OnInit {
     if (!YT || !this.ytPlayer) return;
 
     if (e.data === YT.PlayerState.PLAYING) {
-      // Polling 1s → progress$ + detección de saltos
       this.ytTickStop$.next();
       interval(1000)
         .pipe(takeUntil(this.ytTickStop$), takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           const t = this.safeGetTimeFromYT();
           if (t == null) return;
-
-          if (Math.abs(t - this.lastYtTime) > 1.5) {
-            this.flushProgress(t);
-          }
-
+          if (Math.abs(t - this.lastYtTime) > 1.5) this.flushProgress(t);
           this.progress$.next(t);
           this.lastYtTime = t;
         });
@@ -568,17 +594,14 @@ export class ContentComponent implements OnInit {
       if (t != null) this.flushProgress(t);
     } else if (e.data === YT.PlayerState.ENDED) {
       this.ytTickStop$.next();
-      const t =
-        this.safeGetDurationFromYT() ?? this.safeGetTimeFromYT() ?? 0;
+      const t = this.safeGetDurationFromYT() ?? this.safeGetTimeFromYT() ?? 0;
       this.flushProgress(t);
     }
   }
 
   private destroyYouTubePlayer() {
     this.ytTickStop$.next();
-    try {
-      this.ytPlayer?.destroy?.();
-    } catch {}
+    try { this.ytPlayer?.destroy?.(); } catch {}
     this.ytPlayer = null;
   }
 
@@ -586,63 +609,45 @@ export class ContentComponent implements OnInit {
     try {
       const t = this.ytPlayer?.getCurrentTime?.();
       return typeof t === 'number' && Number.isFinite(t) ? t : null;
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }
+
   private safeGetDurationFromYT(): number | null {
     try {
       const d = this.ytPlayer?.getDuration?.();
       return typeof d === 'number' && Number.isFinite(d) ? d : null;
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }
 
-  /** Carga el IFrame API una sola vez */
   private ensureYouTubeApi(): Promise<void> {
     return new Promise<void>((resolve) => {
-      if (window.YT?.Player) {
-        resolve();
-        return;
-      }
+      if (window.YT?.Player) { resolve(); return; }
 
-      const existing = document.querySelector(
-        'script[data-youtube-api]'
-      ) as HTMLScriptElement | null;
+      const existing = document.querySelector('script[data-youtube-api]') as HTMLScriptElement | null;
       if (existing) {
-        const check = () =>
-          window.YT?.Player ? resolve() : setTimeout(check, 50);
+        const check = () => window.YT?.Player ? resolve() : setTimeout(check, 50);
         check();
         return;
       }
 
       const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.src   = 'https://www.youtube.com/iframe_api';
       tag.async = true;
       tag.defer = true;
       tag.setAttribute('data-youtube-api', 'true');
       document.head.appendChild(tag);
-
       window.onYouTubeIframeAPIReady = () => resolve();
     });
   }
 
-  // ---- YouTube helpers ----
   private buildYouTubeEmbed(rawUrl: string, startSec = 0): string | null {
     const id = this.extractYouTubeId(rawUrl);
     if (!id) return null;
 
     const origin = window.location.origin;
     const params = new URLSearchParams({
-      autoplay: '0',
-      modestbranding: '1',
-      rel: '0',
-      controls: '1',
-      fs: '1',
-      playsinline: '1',
-      enablejsapi: '1',
-      origin
+      autoplay: '0', modestbranding: '1', rel: '0',
+      controls: '1', fs: '1', playsinline: '1', enablejsapi: '1', origin
     });
     if (startSec) params.set('start', String(Math.floor(startSec)));
     return `https://www.youtube.com/embed/${id}?${params.toString()}`;
@@ -651,56 +656,48 @@ export class ContentComponent implements OnInit {
   private extractYouTubeId(url: string): string | null {
     try {
       const u = new URL(url);
-      if (u.hostname.includes('youtu.be'))
-        return u.pathname.replace('/', '') || null;
+      if (u.hostname.includes('youtu.be')) return u.pathname.replace('/', '') || null;
       if (u.searchParams.get('v')) return u.searchParams.get('v');
       const path = u.pathname.split('/');
-      const i = path.indexOf('embed');
+      const i    = path.indexOf('embed');
       return i !== -1 && path[i + 1] ? path[i + 1] : null;
     } catch {
-      const m = url.match(
-        /(?:v=|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/
-      );
+      const m = url.match(/(?:v=|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
       return m?.[1] || null;
     }
   }
 
-  goToPortfolio(username: string) {
-    this.router.navigate(['learning/portfolio', '@' + username]);
-  }
-
+  // ── Duración del player HTML5 activo (video o audio) ──────────────────────
   private getHtml5Duration(): number {
-    const videoEl =
-      document.querySelector<HTMLVideoElement>('video.video-player');
-    const d = videoEl?.duration;
+    const videoEl = document.querySelector<HTMLVideoElement>('video.video-player');
+    const audioEl = document.querySelector<HTMLAudioElement>('audio.audio-player');
+    const el      = videoEl ?? audioEl;
+    const d       = el?.duration;
     return typeof d === 'number' && Number.isFinite(d) ? d : 0;
   }
 
-  /** Calcula y envía delta de progreso (%) desde un player de tiempo */
+  // ── Delta de progreso (%) ─────────────────────────────────────────────────
   private reportCompletedDelta(currentSec: number) {
     const d = this.data();
     if (!d) return;
 
-    const lcId = d.learning_content?.id;
+    const lcId      = d.learning_content?.id;
     const chapterId = d.chapter.id;
     if (lcId == null) return;
 
-    // 1) Duración total según player activo
     let total = 0;
     if (this.isYouTube()) total = this.safeGetDurationFromYT() ?? 0;
-    else total = this.getHtml5Duration();
+    else                  total = this.getHtml5Duration();
 
-    if (!total || total <= 0) return; // aún no hay duración fiable
+    if (!total || total <= 0) return;
 
-    // 2) Porcentaje actual y DELTA a reportar (incremental)
     const percent = Math.min(100, (currentSec / total) * 100);
-    const delta = +Math.max(0, percent - this.lastPercentReported).toFixed(2);
-    if (delta < this.minDeltaPercent) return; // anti-spam
+    const delta   = +Math.max(0, percent - this.lastPercentReported).toFixed(2);
+    if (delta < this.minDeltaPercent) return;
 
     this.sendProgressDelta(lcId, chapterId, delta, percent);
   }
 
-  /** Envía el delta de progreso calculado al backend */
   private sendProgressDelta(
     lcId: number | string,
     chapterId: number,
@@ -708,46 +705,35 @@ export class ContentComponent implements OnInit {
     newPercent: number
   ) {
     if (delta <= 0) return;
-
     this.lastPercentReported = newPercent;
 
     this.feedbackSvc.updateProgress(lcId, { progress: delta }).subscribe({
       next: (res) => {
         if (res?.data?.chapter_completed) {
-          console.log(`Chapter ${chapterId} completed!`);
           this.bridge.markChapterCompleted(chapterId);
         }
         if (res?.data?.certificate_issued) {
           this.notificationBridge.increment(1);
           this.bridge.notifyCertificateIssued();
-          
         }
       },
-      error: () => {
-        // silencioso
-      }
+      error: () => {}
     });
   }
 
-  /** Marca como 100% completado un contenido sin duración (PDF, TMP, imagen) */
+  /** Marca como 100 % completado contenido sin duración (PDF, imagen, doc, etc.) */
   private markNonTimeContentCompleted() {
     const d = this.data();
     if (!d) return;
 
-    const lcId = d.learning_content?.id;
+    const lcId      = d.learning_content?.id;
     const chapterId = d.chapter.id;
     if (lcId == null) return;
 
-    // 1) Asegurar registro de vista
-    this.feedbackSvc
-      .setContent(lcId, 1)
-      .pipe(catchError(() => of(null)))
-      .subscribe();
+    this.feedbackSvc.setContent(lcId, 1).pipe(catchError(() => of(null))).subscribe();
 
-    // 2) Mandar solo el delta que falta hasta 100
     const delta = +Math.max(0, 100 - this.lastPercentReported).toFixed(2);
     if (delta <= 0) return;
-
     this.sendProgressDelta(lcId, chapterId, delta, 100);
   }
 
@@ -755,32 +741,19 @@ export class ContentComponent implements OnInit {
     return this.route.parent?.snapshot.paramMap.get('id') ?? null;
   }
 
-  // ---- Código de acceso (input grande) ----
+  // ── Código de acceso ──────────────────────────────────────────────────────
   private focusCodeInput() {
     const el = this.codeInput?.nativeElement;
-    if (el) {
-      el.focus();
-      el.select?.();
-    }
-  }
-
-  private allowedChar(c: string): boolean {
-    // Mismo set que genera el backend: 23456789ABCDEFGHJKLMNPQRSTUVWXYZ (sin 0,O,1,I,L)
-    return /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]$/.test(c);
+    if (el) { el.focus(); el.select?.(); }
   }
 
   onCodeInput(ev: Event) {
     const input = ev.target as HTMLInputElement;
-    let value = (input.value || '').toUpperCase();
-
+    let value   = (input.value || '').toUpperCase();
     value = value.replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
     if (value.length > this.codeLength) value = value.slice(0, this.codeLength);
-
     this.code.set(value);
-
-    if (input.value !== value) {
-      input.value = value;
-    }
+    if (input.value !== value) input.value = value;
   }
 
   submitCode() {
@@ -798,16 +771,14 @@ export class ContentComponent implements OnInit {
         this.code.set('');
       },
       error: (err) => {
-        this.codeError.set(
-          err?.error?.message || 'Código inválido o curso no disponible.'
-        );
+        this.codeError.set(err?.error?.message || 'Código inválido o curso no disponible.');
         this.enrolling.set(false);
         this.focusCodeInput();
       }
     });
   }
 
-  // ---- Acciones de documentos/archivos ----
+  // ── Acciones de documentos / archivos ─────────────────────────────────────
   openPdfViewer() {
     this.markNonTimeContentCompleted();
     this.dialogPdfShow = true;
@@ -816,11 +787,10 @@ export class ContentComponent implements OnInit {
   downloadFile(url: string) {
     if (!url) return;
     this.markNonTimeContentCompleted();
-
     try {
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
+      const link    = document.createElement('a');
+      link.href     = url;
+      link.target   = '_blank';
       link.download = '';
       document.body.appendChild(link);
       link.click();
@@ -828,8 +798,10 @@ export class ContentComponent implements OnInit {
     } catch {}
   }
 
-  onImageLoaded() {
-    this.markNonTimeContentCompleted();
+  onImageLoaded() { this.markNonTimeContentCompleted(); }
+
+  goToPortfolio(username: string) {
+    this.router.navigate(['learning/portfolio', '@' + username]);
   }
 
   toTest() {

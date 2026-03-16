@@ -1,11 +1,11 @@
 <div class="content">
-  <!-- Skeleton de carga -->
+
+  <!-- ── Skeleton ────────────────────────────────────────────────────────── -->
   <ng-container *ngIf="loading(); else loadedContent">
     <div class="skeleton-view">
       <div class="player-card">
         <div class="skeleton skeleton-video"></div>
       </div>
-
       <div class="watch-metadata skeleton-meta">
         <div class="meta-text">
           <div class="skeleton skeleton-title"></div>
@@ -22,15 +22,17 @@
     </div>
   </ng-container>
 
-  <!-- Contenido / error -->
+  <!-- ── Contenido / error ────────────────────────────────────────────────── -->
   <ng-template #loadedContent>
     <div class="error" *ngIf="error()">{{ error() }}</div>
 
     <div class="view" *ngIf="!error() && data() as d">
-      <!-- Archivo (video / documento / imagen / raw) -->
+
+      <!-- ════ ARCHIVE (todos los formatos de fichero) ════ -->
       <div class="archive" *ngIf="isArchive() && d.learning_content as lc">
-        <!-- VIDEO -->
-        <div class="video player-card" *ngIf="isVideoFile(); else nonVideoArchive">
+
+        <!-- VIDEO (mp4, webm, etc.) -->
+        <div class="video player-card" *ngIf="isVideoFile()">
           <video
             #player
             class="video-player"
@@ -42,93 +44,147 @@
             (pause)="onVideoPause(player)"
             (ended)="onVideoEnded(player)"
           >
-            <source
-              [src]="lc.url"
-              [type]="'video/' + (d.learning_meta.format || 'mp4')"
-            />
+            <source [src]="lc.url" [type]="'video/' + (d.learning_meta.format || 'mp4')" />
             Tu navegador no soporta el elemento de video.
           </video>
         </div>
 
-        <!-- NO VIDEO → PDF / IMAGEN / RAW -->
-        <ng-template #nonVideoArchive>
-          <!-- PDF -->
-          <div class="document player-card" *ngIf="isPdf(); else imageOrRaw">
-            <div class="doc-header">
-              <div class="doc-info">
-                <div class="doc-icon">
-                  <ui-icon
-                [size]="'lg'"
-                [style]="{width: '100%', height: '100%'}"
-                [severity]="'primary'"
-                [svgPath]="'svg/pdf-color.svg'"
-              >
-              </ui-icon>
-                </div>
-                <div>
-                  <p class="doc-title">{{ d.chapter.title }}</p>
-                  <small class="doc-meta">
-                    Documento PDF • {{ d.learning_meta.format.toUpperCase() || 'PDF' }}
-                  </small>
-                </div>
-              </div>
-              <div class="doc-actions">
-                <ui-button
-                  label="Ver documento"
-                  severity="primary"
-                  (click)="openPdfViewer()"
-                >
-                </ui-button>
+        <!-- AUDIO (mp3) -->
+        <div class="audio-card player-card" *ngIf="isAudio()">
+          
 
-                <ui-button
-                  label="Descargar"
-                  severity="secondary"
-                  (click)="downloadFile(lc.url)"
-                >
-                </ui-button>
+          <audio
+            #audioEl
+            class="audio-player"
+            controls
+            preload="metadata"
+            (loadedmetadata)="onAudioLoadedMetadata(audioEl)"
+            (timeupdate)="onAudioTimeUpdate(audioEl)"
+            (seeked)="onAudioSeeked(audioEl)"
+            (pause)="onAudioPause(audioEl)"
+            (ended)="onAudioEnded(audioEl)"
+          >
+            <source [src]="lc.url" type="audio/mpeg" />
+            Tu navegador no soporta el elemento de audio.
+          </audio>
+        </div>
+
+        <!-- PDF -->
+        <div class="document player-card" *ngIf="isPdf()">
+          <div class="doc-header">
+            <div class="doc-info">
+              <div class="doc-icon">
+                <ui-icon
+                  [size]="'lg'"
+                  [style]="{width:'100%',height:'100%'}"
+                  [severity]="'primary'"
+                  [svgPath]="'svg/pdf-color.svg'"
+                ></ui-icon>
               </div>
+              <div>
+                <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
+                <small class="doc-meta">
+                  Documento PDF
+                  <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                </small>
+              </div>
+            </div>
+            <div class="doc-actions">
+              <ui-button label="Ver documento" severity="primary"  (click)="openPdfViewer()"></ui-button>
+              <ui-button label="Descargar"     severity="secondary" (click)="downloadFile(lc.url)"></ui-button>
             </div>
           </div>
+        </div>
 
-          <!-- IMAGEN o RAW -->
-          <ng-template #imageOrRaw>
-            <!-- IMAGEN -->
-            <div class="image player-card" *ngIf="isImageFile(); else rawFile">
-              <img
-                class="image-doc"
-                [src]="lc.url"
-                alt="Recurso del capítulo"
-                loading="lazy"
-                (load)="onImageLoaded()"
-              />
-            </div>
+        <!-- IMAGEN (jpg, jpeg, png, gif, webp…) -->
+        <div class="image player-card" *ngIf="isImageFile()">
+          <img
+            class="image-doc"
+            [src]="lc.url"
+            [alt]="lc.name || 'Recurso del capítulo'"
+            loading="lazy"
+            (load)="onImageLoaded()"
+          />
+        </div>
 
-            <!-- RAW / TMP -->
-            <ng-template #rawFile>
-              <div class="raw player-card">
-                <div class="raw-info">
-                  <div class="raw-icon"></div>
-                  <div>
-                    <p class="raw-title">{{ d.chapter.title }}</p>
-                    <small class="raw-subtitle">
-                      Archivo {{ d.learning_meta.format.toUpperCase() || 'TMP' }}
-                    </small>
-                  </div>
-                </div>
-
-                <ui-button
-                  label="Descargar archivo"
-                  severity="primary"
-                  (click)="downloadFile(lc.url)"
-                >
-                </ui-button>
+        <!-- DOCUMENTO DE OFICINA (docx, pptx, xlsx, txt) -->
+        <div class="document player-card" *ngIf="isDocumentFile()">
+          <div class="doc-header">
+            <div class="doc-info">
+              <div class="doc-icon">
+                <ui-icon
+                  [size]="'lg'"
+                  [style]="{width:'100%',height:'100%'}"
+                  [severity]="'primary'"
+                  [svgPath]="getFileIcon(d.learning_meta.format)"
+                ></ui-icon>
               </div>
-            </ng-template>
-          </ng-template>
-        </ng-template>
-      </div>
+              <div>
+                <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
+                <small class="doc-meta">
+                  {{ d.learning_meta.format.toUpperCase() }}
+                  <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                </small>
+              </div>
+            </div>
+            <div class="doc-actions">
+              <ui-button label="Descargar" severity="primary" (click)="downloadFile(lc.url)"></ui-button>
+            </div>
+          </div>
+        </div>
 
-      <!-- YouTube -->
+        <!-- COMPRIMIDO (zip, rar) -->
+        <div class="document player-card" *ngIf="isCompressedFile()">
+          <div class="doc-header">
+            <div class="doc-info">
+              <div class="doc-icon">
+                <ui-icon
+                  [size]="'lg'"
+                  [style]="{width:'100%',height:'100%'}"
+                  [severity]="'primary'"
+                  [svgPath]="getFileIcon(d.learning_meta.format)"
+                ></ui-icon>
+              </div>
+              <div>
+                <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
+                <small class="doc-meta">
+                  Archivo comprimido {{ d.learning_meta.format.toUpperCase() }}
+                  <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                </small>
+              </div>
+            </div>
+            <div class="doc-actions">
+              <ui-button label="Descargar" severity="primary" (click)="downloadFile(lc.url)"></ui-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAW / formato desconocido -->
+        <div class="raw player-card" *ngIf="isRawFile()">
+          <div class="raw-info">
+            <div class="raw-icon">
+              <ui-icon
+                [size]="'lg'"
+                [style]="{width:'100%',height:'100%'}"
+                [severity]="'primary'"
+                [svgPath]="getFileIcon(d.learning_meta.format)"
+              ></ui-icon>
+            </div>
+            <div>
+              <p class="raw-title">{{ lc.name || d.chapter.title }}</p>
+              <small class="raw-subtitle">
+                Archivo {{ (d.learning_meta.format || 'desconocido').toUpperCase() }}
+                <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+              </small>
+            </div>
+          </div>
+          <ui-button label="Descargar archivo" severity="primary" (click)="downloadFile(lc.url)"></ui-button>
+        </div>
+
+      </div>
+      <!-- ════ FIN ARCHIVE ════ -->
+
+      <!-- ════ YOUTUBE (type: link / format: youtube) ════ -->
       <div class="youtube player-card" *ngIf="isYouTube()">
         <div class="iframe-wrapper">
           <iframe
@@ -140,12 +196,11 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
             referrerpolicy="strict-origin-when-cross-origin"
-          >
-          </iframe>
+          ></iframe>
         </div>
       </div>
 
-      <!-- Metadatos / acciones -->
+      <!-- ════ Metadatos y acciones ════ -->
       <div class="watch-metadata" *ngIf="data() as d2">
         <div class="meta-text">
           <h4 class="title">{{ d2.course.title }}</h4>
@@ -160,13 +215,11 @@
               [name]="(d2.owner.name || '') + ' ' + (d2.owner.lastname || '')"
               severity="primary"
               size="md"
-            >
-            </ui-avatar>
+            ></ui-avatar>
             <div class="meta-avatar-text">
-            <span class="meta-avatar-name">{{ d2.owner.name }} {{ d2.owner.lastname }}</span>
-            <span class="meta-avatar-username">{{ '@' + d2.owner.username }}</span>
+              <span class="meta-avatar-name">{{ d2.owner.name }} {{ d2.owner.lastname }}</span>
+              <span class="meta-avatar-username">{{ '@' + d2.owner.username }}</span>
             </div>
-            
           </div>
 
           <div class="actions">
@@ -175,35 +228,26 @@
               label="Registrarme"
               severity="info"
               (click)="onRegister(d2.course.private)"
-            >
-            </ui-button>
+            ></ui-button>
 
             <app-text
               [description]="d2.chapter.description"
               [title]="'Descripción del capitulo'"
               [showPreview]="false"
               [showLabel]="false"
-            >
-            </app-text>
+            ></app-text>
 
             <!-- Like -->
             <button
               class="icon-btn"
               (click)="toggleLike()"
-              [attr.aria-label]="
-                d2.user_state.liked_chapter ? 'Quitar like' : 'Dar like'
-              "
+              [attr.aria-label]="d2.user_state.liked_chapter ? 'Quitar like' : 'Dar like'"
             >
               <ui-icon
                 [size]="'lg'"
                 [severity]="'contrast'"
-                [svgPath]="
-                  d2.user_state.liked_chapter
-                    ? 'svg/I-like-bold.svg'
-                    : 'svg/I-like-outline.svg'
-                "
-              >
-              </ui-icon>
+                [svgPath]="d2.user_state.liked_chapter ? 'svg/I-like-bold.svg' : 'svg/I-like-outline.svg'"
+              ></ui-icon>
               <span class="count">{{ d2.likes_total }}</span>
             </button>
 
@@ -211,22 +255,13 @@
             <button
               class="icon-btn"
               (click)="toggleSaved()"
-              [attr.aria-label]="
-                d2.user_state.is_saved
-                  ? 'Quitar de guardados'
-                  : 'Guardar curso'
-              "
+              [attr.aria-label]="d2.user_state.is_saved ? 'Quitar de guardados' : 'Guardar curso'"
             >
               <ui-icon
                 [size]="'lg'"
                 [severity]="'contrast'"
-                [svgPath]="
-                  d2.user_state.is_saved
-                    ? 'svg/bookmark-bold.svg'
-                    : 'svg/bookmark-outline.svg'
-                "
-              >
-              </ui-icon>
+                [svgPath]="d2.user_state.is_saved ? 'svg/bookmark-bold.svg' : 'svg/bookmark-outline.svg'"
+              ></ui-icon>
             </button>
 
             <!-- Preguntas -->
@@ -234,16 +269,16 @@
               (click)="toTest()"
               class="pill btn-pill"
               *ngIf="d2.user_state.has_questions"
-              >Contiene preguntas</span
-            >
+            >Contiene preguntas</span>
           </div>
         </div>
       </div>
+
     </div>
   </ng-template>
 </div>
 
-<!-- Dialogo visor PDF -->
+<!-- ── Diálogo visor PDF ──────────────────────────────────────────────────── -->
 <ui-dialog
   type="free"
   [variant]="'flat'"
@@ -251,7 +286,6 @@
   [(visible)]="dialogPdfShow"
 >
   <div class="pdf-dialog">
-    
     <iframe
       *ngIf="pdfSafeSrc() as pdfSrc"
       class="pdf-frame"
@@ -261,7 +295,7 @@
   </div>
 </ui-dialog>
 
-<!-- Diálogo código de acceso (input grande) -->
+<!-- ── Diálogo código de acceso ──────────────────────────────────────────── -->
 <ui-dialog
   type="free"
   [variant]="'filled'"
@@ -271,8 +305,7 @@
   <div class="content-code">
     <h3 class="code-title">Código de acceso</h3>
     <p class="code-subtitle">
-      Ingresa el código de {{ codeLength }} caracteres para unirte al curso
-      privado.
+      Ingresa el código de {{ codeLength }} caracteres para unirte al curso privado.
     </p>
 
     <div class="code-input-wrapper">
@@ -287,29 +320,18 @@
         (keydown.enter)="submitCode()"
       />
     </div>
-    <p class="code-helper">
-      Solo letras mayúsculas y números (sin 0/O ni 1/I).
-    </p>
+    <p class="code-helper">Solo letras mayúsculas y números (sin 0/O ni 1/I).</p>
 
     <div class="code-error" *ngIf="codeError()">{{ codeError() }}</div>
 
     <div class="code-actions">
-      <ui-button
-        label="Cancelar"
-        severity="secondary"
-        (click)="dialogCodeShow = false"
-      >
-      </ui-button>
-
+      <ui-button label="Cancelar"  severity="secondary" (click)="dialogCodeShow = false"></ui-button>
       <ui-button
         label="Confirmar"
         severity="primary"
         [disabled]="code().length !== codeLength || enrolling()"
         (click)="submitCode()"
-      >
-      </ui-button>
+      ></ui-button>
     </div>
   </div>
 </ui-dialog>
-
-

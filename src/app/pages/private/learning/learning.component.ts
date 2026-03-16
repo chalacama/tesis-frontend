@@ -68,20 +68,17 @@ private readonly route = inject(ActivatedRoute);
 
   
   ngOnInit() {
-    
-
-    
-    
-
+  //   this.appRef.isStable
+  // .pipe(first(isStable => isStable === true))
+  // .subscribe(() => {
+  //   this.renderer.removeClass(document.body, 'app-loading');
+  // });
     this.datosUsuario$ = this.authService.currentUser;
     this.currentTheme = this.themeService.getCurrentTheme();
     this.prefersDarkMode = this.themeService.getSystemPrefersDark();
-
     this.themeService.onSystemThemeChange((isDark) => {
       this.prefersDarkMode = isDark;
     });
-    
-
     this.breakpointObserver
       .observe([Breakpoints.Handset])
       .pipe(
@@ -107,14 +104,6 @@ private readonly route = inject(ActivatedRoute);
           this.isSidebarCollapsed = true;
         }
       });
-    
-    this.appRef.isStable
-  .pipe(first(isStable => isStable === true))
-  .subscribe(() => {
-    this.renderer.removeClass(document.body, 'app-loading');
-  });
-  
-
   }
   navigateTo(path: string) {
     

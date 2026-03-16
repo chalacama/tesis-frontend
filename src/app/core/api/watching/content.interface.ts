@@ -33,7 +33,7 @@ export interface LearningContent {
     id:                    number;
     name:                  string | null;
     url:                   string;
-    size:               string | null; // <-- NUEVO
+    size:               string | null; // <-- NUEVO jemplo : "15 MB", " 1024 KB","10299 Bytes"
     duration_seconds:      number | null; // <-- NUEVO
     type_content_id:       number;
     format_id:             number;        // <-- NUEVO

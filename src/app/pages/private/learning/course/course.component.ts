@@ -24,9 +24,11 @@ type ChapterItem = {
   id: number;
   title: string;
   questions: number;
-  learningType: 'youtube' | 'archivo' | null;
+  learningType: 'link' | 'archive' | null;
   format: string | null;
   completed: boolean;
+  size: string | null;
+  duration_formatted: string | null;
 };
 
 type ModuleItem = {
@@ -261,9 +263,11 @@ export class CourseComponent implements OnInit {
       id: c.id,
       title: c.title,
       questions: c.questions_count,
-      learningType: (c.learning?.type as 'youtube' | 'archivo' | null) ?? null,
+      learningType: (c.learning?.type as 'link' | 'archive' | null) ?? null,
       format: c.learning?.format ?? null,
-      completed: !!c.completed_chapter?.is_completed
+      completed: !!c.completed_chapter?.is_completed,
+      size: c.learning?.size ?? null,
+      duration_formatted: c.learning?.duration_formatted ?? null
     }));
   }
 
