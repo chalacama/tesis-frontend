@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, inject, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { Component, inject, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -43,7 +43,6 @@ private readonly route = inject(ActivatedRoute);
     private authService: AuthService,
     private breakpointObserver: BreakpointObserver,
     private renderer: Renderer2,
-    private appRef : ApplicationRef
   ) {
     // this.router.events
     //   .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
@@ -68,11 +67,6 @@ private readonly route = inject(ActivatedRoute);
 
   
   ngOnInit() {
-  //   this.appRef.isStable
-  // .pipe(first(isStable => isStable === true))
-  // .subscribe(() => {
-  //   this.renderer.removeClass(document.body, 'app-loading');
-  // });
     this.datosUsuario$ = this.authService.currentUser;
     this.currentTheme = this.themeService.getCurrentTheme();
     this.prefersDarkMode = this.themeService.getSystemPrefersDark();
