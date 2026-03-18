@@ -1,48 +1,60 @@
 <div class="cl-wrapper" [class.loading]="loading()">
+
   <div class="cl-header">
     <small class="muted">
-      Elige si enlazas un <b>video de YouTube</b> o subes un <b>archivo</b>.
+      Elige el tipo de contenido y sube o enlaza el recurso del capítulo.
     </small>
   </div>
 
-  <!-- Selector binario (YouTube | Archivo) -->
+  <!-- ── Selector de TIPO (dinámico desde backend) ─────────────────────── -->
   <div class="switcher" role="tablist" aria-label="Tipo de contenido">
     <button
+      *ngFor="let type of types()"
       type="button"
       class="switcher-btn"
-      [class.active]="isYouTube()"
-      (click)="pickYouTube()"
-      [attr.aria-pressed]="isYouTube()"
+      [class.active]="selectedTypeId() === type.id"
+      (click)="pickType(type)"
+      [attr.aria-pressed]="selectedTypeId() === type.id"
     >
+      <!-- Ícono representativo del tipo -->
       <span class="icon">
-        <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/youtube.svg'"></ui-icon>
+        <ui-icon
+          [size]="'sm'"
+          [severity]="'primary'"
+          [svgPath]="type.name.toLowerCase() === 'link' ? 'svg/link.svg' : 'svg/file.svg'"
+        ></ui-icon>
       </span>
-      <span>YouTube</span>
-    </button>
+      <span class="switcher-label">{{ type.name | titlecase }}</span>
 
-    <button
-      type="button"
-      class="switcher-btn"
-      [class.active]="isArchivo()"
-      (click)="pickArchivo()"
-      [attr.aria-pressed]="isArchivo()"
-    >
-      <span class="icon">
-        <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/file.svg'"></ui-icon>
-      </span>
-      <span>Archivo</span>
+      <!-- Badge con la cantidad de formatos -->
+      <span class="format-badge">{{ type.formats.length }}</span>
     </button>
   </div>
 
-  <!-- Panel YouTube -->
-  <div class="panel" *ngIf="isYouTube()">
+  <!-- ── Panel LINK (youtube, etc.) ─────────────────────────────────────── -->
+  <div class="panel" *ngIf="isLinkType()">
+
+    <!-- Selector de formato dentro de link (p.ej. si hubiera más de youtube) -->
+    <div class="format-tabs" *ngIf="(selectedType()?.formats?.length ?? 0) > 1">
+      <button
+        *ngFor="let fmt of selectedType()?.formats"
+        type="button"
+        class="format-tab"
+        [class.active]="selectedFormatId() === fmt.id"
+        (click)="selectedFormatId.set(fmt.id)"
+      >
+        <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
+        {{ fmt.name | uppercase }}
+      </button>
+    </div>
+
     <label class="lbl" for="yt-url">Pega la URL de YouTube</label>
     <input
       id="yt-url"
       type="text"
       class="input"
       [class.invalid]="form.controls.url.touched && form.controls.url.invalid"
-      placeholder="Busca en YouTube o pega la URL de YouTube"
+      placeholder="https://www.youtube.com/watch?v=…"
       [formControl]="form.controls.url"
       autocomplete="off"
       spellcheck="false"
@@ -51,23 +63,24 @@
       Ingresa una URL válida de YouTube.
     </div>
 
-    <div class="preview" *ngIf="isYouTube() && embedSafe()">
+    <!-- Preview del video -->
+    <div class="preview" *ngIf="embedSafe() as src">
       <iframe
         class="preview-iframe"
-        [src]="embedSafe()"
+        [src]="src"
         title="YouTube video"
         frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen>
-      </iframe>
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
     </div>
   </div>
 
-  <!-- Panel Archivo -->
-  <div class="panel panel-file" *ngIf="isArchivo()">
-    <div class="uploader" [formGroup]="form">
+  <!-- ── Panel ARCHIVO ──────────────────────────────────────────────────── -->
+  <div class="panel panel-file" *ngIf="isArchiveType()">
+    <div class="uploader">
 
-      <!-- Zona de arrastrar / soltar + clic -->
+      <!-- Zona de arrastrar/soltar -->
       <div
         class="dropzone"
         [class.drag-over]="dragOver()"
@@ -75,21 +88,32 @@
         (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)"
         (click)="openFileDialog(fileInput)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="openFileDialog(fileInput)"
+        (keydown.space)="openFileDialog(fileInput)"
+        [attr.aria-label]="'Subir archivo. ' + acceptedExtensions()"
       >
         <div class="dropzone-inner">
-          <ui-icon
-            [size]="'sm'"
-            [severity]="'primary'"
-            [svgPath]="'svg/file.svg'">
-          </ui-icon>
+          <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/upload.svg'"></ui-icon>
 
           <div class="dropzone-text">
-            <p class="dropzone-title">Suelta un archivo aquí o haz clic para seleccionarlo</p>
-            <p class="dropzone-subtitle">
-              Se permite un solo archivo. Tamaño máximo {{ MAX_FILE_MB }} MB.
-            </p>
-            <p class="dropzone-subtitle">
-              Para videos: mínimo {{ MIN_VIDEO_SECONDS }} s y máximo {{ MAX_VIDEO_SECONDS }} s.
+            <p class="dropzone-title">Arrastra un archivo aquí o haz clic para seleccionarlo</p>
+
+            <!-- Formatos aceptados como pills -->
+            <div class="format-pills">
+              <span
+                *ngFor="let fmt of selectedType()?.formats"
+                class="format-pill"
+              >
+                <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
+                {{ fmt.name.toUpperCase() }}
+              </span>
+            </div>
+
+            <p class="dropzone-subtitle">Tamaño máximo: {{ maxSizeMbLabel() }} MB</p>
+            <p class="dropzone-subtitle" *ngIf="durationRangeLabel() as range">
+              Duración: {{ range }}
             </p>
           </div>
         </div>
@@ -98,55 +122,68 @@
           #fileInput
           type="file"
           class="dropzone-input"
+          [accept]="acceptAttr()"
           (change)="onFileInputChange($event)"
         />
       </div>
 
-      <div class="error" *ngIf="fileError()">
+      <!-- Error de archivo -->
+      <div class="error file-error" *ngIf="fileError()">
         {{ fileError() }}
       </div>
 
-      <!-- Vista previa tipo Classroom -->
+      <!-- Tarjeta de vista previa del archivo ─────────────────────────── -->
       <div class="file-card" *ngIf="filePreviewType() && filePreviewUrl()">
+
         <div class="file-card-header">
           <div class="file-card-main">
             <ui-icon
               [size]="'sm'"
               [severity]="'primary'"
-              [svgPath]="'svg/file.svg'">
-            </ui-icon>
+              [svgPath]="getFormatIcon(selectedFormat()?.name)"
+            ></ui-icon>
 
             <div class="file-card-info">
               <div class="file-name" [title]="fileName() || ''">
                 {{ fileName() || 'Archivo adjunto' }}
               </div>
-              <div class="file-meta" *ngIf="fileSizeLabel()">
-                {{ fileSizeLabel() }}
+              <div class="file-meta">
+                <!-- Formato -->
+                <span *ngIf="selectedFormat() as fmt" class="badge-format">
+                  {{ fmt.name.toUpperCase() }}
+                </span>
+                <!-- Peso -->
+                <span *ngIf="fileSizeLabel()">{{ fileSizeLabel() }}</span>
+                <!-- Duración -->
+                <span *ngIf="durationRangeLabel() as range" class="text-secondary">
+                  {{ range }}
+                </span>
               </div>
             </div>
           </div>
 
           <div class="file-card-actions">
-            <button type="button" class="icon-btn" (click)="clearFile()">
-              <ui-icon
-                [size]="'sm'"
-                [severity]="'primary'"
-                [svgPath]="'svg/delete.svg'">
-              </ui-icon>
+            <button type="button" class="icon-btn" (click)="openPreviewInNewTab()" title="Abrir en nueva pestaña">
+              <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/eye.svg'"></ui-icon>
+            </button>
+            <button type="button" class="icon-btn" (click)="clearFile()" title="Eliminar archivo">
+              <ui-icon [size]="'sm'" [severity]="'danger'" [svgPath]="'svg/delete.svg'"></ui-icon>
             </button>
           </div>
         </div>
 
+        <!-- Vista previa según tipo ────────────────────────────────────── -->
         <div class="file-card-body" [ngSwitch]="filePreviewType()">
+
           <figure *ngSwitchCase="'image'" class="file-preview-img">
-            <img [src]="filePreviewUrl()!" alt="Vista previa de la imagen" />
+            <img [src]="filePreviewUrl()!" [alt]="fileName() || 'imagen'" />
           </figure>
 
           <div *ngSwitchCase="'video'" class="file-preview-media">
             <video [src]="filePreviewUrl()!" controls></video>
           </div>
 
-          <div *ngSwitchCase="'audio'" class="file-preview-media">
+          <div *ngSwitchCase="'audio'" class="file-preview-media file-preview-audio">
             <audio [src]="filePreviewUrl()!" controls></audio>
           </div>
 
@@ -154,45 +191,46 @@
             <iframe
               *ngIf="fileSafePreviewUrl()"
               [src]="fileSafePreviewUrl()!"
-              title="Vista previa de PDF">
-            </iframe>
+              title="Vista previa PDF"
+            ></iframe>
           </div>
 
           <div *ngSwitchDefault class="file-preview-generic">
             <p>Vista previa no disponible para este tipo de archivo.</p>
-            <a *ngIf="filePreviewUrl()" [href]="filePreviewUrl()!" target="_blank" rel="noopener">
-              Abrir archivo en una nueva pestaña
-            </a>
           </div>
+
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Acciones -->
+  <!-- ── Sin tipo seleccionado ──────────────────────────────────────────── -->
+  <div class="empty-state" *ngIf="!isLinkType() && !isArchiveType() && !loading()">
+    <small class="muted">Selecciona un tipo de contenido para comenzar.</small>
+  </div>
+
+  <!-- ── Acciones ──────────────────────────────────────────────────────── -->
   <div class="actions">
     <ui-button
-      [disabled]="form.pristine"
+      [disabled]="!isDirty()"
       (click)="reset()"
       label="Restablecer"
       [icon]="{svgPath: 'svg/clear-all.svg'}"
-      severity="secondary">
-    </ui-button>
+      severity="secondary"
+    ></ui-button>
 
     <ui-button
-      [disabled]="sabed || !!fileError()"
+      [disabled]="!canSave()"
       (click)="save()"
       label="Guardar"
       [icon]="{svgPath: 'svg/save-outline.svg'}"
-      severity="primary">
-    </ui-button>
+      severity="primary"
+    ></ui-button>
   </div>
 
 </div>
 
-<ui-loading-bar
-  [visible]="loadbar()"
-  [mask]="{ type: 'dimmed' }">
+<ui-loading-bar [visible]="loadbar()" [mask]="{ type: 'dimmed' }">
   Guardando cambios…
 </ui-loading-bar>

@@ -10,44 +10,48 @@ import {
   QuestionFilters,
   QuestionResponse,
   QuestionUpdateRequest,
-  QuestionUpdateResponse
+  QuestionUpdateResponse,
 } from './chapter.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ChapterService {
-  private readonly http = inject(HttpClient);
+  private readonly http   = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/chapter`;
 
   showChapter(chapterId: number | string): Observable<ChapterResponse> {
     return this.http.get<ChapterResponse>(`${this.apiUrl}/${chapterId}/show`);
   }
 
+  /**
+   * Devuelve el contenido actual + todos los tipos/formatos activos.
+   * Una sola llamada elimina la necesidad de TypeService en el editor de contenido.
+   */
   showLearningContent(chapterId: number | string): Observable<LearingContentResponse> {
-    return this.http.get<LearingContentResponse>(`${this.apiUrl}/learning-content/${chapterId}/show`);
+    return this.http.get<LearingContentResponse>(
+      `${this.apiUrl}/learning-content/${chapterId}/show`
+    );
   }
 
+  /**
+   * Crea/actualiza el contenido del capítulo.
+   * Acepta FormData directamente o un objeto LearningContentUpdate que se serializa.
+   * Siempre envía multipart para soportar ficheros.
+   */
   updateLearningContent(
     chapterId: number | string,
     payload: LearningContentUpdate | FormData
   ): Observable<LearingContentResponse> {
-    if (payload instanceof FormData) {
-      return this.http.post<LearingContentResponse>(
-        `${this.apiUrl}/learning-content/${chapterId}/update`,
-        payload
-      );
-    }
-    const fd = new FormData();
-    fd.append('type_content_id', String(payload.type_content_id));
-    if (payload.url !== undefined && payload.url !== null) fd.append('url', payload.url);
-    if (payload.file) fd.append('file', payload.file);
-
+    const fd = payload instanceof FormData ? payload : this.toFormData(payload);
     return this.http.post<LearingContentResponse>(
       `${this.apiUrl}/learning-content/${chapterId}/update`,
       fd
     );
   }
 
-  updateChapter(chapterId: number | string, payload: ChapterUpdateRequest): Observable<ChapterResponse> {
+  updateChapter(
+    chapterId: number | string,
+    payload: ChapterUpdateRequest
+  ): Observable<ChapterResponse> {
     return this.http.put<ChapterResponse>(`${this.apiUrl}/${chapterId}/update`, payload);
   }
 
@@ -58,28 +62,24 @@ export class ChapterService {
     const defaults: QuestionFilters = {
       q: '',
       type_questions_id: null,
-      order_by: 'order',       // <--- default ahora es 'order'
+      order_by: 'order',
       order_dir: 'asc',
       per_page: 15,
       include_correct: false,
       page: 1,
     };
 
-    const f = { ...defaults, ...(filters || {}) };
+    const f = { ...defaults, ...(filters ?? {}) };
 
     let params = new HttpParams()
-      .set('per_page', String(f.per_page))
-      .set('order_by', f.order_by)
-      .set('order_dir', f.order_dir)
+      .set('per_page',        String(f.per_page))
+      .set('order_by',        f.order_by)
+      .set('order_dir',       f.order_dir)
       .set('include_correct', String(f.include_correct));
 
-    if (f.q && f.q.trim() !== '') params = params.set('q', f.q.trim());
-    if (typeof f.type_questions_id === 'number') {
-      params = params.set('type_questions_id', String(f.type_questions_id));
-    }
-    if (typeof f.page === 'number' && f.page > 0) {
-      params = params.set('page', String(f.page));
-    }
+    if (f.q?.trim())                           params = params.set('q', f.q.trim());
+    if (typeof f.type_questions_id === 'number') params = params.set('type_questions_id', String(f.type_questions_id));
+    if (typeof f.page === 'number' && f.page > 0) params = params.set('page', String(f.page));
 
     return this.http.get<QuestionResponse>(
       `${this.apiUrl}/question/${chapterId}/index`,
@@ -87,7 +87,6 @@ export class ChapterService {
     );
   }
 
-  // Crea/actualiza/borra en lote preguntas y config del test
   updateQuestions(
     chapterId: number | string,
     payload: QuestionUpdateRequest
@@ -96,5 +95,17 @@ export class ChapterService {
       `${this.apiUrl}/question/${chapterId}/update`,
       payload
     );
+  }
+
+  // ── Helpers privados ──────────────────────────────────────────────────────
+
+  private toFormData(payload: LearningContentUpdate): FormData {
+    const fd = new FormData();
+    fd.append('type_content_id', String(payload.type_content_id));
+    fd.append('format_id',       String(payload.format_id));
+    if (payload.url  != null) fd.append('url',  payload.url);
+    if (payload.name != null) fd.append('name', payload.name);
+    if (payload.file)         fd.append('file', payload.file, payload.file.name);
+    return fd;
   }
 }

@@ -1,4 +1,4 @@
-// --- Chapter (sin cambios relevantes) ---
+// ── Chapter ─────────────────────────────────────────────────────────────────
 export interface ChapterResponse {
   ok: boolean;
   chapter: Chapter;
@@ -12,7 +12,6 @@ export interface Chapter {
   module_id: number;
   created_at: string;
   updated_at: string;
-  
 }
 
 export interface ChapterUpdateRequest {
@@ -20,43 +19,69 @@ export interface ChapterUpdateRequest {
   description: string | null;
 }
 
-// --- Learning content (igual) ---
-export interface LearingContentResponse {
-  ok: boolean;
-  chapter_id: number;
-  learning_content: LearningContent;
+// ── Tipos y formatos de contenido ────────────────────────────────────────────
+
+/** Formato individual (pdf, mp4, mp3, docx, youtube…) */
+export interface FormatItem {
+  id: number;
+  name: string;
+  /** Bytes máximos permitidos; null = sin límite */
+  max_size_bytes: number | null;
+  /** Segundos mínimos para contenido media; null = sin límite */
+  min_duration_seconds: number | null;
+  /** Segundos máximos para contenido media; null = sin límite */
+  max_duration_seconds: number | null;
 }
+
+/** Tipo de contenido con sus formatos activos (link, archive…) */
+export interface TypeWithFormats {
+  id: number;
+  name: string;
+  formats: FormatItem[];
+}
+
+// ── Learning Content ─────────────────────────────────────────────────────────
 
 export interface LearningContent {
   id: number;
+  /** Nombre original del archivo subido; null para links */
+  name: string | null;
   url: string;
+  /** Peso en bytes del archivo; null para links */
+  size_bytes: number | null;
+  /** Duración en segundos (video/audio); null para otros */
+  duration_seconds: number | null;
   type_content_id: number;
+  format_id: number | null;
+  chapter_id?: number;
   created_at: string;
   updated_at: string;
-  type_learning_content: TypeLearningContent;
+  type_learning_content: { id: number; name: string } | null;
+  format: FormatItem | null;
 }
 
-export interface TypeLearningContent {
-  id: number;
-  name: string;
-  max_size_mb: null;
-  min_duration_seconds: null;
-  max_duration_seconds: null;
-  created_at: string;
-  updated_at: string;
+/**
+ * Respuesta del endpoint show y update de learning-content.
+ * Incluye los tipos+formatos activos para que el componente sea auto-suficiente.
+ */
+export interface LearingContentResponse {
+  ok: boolean;
+  chapter_id: number;
+  learning_content: LearningContent | null;
+  /** Todos los tipos activos con sus formatos activos */
+  types: TypeWithFormats[];
 }
 
 export interface LearningContentUpdate {
   type_content_id: number;
-  url: string | null;
-  file: File | null;
+  format_id: number;
+  url?: string | null;
+  file?: File | null;
+  name?: string | null;
 }
 
-// =======================
-//   TEST + QUESTIONS
-// =======================
+// ── Test + Questions ─────────────────────────────────────────────────────────
 
-// Nueva: config del test que devuelve el backend en index/update
 export interface TestConfig {
   id: number;
   chapter_id: number;
@@ -64,16 +89,15 @@ export interface TestConfig {
   incorrect: boolean;
   score: boolean;
   split: number;
-  limited: number; // 0..2
+  limited: number;
   questions_count: number;
   updated_at: string | null;
   created_at: string | null;
 }
 
-// Respuesta del index (agrega test)
 export interface QuestionResponse {
   filters: Filters;
-  test: TestConfig | null;         // <--- NUEVO
+  test: TestConfig | null;
   questions: Question[];
   meta: Meta;
 }
@@ -81,7 +105,7 @@ export interface QuestionResponse {
 export interface Filters {
   q: string;
   type_questions_id: number | null;
-  order_by: 'order' | 'spot' | 'created_at' | 'id'; // <--- agrega 'order'
+  order_by: 'order' | 'spot' | 'created_at' | 'id';
   order_dir: 'asc' | 'desc';
   per_page: number;
   include_correct: boolean;
@@ -95,17 +119,15 @@ export interface Meta {
   has_more: boolean;
 }
 
-// Lectura de pregunta ahora está ligada a TEST y usa order
 export interface Question {
   id: number;
   statement: string;
-  spot: number;                 // sigue existiendo si lo usas
-  order: number;                // <--- NUEVO (orden dentro del test)
+  spot: number;
+  order: number;
   type_questions_id: number;
-  test_id: number;              // <--- ANTES era chapter_id
+  test_id: number;
   created_at: string;
   updated_at: string;
-  
   type_question: TypeQuestion;
   answers: Answer[];
 }
@@ -113,8 +135,8 @@ export interface Question {
 export interface Answer {
   id: number;
   option: string;
-  is_correct: number; // 0 | 1
-  order: number;      // <--- NUEVO (orden de la respuesta)
+  is_correct: number;
+  order: number;
   question_id: number;
 }
 
@@ -123,20 +145,18 @@ export interface TypeQuestion {
   nombre: string;
 }
 
-// Filtros que envías al index
 export type QuestionFilters = {
   q: string;
   type_questions_id: number | null;
-  order_by: 'order' | 'spot' | 'created_at' | 'id'; // <--- default será 'order'
+  order_by: 'order' | 'spot' | 'created_at' | 'id';
   order_dir: 'asc' | 'desc';
   per_page: number;
   include_correct: boolean;
   page?: number;
 };
 
-// Payload para actualizar test + preguntas
 export interface QuestionUpdateRequest {
-  test?: QuestionUpdateTestPayload;       // <--- NUEVO (config del test)
+  test?: QuestionUpdateTestPayload;
   questions: QuestionUpdateItem[];
 }
 
@@ -144,16 +164,16 @@ export interface QuestionUpdateTestPayload {
   random?: boolean;
   incorrect?: boolean;
   score?: boolean;
-  split?: number;      // >= 1
-  limited?: number;    // 0..2
+  split?: number;
+  limited?: number;
 }
 
 export interface QuestionUpdateItem {
   id: number | null;
   statement: string;
   type_questions_id: number;
-  spot?: number;       // opcional
-  order?: number;      // <--- NUEVO (orden dentro del test)
+  spot?: number;
+  order?: number;
   answers: AnswerUpdateItem[];
 }
 
@@ -161,12 +181,11 @@ export interface AnswerUpdateItem {
   id: number | null;
   option: string;
   is_correct: 0 | 1 | boolean;
-  order?: number;      // <--- NUEVO (orden de la respuesta)
+  order?: number;
 }
 
-// Respuesta del update ahora incluye test
 export interface QuestionUpdateResponse {
   message: string;
-  test: TestConfig;        // <--- NUEVO
+  test: TestConfig;
   questions: Question[];
 }
