@@ -336,31 +336,39 @@ export class CourseComponent implements OnInit {
     const format = ch.format?.toLowerCase();
 
     switch (format) {
-      case 'youtube':
-        return 'svg/youtube.svg';
       case 'mp4':
-        return 'svg/video.svg';
+      case 'youtube':
+      case 'googledrive.mp4':
+      case 'onedrive.mp4':
+        return 'svg/youtube.svg';
       case 'pdf':
-        return 'svg/pdf.svg'; // Asegúrate de tener un icono para PDF
+      case 'googledrive.pdf':
+      case 'onedrive.pdf':
+        return 'svg/pdf.svg';
       case 'docx':
-        return 'svg/word.svg'; // Asegúrate de tener un icono para Word
+      case 'googledrive.docx':
+      case 'onedrive.docx':
+        return 'svg/word.svg';
       case 'pptx':
-        return 'svg/powerpoint.svg'; // Y así sucesivamente...
+      case 'googledrive.pptx':
+      case 'onedrive.pptx':
+        return 'svg/powerpoint.svg';
       case 'xlsx':
+      case 'googledrive.xlsx':
+      case 'onedrive.xlsx':
         return 'svg/excel.svg';
       case 'mp3':
+      case 'googledrive.mp3':
+      case 'onedrive.mp3':
         return 'svg/audio.svg';
       case 'zip':
+      case 'googledrive.zip':
+      case 'onedrive.zip':
         return 'svg/zip.svg';
-      case 'rar':
-        return 'svg/rar.svg';
       case 'txt':
+      case 'googledrive.txt':
+      case 'onedrive.txt':
         return 'svg/text.svg';
-      case 'png':
-      case 'jpg':
-      case 'jpeg':
-      case 'gif':
-        return 'svg/image.svg';
       default:
         return 'svg/file.svg'; // El icono genérico por si no coincide
     }

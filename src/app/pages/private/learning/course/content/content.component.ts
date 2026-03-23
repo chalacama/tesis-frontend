@@ -343,17 +343,9 @@ export class ContentComponent implements OnInit {
       pptx: 'svg/powerpoint-color.svg',
       xlsx: 'svg/excel-color.svg',
       zip:  'svg/zip-color.svg',
-      rar:  'svg/rar-color.svg',
       txt:  'svg/text-color.svg',
-      // mp3:  'svg/audio-color.svg',
-      // mp4:  'svg/video-color.svg',
-      // jpg:  'svg/image-color.svg',
-      // jpeg: 'svg/image-color.svg',
-      // png:  'svg/image-color.svg',
-      // gif:  'svg/image-color.svg',
-      // webp: 'svg/image-color.svg',
     };
-    return icons[(format || '').toLowerCase()] ?? 'svg/file-color.svg';
+    return icons[(format || '').toLowerCase()] ?? 'svg/file.svg';
   }
 
   // ── UI Actions (optimistic) ────────────────────────────────────────────────
