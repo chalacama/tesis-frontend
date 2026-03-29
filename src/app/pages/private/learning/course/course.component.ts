@@ -336,10 +336,10 @@ export class CourseComponent implements OnInit {
     const format = ch.format?.toLowerCase();
 
     switch (format) {
-      case 'mp4':
+      case 'video':
       case 'youtube':
-      case 'googledrive.mp4':
-      case 'onedrive.mp4':
+      case 'googledrive.video':
+      case 'onedrive.video':
         return 'svg/youtube.svg';
       case 'pdf':
       case 'googledrive.pdf':
@@ -357,9 +357,9 @@ export class CourseComponent implements OnInit {
       case 'googledrive.xlsx':
       case 'onedrive.xlsx':
         return 'svg/excel.svg';
-      case 'mp3':
-      case 'googledrive.mp3':
-      case 'onedrive.mp3':
+      case 'audio':
+      case 'googledrive.audio':
+      case 'onedrive.audio':
         return 'svg/audio.svg';
       case 'zip':
       case 'googledrive.zip':
