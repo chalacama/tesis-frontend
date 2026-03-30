@@ -26,8 +26,8 @@
 .ui-dialog__mask.is-closed { opacity: 0; pointer-events: none; }
 
 /* variantes de máscara */
-.ui-dialog__mask.mask-transparent { background-color: var(--overlay-color); }
-.ui-dialog__mask.mask-dimmed     { background-color: color-mix(in oklab, var(--overlay-color) 85%, black); }
+.ui-dialog__mask.mask-transparent {  background-color:  var(--overlay-color) }
+.ui-dialog__mask.mask-dimmed     { background-color:  var(--overlay-color-secondary)  }
 .ui-dialog__mask.mask-blur {
   background-color: color-mix(in oklab, var(--overlay-color) 60%, transparent);
   backdrop-filter: blur(6px) saturate(120%);
@@ -214,14 +214,15 @@
 /* Controles en la máscara (top-right) */
 .ui-dialog__mask-controls {
   position: fixed;
-  top: 12px;
-  right: 12px;
+  top: 9px;
+  right: 21px;
   display: flex;
   gap: 8px;
   pointer-events: auto; /* los botones sí reciben click */
   width: auto;
   height: auto;
   display: flex;
+  
   
 }
 .ui-dialog__mask-rotate{

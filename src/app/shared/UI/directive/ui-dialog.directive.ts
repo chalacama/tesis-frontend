@@ -48,7 +48,7 @@ export class UiDialogDirective {
   // ======== Máscara (backdrop) ========
   @Input() showMask: UiDialogProps['showMask'] = true;
   @Input() mask?: UiDialogProps['mask'] = {
-    type: 'blur',
+    type: 'dimmed',
     showBnt: true
   };
   @Input() showBtn?: UiDialogProps['showBnt'] = true;

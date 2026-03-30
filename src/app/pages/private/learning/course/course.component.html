@@ -151,8 +151,8 @@
                             [severity]="'primary'"
                             [svgPath]="iconPath"
                           ></ui-icon>
-                          <span class="icon-slot-meta" *ngIf="c.format != 'mp4' && c.format != 'youtube' && c.format != 'mp3'"   >{{c.size}}</span>
-                          <span class="icon-slot-meta" *ngIf="c.format == 'mp4' || c.format == 'youtube' || c.format == 'mp3'">{{c.duration_formatted}}</span>
+                          <span class="icon-slot-meta" *ngIf="c.format != 'video' && c.format != 'youtube' && c.format != 'audio'"   >{{c.size}}</span>
+                          <span class="icon-slot-meta" *ngIf="c.format == 'video' || c.format == 'youtube' || c.format == 'audio'">{{c.duration_formatted}}</span>
                         </span>
                         <span class="questions">
                           {{ c.questions }} preguntas

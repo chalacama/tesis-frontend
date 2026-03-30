@@ -28,10 +28,12 @@
 
     <div class="view" *ngIf="!error() && data() as d">
 
-      <!-- ════ ARCHIVE (todos los formatos de fichero) ════ -->
+      <!-- ════════════════════════════════════════════════════════════════════
+           ARCHIVE — todos los formatos de fichero local
+           ════════════════════════════════════════════════════════════════════ -->
       <div class="archive" *ngIf="isArchive() && d.learning_content as lc">
 
-        <!-- VIDEO (mp4, webm, etc.) -->
+        <!-- VIDEO (format: video) ─────────────────────────────────────────── -->
         <div class="video player-card" *ngIf="isVideoFile()">
           <video
             #player
@@ -44,15 +46,13 @@
             (pause)="onVideoPause(player)"
             (ended)="onVideoEnded(player)"
           >
-            <source [src]="lc.url" [type]="'video/' + (d.learning_meta.format || 'mp4')" />
+            <source [src]="lc.url" />
             Tu navegador no soporta el elemento de video.
           </video>
         </div>
 
-        <!-- AUDIO (mp3) -->
+        <!-- AUDIO (format: audio) ────────────────────────────────────────── -->
         <div class="audio-card player-card" *ngIf="isAudio()">
-          
-
           <audio
             #audioEl
             class="audio-player"
@@ -69,7 +69,7 @@
           </audio>
         </div>
 
-        <!-- PDF -->
+        <!-- PDF (format: pdf) ────────────────────────────────────────────── -->
         <div class="document player-card" *ngIf="isPdf()">
           <div class="doc-header">
             <div class="doc-info">
@@ -85,29 +85,18 @@
                 <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
                 <small class="doc-meta">
                   Documento PDF
-                  <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                  <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
                 </small>
               </div>
             </div>
             <div class="doc-actions">
-              <ui-button label="Ver documento" severity="primary"  (click)="openPdfViewer()"></ui-button>
+              <ui-button label="Ver documento" severity="primary"   (click)="openPdfViewer()"></ui-button>
               <ui-button label="Descargar"     severity="secondary" (click)="downloadFile(lc.url)"></ui-button>
             </div>
           </div>
         </div>
 
-        <!-- IMAGEN (jpg, jpeg, png, gif, webp…) -->
-        <div class="image player-card" *ngIf="isImageFile()">
-          <img
-            class="image-doc"
-            [src]="lc.url"
-            [alt]="lc.name || 'Recurso del capítulo'"
-            loading="lazy"
-            (load)="onImageLoaded()"
-          />
-        </div>
-
-        <!-- DOCUMENTO DE OFICINA (docx, pptx, xlsx, txt) -->
+        <!-- DOCUMENTOS DE OFICINA (format: docx · pptx · xlsx · txt) ───── -->
         <div class="document player-card" *ngIf="isDocumentFile()">
           <div class="doc-header">
             <div class="doc-info">
@@ -123,7 +112,7 @@
                 <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
                 <small class="doc-meta">
                   {{ d.learning_meta.format.toUpperCase() }}
-                  <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                  <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
                 </small>
               </div>
             </div>
@@ -133,7 +122,7 @@
           </div>
         </div>
 
-        <!-- COMPRIMIDO (zip, rar) -->
+        <!-- ARCHIVOS COMPRIMIDOS (format: zip · rar) ─────────────────────── -->
         <div class="document player-card" *ngIf="isCompressedFile()">
           <div class="doc-header">
             <div class="doc-info">
@@ -149,7 +138,7 @@
                 <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
                 <small class="doc-meta">
                   Archivo comprimido {{ d.learning_meta.format.toUpperCase() }}
-                  <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                  <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
                 </small>
               </div>
             </div>
@@ -159,7 +148,7 @@
           </div>
         </div>
 
-        <!-- RAW / formato desconocido -->
+        <!-- RAW / formato desconocido ─────────────────────────────────────── -->
         <div class="raw player-card" *ngIf="isRawFile()">
           <div class="raw-info">
             <div class="raw-icon">
@@ -174,7 +163,7 @@
               <p class="raw-title">{{ lc.name || d.chapter.title }}</p>
               <small class="raw-subtitle">
                 Archivo {{ (d.learning_meta.format || 'desconocido').toUpperCase() }}
-                <ng-container *ngIf="lc.size"> • {{ lc.size }}</ng-container>
+                <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
               </small>
             </div>
           </div>
@@ -184,7 +173,10 @@
       </div>
       <!-- ════ FIN ARCHIVE ════ -->
 
-      <!-- ════ YOUTUBE (type: link / format: youtube) ════ -->
+
+      <!-- ════════════════════════════════════════════════════════════════════
+           LINK: YouTube
+           ════════════════════════════════════════════════════════════════════ -->
       <div class="youtube player-card" *ngIf="isYouTube()">
         <div class="iframe-wrapper">
           <iframe
@@ -200,7 +192,102 @@
         </div>
       </div>
 
-      <!-- ════ Metadatos y acciones ════ -->
+
+      <!-- ════════════════════════════════════════════════════════════════════
+           LINK: Google Drive / OneDrive
+           Todos los sub-formatos usan iframe; el ZIP se abre en pestaña nueva.
+           ════════════════════════════════════════════════════════════════════ -->
+      <div class="cloud-viewer player-card" *ngIf="isCloudViewer() && d.learning_content as lc">
+
+        <!-- ZIP: tarjeta con enlace externo (no se puede previsualizar en iframe) -->
+        <ng-container *ngIf="isCloudZip()">
+          <div class="doc-header">
+            <div class="doc-info">
+              <div class="doc-icon">
+                <ui-icon
+                  [size]="'lg'"
+                  [style]="{width:'100%',height:'100%'}"
+                  [severity]="'primary'"
+                  [svgPath]="getCloudSubFormatIcon('zip')"
+                ></ui-icon>
+              </div>
+              <div>
+                <p class="doc-title">{{ lc.name || d.chapter.title }}</p>
+                <small class="doc-meta">
+                  ZIP · {{ getCloudProviderLabel(cloudProvider()) }}
+                  <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
+                </small>
+              </div>
+            </div>
+            <div class="doc-actions">
+              <ui-button
+                [label]="'Abrir en ' + getCloudProviderLabel(cloudProvider())"
+                severity="primary"
+                (click)="openCloudLink(lc.url)"
+              ></ui-button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- MEDIA / DOCUMENTO: iframe viewer -->
+        <ng-container *ngIf="!isCloudZip()">
+
+          <!--
+            Cabecera con icono, nombre y enlace externo.
+            Solo se muestra para tipos no-media (pdf, docx, pptx, xlsx, txt).
+            Los tipos media (video, audio) ocupan el espacio completo como YouTube.
+          -->
+          <div class="cloud-header" *ngIf="!isCloudMedia()">
+            <div class="cloud-info">
+              <div class="cloud-icon">
+                <ui-icon
+                  [size]="'lg'"
+                  [style]="{width:'100%',height:'100%'}"
+                  [severity]="'primary'"
+                  [svgPath]="getCloudSubFormatIcon(linkSubFormat())"
+                ></ui-icon>
+              </div>
+              <div class="cloud-info-text">
+                <p class="cloud-title">{{ lc.name || d.chapter.title }}</p>
+                <small class="cloud-meta">
+                  {{ linkSubFormat().toUpperCase() }} ·
+                  {{ getCloudProviderLabel(cloudProvider()) }}
+                  <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
+                </small>
+              </div>
+            </div>
+            <div class="cloud-actions">
+              <ui-button
+                [label]="'Abrir en ' + getCloudProviderLabel(cloudProvider())"
+                severity="secondary"
+                (click)="openCloudLink(lc.url)"
+              ></ui-button>
+            </div>
+          </div>
+
+          <!-- Iframe del visor cloud -->
+          <div
+            class="cloud-frame-wrapper"
+            [class.cloud-frame-media]="isCloudMedia()"
+            [class.cloud-frame-doc]="!isCloudMedia()"
+          >
+            <iframe
+              *ngIf="cloudSafeSrc() as cSrc"
+              [src]="cSrc"
+              [title]="lc.name || 'Contenido en la nube'"
+              frameborder="0"
+              allowfullscreen
+              allow="autoplay; fullscreen; picture-in-picture"
+              (load)="onCloudIframeLoaded()"
+            ></iframe>
+          </div>
+
+        </ng-container>
+      </div>
+      <!-- ════ FIN CLOUD VIEWER ════ -->
+
+
+      <!-- ════ Metadatos y acciones del capítulo ════ -->
       <div class="watch-metadata" *ngIf="data() as d2">
         <div class="meta-text">
           <h4 class="title">{{ d2.course.title }}</h4>
@@ -232,7 +319,7 @@
 
             <app-text
               [description]="d2.chapter.description"
-              [title]="'Descripción del capitulo'"
+              [title]="'Descripción del capítulo'"
               [showPreview]="false"
               [showLabel]="false"
             ></app-text>
@@ -278,7 +365,7 @@
   </ng-template>
 </div>
 
-<!-- ── Diálogo visor PDF ──────────────────────────────────────────────────── -->
+<!-- ── Diálogo visor PDF (archive) ───────────────────────────────────────── -->
 <ui-dialog
   type="free"
   [variant]="'flat'"
@@ -286,13 +373,12 @@
   [(visible)]="dialogPdfShow"
 >
   <div class="pdf-dialog">
-    <!-- <iframe
+    <iframe
       *ngIf="pdfSafeSrc() as pdfSrc"
       class="pdf-frame"
       [src]="pdfSrc"
       title="Documento PDF"
-    ></iframe> -->
-    <iframe class="pdf-frame" src="https://res.cloudinary.com/dvvqko1vv/raw/upload/v1773475782/ARTICULO_129_-_CHALA_1_lhqwv2.docx"></iframe>
+    ></iframe>
   </div>
 </ui-dialog>
 
@@ -301,6 +387,7 @@
   type="free"
   [variant]="'filled'"
   [closeOnMaskClick]="true"
+  
   [(visible)]="dialogCodeShow"
 >
   <div class="content-code">

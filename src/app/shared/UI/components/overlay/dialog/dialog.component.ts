@@ -23,7 +23,7 @@ import { UiButtonProps } from '../../../interfaces/ui-button.interface';
       'ariaLabel','role','ariaPressed','title',
       'class','style',
       'closeOnMaskClick','closeOnEsc',
-      'showMask' ,'style','showBtn'
+      'showMask','showBtn', 'mask'
     ],
     outputs: ['visibleChange']
   }]

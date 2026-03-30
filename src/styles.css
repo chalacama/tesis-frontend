@@ -34,7 +34,8 @@
 
 
   /* Trasparent */
-  --overlay-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+  --overlay-color: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+  --overlay-color-secondary: light-dark(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
   --overlay-color-contrast: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.2));
   --shadow-color: light-dark(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
   --shadow-color-contrast: light-dark(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));

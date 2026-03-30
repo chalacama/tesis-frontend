@@ -3,6 +3,7 @@
   padding: 16px;
 }
 
+/* ── Código de acceso ─────────────────────────────────────────────────────── */
 .content-code {
   width: min(520px, 90vw);
   padding: 16px;
@@ -20,7 +21,6 @@
   font-size: 0.92rem;
 }
 
-/* INPUT GRANDE PARA CÓDIGO */
 .code-input-wrapper {
   margin-top: 8px;
 }
@@ -143,12 +143,11 @@
   flex-direction: column;
 }
 
-/* Tarjeta base del reproductor */
 .player-card {
   width: 100%;
 }
 
-/* ── Video ────────────────────────────────────────────────────────────────── */
+/* ── Video (archive) ──────────────────────────────────────────────────────── */
 .video .video-player {
   width: 100%;
   height: auto;
@@ -164,15 +163,17 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .iframe-wrapper iframe {
   width: 100%;
   height: 100%;
   border: 0;
+  display: block;
 }
 
-/* ── Audio (MP3) ──────────────────────────────────────────────────────────── */
+/* ── Audio (archive) ──────────────────────────────────────────────────────── */
 .audio-card {
   padding: 12px 0;
   display: flex;
@@ -184,11 +185,144 @@
   width: 100%;
   border-radius: 8px;
   outline: none;
-  /* Fuerza el tema del SO a mezclarse con los colores del sitio lo mejor posible */
   accent-color: var(--active-color);
 }
 
-/* ── Metadata y acciones ──────────────────────────────────────────────────── */
+/* ── Documentos / comprimidos / raw (archive) ─────────────────────────────── */
+.document,
+.raw {
+  padding: 12px 0;
+}
+
+.doc-header,
+.raw {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.doc-info,
+.raw-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.doc-icon,
+.raw-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.doc-title,
+.raw-title {
+  font-weight: 600;
+  font-size: 0.98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-meta,
+.raw-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.doc-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* ── Cloud Viewer (Google Drive / OneDrive) ───────────────────────────────── */
+.cloud-viewer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Cabecera de metadatos para tipos no-media (pdf, docx, pptx, xlsx, txt) */
+.cloud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cloud-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cloud-info-text {
+  min-width: 0;
+}
+
+.cloud-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.cloud-title {
+  font-weight: 600;
+  font-size: 0.98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cloud-meta {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.cloud-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* Contenedor del iframe */
+.cloud-frame-wrapper {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--background-skeleton);
+}
+
+.cloud-frame-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Media cloud (video / audio): relación 16:9, sin borde */
+.cloud-frame-media {
+  aspect-ratio: 16 / 9;
+  border-color: transparent;
+  background: #000;
+}
+
+/* Documentos cloud (pdf, docx, etc.): altura adaptada al contenido */
+.cloud-frame-doc {
+  aspect-ratio: unset;
+  height: clamp(420px, 70vh, 860px);
+}
+
+/* ── Metadatos y acciones del capítulo ────────────────────────────────────── */
 .watch-metadata {
   display: flex;
   flex-direction: column;
@@ -282,63 +416,6 @@
   border: 1px solid var(--border-color);
 }
 
-/* ── Documentos / imágenes / comprimidos / raw ────────────────────────────── */
-.document,
-.image,
-.raw {
-  padding: 12px 0;
-}
-
-.doc-header,
-.raw {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.doc-info,
-.raw-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.doc-icon,
-.raw-icon {
-  width: 40px;
-  height: auto;
-  flex-shrink: 0;
-}
-
-.doc-title,
-.raw-title {
-  font-weight: 600;
-  font-size: 0.98rem;
-}
-
-.doc-meta,
-.raw-subtitle {
-  font-size: 0.8rem;
-  color: var(--text-color-secondary);
-}
-
-.doc-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.image-doc {
-  width: 100%;
-  max-height: min(480px, 70vh);
-  object-fit: contain;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  background: #000;
-}
-
 /* ── Diálogo PDF ──────────────────────────────────────────────────────────── */
 .pdf-dialog {
   width: 100vh;
@@ -375,13 +452,19 @@
 
 @media (max-width: 599px) {
   .doc-header,
-  .raw {
+  .raw,
+  .cloud-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .doc-actions {
+  .doc-actions,
+  .cloud-actions {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .cloud-frame-doc {
+    height: clamp(320px, 65vh, 600px);
   }
 }

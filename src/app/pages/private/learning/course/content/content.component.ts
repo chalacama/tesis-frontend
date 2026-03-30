@@ -16,6 +16,8 @@ import { WatchingService } from '../../../../../core/api/watching/watching.servi
 import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
 import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
 import { AvatarComponent } from '../../../../../shared/UI/components/media/avatar/avatar.component';
+import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
+import { TextComponent } from '../../../../../shared/UI/components/data/text/text.component';
 
 import { ContentResponse } from '../../../../../core/api/watching/content.interface';
 import { Subject, of, interval } from 'rxjs';
@@ -33,11 +35,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FeedbackService } from '../../../../../core/api/feedback/feedback.service';
 import { LikeResponse, SavedResponse } from '../../../../../core/api/feedback/feedback.interface';
 import { CourseBridge } from '../../../../../core/api/watching/course-bridge.service';
-import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
-
 import { NotificationBridgeService } from '../../../../../core/api/notification/notification-bridge.service';
-
-import { TextComponent } from '../../../../../shared/UI/components/data/text/text.component';
 
 declare global {
   interface Window { onYouTubeIframeAPIReady?: () => void; YT?: any; }
@@ -58,35 +56,36 @@ declare global {
   styleUrl: './content.component.css'
 })
 export class ContentComponent implements OnInit {
-  private readonly route          = inject(ActivatedRoute);
-  private readonly router         = inject(Router);
-  private readonly watchingSvc    = inject(WatchingService);
-  private readonly sanitizer      = inject(DomSanitizer);
-  private readonly destroyRef     = inject(DestroyRef);
-  private readonly feedbackSvc    = inject(FeedbackService);
-  private readonly bridge         = inject(CourseBridge);
+  private readonly route              = inject(ActivatedRoute);
+  private readonly router             = inject(Router);
+  private readonly watchingSvc        = inject(WatchingService);
+  private readonly sanitizer          = inject(DomSanitizer);
+  private readonly destroyRef         = inject(DestroyRef);
+  private readonly feedbackSvc        = inject(FeedbackService);
+  private readonly bridge             = inject(CourseBridge);
   private readonly notificationBridge = inject(NotificationBridgeService);
 
   @ViewChild('ytFrame')   ytFrame?:   ElementRef<HTMLIFrameElement>;
   @ViewChild('codeInput') codeInput?: ElementRef<HTMLInputElement>;
 
   // ── State ──────────────────────────────────────────────────────────────────
-  readonly loading   = signal(true);
-  readonly error     = signal<string | null>(null);
-  readonly data      = signal<ContentResponse | null>(null);
-  readonly liking    = signal(false);
-  readonly saving    = signal(false);
+  readonly loading  = signal(true);
+  readonly error    = signal<string | null>(null);
+  readonly data     = signal<ContentResponse | null>(null);
+  readonly liking   = signal(false);
+  readonly saving   = signal(false);
 
   dialogCodeShow = false;
   dialogPdfShow  = false;
 
-  // ── YouTube embed (no re-render en likes/saves) ────────────────────────────
+  // ── YouTube embed (URL calculada una sola vez, no se recalcula en likes/saves) ──
   readonly ytEmbedRaw = signal<string | null>(null);
   readonly ytSafeSrc  = computed<SafeResourceUrl | null>(() => {
     const raw = this.ytEmbedRaw();
     return raw ? this.sanitizer.bypassSecurityTrustResourceUrl(raw) : null;
   });
 
+  // PDF local (archive) para el visor en diálogo
   readonly pdfSafeSrc = computed<SafeResourceUrl | null>(() => {
     const d      = this.data();
     const format = (d?.learning_meta?.format || '').toLowerCase();
@@ -95,11 +94,19 @@ export class ContentComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   });
 
-  // ── Helpers de tipo de contenido ──────────────────────────────────────────
-  /**
-   * CAMBIO: el type del TypeLearningContent es ahora "link"
-   * y el format del Format es "youtube".
-   */
+  // URL segura para el iframe de Google Drive / OneDrive
+  readonly cloudSafeSrc = computed<SafeResourceUrl | null>(() => {
+    if (!this.isCloudViewer() || this.isCloudZip()) return null;
+    const url = this.data()?.learning_content?.url;
+    if (!url) return null;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // Helpers de tipo de contenido
+  // ────────────────────────────────────────────────────────────────────────────
+
+  /** type = 'link', format = 'youtube' */
   readonly isYouTube = computed(() => {
     const meta = this.data()?.learning_meta;
     return (
@@ -108,40 +115,30 @@ export class ContentComponent implements OnInit {
     );
   });
 
-  /**
-   * CAMBIO: el name del TypeLearningContent es ahora "archive" (normalizado).
-   * Se eliminan los alias legacy "archivo" / "file".
-   */
+  /** type = 'archive' */
   readonly isArchive = computed(() =>
     (this.data()?.learning_meta?.type || '').toLowerCase() === 'archive'
   );
 
+  /** archive · format = 'video' */
   readonly isVideoFile = computed(() =>
     this.isArchive() &&
-    ['mp4', 'webm', 'ogg', 'mov', 'm4v'].includes(
-      (this.data()?.learning_meta?.format || '').toLowerCase()
-    )
+    (this.data()?.learning_meta?.format || '').toLowerCase() === 'video'
   );
 
-  /** NUEVO: audio MP3 */
+  /** archive · format = 'audio' */
   readonly isAudio = computed(() =>
     this.isArchive() &&
-    (this.data()?.learning_meta?.format || '').toLowerCase() === 'mp3'
+    (this.data()?.learning_meta?.format || '').toLowerCase() === 'audio'
   );
 
+  /** archive · format = 'pdf' */
   readonly isPdf = computed(() =>
     this.isArchive() &&
     (this.data()?.learning_meta?.format || '').toLowerCase() === 'pdf'
   );
 
-  readonly isImageFile = computed(() =>
-    this.isArchive() &&
-    ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'].includes(
-      (this.data()?.learning_meta?.format || '').toLowerCase()
-    )
-  );
-
-  /** NUEVO: documentos de oficina + texto plano */
+  /** archive · format in [docx, pptx, xlsx, txt] */
   readonly isDocumentFile = computed(() =>
     this.isArchive() &&
     ['docx', 'pptx', 'xlsx', 'txt'].includes(
@@ -149,7 +146,7 @@ export class ContentComponent implements OnInit {
     )
   );
 
-  /** NUEVO: archivos comprimidos */
+  /** archive · format in [zip, rar] */
   readonly isCompressedFile = computed(() =>
     this.isArchive() &&
     ['zip', 'rar'].includes(
@@ -157,30 +154,85 @@ export class ContentComponent implements OnInit {
     )
   );
 
-  /** Cualquier otro formato no clasificado */
+  /** archive · formato sin categoría conocida */
   readonly isRawFile = computed(() =>
     this.isArchive() &&
     !this.isVideoFile()    &&
     !this.isAudio()        &&
     !this.isPdf()          &&
-    !this.isImageFile()    &&
     !this.isDocumentFile() &&
     !this.isCompressedFile()
   );
 
+  // ────────────────────────────────────────────────────────────────────────────
+  // Cloud Viewers: Google Drive · OneDrive
+  // ────────────────────────────────────────────────────────────────────────────
+
+  /** type = 'link', format starts with 'googledrive.' */
+  readonly isGoogleDrive = computed(() => {
+    const meta = this.data()?.learning_meta;
+    return (
+      (meta?.type   || '').toLowerCase() === 'link' &&
+      (meta?.format || '').toLowerCase().startsWith('googledrive.')
+    );
+  });
+
+  /** type = 'link', format starts with 'onedrive.' */
+  readonly isOneDrive = computed(() => {
+    const meta = this.data()?.learning_meta;
+    return (
+      (meta?.type   || '').toLowerCase() === 'link' &&
+      (meta?.format || '').toLowerCase().startsWith('onedrive.')
+    );
+  });
+
+  /** true si el contenido usa un visor cloud (GD o OD) */
+  readonly isCloudViewer = computed(() => this.isGoogleDrive() || this.isOneDrive());
+
+  /**
+   * Sub-formato tras el punto del nombre de formato.
+   * Ej: 'googledrive.video' → 'video'  |  'onedrive.pdf' → 'pdf'
+   */
+  readonly linkSubFormat = computed<string>(() => {
+    const fmt = (this.data()?.learning_meta?.format || '').toLowerCase();
+    const dot = fmt.lastIndexOf('.');
+    return dot !== -1 ? fmt.slice(dot + 1) : '';
+  });
+
+  /**
+   * true cuando el cloud es media (video / audio).
+   * En este caso el iframe ocupa todo el espacio sin cabecera de documento.
+   */
+  readonly isCloudMedia = computed(() =>
+    this.isCloudViewer() && ['video', 'audio'].includes(this.linkSubFormat())
+  );
+
+  /**
+   * true cuando el cloud es un archivo ZIP.
+   * No se puede previsualizar en iframe; se muestra tarjeta con enlace externo.
+   */
+  readonly isCloudZip = computed(() =>
+    this.isCloudViewer() && this.linkSubFormat() === 'zip'
+  );
+
+  /** Proveedor cloud activo */
+  readonly cloudProvider = computed<'googledrive' | 'onedrive' | null>(() => {
+    if (this.isGoogleDrive()) return 'googledrive';
+    if (this.isOneDrive())    return 'onedrive';
+    return null;
+  });
+
   // ── Progreso en tiempo real ────────────────────────────────────────────────
-  private progress$          = new Subject<number>();
-  private lastSentSecond     = -1;
-  private ytPlayer: any      = null;
-  private ytTickStop$        = new Subject<void>();
-
-  private lastHtml5Time      = 0;
-  private lastYtTime         = 0;
-
-  private lastPercentReported  = 0;
+  private progress$              = new Subject<number>();
+  private lastSentSecond         = -1;
+  private ytPlayer: any          = null;
+  private ytTickStop$            = new Subject<void>();
+  private lastHtml5Time          = 0;
+  private lastYtTime             = 0;
+  private lastPercentReported    = 0;
   private readonly minDeltaPercent = 0.5;
 
-  // ── Registro ──────────────────────────────────────────────────────────────
+  // ── Registro / código de acceso ────────────────────────────────────────────
   readonly codeLength = 7;
   readonly code       = signal<string>('');
   readonly enrolling  = signal(false);
@@ -188,10 +240,10 @@ export class ContentComponent implements OnInit {
 
   isRegistered = computed(() => this.bridge.isRegistered());
 
-  // ── Local backup ──────────────────────────────────────────────────────────
+  // ── Local backup de progreso ──────────────────────────────────────────────
   private resumeKey(lcId: number | string) { return `resume:${lcId}`; }
 
-  private saveResumeLocal(lcId: number | string, sec: number) {
+  private saveResumeLocal(lcId: number | string, sec: number): void {
     try {
       localStorage.setItem(
         this.resumeKey(lcId),
@@ -215,7 +267,7 @@ export class ContentComponent implements OnInit {
     // a) Canal de progreso con throttling 4 s
     this.progress$
       .pipe(
-        map((s)  => Math.max(0, Math.floor(s))),
+        map((s) => Math.max(0, Math.floor(s))),
         distinctUntilChanged(),
         auditTime(4000),
         switchMap((sec) => this.sendProgress(sec)),
@@ -223,7 +275,7 @@ export class ContentComponent implements OnInit {
       )
       .subscribe();
 
-    // b) Cambio de capítulo por paramMap
+    // b) Cambio de capítulo reactivo (paramMap)
     const parent = this.route.parent ?? this.route;
 
     parent.paramMap
@@ -247,7 +299,7 @@ export class ContentComponent implements OnInit {
         this.loading.set(false);
       });
 
-    // c) Primera carga por snapshot
+    // c) Primera carga por snapshot (evita espera del paramMap)
     const initialId = parent.snapshot.paramMap.get('chapterId');
     if (initialId) {
       this.loading.set(true);
@@ -280,8 +332,9 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  // ── Carga / prepare players ───────────────────────────────────────────────
-  private setDataAndPreparePlayers(res: ContentResponse) {
+  // ── Carga y preparación de players ────────────────────────────────────────
+  private setDataAndPreparePlayers(res: ContentResponse): void {
+    // Reset de estado de progreso al cambiar de capítulo
     this.lastPercentReported = 0;
     this.lastHtml5Time       = 0;
     this.lastYtTime          = 0;
@@ -290,13 +343,14 @@ export class ContentComponent implements OnInit {
     const lcId      = res?.learning_content?.id;
     const serverSec = res?.last_view?.second_seen ?? 0;
 
+    // Preferir progreso local si es más reciente que el del servidor
     if (lcId != null) {
       const local = this.readResumeLocal(lcId);
       if (local && local.sec >= 0) {
-        const useLocal =
-          local.ts > (res?.last_view?.updated_at
-            ? new Date(res.last_view.updated_at).getTime()
-            : 0) || local.sec > serverSec;
+        const serverUpdatedAt = res?.last_view?.updated_at
+          ? new Date(res.last_view.updated_at).getTime()
+          : 0;
+        const useLocal = local.ts > serverUpdatedAt || local.sec > serverSec;
 
         if (useLocal) {
           res = {
@@ -328,27 +382,42 @@ export class ContentComponent implements OnInit {
 
     if (res && type === 'link' && format === 'youtube' && res.learning_content?.url) {
       const start = res.last_view?.second_seen || 0;
-      const embed = this.buildYouTubeEmbed(res.learning_content.url, start);
-      this.ytEmbedRaw.set(embed);
+      this.ytEmbedRaw.set(this.buildYouTubeEmbed(res.learning_content.url, start));
     } else {
       this.ytEmbedRaw.set(null);
     }
   }
 
-  // ── Ícono según formato ────────────────────────────────────────────────────
+  // ── Helpers de iconos y etiquetas ─────────────────────────────────────────
+
+  /** Ícono SVG para formatos de archivo (archive y sub-formatos cloud) */
   getFileIcon(format: string): string {
     const icons: Record<string, string> = {
-      pdf:  'svg/pdf-color.svg',
-      docx: 'svg/word-color.svg',
-      pptx: 'svg/powerpoint-color.svg',
-      xlsx: 'svg/excel-color.svg',
-      zip:  'svg/zip-color.svg',
-      txt:  'svg/text-color.svg',
+      video: 'svg/video-color.svg',
+      audio: 'svg/audio-color.svg',
+      pdf:   'svg/pdf-color.svg',
+      docx:  'svg/word-color.svg',
+      pptx:  'svg/powerpoint-color.svg',
+      xlsx:  'svg/excel-color.svg',
+      zip:   'svg/zip-color.svg',
+      txt:   'svg/text-color.svg',
     };
     return icons[(format || '').toLowerCase()] ?? 'svg/file.svg';
   }
 
-  // ── UI Actions (optimistic) ────────────────────────────────────────────────
+  /** Alias semántico para iconos de sub-formatos cloud */
+  getCloudSubFormatIcon(subFormat: string): string {
+    return this.getFileIcon(subFormat);
+  }
+
+  /** Etiqueta legible del proveedor cloud */
+  getCloudProviderLabel(provider: 'googledrive' | 'onedrive' | null): string {
+    if (provider === 'googledrive') return 'Google Drive';
+    if (provider === 'onedrive')    return 'OneDrive';
+    return 'Nube';
+  }
+
+  // ── UI Actions (optimistic updates) ───────────────────────────────────────
   toggleLike(): void {
     const d = this.data();
     if (!d) return;
@@ -358,6 +427,7 @@ export class ContentComponent implements OnInit {
     const nextLiked = !prevLiked;
     const prevLikes = d.likes_total ?? 0;
 
+    // Actualización optimista
     this.data.set({
       ...d,
       user_state:  { ...d.user_state, liked_chapter: nextLiked },
@@ -380,12 +450,13 @@ export class ContentComponent implements OnInit {
         this.liking.set(false);
       },
       error: () => {
+        // Revertir en caso de error
         const cur = this.data();
         if (!cur) return;
         this.data.set({
           ...cur,
           user_state:  { ...cur.user_state, liked_chapter: prevLiked },
-          likes_total: prevLiked ? prevLikes : Math.max(0, prevLikes)
+          likes_total: prevLikes
         });
         this.liking.set(false);
       }
@@ -475,7 +546,7 @@ export class ContentComponent implements OnInit {
     this.flushProgress(endSec);
   }
 
-  // ── HTML5 <audio> events (MP3) ─────────────────────────────────────────────
+  // ── HTML5 <audio> events ───────────────────────────────────────────────────
   onAudioLoadedMetadata(audio: HTMLAudioElement): void {
     const start = this.data()?.last_view?.second_seen || 0;
     try {
@@ -505,6 +576,17 @@ export class ContentComponent implements OnInit {
     this.flushProgress(endSec);
   }
 
+  // ── Cloud iframe events ────────────────────────────────────────────────────
+
+  /**
+   * Callback al cargar el iframe de Google Drive / OneDrive.
+   * Como el iframe es cross-origin no podemos rastrear tiempo de reproducción,
+   * así que registramos el contenido como completado en la primera carga.
+   */
+  onCloudIframeLoaded(): void {
+    this.markNonTimeContentCompleted();
+  }
+
   // ── Envío de progreso ─────────────────────────────────────────────────────
   private get learningContentId(): number | string | null {
     return this.data()?.learning_content?.id ?? null;
@@ -524,17 +606,23 @@ export class ContentComponent implements OnInit {
     return this.feedbackSvc.setContent(lcId, s).pipe(catchError(() => of(null)));
   }
 
-  private flushProgress(currentSec: number) {
+  private flushProgress(currentSec: number): void {
     const sec = Math.max(0, Math.floor(currentSec ?? 0));
     this.sendProgress(sec).subscribe();
   }
 
-  /** Detecta el player activo (YouTube → video → audio) y hace flush */
-  private flushNowFromCurrentPlayer(_isUnload = false) {
+  /**
+   * Detecta el player activo y hace flush del progreso actual.
+   * Los cloud viewers (cross-origin) se saltan ya que no podemos
+   * leer su posición de reproducción.
+   */
+  private flushNowFromCurrentPlayer(_isUnload = false): void {
     if (this.isYouTube() && this.ytPlayer?.getCurrentTime) {
       this.flushProgress(this.ytPlayer.getCurrentTime());
       return;
     }
+    if (this.isCloudViewer()) return; // iframe cross-origin: sin acceso
+
     const videoEl = document.querySelector<HTMLVideoElement>('video.video-player');
     if (videoEl) { this.flushProgress(videoEl.currentTime || 0); return; }
 
@@ -543,7 +631,7 @@ export class ContentComponent implements OnInit {
   }
 
   // ── YouTube IFrame API ────────────────────────────────────────────────────
-  private async initYouTubePlayerIfNeeded() {
+  private async initYouTubePlayerIfNeeded(): Promise<void> {
     if (!this.isYouTube()) return;
     const iframe = this.ytFrame?.nativeElement;
     if (!iframe) return;
@@ -562,7 +650,7 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  private onYouTubeStateChange(e: any) {
+  private onYouTubeStateChange(e: any): void {
     const YT = window.YT;
     if (!YT || !this.ytPlayer) return;
 
@@ -591,7 +679,7 @@ export class ContentComponent implements OnInit {
     }
   }
 
-  private destroyYouTubePlayer() {
+  private destroyYouTubePlayer(): void {
     this.ytTickStop$.next();
     try { this.ytPlayer?.destroy?.(); } catch {}
     this.ytPlayer = null;
@@ -649,7 +737,7 @@ export class ContentComponent implements OnInit {
     try {
       const u = new URL(url);
       if (u.hostname.includes('youtu.be')) return u.pathname.replace('/', '') || null;
-      if (u.searchParams.get('v')) return u.searchParams.get('v');
+      if (u.searchParams.get('v'))          return u.searchParams.get('v');
       const path = u.pathname.split('/');
       const i    = path.indexOf('embed');
       return i !== -1 && path[i + 1] ? path[i + 1] : null;
@@ -669,7 +757,7 @@ export class ContentComponent implements OnInit {
   }
 
   // ── Delta de progreso (%) ─────────────────────────────────────────────────
-  private reportCompletedDelta(currentSec: number) {
+  private reportCompletedDelta(currentSec: number): void {
     const d = this.data();
     if (!d) return;
 
@@ -695,7 +783,7 @@ export class ContentComponent implements OnInit {
     chapterId: number,
     delta: number,
     newPercent: number
-  ) {
+  ): void {
     if (delta <= 0) return;
     this.lastPercentReported = newPercent;
 
@@ -713,8 +801,11 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  /** Marca como 100 % completado contenido sin duración (PDF, imagen, doc, etc.) */
-  private markNonTimeContentCompleted() {
+  /**
+   * Marca contenido sin dimensión temporal como 100 % completado.
+   * Usado por: PDF, documentos de oficina, archivos comprimidos, cloud viewers.
+   */
+  private markNonTimeContentCompleted(): void {
     const d = this.data();
     if (!d) return;
 
@@ -734,21 +825,21 @@ export class ContentComponent implements OnInit {
   }
 
   // ── Código de acceso ──────────────────────────────────────────────────────
-  private focusCodeInput() {
+  private focusCodeInput(): void {
     const el = this.codeInput?.nativeElement;
     if (el) { el.focus(); el.select?.(); }
   }
 
-  onCodeInput(ev: Event) {
+  onCodeInput(ev: Event): void {
     const input = ev.target as HTMLInputElement;
     let value   = (input.value || '').toUpperCase();
-    value = value.replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
+    value       = value.replace(/[^23456789ABCDEFGHJKLMNPQRSTUVWXYZ]/g, '');
     if (value.length > this.codeLength) value = value.slice(0, this.codeLength);
     this.code.set(value);
     if (input.value !== value) input.value = value;
   }
 
-  submitCode() {
+  submitCode(): void {
     const code = this.code();
     if (code.length !== this.codeLength) return;
 
@@ -770,13 +861,15 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  // ── Acciones de documentos / archivos ─────────────────────────────────────
-  openPdfViewer() {
+  // ── Acciones de documentos y archivos ─────────────────────────────────────
+
+  openPdfViewer(): void {
     this.markNonTimeContentCompleted();
     this.dialogPdfShow = true;
   }
 
-  downloadFile(url: string) {
+  /** Descarga un archivo archive (pdf, docx, zip, etc.) */
+  downloadFile(url: string): void {
     if (!url) return;
     this.markNonTimeContentCompleted();
     try {
@@ -790,13 +883,18 @@ export class ContentComponent implements OnInit {
     } catch {}
   }
 
-  onImageLoaded() { this.markNonTimeContentCompleted(); }
+  /** Abre un enlace cloud en nueva pestaña (usado para ZIP de GD/OD) */
+  openCloudLink(url: string): void {
+    if (!url) return;
+    this.markNonTimeContentCompleted();
+    try { window.open(url, '_blank', 'noopener,noreferrer'); } catch {}
+  }
 
-  goToPortfolio(username: string) {
+  goToPortfolio(username: string): void {
     this.router.navigate(['learning/portfolio', '@' + username]);
   }
 
-  toTest() {
+  toTest(): void {
     this.router.navigate(['test'], { relativeTo: this.route.parent });
   }
 }
