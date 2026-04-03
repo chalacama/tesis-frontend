@@ -77,6 +77,7 @@ export class ContentComponent implements OnInit {
 
   dialogCodeShow = false;
   dialogPdfShow  = false;
+  dialogCloudShow = false;
 
   // ── YouTube embed (URL calculada una sola vez, no se recalcula en likes/saves) ──
   readonly ytEmbedRaw = signal<string | null>(null);
@@ -213,6 +214,27 @@ export class ContentComponent implements OnInit {
    */
   readonly isCloudZip = computed(() =>
     this.isCloudViewer() && this.linkSubFormat() === 'zip'
+  );
+
+  /**
+   * true cuando el cloud es video.
+   */
+  readonly isCloudVideo = computed(() =>
+    this.isCloudViewer() && this.linkSubFormat() === 'video'
+  );
+
+  /**
+   * true cuando el cloud es audio.
+   */
+  readonly isCloudAudio = computed(() =>
+    this.isCloudViewer() && this.linkSubFormat() === 'audio'
+  );
+
+  /**
+   * true cuando el cloud es documento (pdf, docx, pptx, xlsx, txt).
+   */
+  readonly isCloudDocument = computed(() =>
+    this.isCloudViewer() && ['pdf', 'docx', 'pptx', 'xlsx', 'txt'].includes(this.linkSubFormat())
   );
 
   /** Proveedor cloud activo */
@@ -417,6 +439,13 @@ export class ContentComponent implements OnInit {
     return 'Nube';
   }
 
+  /** Ícono del proveedor cloud */
+  getCloudProviderIcon(provider: 'googledrive' | 'onedrive' | null): string {
+    if (provider === 'googledrive') return 'svg/googledrive-color.svg';
+    if (provider === 'onedrive')    return 'svg/onedrive-color.svg';
+    return 'svg/cloud.svg'; // fallback
+  }
+
   // ── UI Actions (optimistic updates) ───────────────────────────────────────
   toggleLike(): void {
     const d = this.data();
@@ -580,11 +609,12 @@ export class ContentComponent implements OnInit {
 
   /**
    * Callback al cargar el iframe de Google Drive / OneDrive.
-   * Como el iframe es cross-origin no podemos rastrear tiempo de reproducción,
-   * así que registramos el contenido como completado en la primera carga.
+   * Para media cloud, marcar como completado ya que no podemos rastrear tiempo.
    */
   onCloudIframeLoaded(): void {
-    this.markNonTimeContentCompleted();
+    if (this.isCloudMedia()) {
+      this.markNonTimeContentCompleted();
+    }
   }
 
   // ── Envío de progreso ─────────────────────────────────────────────────────
@@ -866,6 +896,12 @@ export class ContentComponent implements OnInit {
   openPdfViewer(): void {
     this.markNonTimeContentCompleted();
     this.dialogPdfShow = true;
+  }
+
+  /** Abre el visor de documentos cloud en diálogo */
+  openCloudDocumentViewer(): void {
+    this.markNonTimeContentCompleted();
+    this.dialogCloudShow = true;
   }
 
   /** Descarga un archivo archive (pdf, docx, zip, etc.) */

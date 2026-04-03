@@ -232,55 +232,56 @@
         <!-- MEDIA / DOCUMENTO: iframe viewer -->
         <ng-container *ngIf="!isCloudZip()">
 
-          <!--
-            Cabecera con icono, nombre y enlace externo.
-            Solo se muestra para tipos no-media (pdf, docx, pptx, xlsx, txt).
-            Los tipos media (video, audio) ocupan el espacio completo como YouTube.
-          -->
-          <div class="cloud-header" *ngIf="!isCloudMedia()">
-            <div class="cloud-info">
-              <div class="cloud-icon">
-                <ui-icon
-                  [size]="'lg'"
-                  [style]="{width:'100%',height:'100%'}"
-                  [severity]="'primary'"
-                  [svgPath]="getCloudSubFormatIcon(linkSubFormat())"
-                ></ui-icon>
+          <!-- Para documentos, mostrar cabecera con botón previsualizar -->
+          <ng-container *ngIf="isCloudDocument()">
+            <div class="cloud-header">
+              <div class="cloud-info">
+                <div class="cloud-icon">
+                  <ui-icon
+                    [size]="'lg'"
+                    [style]="{width:'100%',height:'100%'}"
+                    [severity]="'primary'"
+                    [svgPath]="getCloudSubFormatIcon(linkSubFormat())"
+                  ></ui-icon>
+                </div>
+                <div class="cloud-info-text">
+                  <p class="cloud-title">{{ lc.name || d.chapter.title }}</p>
+                  <small class="cloud-meta">
+                    {{ linkSubFormat().toUpperCase() }} ·
+                    {{ getCloudProviderLabel(cloudProvider()) }}
+                    <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
+                  </small>
+                </div>
               </div>
-              <div class="cloud-info-text">
-                <p class="cloud-title">{{ lc.name || d.chapter.title }}</p>
-                <small class="cloud-meta">
-                  {{ linkSubFormat().toUpperCase() }} ·
-                  {{ getCloudProviderLabel(cloudProvider()) }}
-                  <ng-container *ngIf="lc.size"> · {{ lc.size }}</ng-container>
-                </small>
+              <div class="cloud-actions">
+                <ui-button
+                  label="Previsualizar"
+                  severity="primary"
+                  (click)="openCloudDocumentViewer()"
+                ></ui-button>
+                <ui-button
+                  [label]="'Abrir en ' + getCloudProviderLabel(cloudProvider())"
+                  severity="secondary"
+                  (click)="openCloudLink(lc.url)"
+                ></ui-button>
               </div>
             </div>
-            <div class="cloud-actions">
-              <ui-button
-                [label]="'Abrir en ' + getCloudProviderLabel(cloudProvider())"
-                severity="secondary"
-                (click)="openCloudLink(lc.url)"
-              ></ui-button>
-            </div>
-          </div>
+          </ng-container>
 
-          <!-- Iframe del visor cloud -->
-          <div
-            class="cloud-frame-wrapper"
-            [class.cloud-frame-media]="isCloudMedia()"
-            [class.cloud-frame-doc]="!isCloudMedia()"
-          >
-            <iframe
-              *ngIf="cloudSafeSrc() as cSrc"
-              [src]="cSrc"
-              [title]="lc.name || 'Contenido en la nube'"
-              frameborder="0"
-              allowfullscreen
-              allow="autoplay; fullscreen; picture-in-picture"
-              (load)="onCloudIframeLoaded()"
-            ></iframe>
-          </div>
+          <!-- Para media, mostrar iframe directamente -->
+          <ng-container *ngIf="isCloudMedia()">
+            <div class="cloud-frame-wrapper cloud-frame-media">
+              <iframe
+                *ngIf="cloudSafeSrc() as cSrc"
+                [src]="cSrc"
+                [title]="lc.name || 'Contenido multimedia en la nube'"
+                frameborder="0"
+                allowfullscreen
+                allow="autoplay; fullscreen; picture-in-picture"
+                (load)="onCloudIframeLoaded()"
+              ></iframe>
+            </div>
+          </ng-container>
 
         </ng-container>
       </div>
@@ -378,6 +379,23 @@
       class="pdf-frame"
       [src]="pdfSrc"
       title="Documento PDF"
+    ></iframe>
+  </div>
+</ui-dialog>
+
+<!-- ── Diálogo visor documentos cloud ────────────────────────────────────── -->
+<ui-dialog
+  type="free"
+  [variant]="'flat'"
+  [closeOnMaskClick]="true"
+  [(visible)]="dialogCloudShow"
+>
+  <div class="pdf-dialog">
+    <iframe
+      *ngIf="cloudSafeSrc() as cSrc"
+      class="pdf-frame"
+      [src]="cSrc"
+      [title]="(data()?.learning_content?.name || 'Documento en la nube')"
     ></iframe>
   </div>
 </ui-dialog>

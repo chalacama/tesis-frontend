@@ -361,9 +361,9 @@ export class CourseComponent implements OnInit {
       case 'googledrive.audio':
       case 'onedrive.audio':
         return 'svg/audio.svg';
-      case 'zip':
-      case 'googledrive.zip':
-      case 'onedrive.zip':
+      case 'compressed':
+      case 'googledrive.compressed':
+      case 'onedrive.compressed':
         return 'svg/zip.svg';
       case 'txt':
       case 'googledrive.txt':
