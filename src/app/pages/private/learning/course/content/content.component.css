@@ -262,6 +262,14 @@
   min-width: 0;
 }
 
+.cloud-provider {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .cloud-info-text {
   min-width: 0;
 }

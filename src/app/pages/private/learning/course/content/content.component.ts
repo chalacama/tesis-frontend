@@ -98,8 +98,14 @@ export class ContentComponent implements OnInit {
   // URL segura para el iframe de Google Drive / OneDrive
   readonly cloudSafeSrc = computed<SafeResourceUrl | null>(() => {
     if (!this.isCloudViewer() || this.isCloudZip()) return null;
-    const url = this.data()?.learning_content?.url;
+
+    const d = this.data()?.learning_content;
+    if (!d) return null;
+
+    // Para embed válido preferimos url_insert que ya viene preparado para previews.
+    const url = d.url_insert?.trim() || d.url?.trim();
     if (!url) return null;
+
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   });
 
@@ -147,10 +153,10 @@ export class ContentComponent implements OnInit {
     )
   );
 
-  /** archive · format in [zip, rar] */
+  /** archive · format in [compressed, zip, rar] */
   readonly isCompressedFile = computed(() =>
     this.isArchive() &&
-    ['zip', 'rar'].includes(
+    ['compressed', 'zip', 'rar'].includes(
       (this.data()?.learning_meta?.format || '').toLowerCase()
     )
   );
@@ -209,11 +215,18 @@ export class ContentComponent implements OnInit {
   );
 
   /**
-   * true cuando el cloud es un archivo ZIP.
-   * No se puede previsualizar en iframe; se muestra tarjeta con enlace externo.
+   * true cuando el cloud es un archivo no-preview (zip/rar solo en modo enlace).
+   * Usado para mantener comportamiento legacy.
    */
   readonly isCloudZip = computed(() =>
-    this.isCloudViewer() && this.linkSubFormat() === 'zip'
+    this.isCloudViewer() && ['zip', 'rar'].includes(this.linkSubFormat())
+  );
+
+  /**
+   * true cuando el cloud es compressed (previewable en diálogo).
+   */
+  readonly isCloudCompressed = computed(() =>
+    this.isCloudViewer() && this.linkSubFormat() === 'compressed'
   );
 
   /**
@@ -231,10 +244,10 @@ export class ContentComponent implements OnInit {
   );
 
   /**
-   * true cuando el cloud es documento (pdf, docx, pptx, xlsx, txt).
+   * true cuando el cloud es documento (pdf, docx, pptx, xlsx, txt, compressed).
    */
   readonly isCloudDocument = computed(() =>
-    this.isCloudViewer() && ['pdf', 'docx', 'pptx', 'xlsx', 'txt'].includes(this.linkSubFormat())
+    this.isCloudViewer() && ['pdf', 'docx', 'pptx', 'xlsx', 'txt', 'compressed'].includes(this.linkSubFormat())
   );
 
   /** Proveedor cloud activo */
@@ -421,7 +434,9 @@ export class ContentComponent implements OnInit {
       docx:  'svg/word-color.svg',
       pptx:  'svg/powerpoint-color.svg',
       xlsx:  'svg/excel-color.svg',
-      zip:   'svg/zip-color.svg',
+      compressed: 'svg/zip-color.svg',
+      zip: 'svg/zip-color.svg',
+      rar: 'svg/zip-color.svg',
       txt:   'svg/text-color.svg',
     };
     return icons[(format || '').toLowerCase()] ?? 'svg/file.svg';
