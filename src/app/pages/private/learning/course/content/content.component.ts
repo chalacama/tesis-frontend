@@ -266,6 +266,8 @@ export class ContentComponent implements OnInit {
   private lastYtTime             = 0;
   private lastPercentReported    = 0;
   private readonly minDeltaPercent = 0.5;
+  private isPlayerActive         = false; // Flag: solo reportar progreso si hay reproducción activa
+  private playerInitialized      = false; // Flag: player del tipo actual verificado
 
   // ── Registro / código de acceso ────────────────────────────────────────────
   readonly codeLength = 7;
@@ -374,6 +376,8 @@ export class ContentComponent implements OnInit {
     this.lastHtml5Time       = 0;
     this.lastYtTime          = 0;
     this.lastSentSecond      = -1;
+    this.isPlayerActive      = false; // Resetear: nunca reportar progreso al cambiar
+    this.playerInitialized   = false;
 
     const lcId      = res?.learning_content?.id;
     const serverSec = res?.last_view?.second_seen ?? 0;
@@ -404,8 +408,12 @@ export class ContentComponent implements OnInit {
     this.data.set(res);
     this.updateYouTubeEmbedFromResponse(res);
 
+    // ── Inicializar player de FORMA ASINCRÓNICA ──
+    // No bloqueamos el resto del componente esperando YouTube
     if (this.isYouTube()) {
-      queueMicrotask(() => this.initYouTubePlayerIfNeeded());
+      // Renderizar iframe de inmediato (sin esperar el script)
+      // Inicializar el player SIN bloquear
+      this.initYouTubePlayerIfNeeded().catch(() => {});
     } else {
       this.destroyYouTubePlayer();
     }
@@ -568,9 +576,18 @@ export class ContentComponent implements OnInit {
         video.currentTime = start;
       }
     } catch {}
+    this.playerInitialized = true; // Metadata cargado, pero NO activo aún
+    this.isPlayerActive = false; // Esperar a que el usuario presione play
+  }
+
+  onVideoPlay(video: HTMLVideoElement): void {
+    this.isPlayerActive = true; // Usuario presionó play
   }
 
   onVideoTimeUpdate(video: HTMLVideoElement): void {
+    // Solo reportar si: (1) metadata cargó, (2) está reproduciéndose activamente
+    if (!this.playerInitialized || !this.isPlayerActive) return;
+
     const t = video.currentTime || 0;
     if (Math.abs(t - this.lastHtml5Time) > 1.5) this.flushProgress(t);
     this.progress$.next(t);
@@ -578,12 +595,17 @@ export class ContentComponent implements OnInit {
   }
 
   onVideoSeeked(video: HTMLVideoElement): void {
+    if (!this.playerInitialized) return;
     const t = video.currentTime || 0;
     this.lastHtml5Time = t;
-    this.flushProgress(t);
+    // Solo flush si está activo, de lo contrario es solo un seek preparatorio
+    if (this.isPlayerActive) this.flushProgress(t);
   }
 
-  onVideoPause(video: HTMLVideoElement): void { this.flushProgress(video.currentTime); }
+  onVideoPause(video: HTMLVideoElement): void { 
+    this.isPlayerActive = false;
+    this.flushProgress(video.currentTime); 
+  }
 
   onVideoEnded(video: HTMLVideoElement): void {
     const endSec = Number.isFinite(video.duration) ? video.duration : video.currentTime;
@@ -598,9 +620,18 @@ export class ContentComponent implements OnInit {
         audio.currentTime = start;
       }
     } catch {}
+    this.playerInitialized = true; // Metadata cargado, pero NO activo aún
+    this.isPlayerActive = false; // Esperar a que el usuario presione play
+  }
+
+  onAudioPlay(audio: HTMLAudioElement): void {
+    this.isPlayerActive = true; // Usuario presionó play
   }
 
   onAudioTimeUpdate(audio: HTMLAudioElement): void {
+    // Solo reportar si: (1) metadata cargó, (2) está reproduciéndose activamente
+    if (!this.playerInitialized || !this.isPlayerActive) return;
+
     const t = audio.currentTime || 0;
     if (Math.abs(t - this.lastHtml5Time) > 1.5) this.flushProgress(t);
     this.progress$.next(t);
@@ -608,12 +639,17 @@ export class ContentComponent implements OnInit {
   }
 
   onAudioSeeked(audio: HTMLAudioElement): void {
+    if (!this.playerInitialized) return;
     const t = audio.currentTime || 0;
     this.lastHtml5Time = t;
-    this.flushProgress(t);
+    // Solo flush si está activo, de lo contrario es solo un seek preparatorio
+    if (this.isPlayerActive) this.flushProgress(t);
   }
 
-  onAudioPause(audio: HTMLAudioElement): void { this.flushProgress(audio.currentTime); }
+  onAudioPause(audio: HTMLAudioElement): void { 
+    this.isPlayerActive = false;
+    this.flushProgress(audio.currentTime); 
+  }
 
   onAudioEnded(audio: HTMLAudioElement): void {
     const endSec = Number.isFinite(audio.duration) ? audio.duration : audio.currentTime;
@@ -681,18 +717,23 @@ export class ContentComponent implements OnInit {
     const iframe = this.ytFrame?.nativeElement;
     if (!iframe) return;
 
-    await this.ensureYouTubeApi();
-    this.destroyYouTubePlayer();
+    try {
+      await this.ensureYouTubeApi();
+      this.destroyYouTubePlayer();
 
-    this.ytPlayer = new window.YT.Player(iframe, {
-      events: {
-        onReady: (e: any) => {
-          const start = this.data()?.last_view?.second_seen || 0;
-          if (start > 0) { try { e.target.seekTo(start, true); } catch {} }
-        },
-        onStateChange: (e: any) => this.onYouTubeStateChange(e)
-      }
-    });
+      this.ytPlayer = new window.YT.Player(iframe, {
+        events: {
+          onReady: (e: any) => {
+            this.playerInitialized = true;
+            const start = this.data()?.last_view?.second_seen || 0;
+            if (start > 0) { try { e.target.seekTo(start, true); } catch {} }
+          },
+          onStateChange: (e: any) => this.onYouTubeStateChange(e)
+        }
+      });
+    } catch (err) {
+      console.error('Error initializing YouTube player:', err);
+    }
   }
 
   private onYouTubeStateChange(e: any): void {
@@ -700,6 +741,8 @@ export class ContentComponent implements OnInit {
     if (!YT || !this.ytPlayer) return;
 
     if (e.data === YT.PlayerState.PLAYING) {
+      this.isPlayerActive = true; // Usuario presionó play
+      this.playerInitialized = true;
       this.ytTickStop$.next();
       interval(1000)
         .pipe(takeUntil(this.ytTickStop$), takeUntilDestroyed(this.destroyRef))
@@ -711,16 +754,25 @@ export class ContentComponent implements OnInit {
           this.lastYtTime = t;
         });
     } else if (e.data === YT.PlayerState.PAUSED) {
+      this.isPlayerActive = false; // Usuario pausó
       this.ytTickStop$.next();
       const t = this.safeGetTimeFromYT();
       if (t != null) this.flushProgress(t);
     } else if (e.data === YT.PlayerState.BUFFERING) {
-      const t = this.safeGetTimeFromYT();
-      if (t != null) this.flushProgress(t);
+      // BUFFERING ocurre justo después de READY, NO reportar
+      // Solo reportar si ya está activo
+      if (this.isPlayerActive) {
+        const t = this.safeGetTimeFromYT();
+        if (t != null) this.flushProgress(t);
+      }
     } else if (e.data === YT.PlayerState.ENDED) {
+      this.isPlayerActive = false;
       this.ytTickStop$.next();
       const t = this.safeGetDurationFromYT() ?? this.safeGetTimeFromYT() ?? 0;
       this.flushProgress(t);
+    } else if (e.data === YT.PlayerState.UNSTARTED) {
+      this.isPlayerActive = false; // Fue pausado
+      this.playerInitialized = true;
     }
   }
 
@@ -745,23 +797,58 @@ export class ContentComponent implements OnInit {
   }
 
   private ensureYouTubeApi(): Promise<void> {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
+      // Ya existe, resolución inmediata
       if (window.YT?.Player) { resolve(); return; }
 
       const existing = document.querySelector('script[data-youtube-api]') as HTMLScriptElement | null;
       if (existing) {
-        const check = () => window.YT?.Player ? resolve() : setTimeout(check, 50);
+        // Script en proceso de carga, esperar con timeout
+        const timeoutMs = 10000; // 10s max
+        const startTime = Date.now();
+        const check = () => {
+          if (window.YT?.Player) { resolve(); return; }
+          if (Date.now() - startTime > timeoutMs) { 
+            reject(new Error('YouTube API timeout')); 
+            return; 
+          }
+          setTimeout(check, 100); // Aumentar intervalo a 100ms para mejor performance
+        };
         check();
         return;
       }
 
+      // Crear nuevo script
       const tag = document.createElement('script');
       tag.src   = 'https://www.youtube.com/iframe_api';
       tag.async = true;
       tag.defer = true;
       tag.setAttribute('data-youtube-api', 'true');
+      
+      // Timeout de 10s para fallback
+      const timer = setTimeout(() => reject(new Error('YouTube API load timeout')), 10000);
+
+      tag.onload = () => {
+        clearTimeout(timer);
+        // Dar tiempo extra para que onYouTubeIframeAPIReady se defina
+        const checkApi = setInterval(() => {
+          if (window.YT?.Player) {
+            clearInterval(checkApi);
+            resolve();
+          }
+        }, 50);
+      };
+
+      tag.onerror = () => {
+        clearTimeout(timer);
+        reject(new Error('Failed to load YouTube API'));
+      };
+
       document.head.appendChild(tag);
-      window.onYouTubeIframeAPIReady = () => resolve();
+      window.onYouTubeIframeAPIReady = () => { 
+        clearTimeout(timer);
+        resolve(); 
+      };
     });
   }
 
