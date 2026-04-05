@@ -154,8 +154,13 @@
                           <span class="icon-slot-meta" *ngIf="c.format != 'video' && c.format != 'youtube' && c.format != 'audio'"   >{{c.size}}</span>
                           <span class="icon-slot-meta" *ngIf="c.format == 'video' || c.format == 'youtube' || c.format == 'audio'">{{c.duration_formatted}}</span>
                         </span>
-                        <span class="questions">
-                          {{ c.questions }} preguntas
+                        <span class="icon-slot">
+                          <ui-icon
+                            [size]="'sm'"
+                            [severity]="'primary'"
+                            [svgPath]="'svg/test.svg'"
+                          ></ui-icon>
+                          <span>{{ c.questions }}</span> 
                         </span>
                       </div>
                     </div>
