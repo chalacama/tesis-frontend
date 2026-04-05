@@ -104,11 +104,19 @@ export class HomeComponent implements OnInit {
   }
 
   titleCoursePath(title: string) {
-    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return title
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   viewCourse(course: any) {
-    this.router.navigate(['/learning/course/' + this.titleCoursePath(course.title) + '/' + course.id]);
+    if (!course?.title || course?.id == null) return;
+    const slug = this.titleCoursePath(course.title);
+    this.router.navigate(['/learning', 'course', slug, course.id]);
   }
 
   /* ==== Preview tipo GIF (video intro) ==== */

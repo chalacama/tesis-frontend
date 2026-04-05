@@ -71,6 +71,8 @@
           (click)="toggle(m.id)"
           [attr.aria-expanded]="isOpen(m.id)"
           [attr.aria-controls]="'panel-' + m.id"
+          [attr.aria-label]="m.name"
+          [attr.title]="m.name"
         >
           <div class="acc-title">
             <span class="mod-name" *ngIf="!smallModule">
@@ -105,6 +107,8 @@
                   [disabled]="!isFirstChapter(c.id) && !bridge.isRegistered()"
                   class="chapter-btn"
                   type="button"
+                  [attr.aria-label]="c.title"
+                  [attr.title]="c.title"
                   (click)="selectChapter(c)"
                 >
                   <div class="chapter-btn-content">

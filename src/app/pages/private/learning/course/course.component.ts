@@ -202,15 +202,7 @@ export class CourseComponent implements OnInit {
           const chapter = this.findChapterById(computedActive);
           if (chapter) {
             this.router.navigate(
-              [
-                '/learning',
-                'course',
-                courseTitle,
-                res.course.id,
-                this.slugify(chapter.title),
-                chapter.id,
-                'content'
-              ],
+              this.buildChapterRoute(chapter, courseTitle, res.course.id),
               { replaceUrl: true }
             );
           }
@@ -273,8 +265,12 @@ export class CourseComponent implements OnInit {
 
   private indexChapterToModule(mods: ModuleItem[]) {
     this.chapterIdToModuleId.clear();
+    this.chapterIdToChapter.clear();
     for (const m of mods) {
-      for (const c of m.chapters) this.chapterIdToModuleId.set(c.id, m.id);
+      for (const c of m.chapters) {
+        this.chapterIdToModuleId.set(c.id, m.id);
+        this.chapterIdToChapter.set(c.id, c);
+      }
     }
   }
 
@@ -298,6 +294,7 @@ export class CourseComponent implements OnInit {
   }
 
   private chapterIdToModuleId = new Map<number, number>();
+  private chapterIdToChapter = new Map<number, ChapterItem>();
 
   private setActiveChapter(chapterId: number | null, openModule = false) {
     this.activeChapterId.set(chapterId);
@@ -310,11 +307,28 @@ export class CourseComponent implements OnInit {
   }
 
   private findChapterById(id: number): ChapterItem | null {
-    for (const m of this.modules()) {
-      const found = m.chapters.find(c => c.id === id);
-      if (found) return found;
-    }
-    return null;
+    return this.chapterIdToChapter.get(id) ?? null;
+  }
+
+  private getChapterRouteMode(chapter: ChapterItem): 'content' | 'test' {
+    if (chapter.learningType) return 'content';
+    return chapter.questions > 0 ? 'test' : 'content';
+  }
+
+  private buildChapterRoute(
+    chapter: ChapterItem,
+    courseTitle: string,
+    courseId: number | string
+  ): (string | number)[] {
+    return [
+      '/learning',
+      'course',
+      courseTitle,
+      courseId,
+      this.slugify(chapter.title),
+      chapter.id,
+      this.getChapterRouteMode(chapter)
+    ];
   }
 
   // === UI helpers ===
@@ -385,34 +399,9 @@ export class CourseComponent implements OnInit {
     const courseTitle = this.getCourseParam('title') ?? 'curso';
     const courseId = this.getCourseParam('id')!;
     this.setActiveChapter(c.id, /*openModule*/ true);
-
-    if (c.learningType) {
-      this.router.navigate(
-        [
-          '/learning',
-          'course',
-          courseTitle,
-          courseId,
-          this.slugify(c.title),
-          c.id,
-          'content'
-        ],
-        { replaceUrl: false }
-      );
-    } else if (c.questions > 0) {
-      this.router.navigate(
-        [
-          '/learning',
-          'course',
-          courseTitle,
-          courseId,
-          this.slugify(c.title),
-          c.id,
-          'test'
-        ],
-        { replaceUrl: false }
-      );
-    }
+    this.router.navigate(this.buildChapterRoute(c, courseTitle, courseId), {
+      replaceUrl: false
+    });
   }
 
   /** Click en módulo desde el drawer horizontal */
