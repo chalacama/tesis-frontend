@@ -329,8 +329,6 @@ export class CourseComponent implements OnInit {
   isActiveChapter = (chapterId: number) => this.activeChapterId() === chapterId;
 
   learningIcon(ch: ChapterItem): string | null {
-    // Si no tiene formato, pero tiene preguntas, es un Test
-    if (!ch.format && ch.questions > 0) return 'svg/test.svg'; // Asegúrate de tener este SVG
     
     // Convertimos a minúsculas por si acaso
     const format = ch.format?.toLowerCase();

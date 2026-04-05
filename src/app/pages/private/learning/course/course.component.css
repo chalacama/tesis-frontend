@@ -280,6 +280,9 @@ padding-left: 5px;
 .icon-slot-meta{
   font-size: 10px;
 }
+.icon-slot-meta-q{
+  font-size: 13px;
+}
 .chapter-lock{
   color: var(--sev-info);
 }

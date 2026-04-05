@@ -145,8 +145,9 @@
                       </div>
 
                       <div class="chapter-meta" *ngIf="!smallModule">
-                        <span class="icon-slot" *ngIf="learningIcon(c) as iconPath">
+                        <span class="icon-slot" *ngIf="c.format != null">
                           <ui-icon
+                          *ngIf="learningIcon(c) as iconPath"
                             [size]="'sm'"
                             [severity]="'primary'"
                             [svgPath]="iconPath"
@@ -154,13 +155,13 @@
                           <span class="icon-slot-meta" *ngIf="c.format != 'video' && c.format != 'youtube' && c.format != 'audio'"   >{{c.size}}</span>
                           <span class="icon-slot-meta" *ngIf="c.format == 'video' || c.format == 'youtube' || c.format == 'audio'">{{c.duration_formatted}}</span>
                         </span>
-                        <span class="icon-slot">
+                        <span *ngIf="c.questions > 0" class="icon-slot">
                           <ui-icon
                             [size]="'sm'"
                             [severity]="'primary'"
                             [svgPath]="'svg/test.svg'"
                           ></ui-icon>
-                          <span>{{ c.questions }}</span> 
+                          <span class="icon-slot-meta-q" >{{ c.questions }}</span> 
                         </span>
                       </div>
                     </div>
