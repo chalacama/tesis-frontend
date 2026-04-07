@@ -19,6 +19,7 @@ import {
   LearningContent,
   TypeWithFormats,
 } from '../../../../../../../core/api/chapter/chapter.interface';
+import { LoadingBarComponent } from '../../../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 
 // ── Conjuntos de clasificación de formatos ────────────────────────────────────
 const MEDIA_FORMATS    = new Set(['mp4','webm','ogg','mov','m4v','avi','mkv','mp3','wav','aac','flac']);
@@ -49,7 +50,7 @@ const DEFAULT_FILE_ICON = 'svg/file-color.svg';
 @Component({
   selector: 'app-content-learning',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent , LoadingBarComponent],
   templateUrl: './content-learning.component.html',
   styleUrl: './content-learning.component.css',
 })
