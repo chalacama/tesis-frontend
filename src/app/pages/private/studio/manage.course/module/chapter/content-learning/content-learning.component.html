@@ -330,10 +330,6 @@
         <!-- Vista previa según tipo ──────────────────────────────────────── -->
         <div class="file-card-body" [ngSwitch]="filePreviewType()">
 
-          <figure *ngSwitchCase="'image'" class="file-preview-img">
-            <img [src]="filePreviewUrl()!" [alt]="fileName() || 'imagen'" />
-          </figure>
-
           <div *ngSwitchCase="'video'" class="file-preview-media">
             <video [src]="filePreviewUrl()!" controls></video>
           </div>

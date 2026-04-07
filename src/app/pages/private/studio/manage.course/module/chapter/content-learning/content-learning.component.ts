@@ -35,9 +35,7 @@ const ONEDRIVE_FORMATS = new Set(['onedrive.video','onedrive.audio','onedrive.pd
 /** Mapa formato → ícono SVG */
 const FORMAT_ICON: Record<string, string> = {
   youtube:                  'svg/youtube-color.svg',
-  mp4:                      'svg/video-color.svg',
   video:                    'svg/video-color.svg',
-  mp3:                      'svg/audio-color.svg',
   audio:                    'svg/audio-color.svg',
   pdf:                      'svg/pdf-color.svg',
   docx:                     'svg/word-color.svg',
@@ -45,11 +43,6 @@ const FORMAT_ICON: Record<string, string> = {
   xlsx:                     'svg/excel-color.svg',
   compressed:               'svg/zip-color.svg',
   txt:                      'svg/text-color.svg',
-  jpg:                      'svg/image-color.svg',
-  jpeg:                     'svg/image-color.svg',
-  png:                      'svg/image-color.svg',
-  gif:                      'svg/image-color.svg',
-  webp:                     'svg/image-color.svg',
   'googledrive.video':      'svg/googledrive-color.svg',
   'googledrive.audio':      'svg/googledrive-color.svg',
   'googledrive.pdf':        'svg/googledrive-color.svg',

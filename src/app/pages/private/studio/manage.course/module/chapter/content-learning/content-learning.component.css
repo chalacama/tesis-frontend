@@ -381,7 +381,10 @@
 .select {
   cursor: pointer;
 }
-
+.select option {
+  background: var(--background-color);
+  color: var(--text-color);
+}
 .input:focus,
 .select:focus {
   border-color: var(--active-color);
