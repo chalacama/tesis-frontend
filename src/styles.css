@@ -72,10 +72,10 @@
   --sev-help-hover: light-dark(var(--help-600), var(--help-300));
   --sev-danger-hover: light-dark(var(--danger-600), var(--danger-300));
 
-  --switcher-border: light-dark(var(--primary-500), var(--primary-400));
+  /* --switcher-border: light-dark(var(--primary-500), var(--primary-400));
   --switcher-hover: light-dark(var(--primary-600), var(--primary-300));
   --switcher-active-bg: light-dark(var(--primary-500), var(--primary-400));
-  --switcher-active-icon: light-dark(var(--surface-50), var(--surface-950));
+  --switcher-active-icon: light-dark(var(--surface-50), var(--surface-950)); */
 
 }
 /* === ESTILO DE SCROLLBAR "FANTASMA" (Semistransparente) === */

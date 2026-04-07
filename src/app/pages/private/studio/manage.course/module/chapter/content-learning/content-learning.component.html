@@ -212,25 +212,16 @@
 
   <!-- ── Acciones ──────────────────────────────────────────────────────── -->
   <div class="actions">
-    <ui-button
+    <button
       [disabled]="!isDirty()"
       (click)="reset()"
-      label="Restablecer"
-      [icon]="{svgPath: 'svg/clear-all.svg'}"
-      severity="secondary"
-    ></ui-button>
+    ></button>
 
-    <ui-button
+    <button
       [disabled]="!canSave()"
       (click)="save()"
-      label="Guardar"
-      [icon]="{svgPath: 'svg/save-outline.svg'}"
       severity="primary"
-    ></ui-button>
+    ></button>
   </div>
 
 </div>
-
-<ui-loading-bar [visible]="loadbar()" [mask]="{ type: 'dimmed' }">
-  Guardando cambios…
-</ui-loading-bar>

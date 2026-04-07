@@ -9,9 +9,8 @@ import { DomSanitizer, SafeResourceUrl }                               from '@an
 import { debounceTime, firstValueFrom }                                from 'rxjs';
 import { takeUntilDestroyed }                                          from '@angular/core/rxjs-interop';
 
-import { ButtonComponent }     from '../../../../../../../shared/UI/components/button/button/button.component';
+
 import { IconComponent }       from '../../../../../../../shared/UI/components/button/icon/icon.component';
-import { LoadingBarComponent } from '../../../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 
 import { ChapterService }      from '../../../../../../../core/api/chapter/chapter.service';
 import {
@@ -29,7 +28,7 @@ const ARCHIVE_TYPE     = 'archive';
 
 /** Mapa formato → ícono SVG (ajusta los paths según tus assets) */
 const FORMAT_ICON: Record<string, string> = {
-  youtube: 'svg/youtube.svg',
+  youtube: 'svg/youtube-color.svg',
   mp4:     'svg/video-color.svg',
   mp3:     'svg/audio-color.svg',
   pdf:     'svg/pdf-color.svg',
@@ -50,7 +49,7 @@ const DEFAULT_FILE_ICON = 'svg/file-color.svg';
 @Component({
   selector: 'app-content-learning',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ButtonComponent, IconComponent, LoadingBarComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent],
   templateUrl: './content-learning.component.html',
   styleUrl: './content-learning.component.css',
 })

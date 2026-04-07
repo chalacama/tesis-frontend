@@ -2,10 +2,11 @@ import { ApplicationRef, Component, Inject, OnInit, PLATFORM_ID, Renderer2 } fro
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, first } from 'rxjs';
+import { UploadWidgetComponent } from './shared/UI/components/data/upload-widget/upload-widget.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, UploadWidgetComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
