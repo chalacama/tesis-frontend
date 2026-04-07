@@ -63,6 +63,7 @@
   display: flex;
   gap: .35rem;
   flex-wrap: wrap;
+  margin-bottom: .75rem;
 }
 .format-tab {
   display: flex;
@@ -92,6 +93,12 @@
   border-radius: 12px;
   width: 100%;
 }
+
+.panel-link {
+  border: 1px solid var(--border-color);
+  background: color-mix(in oklab, var(--border-color) 5%, transparent);
+}
+
 .panel-file {
   padding: 0;
   display: flex;
@@ -308,4 +315,158 @@
   gap: .5rem;
   justify-content: flex-end;
   align-items: center;
+  padding-top: .5rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: .65rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: .95rem;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--sev-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--sev-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--sev-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--sev-secondary-hover);
+}
+
+/* ── Formularios avanzados ────────────────────────────────────────────────────── */
+.lbl {
+  font-weight: 600;
+  font-size: .95rem;
+  display: block;
+  margin-bottom: .35rem;
+  color: var(--text-color);
+}
+
+.input,
+.select {
+  padding: .65rem .8rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-color);
+  outline: none;
+  transition: border-color .15s;
+  font-size: .95rem;
+}
+
+.select {
+  cursor: pointer;
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--active-color);
+}
+
+.input.invalid {
+  border-color: var(--sev-danger);
+}
+
+.input-readonly {
+  background: color-mix(in oklab, var(--border-color) 30%, transparent);
+  cursor: not-allowed;
+}
+
+.input-sm {
+  font-size: .85rem;
+  padding: .5rem .7rem;
+}
+
+/* Input group para combinar input + select ──────────────────────────────────── */
+.input-group {
+  display: flex;
+  gap: .25rem;
+  align-items: stretch;
+}
+
+.input-group .input {
+  flex: 1;
+  margin: 0;
+}
+
+.input-group .select {
+  width: auto;
+  flex: 0 0 90px;
+  margin: 0;
+}
+
+/* Grupos de formulario ───────────────────────────────────────────────────────── */
+.form-group {
+  display: grid;
+  gap: .35rem;
+}
+
+.row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .row-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.help-text {
+  font-size: .8rem;
+  color: var(--text-color-secondary);
+  display: block;
+  margin-top: .25rem;
+}
+
+/* Metadatos del archivo ───────────────────────────────────────────────────────– */
+.file-metadata {
+  margin-top: .75rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--border-color);
+  display: grid;
+  gap: .5rem;
+}
+
+/* Preview actualizado ────────────────────────────────────────────────────────── */
+.preview {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: .75rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.preview-iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  display: block;
 }

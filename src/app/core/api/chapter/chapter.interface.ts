@@ -47,7 +47,9 @@ export interface LearningContent {
   /** Nombre original del archivo subido; null para links */
   name: string | null;
   url: string;
-  /** Peso en bytes del archivo; null para links */
+  /** URL insertable (GCS path para archive, preview link para links) */
+  url_insert: string | null;
+  /** Peso en bytes del archivo; null para links sin esta metadata */
   size_bytes: number | null;
   /** Duración en segundos (video/audio); null para otros */
   duration_seconds: number | null;
@@ -76,8 +78,11 @@ export interface LearningContentUpdate {
   type_content_id: number;
   format_id: number;
   url?: string | null;
+  url_insert?: string | null;
   file?: File | null;
   name?: string | null;
+  size_bytes?: number | null;
+  duration_seconds?: number | null;
 }
 
 // ── Test + Questions ─────────────────────────────────────────────────────────

@@ -6,7 +6,7 @@
     </small>
   </div>
 
-  <!-- ── Selector de TIPO (dinámico desde backend) ─────────────────────── -->
+  <!-- ── Selector de TIPO ─────────────────────────────────────────────────── -->
   <div class="switcher" role="tablist" aria-label="Tipo de contenido">
     <button
       *ngFor="let type of types()"
@@ -16,7 +16,6 @@
       (click)="pickType(type)"
       [attr.aria-pressed]="selectedTypeId() === type.id"
     >
-      <!-- Ícono representativo del tipo -->
       <span class="icon">
         <ui-icon
           [size]="'sm'"
@@ -25,62 +24,221 @@
         ></ui-icon>
       </span>
       <span class="switcher-label">{{ type.name | titlecase }}</span>
-
-      <!-- Badge con la cantidad de formatos -->
       <span class="format-badge">{{ type.formats.length }}</span>
     </button>
   </div>
 
-  <!-- ── Panel LINK (youtube, etc.) ─────────────────────────────────────── -->
-  <div class="panel" *ngIf="isLinkType()">
+  <!-- ── Panel LINK ──────────────────────────────────────────────────────── -->
+  <div class="panel panel-link" *ngIf="isLinkType()">
 
-    <!-- Selector de formato dentro de link (p.ej. si hubiera más de youtube) -->
-    <div class="format-tabs" *ngIf="(selectedType()?.formats?.length ?? 0) > 1">
+    <!-- Selector de formato ────────────────────────────────────────────────── -->
+    <div class="format-tabs" *ngIf="(selectedType()?.formats?.length ?? 0) > 0">
       <button
         *ngFor="let fmt of selectedType()?.formats"
         type="button"
         class="format-tab"
         [class.active]="selectedFormatId() === fmt.id"
-        (click)="selectedFormatId.set(fmt.id)"
+        (click)="pickFormat(fmt)"
       >
         <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
         {{ fmt.name | uppercase }}
       </button>
     </div>
 
-    <label class="lbl" for="yt-url">Pega la URL de YouTube</label>
-    <input
-      id="yt-url"
-      type="text"
-      class="input"
-      [class.invalid]="form.controls.url.touched && form.controls.url.invalid"
-      placeholder="https://www.youtube.com/watch?v=…"
-      [formControl]="form.controls.url"
-      autocomplete="off"
-      spellcheck="false"
-    />
-    <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError('youtubeUrl')">
-      Ingresa una URL válida de YouTube.
-    </div>
+    <!-- YouTube ──────────────────────────────────────────────────────────── -->
+    <ng-container *ngIf="isYouTubeFormat()">
+      <label class="lbl" for="yt-url">URL de YouTube</label>
+      <input
+        id="yt-url"
+        type="text"
+        class="input"
+        [class.invalid]="form.controls.url.touched && form.controls.url.invalid"
+        placeholder="https://www.youtube.com/watch?v=…"
+        [formControl]="form.controls.url"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError('youtubeUrl')">
+        Ingresa una URL válida de YouTube.
+      </div>
 
-    <!-- Preview del video -->
-    <div class="preview" *ngIf="embedSafe() as src">
-      <iframe
-        class="preview-iframe"
-        [src]="src"
-        title="YouTube video"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-    </div>
+      <!-- Preview del video -->
+      <div class="preview" *ngIf="embedSafe() as src">
+        <iframe
+          class="preview-iframe"
+          [src]="src"
+          title="YouTube video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <!-- Duración opcional ───────────────────────────────────────────────── -->
+      <div class="form-group">
+        <label class="lbl" for="yt-duration">Duración (MM:SS)</label>
+        <input
+          id="yt-duration"
+          type="text"
+          class="input input-sm"
+          placeholder="5:30"
+          [formControl]="form.controls.duration_str"
+          spellcheck="false"
+        />
+        <small class="help-text">Ej: "5:30" o "1:2:30" (horas:minutos:segundos)</small>
+      </div>
+    </ng-container>
+
+    <!-- Google Drive ─────────────────────────────────────────────────────── -->
+    <ng-container *ngIf="isGoogleDriveFormat()">
+      <label class="lbl" for="gd-url">URL de Google Drive</label>
+      <input
+        id="gd-url"
+        type="text"
+        class="input"
+        placeholder="https://drive.google.com/file/d/…"
+        [formControl]="form.controls.url"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <small class="help-text">La URL de vista previa se generará automáticamente</small>
+
+      <!-- URL Insert (generada) ───────────────────────────────────────────── -->
+      <label class="lbl" for="gd-insert">URL de Vista Previa (auto-generada)</label>
+      <input
+        id="gd-insert"
+        type="text"
+        class="input input-readonly"
+        readonly
+        [value]="form.controls.url_insert.value || 'Se generará al pegar la URL'"
+      />
+
+      <!-- Metadatos ──────────────────────────────────────────────────────── -->
+      <div class="row-2col">
+        <div class="form-group">
+          <label class="lbl" for="gd-size">Tamaño</label>
+          <div class="input-group">
+            <input
+              id="gd-size"
+              type="number"
+              class="input"
+              placeholder="0"
+              [formControl]="form.controls.size_value"
+              min="0"
+            />
+            <select class="select" [formControl]="form.controls.size_unit">
+              <option value="B">B</option>
+              <option value="KB">KB</option>
+              <option value="MB">MB</option>
+              <option value="GB">GB</option>
+              <option value="TB">TB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="lbl" for="gd-duration">Duración (MM:SS)</label>
+          <input
+            id="gd-duration"
+            type="text"
+            class="input"
+            placeholder="5:30"
+            [formControl]="form.controls.duration_str"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- OneDrive ──────────────────────────────────────────────────────────── -->
+    <ng-container *ngIf="isOneDriveFormat()">
+      <label class="lbl" for="od-url">URL de OneDrive</label>
+      <input
+        id="od-url"
+        type="text"
+        class="input"
+        placeholder="https://1drv.ms/…"
+        [formControl]="form.controls.url"
+        autocomplete="off"
+        spellcheck="false"
+      />
+
+      <!-- URL Insert (requerida) ────────────────────────────────────────── -->
+      <label class="lbl" for="od-insert">URL de Vista Previa (requerida)</label>
+      <input
+        id="od-insert"
+        type="text"
+        class="input"
+        [class.invalid]="form.controls.url_insert.touched && !form.controls.url_insert.value"
+        placeholder="https://1drv.ms/…"
+        [formControl]="form.controls.url_insert"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <small class="help-text">Copia la URL de vista previa desde OneDrive</small>
+      <div class="error" *ngIf="form.controls.url_insert.touched && !form.controls.url_insert.value">
+        La URL de vista previa es obligatoria para OneDrive.
+      </div>
+
+      <!-- Metadatos ──────────────────────────────────────────────────────── -->
+      <div class="row-2col">
+        <div class="form-group">
+          <label class="lbl" for="od-size">Tamaño</label>
+          <div class="input-group">
+            <input
+              id="od-size"
+              type="number"
+              class="input"
+              placeholder="0"
+              [formControl]="form.controls.size_value"
+              min="0"
+            />
+            <select class="select" [formControl]="form.controls.size_unit">
+              <option value="B">B</option>
+              <option value="KB">KB</option>
+              <option value="MB">MB</option>
+              <option value="GB">GB</option>
+              <option value="TB">TB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="lbl" for="od-duration">Duración (MM:SS)</label>
+          <input
+            id="od-duration"
+            type="text"
+            class="input"
+            placeholder="5:30"
+            [formControl]="form.controls.duration_str"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+    </ng-container>
+
   </div>
 
   <!-- ── Panel ARCHIVO ──────────────────────────────────────────────────── -->
   <div class="panel panel-file" *ngIf="isArchiveType()">
-    <div class="uploader">
 
-      <!-- Zona de arrastrar/soltar -->
+    <!-- Selector de formato (requerido) ────────────────────────────────– -->
+    <div class="format-tabs" *ngIf="(selectedType()?.formats?.length ?? 0) > 0">
+      <button
+        *ngFor="let fmt of selectedType()?.formats"
+        type="button"
+        class="format-tab"
+        [class.active]="selectedFormatId() === fmt.id"
+        (click)="pickFormat(fmt)"
+      >
+        <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
+        {{ fmt.name | uppercase }}
+      </button>
+    </div>
+
+    <div class="uploader" *ngIf="selectedFormatId()">
+
+      <!-- Zona de arrastrar/soltar ───────────────────────────────────────── -->
       <div
         class="dropzone"
         [class.drag-over]="dragOver()"
@@ -100,7 +258,7 @@
           <div class="dropzone-text">
             <p class="dropzone-title">Arrastra un archivo aquí o haz clic para seleccionarlo</p>
 
-            <!-- Formatos aceptados como pills -->
+            <!-- Formatos aceptados como pills ───────────────────────────── -->
             <div class="format-pills">
               <span
                 *ngFor="let fmt of selectedType()?.formats"
@@ -127,12 +285,12 @@
         />
       </div>
 
-      <!-- Error de archivo -->
+      <!-- Error de archivo ───────────────────────────────────────────────── -->
       <div class="error file-error" *ngIf="fileError()">
         {{ fileError() }}
       </div>
 
-      <!-- Tarjeta de vista previa del archivo ─────────────────────────── -->
+      <!-- Tarjeta de vista previa ────────────────────────────────────────── -->
       <div class="file-card" *ngIf="filePreviewType() && filePreviewUrl()">
 
         <div class="file-card-header">
@@ -148,13 +306,10 @@
                 {{ fileName() || 'Archivo adjunto' }}
               </div>
               <div class="file-meta">
-                <!-- Formato -->
                 <span *ngIf="selectedFormat() as fmt" class="badge-format">
                   {{ fmt.name.toUpperCase() }}
                 </span>
-                <!-- Peso -->
                 <span *ngIf="fileSizeLabel()">{{ fileSizeLabel() }}</span>
-                <!-- Duración -->
                 <span *ngIf="durationRangeLabel() as range" class="text-secondary">
                   {{ range }}
                 </span>
@@ -172,7 +327,7 @@
           </div>
         </div>
 
-        <!-- Vista previa según tipo ────────────────────────────────────── -->
+        <!-- Vista previa según tipo ──────────────────────────────────────── -->
         <div class="file-card-body" [ngSwitch]="filePreviewType()">
 
           <figure *ngSwitchCase="'image'" class="file-preview-img">
@@ -200,31 +355,86 @@
           </div>
 
         </div>
+
+        <!-- Metadatos del archivo ────────────────────────────────────────── -->
+        <div class="file-metadata">
+          <div class="row-2col">
+            <div class="form-group">
+              <label class="lbl" for="file-name">Nombre del archivo</label>
+              <input
+                id="file-name"
+                type="text"
+                class="input input-sm"
+                [formControl]="form.controls.name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="lbl" for="file-size">Tamaño</label>
+              <div class="input-group">
+                <input
+                  id="file-size"
+                  type="number"
+                  class="input"
+                  placeholder="0"
+                  [formControl]="form.controls.size_value"
+                  min="0"
+                />
+                <select class="select" [formControl]="form.controls.size_unit">
+                  <option value="B">B</option>
+                  <option value="KB">KB</option>
+                  <option value="MB">MB</option>
+                  <option value="GB">GB</option>
+                  <option value="TB">TB</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="lbl" for="file-duration">Duración (MM:SS o HH:MM:SS)</label>
+            <input
+              id="file-duration"
+              type="text"
+              class="input"
+              placeholder="5:30"
+              [formControl]="form.controls.duration_str"
+              spellcheck="false"
+            />
+            <small class="help-text">Ej: "5:30" o "1:2:30"</small>
+          </div>
+        </div>
       </div>
 
     </div>
   </div>
 
-  <!-- ── Sin tipo seleccionado ──────────────────────────────────────────── -->
-  <div class="empty-state" *ngIf="!isLinkType() && !isArchiveType() && !loading()">
+  <!-- ── Sin tipo/formato seleccionado ──────────────────────────────────── -->
+  <div class="empty-state" *ngIf="!selectedTypeId() && !loading()">
     <small class="muted">Selecciona un tipo de contenido para comenzar.</small>
+  </div>
+
+  <div class="empty-state" *ngIf="isArchiveType() && !selectedFormatId() && !loading()">
+    <small class="muted">Selecciona un formato para subir el archivo.</small>
   </div>
 
   <!-- ── Acciones ──────────────────────────────────────────────────────── -->
   <div class="actions">
     <button
+      class="btn btn-secondary"
       [disabled]="!isDirty()"
       (click)="reset()"
-    ></button>
+    >Cancelar</button>
 
     <button
+      class="btn btn-primary"
       [disabled]="!canSave()"
       (click)="save()"
-      severity="primary"
-    ></button>
+    >Guardar cambios</button>
   </div>
 
 </div>
+
 <ui-loading-bar
   [visible]="loadbar()"
   [mask]="{ type: 'dimmed' }">

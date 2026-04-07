@@ -103,9 +103,12 @@ export class ChapterService {
     const fd = new FormData();
     fd.append('type_content_id', String(payload.type_content_id));
     fd.append('format_id',       String(payload.format_id));
-    if (payload.url  != null) fd.append('url',  payload.url);
-    if (payload.name != null) fd.append('name', payload.name);
-    if (payload.file)         fd.append('file', payload.file, payload.file.name);
+    if (payload.url  != null)              fd.append('url',  payload.url);
+    if (payload.url_insert != null)        fd.append('url_insert', payload.url_insert);
+    if (payload.name != null)              fd.append('name', payload.name);
+    if (payload.size_bytes != null)        fd.append('size_bytes', String(payload.size_bytes));
+    if (payload.duration_seconds != null)  fd.append('duration_seconds', String(payload.duration_seconds));
+    if (payload.file)                      fd.append('file', payload.file, payload.file.name);
     return fd;
   }
 }

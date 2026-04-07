@@ -3,7 +3,7 @@ import {
   inject, signal, DestroyRef
 } from '@angular/core';
 import { CommonModule }                                                from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute }                                              from '@angular/router';
 import { DomSanitizer, SafeResourceUrl }                               from '@angular/platform-browser';
 import { debounceTime, firstValueFrom }                                from 'rxjs';
@@ -18,6 +18,7 @@ import {
   LearingContentResponse,
   LearningContent,
   TypeWithFormats,
+  LearningContentUpdate,
 } from '../../../../../../../core/api/chapter/chapter.interface';
 import { LoadingBarComponent } from '../../../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 
@@ -27,35 +28,57 @@ const IMAGE_FORMATS    = new Set(['png','jpg','jpeg','gif','webp','bmp','svg']);
 const LINK_TYPE        = 'link';
 const ARCHIVE_TYPE     = 'archive';
 
-/** Mapa formato → ícono SVG (ajusta los paths según tus assets) */
+// Google Drive y OneDrive formats
+const GOOGLEDRIVE_FORMATS = new Set(['googledrive.video','googledrive.audio','googledrive.pdf','googledrive.docx','googledrive.pptx','googledrive.xlsx','googledrive.compressed','googledrive.txt','googledrive.other']);
+const ONEDRIVE_FORMATS = new Set(['onedrive.video','onedrive.audio','onedrive.pdf','onedrive.docx','onedrive.pptx','onedrive.xlsx','onedrive.compressed','onedrive.txt','onedrive.other']);
+
+/** Mapa formato → ícono SVG */
 const FORMAT_ICON: Record<string, string> = {
-  youtube: 'svg/youtube-color.svg',
-  mp4:     'svg/video-color.svg',
-  mp3:     'svg/audio-color.svg',
-  pdf:     'svg/pdf-color.svg',
-  docx:    'svg/word-color.svg',
-  pptx:    'svg/powerpoint-color.svg',
-  xlsx:    'svg/excel-color.svg',
-  zip:     'svg/zip-color.svg',
-  rar:     'svg/rar-color.svg',
-  txt:     'svg/text-color.svg',
-  jpg:     'svg/image-color.svg',
-  jpeg:    'svg/image-color.svg',
-  png:     'svg/image-color.svg',
-  gif:     'svg/image-color.svg',
-  webp:    'svg/image-color.svg',
+  youtube:                  'svg/youtube-color.svg',
+  mp4:                      'svg/video-color.svg',
+  video:                    'svg/video-color.svg',
+  mp3:                      'svg/audio-color.svg',
+  audio:                    'svg/audio-color.svg',
+  pdf:                      'svg/pdf-color.svg',
+  docx:                     'svg/word-color.svg',
+  pptx:                     'svg/powerpoint-color.svg',
+  xlsx:                     'svg/excel-color.svg',
+  compressed:               'svg/zip-color.svg',
+  txt:                      'svg/text-color.svg',
+  jpg:                      'svg/image-color.svg',
+  jpeg:                     'svg/image-color.svg',
+  png:                      'svg/image-color.svg',
+  gif:                      'svg/image-color.svg',
+  webp:                     'svg/image-color.svg',
+  'googledrive.video':      'svg/googledrive-color.svg',
+  'googledrive.audio':      'svg/googledrive-color.svg',
+  'googledrive.pdf':        'svg/googledrive-color.svg',
+  'googledrive.docx':       'svg/googledrive-color.svg',
+  'googledrive.pptx':       'svg/googledrive-color.svg',
+  'googledrive.xlsx':       'svg/googledrive-color.svg',
+  'googledrive.compressed': 'svg/googledrive-color.svg',
+  'googledrive.txt':        'svg/googledrive-color.svg',
+  'googledrive.other':      'svg/googledrive-color.svg',
+  'onedrive.video':         'svg/onedrive-color.svg',
+  'onedrive.audio':         'svg/onedrive-color.svg',
+  'onedrive.pdf':           'svg/onedrive-color.svg',
+  'onedrive.docx':          'svg/onedrive-color.svg',
+  'onedrive.pptx':          'svg/onedrive-color.svg',
+  'onedrive.xlsx':          'svg/onedrive-color.svg',
+  'onedrive.compressed':    'svg/onedrive-color.svg',
+  'onedrive.txt':           'svg/onedrive-color.svg',
+  'onedrive.other':         'svg/onedrive-color.svg',
 };
 const DEFAULT_FILE_ICON = 'svg/file-color.svg';
 
 @Component({
   selector: 'app-content-learning',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent , LoadingBarComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, LoadingBarComponent],
   templateUrl: './content-learning.component.html',
   styleUrl: './content-learning.component.css',
 })
 export class ContentLearningComponent implements OnInit {
-
   private readonly route      = inject(ActivatedRoute);
   private readonly fb         = inject(FormBuilder);
   private readonly chapterSrv = inject(ChapterService);
@@ -96,13 +119,21 @@ export class ContentLearningComponent implements OnInit {
     return u ? this.sanitizer.bypassSecurityTrustResourceUrl(u) : null;
   });
 
-  // Formulario: solo el campo URL que el usuario teclea
-  form = this.fb.group({ url: this.fb.control<string | null>(null) });
+  // ── Form: URLs y metadatos dinámicos ─────────────────────────────────────────
+  form = this.fb.group({
+    url:               this.fb.control<string | null>(null),
+    url_insert:        this.fb.control<string | null>(null),
+    name:              this.fb.control<string | null>(null),
+    size_value:        this.fb.control<number | null>(null),
+    size_unit:         this.fb.control<'B' | 'KB' | 'MB' | 'GB' | 'TB'>('MB'),
+    duration_str:      this.fb.control<string | null>(null), // "MM:SS" o "HH:MM:SS"
+  });
 
   // ── Computados derivados ─────────────────────────────────────────────────────
-  selectedType   = computed<TypeWithFormats | null>(() =>
+  selectedType = computed<TypeWithFormats | null>(() =>
     this.types().find(t => t.id === this.selectedTypeId()) ?? null
   );
+
   selectedFormat = computed<FormatItem | null>(() =>
     this.selectedType()?.formats.find(f => f.id === this.selectedFormatId()) ?? null
   );
@@ -110,8 +141,10 @@ export class ContentLearningComponent implements OnInit {
   isLinkType    = computed(() => (this.selectedType()?.name ?? '').toLowerCase() === LINK_TYPE);
   isArchiveType = computed(() => (this.selectedType()?.name ?? '').toLowerCase() === ARCHIVE_TYPE);
   isYouTubeFormat = computed(() => (this.selectedFormat()?.name ?? '').toLowerCase() === 'youtube');
+  isGoogleDriveFormat = computed(() => GOOGLEDRIVE_FORMATS.has((this.selectedFormat()?.name ?? '').toLowerCase()));
+  isOneDriveFormat = computed(() => ONEDRIVE_FORMATS.has((this.selectedFormat()?.name ?? '').toLowerCase()));
 
-  maxSizeBytes   = computed(() => this.selectedFormat()?.max_size_bytes      ?? null);
+  maxSizeBytes   = computed(() => this.selectedFormat()?.max_size_bytes ?? null);
   minDurationSec = computed(() => this.selectedFormat()?.min_duration_seconds ?? null);
   maxDurationSec = computed(() => this.selectedFormat()?.max_duration_seconds ?? null);
 
@@ -125,8 +158,8 @@ export class ContentLearningComponent implements OnInit {
     const max = this.maxDurationSec();
     if (!min && !max) return null;
     if (min && max) return `${this.secToMin(min)} – ${this.secToMin(max)}`;
-    if (min)         return `Mín. ${this.secToMin(min)}`;
-    return           `Máx. ${this.secToMin(max!)}`;
+    if (min)        return `Mín. ${this.secToMin(min)}`;
+    return          `Máx. ${this.secToMin(max!)}`;
   });
 
   /** Extensiones mostrables en el UI */
@@ -139,13 +172,25 @@ export class ContentLearningComponent implements OnInit {
     (this.selectedType()?.formats ?? []).map(f => '.' + f.name.toLowerCase()).join(',')
   );
 
-  canSave = computed(() =>
-    !this.saving()    &&
-    !this.fileError() &&
-    this.isDirty()    &&
-    !this.loading()   &&
-    (this.isLinkType() ? !this.form.controls.url.hasError('youtubeUrl') : true)
-  );
+  canSave = computed(() => {
+    if (this.saving() || !this.isDirty() || this.loading()) return false;
+
+    const typeId = this.selectedTypeId();
+    const formatId = this.selectedFormatId();
+    if (!typeId || !formatId) return false;
+
+    const isLinkType = this.isLinkType();
+    const isGDrive = this.isGoogleDriveFormat();
+    const isOneDrive = this.isOneDriveFormat();
+
+    if (isLinkType) {
+      if (this.isYouTubeFormat() && this.form.controls.url.hasError('youtubeUrl')) return false;
+      if (isGDrive && !this.form.controls.url.value?.trim()) return false;
+      if (isOneDrive && !this.form.controls.url_insert.value?.trim()) return false;
+    }
+
+    return true;
+  });
 
   // ── Icono por formato ─────────────────────────────────────────────────────────
   getFormatIcon(fmt?: string | null): string {
@@ -154,12 +199,11 @@ export class ContentLearningComponent implements OnInit {
 
   // ── Constructor ──────────────────────────────────────────────────────────────
   constructor() {
-    // Validador youtube (solo cuando tipo=link y formato=youtube)
+    // Validador YouTube
     effect(() => {
       const isYT = this.isLinkType() && this.isYouTubeFormat();
       this.form.controls.url.clearValidators();
       if (isYT) this.form.controls.url.addValidators(this.youtubeUrlOptionalValidator.bind(this));
-      else      this.embedUrl.set(null);
       this.form.controls.url.updateValueAndValidity({ emitEvent: false });
     });
 
@@ -172,6 +216,18 @@ export class ContentLearningComponent implements OnInit {
         if (this.isLinkType()) this.updateEmbedFromUrl(str);
       });
 
+    // Google Drive: converter URL a url_insert automáticamente
+    effect(() => {
+      if (!this.isGoogleDriveFormat()) return;
+      const url = this.form.controls.url.value?.trim() || '';
+      if (url && url.includes('drive.google.com')) {
+        const urlInsert = this.convertGoogleDriveUrl(url);
+        if (urlInsert !== this.form.controls.url_insert.value) {
+          this.form.controls.url_insert.setValue(urlInsert, { emitEvent: false });
+        }
+      }
+    });
+
     this.form.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => { if (this.form.dirty) this.isDirty.set(true); });
@@ -179,7 +235,7 @@ export class ContentLearningComponent implements OnInit {
 
   ngOnInit(): void { void this.init(); }
 
-  // ── Inicialización (una sola llamada HTTP) ─────────────────────────────────
+  // ── Inicialización ───────────────────────────────────────────────────────────
   private async init(): Promise<void> {
     this.loading.set(true);
     this.isDirty.set(false);
@@ -211,16 +267,29 @@ export class ContentLearningComponent implements OnInit {
     const matchFormat = matchType?.formats.find(f => f.id === lc.format_id)
       ?? matchType?.formats[0] ?? null;
 
-    this.selectedTypeId.set(matchType?.id   ?? null);
+    this.selectedTypeId.set(matchType?.id ?? null);
     this.selectedFormatId.set(matchFormat?.id ?? null);
 
     if (typeName === LINK_TYPE) {
       this.form.controls.url.setValue(lc.url || null, { emitEvent: false });
+      this.form.controls.url_insert.setValue(lc.url_insert || null, { emitEvent: false });
+      if (lc.duration_seconds) {
+        this.form.controls.duration_str.setValue(this.secToTimeStr(lc.duration_seconds), { emitEvent: false });
+      }
       this.updateEmbedFromUrl(lc.url || '');
       this.clearFilePreview();
     } else if (typeName === ARCHIVE_TYPE) {
       this.form.controls.url.setValue(null, { emitEvent: false });
       this.embedUrl.set(null);
+      if (lc.name) this.form.controls.name.setValue(lc.name, { emitEvent: false });
+      if (lc.size_bytes) {
+        const { value, unit } = this.bytesToValueUnit(lc.size_bytes);
+        this.form.controls.size_value.setValue(value, { emitEvent: false });
+        this.form.controls.size_unit.setValue(unit, { emitEvent: false });
+      }
+      if (lc.duration_seconds) {
+        this.form.controls.duration_str.setValue(this.secToTimeStr(lc.duration_seconds), { emitEvent: false });
+      }
       this.setFilePreviewFromBackend(lc.url || null, lc.name, formatName, lc.size_bytes);
     } else {
       this.form.controls.url.setValue(null, { emitEvent: false });
@@ -230,13 +299,11 @@ export class ContentLearningComponent implements OnInit {
   }
 
   private applyDefaultSelection(types: TypeWithFormats[]): void {
-    const firstType   = types[0]             ?? null;
+    const firstType = types[0] ?? null;
     const firstFormat = firstType?.formats[0] ?? null;
-    this.selectedTypeId.set(firstType?.id   ?? null);
-    this.selectedFormatId.set(firstFormat?.id ?? null);
-    this.form.controls.url.setValue(null, { emitEvent: false });
-    this.embedUrl.set(null);
-    this.clearFilePreview();
+    this.selectedTypeId.set(firstType?.id ?? null);
+    this.selectedFormatId.set(null);
+    this.clearFormFields();
   }
 
   // ── Selector de tipo ─────────────────────────────────────────────────────────
@@ -247,16 +314,26 @@ export class ContentLearningComponent implements OnInit {
     this.fileError.set(null);
     this.revokePreviewUrl();
     this.clearFilePreview();
+    this.clearFormFields();
     this.embedUrl.set(null);
-    this.form.controls.url.setValue(null, { emitEvent: false });
     this.selectedTypeId.set(type.id);
+    this.selectedFormatId.set(null);
 
-    // Link: auto-seleccionar primer formato. Archive: esperar al archivo
-    if (type.name.toLowerCase() === LINK_TYPE) {
-      this.selectedFormatId.set(type.formats[0]?.id ?? null);
-    } else {
-      this.selectedFormatId.set(null);
-    }
+    this.form.markAsDirty();
+    this.isDirty.set(true);
+  }
+
+  // ── Selector de formato ──────────────────────────────────────────────────────
+  pickFormat(format: FormatItem): void {
+    if (format.id === this.selectedFormatId()) return;
+
+    this.selectedFormatId.set(format.id);
+    this.fileSel.set(null);
+    this.fileError.set(null);
+    this.revokePreviewUrl();
+    this.clearFilePreview();
+    this.clearFormFields();
+    this.embedUrl.set(null);
 
     this.form.markAsDirty();
     this.isDirty.set(true);
@@ -276,7 +353,7 @@ export class ContentLearningComponent implements OnInit {
   }
 
   // ── Drag & Drop / File Input ─────────────────────────────────────────────────
-  onDragOver(ev: DragEvent)  { ev.preventDefault(); ev.stopPropagation(); this.dragOver.set(true);  }
+  onDragOver(ev: DragEvent) { ev.preventDefault(); ev.stopPropagation(); this.dragOver.set(true); }
   onDragLeave(ev: DragEvent) { ev.preventDefault(); ev.stopPropagation(); this.dragOver.set(false); }
 
   onDrop(ev: DragEvent): void {
@@ -296,26 +373,21 @@ export class ContentLearningComponent implements OnInit {
   async handleIncomingFile(file: File): Promise<void> {
     this.fileError.set(null);
 
-    // 1. Buscar formato por extensión
     const ext         = file.name.split('.').pop()?.toLowerCase() ?? '';
     const archiveType = this.types().find(t => t.name.toLowerCase() === ARCHIVE_TYPE);
     const fmt         = archiveType?.formats.find(f => f.name.toLowerCase() === ext) ?? null;
 
     if (!fmt) {
-      this.fileError.set(
-        `Formato ".${ext}" no permitido. Acepta: ${this.acceptedExtensions()}`
-      );
+      this.fileError.set(`Formato ".${ext}" no permitido. Acepta: ${this.acceptedExtensions()}`);
       return;
     }
 
-    // 2. Tamaño
     if (fmt.max_size_bytes && file.size > fmt.max_size_bytes) {
       const mb = Math.round(fmt.max_size_bytes / 1024 / 1024);
       this.fileError.set(`El archivo supera el máximo de ${mb} MB.`);
       return;
     }
 
-    // 3. Duración (solo media)
     if (MEDIA_FORMATS.has(ext) && (fmt.min_duration_seconds || fmt.max_duration_seconds)) {
       const dur = await this.getMediaDuration(file);
       if (dur == null) {
@@ -332,13 +404,15 @@ export class ContentLearningComponent implements OnInit {
       }
     }
 
-    // 4. OK
     this.fileSel.set(file);
     this.selectedTypeId.set(archiveType!.id);
     this.selectedFormatId.set(fmt.id);
     this.setFilePreviewFromFile(file);
     this.embedUrl.set(null);
-    this.form.controls.url.setValue(null, { emitEvent: false });
+    this.form.controls.name.setValue(file.name, { emitEvent: false });
+    const { value, unit } = this.bytesToValueUnit(file.size);
+    this.form.controls.size_value.setValue(value, { emitEvent: false });
+    this.form.controls.size_unit.setValue(unit, { emitEvent: false });
     this.form.markAsDirty();
     this.isDirty.set(true);
   }
@@ -347,7 +421,7 @@ export class ContentLearningComponent implements OnInit {
     this.fileError.set(null);
     this.fileSel.set(null);
     this.revokePreviewUrl();
-    const lc          = this.current()?.learning_content;
+    const lc = this.current()?.learning_content;
     const archiveType = this.types().find(t => t.name.toLowerCase() === ARCHIVE_TYPE);
     if (lc && archiveType?.formats.find(f => f.id === lc.format_id)) {
       this.selectedFormatId.set(lc.format_id);
@@ -364,7 +438,7 @@ export class ContentLearningComponent implements OnInit {
   async save(): Promise<void> {
     if (!this.canSave()) return;
 
-    const typeId   = this.selectedTypeId();
+    const typeId = this.selectedTypeId();
     const formatId = this.selectedFormatId();
     if (!typeId || !formatId) {
       this.fileError.set('Selecciona un tipo y formato antes de guardar.');
@@ -375,24 +449,52 @@ export class ContentLearningComponent implements OnInit {
     this.loadbar.set(true);
 
     try {
-      const fd = new FormData();
-      fd.append('type_content_id', String(typeId));
-      fd.append('format_id',       String(formatId));
+      const payload: LearningContentUpdate = {
+        type_content_id: typeId,
+        format_id: formatId,
+      };
 
       if (this.isLinkType()) {
-        fd.append('url', (this.form.controls.url.value ?? '').trim());
+        const url = this.form.controls.url.value?.trim() || '';
+        if (url) payload.url = url;
+
+        const urlInsert = this.form.controls.url_insert.value?.trim() || '';
+        if (urlInsert) payload.url_insert = urlInsert;
+
+        const durationStr = this.form.controls.duration_str.value?.trim() || '';
+        if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
+
+        const sizeValue = this.form.controls.size_value.value;
+        if (sizeValue) {
+          const unit = this.form.controls.size_unit.value || 'MB';
+          payload.size_bytes = this.valueUnitToBytes(sizeValue, unit);
+        }
       } else {
         const file = this.fileSel();
         if (file) {
-          fd.append('file', file, file.name);
-          fd.append('name', file.name);
+          payload.file = file;
+          payload.name = file.name;
+
+          const { value, unit } = this.bytesToValueUnit(file.size);
+          payload.size_bytes = file.size;
+
+          const durationStr = this.form.controls.duration_str.value?.trim();
+          if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
         } else {
-          fd.append('url', this.current()?.learning_content?.url ?? '');
+          payload.url = this.current()?.learning_content?.url ?? '';
+          payload.name = this.form.controls.name.value || '';
+          const sizeValue = this.form.controls.size_value.value;
+          if (sizeValue) {
+            const unit = this.form.controls.size_unit.value || 'MB';
+            payload.size_bytes = this.valueUnitToBytes(sizeValue, unit);
+          }
+          const durationStr = this.form.controls.duration_str.value?.trim();
+          if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
         }
       }
 
       const res = await firstValueFrom(
-        this.chapterSrv.updateLearningContent(this.getChapterParam(), fd)
+        this.chapterSrv.updateLearningContent(this.getChapterParam(), payload)
       );
 
       this.types.set(res.types ?? this.types());
@@ -406,11 +508,10 @@ export class ContentLearningComponent implements OnInit {
       this.fileError.set(null);
       this.form.markAsPristine();
       this.isDirty.set(false);
-
     } catch (err: any) {
       const e = err?.error?.errors;
       this.fileError.set(
-        e?.file?.[0] ?? e?.format_id?.[0] ?? err?.error?.message ?? 'No se pudo guardar.'
+        e?.file?.[0] ?? e?.format_id?.[0] ?? e?.url?.[0] ?? err?.error?.message ?? 'No se pudo guardar.'
       );
     } finally {
       this.saving.set(false);
@@ -439,7 +540,7 @@ export class ContentLearningComponent implements OnInit {
   private extractYouTubeId(raw: string): string | null {
     if (!raw) return null;
     try {
-      const url  = new URL(raw.startsWith('http') ? raw : `https://${raw}`);
+      const url = new URL(raw.startsWith('http') ? raw : `https://${raw}`);
       const host = url.hostname.replace(/^www\./i, '').toLowerCase();
 
       if (host === 'youtu.be') {
@@ -449,7 +550,7 @@ export class ContentLearningComponent implements OnInit {
       if (host === 'youtube.com' || host === 'm.youtube.com') {
         const p = url.pathname.toLowerCase();
         const v = url.searchParams.get('v');
-        if (v && this.isValidYtId(v))     return v;
+        if (v && this.isValidYtId(v)) return v;
         const seg = p.startsWith('/shorts/') ? 1 : p.startsWith('/embed/') ? 1 : -1;
         if (seg !== -1) {
           const id = url.pathname.split('/').filter(Boolean)[seg];
@@ -463,6 +564,28 @@ export class ContentLearningComponent implements OnInit {
 
   private isValidYtId(id?: string | null): boolean {
     return !!id && /^[A-Za-z0-9_-]{6,}$/.test(id);
+  }
+
+  // ── Google Drive Helper ──────────────────────────────────────────────────────
+  private convertGoogleDriveUrl(url: string): string {
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.hostname.includes('drive.google.com')) {
+        const fileId = urlObj.searchParams.get('id') || urlObj.pathname.split('/d/')[1]?.split('/')[0];
+        if (fileId) return `https://drive.google.com/file/d/${fileId}/preview`;
+      }
+      if (urlObj.hostname.includes('docs.google.com')) {
+        const docId = urlObj.pathname.split('/d/')[1]?.split('/')[0];
+        if (docId) {
+          const type = urlObj.pathname.includes('/document/') ? 'document'
+                     : urlObj.pathname.includes('/presentation/') ? 'presentation'
+                     : urlObj.pathname.includes('/spreadsheets/') ? 'spreadsheets'
+                     : '';
+          if (type) return `https://docs.google.com/${type}/d/${docId}/preview`;
+        }
+      }
+    } catch { /* */ }
+    return url;
   }
 
   // ── File preview helpers ─────────────────────────────────────────────────────
@@ -483,7 +606,7 @@ export class ContentLearningComponent implements OnInit {
     this.revokePreviewUrl();
     if (!url) { this.clearFilePreview(); return; }
     const displayName = name || url.split('/').pop() || 'archivo';
-    const mime        = formatName ? this.mimeFromFormat(formatName) : undefined;
+    const mime = formatName ? this.mimeFromFormat(formatName) : undefined;
     this.filePreviewUrl.set(url);
     this.filePreviewType.set(this.detectPreviewType(displayName, mime));
     this.fileName.set(displayName);
@@ -504,19 +627,19 @@ export class ContentLearningComponent implements OnInit {
 
   private detectPreviewType(name: string, mime?: string): 'image' | 'video' | 'audio' | 'pdf' | 'other' {
     const ext = name.split('.').pop()?.toLowerCase() ?? '';
-    if (mime?.startsWith('image/') || IMAGE_FORMATS.has(ext))                          return 'image';
-    if (mime?.startsWith('video/') || ['mp4','webm','ogg','mkv','mov'].includes(ext))   return 'video';
-    if (mime?.startsWith('audio/') || ['mp3','wav','aac','flac'].includes(ext))         return 'audio';
-    if (ext === 'pdf')                                                                   return 'pdf';
+    if (mime?.startsWith('image/') || IMAGE_FORMATS.has(ext)) return 'image';
+    if (mime?.startsWith('video/') || ['mp4','webm','ogg','mkv','mov'].includes(ext)) return 'video';
+    if (mime?.startsWith('audio/') || ['mp3','wav','aac','flac'].includes(ext)) return 'audio';
+    if (ext === 'pdf') return 'pdf';
     return 'other';
   }
 
   private mimeFromFormat(fmt: string): string | undefined {
     const m: Record<string, string> = {
-      mp4:'video/mp4', webm:'video/webm', mp3:'audio/mpeg',
-      pdf:'application/pdf',
-      jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png',
-      gif:'image/gif',  webp:'image/webp',
+      mp4: 'video/mp4', webm: 'video/webm', mp3: 'audio/mpeg',
+      pdf: 'application/pdf',
+      jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+      gif: 'image/gif', webp: 'image/webp',
     };
     return m[fmt.toLowerCase()];
   }
@@ -524,14 +647,69 @@ export class ContentLearningComponent implements OnInit {
   private getMediaDuration(file: File): Promise<number | null> {
     return new Promise<number | null>(resolve => {
       const url = URL.createObjectURL(file);
-      const el  = file.type.startsWith('audio/')
+      const el = file.type.startsWith('audio/')
         ? document.createElement('audio')
         : document.createElement('video');
       el.preload = 'metadata';
-      el.src     = url;
+      el.src = url;
       el.onloadedmetadata = () => { URL.revokeObjectURL(url); resolve(el.duration || null); };
-      el.onerror          = () => { URL.revokeObjectURL(url); resolve(null); };
+      el.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
     });
+  }
+
+  // ── Conversiones de unidades ─────────────────────────────────────────────────
+  private bytesToValueUnit(bytes: number): { value: number; unit: 'B' | 'KB' | 'MB' | 'GB' | 'TB' } {
+    const units: Array<'B' | 'KB' | 'MB' | 'GB' | 'TB'> = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let i = 0;
+    let value = bytes;
+    while (value >= 1024 && i < units.length - 1) {
+      value /= 1024;
+      i++;
+    }
+    return { value: Math.round(value * 100) / 100, unit: units[i] };
+  }
+
+  private valueUnitToBytes(value: number, unit: string): number {
+    const multipliers: Record<string, number> = {
+      'B': 1,
+      'KB': 1024,
+      'MB': 1024 ** 2,
+      'GB': 1024 ** 3,
+      'TB': 1024 ** 4,
+    };
+    return Math.round(value * (multipliers[unit] || 1024 ** 2));
+  }
+
+  private timeStrToSec(timeStr: string): number {
+    const parts = timeStr.trim().split(':').map(p => parseInt(p, 10)).filter(n => !isNaN(n));
+    if (parts.length === 2) {
+      const [mm, ss] = parts;
+      return mm * 60 + ss;
+    }
+    if (parts.length === 3) {
+      const [hh, mm, ss] = parts;
+      return hh * 3600 + mm * 60 + ss;
+    }
+    return 0;
+  }
+
+  private secToTimeStr(sec: number): string {
+    const hh = Math.floor(sec / 3600);
+    const mm = Math.floor((sec % 3600) / 60);
+    const ss = sec % 60;
+    if (hh > 0) {
+      return `${hh}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+    }
+    return `${mm}:${String(ss).padStart(2, '0')}`;
+  }
+
+  private clearFormFields(): void {
+    this.form.controls.url.setValue(null, { emitEvent: false });
+    this.form.controls.url_insert.setValue(null, { emitEvent: false });
+    this.form.controls.name.setValue(null, { emitEvent: false });
+    this.form.controls.size_value.setValue(null, { emitEvent: false });
+    this.form.controls.size_unit.setValue('MB', { emitEvent: false });
+    this.form.controls.duration_str.setValue(null, { emitEvent: false });
   }
 
   // ── Utilities ────────────────────────────────────────────────────────────────
@@ -546,7 +724,7 @@ export class ContentLearningComponent implements OnInit {
   formatBytes(bytes: number): string {
     if (!bytes) return '0 B';
     const k = 1024;
-    const s = ['B','KB','MB','GB'];
+    const s = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${(bytes / k ** i).toFixed(i === 0 ? 0 : 1)} ${s[i]}`;
   }
