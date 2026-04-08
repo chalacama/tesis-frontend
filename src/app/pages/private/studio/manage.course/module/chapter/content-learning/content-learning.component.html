@@ -40,7 +40,10 @@
         [class.active]="selectedFormatId() === fmt.id"
         (click)="pickFormat(fmt)"
       >
-        <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
+        <div class="icon-container">
+          <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name).base"></ui-icon>
+          <ui-icon *ngIf="getFormatIcon(fmt.name).badge" [size]="'sm'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name).badge" class="icon-badge"></ui-icon>
+        </div>
         {{ fmt.name | uppercase }}
       </button>
     </div>
@@ -96,11 +99,15 @@
         id="gd-url"
         type="text"
         class="input"
+        [class.invalid]="form.controls.url.touched && form.controls.url.invalid"
         placeholder="https://drive.google.com/file/d/…"
         [formControl]="form.controls.url"
         autocomplete="off"
         spellcheck="false"
       />
+      <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError('googleDriveUrl')">
+        Ingresa una URL válida de Google Drive.
+      </div>
       <small class="help-text">La URL de vista previa se generará automáticamente</small>
 
       <!-- Tutorial Google Drive ────────────────────────────────────────────── -->
@@ -184,12 +191,15 @@
         id="od-insert"
         type="text"
         class="input"
-        [class.invalid]="form.controls.url_insert.touched && !form.controls.url_insert.value"
+        [class.invalid]="form.controls.url_insert.touched && form.controls.url_insert.invalid"
         placeholder="https://1drv.ms/…"
         [formControl]="form.controls.url_insert"
         autocomplete="off"
         spellcheck="false"
       />
+      <div class="error" *ngIf="form.controls.url_insert.touched && form.controls.url_insert.hasError('oneDriveUrl')">
+        Ingresa una URL válida de OneDrive.
+      </div>
       <small class="help-text">Copia la URL de vista previa desde OneDrive</small>
       <div class="error" *ngIf="form.controls.url_insert.touched && !form.controls.url_insert.value">
         La URL de vista previa es obligatoria para OneDrive.
@@ -290,7 +300,7 @@
                 *ngFor="let fmt of selectedType()?.formats"
                 class="format-pill"
               >
-                <ui-icon [size]="'md'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
+                <ui-icon [size]="'md'" [svgPath]="getFormatIcon(fmt.name).base"></ui-icon>
                 {{ fmt.name.toUpperCase() }}
               </span>
             </div>
@@ -324,7 +334,7 @@
             <ui-icon
               [size]="'sm'"
               [severity]="'primary'"
-              [svgPath]="getFormatIcon(selectedFormat()?.name)"
+              [svgPath]="getFormatIcon(selectedFormat()?.name).base"
             ></ui-icon>
 
             <div class="file-card-info">

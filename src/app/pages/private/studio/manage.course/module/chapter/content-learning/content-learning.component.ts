@@ -189,9 +189,21 @@ export class ContentLearningComponent implements OnInit {
   );
 
   /** Para el atributo [accept] del input file */
-  acceptAttr = computed<string>(() =>
-    (this.selectedType()?.formats ?? []).map(f => '.' + f.name.toLowerCase()).join(',')
-  );
+  acceptAttr = computed<string>(() => {
+    const formats = this.selectedType()?.formats ?? [];
+    const accepts: string[] = [];
+    for (const f of formats) {
+      const name = f.name.toLowerCase();
+      if (name === 'video') {
+        accepts.push('video/*');
+      } else if (name === 'audio') {
+        accepts.push('audio/*');
+      } else {
+        accepts.push('.' + name);
+      }
+    }
+    return accepts.join(',');
+  });
 
   canSave = computed(() => {
     if (this.saving() || !this.isDirty() || this.loading()) return false;
@@ -218,22 +230,65 @@ export class ContentLearningComponent implements OnInit {
   });
 
   // ── Icono por formato ─────────────────────────────────────────────────────────
-  getFormatIcon(fmt?: string | null): string {
+  getFormatIcon(fmt?: string | null): { base: string; badge?: string } {
     const name = (fmt ?? '').toLowerCase();
-    if (name === 'youtube') return FORMAT_ICON['youtube'];
-    if (name.startsWith('googledrive.')) return FORMAT_ICON[name] || FORMAT_ICON['googledrive.other'];
-    if (name.startsWith('onedrive.')) return FORMAT_ICON[name] || FORMAT_ICON['onedrive.other'];
-    return FORMAT_ICON[name] ?? DEFAULT_FILE_ICON;
+    if (name === 'youtube') return { base: FORMAT_ICON['youtube'] };
+    if (name.startsWith('googledrive.')) {
+      const base = FORMAT_ICON[name] || FORMAT_ICON['googledrive.other'];
+      return { base, badge: 'svg/googledrive-color.svg' };
+    }
+    if (name.startsWith('onedrive.')) {
+      const base = FORMAT_ICON[name] || FORMAT_ICON['onedrive.other'];
+      return { base, badge: 'svg/onedrive-color.svg' };
+    }
+    return { base: FORMAT_ICON[name] ?? DEFAULT_FILE_ICON };
+  }
+
+  // ── Validadores ──────────────────────────────────────────────────────────────
+  private youtubeUrlOptionalValidator(ctrl: AbstractControl): ValidationErrors | null {
+    const v = (ctrl.value ?? '').toString().trim();
+    if (!v) return null;
+    return this.extractYouTubeId(v) ? null : { youtubeUrl: true };
+  }
+
+  private googleDriveUrlValidator(ctrl: AbstractControl): ValidationErrors | null {
+    const v = (ctrl.value ?? '').toString().trim();
+    if (!v) return null;
+    try {
+      const url = new URL(v);
+      if (url.hostname.includes('drive.google.com') || url.hostname.includes('docs.google.com')) {
+        return null;
+      }
+    } catch { /* */ }
+    return { googleDriveUrl: true };
+  }
+
+  private oneDriveUrlValidator(ctrl: AbstractControl): ValidationErrors | null {
+    const v = (ctrl.value ?? '').toString().trim();
+    if (!v) return null;
+    try {
+      const url = new URL(v);
+      if (url.hostname.includes('1drv.ms') || url.hostname.includes('onedrive.live.com')) {
+        return null;
+      }
+    } catch { /* */ }
+    return { oneDriveUrl: true };
   }
 
   // ── Constructor ──────────────────────────────────────────────────────────────
   constructor() {
-    // Validador YouTube
+    // Validador YouTube, Google Drive y OneDrive
     effect(() => {
       const isYT = this.isLinkType() && this.isYouTubeFormat();
+      const isGDrive = this.isLinkType() && this.isGoogleDriveFormat();
+      const isOneDrive = this.isLinkType() && this.isOneDriveFormat();
       this.form.controls.url.clearValidators();
+      this.form.controls.url_insert.clearValidators();
       if (isYT) this.form.controls.url.addValidators(this.youtubeUrlOptionalValidator.bind(this));
+      if (isGDrive) this.form.controls.url.addValidators(this.googleDriveUrlValidator.bind(this));
+      if (isOneDrive) this.form.controls.url_insert.addValidators(this.oneDriveUrlValidator.bind(this));
       this.form.controls.url.updateValueAndValidity({ emitEvent: false });
+      this.form.controls.url_insert.updateValueAndValidity({ emitEvent: false });
     });
 
     // Preview YouTube mientras escribe
@@ -257,11 +312,11 @@ export class ContentLearningComponent implements OnInit {
       }
     });
 
-    // OneDrive: procesar url_insert si es iframe completo
+    // OneDrive: procesar url_insert si es iframe completo o img
     effect(() => {
       if (!this.isOneDriveFormat()) return;
       const urlInsert = this.form.controls.url_insert.value?.trim() || '';
-      if (urlInsert && urlInsert.includes('<iframe')) {
+      if (urlInsert) {
         const extracted = this.extractOneDriveSrc(urlInsert);
         if (extracted && extracted !== urlInsert) {
           this.form.controls.url_insert.setValue(extracted, { emitEvent: false });
@@ -406,7 +461,22 @@ export class ContentLearningComponent implements OnInit {
 
     const ext         = file.name.split('.').pop()?.toLowerCase() ?? '';
     const archiveType = this.types().find(t => t.name.toLowerCase() === ARCHIVE_TYPE);
-    const fmt         = archiveType?.formats.find(f => f.name.toLowerCase() === ext) ?? null;
+    let fmt: FormatItem | null = null;
+
+    // Buscar formato exacto o genérico
+    for (const f of archiveType?.formats ?? []) {
+      const fName = f.name.toLowerCase();
+      if (fName === ext) {
+        fmt = f;
+        break;
+      } else if (fName === 'video' && file.type.startsWith('video/')) {
+        fmt = f;
+        break;
+      } else if (fName === 'audio' && file.type.startsWith('audio/')) {
+        fmt = f;
+        break;
+      }
+    }
 
     if (!fmt) {
       this.fileError.set(`Formato ".${ext}" no permitido. Acepta: ${this.acceptedExtensions()}`);
@@ -502,10 +572,23 @@ export class ContentLearningComponent implements OnInit {
           return;
         }
 
-        // Detectar formato basado en extensión
+        // Detectar formato basado en extensión o MIME
         const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
         const archiveType = this.types().find(t => t.name.toLowerCase() === ARCHIVE_TYPE);
-        const fmt = archiveType?.formats.find(f => f.name.toLowerCase() === ext);
+        let fmt: FormatItem | null = null;
+        for (const f of archiveType?.formats ?? []) {
+          const fName = f.name.toLowerCase();
+          if (fName === ext) {
+            fmt = f;
+            break;
+          } else if (fName === 'video' && file.type.startsWith('video/')) {
+            fmt = f;
+            break;
+          } else if (fName === 'audio' && file.type.startsWith('audio/')) {
+            fmt = f;
+            break;
+          }
+        }
         if (!fmt) {
           this.fileError.set(`Formato ".${ext}" no válido.`);
           return;
@@ -555,12 +638,6 @@ export class ContentLearningComponent implements OnInit {
     if (!this.isLinkType()) { this.embedUrl.set(null); return; }
     const id = this.extractYouTubeId(url);
     this.embedUrl.set(id ? `https://www.youtube.com/embed/${id}?rel=0` : null);
-  }
-
-  private youtubeUrlOptionalValidator(ctrl: AbstractControl): ValidationErrors | null {
-    const v = (ctrl.value ?? '').toString().trim();
-    if (!v) return null;
-    return this.extractYouTubeId(v) ? null : { youtubeUrl: true };
   }
 
   private extractYouTubeId(raw: string): string | null {
@@ -616,9 +693,15 @@ export class ContentLearningComponent implements OnInit {
 
   // ── OneDrive Helper ──────────────────────────────────────────────────────────
   private extractOneDriveSrc(input: string): string | null {
-    if (!input.includes('<iframe')) return input;
-    const match = input.match(/src="([^"]+)"/);
-    return match ? match[1] : null;
+    // Si es un link directo, devolverlo
+    if (input.startsWith('https://') && !input.includes('<')) return input;
+    // Extraer de <iframe src="...">
+    const iframeMatch = input.match(/<iframe[^>]*src="([^"]+)"/);
+    if (iframeMatch) return iframeMatch[1];
+    // Extraer de <img src="...">
+    const imgMatch = input.match(/<img[^>]*src="([^"]+)"/);
+    if (imgMatch) return imgMatch[1];
+    return null;
   }
 
   // ── File preview helpers ─────────────────────────────────────────────────────

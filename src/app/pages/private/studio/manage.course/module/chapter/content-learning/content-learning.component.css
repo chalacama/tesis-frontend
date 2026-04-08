@@ -85,6 +85,22 @@
   color: var(--active-color);
 }
 
+.icon-container {
+  position: relative;
+  display: inline-block;
+}
+
+.icon-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: white;
+  border-radius: 50%;
+  padding: 1px;
+  width: 12px;
+  height: 12px;
+}
+
 /* ── Paneles ─────────────────────────────────────────────────────────────── */
 .panel {
   display: grid;
