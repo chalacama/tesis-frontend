@@ -198,6 +198,8 @@ export class ContentLearningComponent implements OnInit {
         accepts.push('video/*');
       } else if (name === 'audio') {
         accepts.push('audio/*');
+      } else if (name === 'compressed') {
+        accepts.push('.zip,.rar,.7z,application/zip,application/x-rar-compressed,application/x-zip-compressed');
       } else {
         accepts.push('.' + name);
       }
@@ -277,16 +279,12 @@ export class ContentLearningComponent implements OnInit {
 
   // ── Constructor ──────────────────────────────────────────────────────────────
   constructor() {
-    // Validador YouTube, Google Drive y OneDrive
+    // Validador YouTube
     effect(() => {
       const isYT = this.isLinkType() && this.isYouTubeFormat();
-      const isGDrive = this.isLinkType() && this.isGoogleDriveFormat();
-      const isOneDrive = this.isLinkType() && this.isOneDriveFormat();
       this.form.controls.url.clearValidators();
       this.form.controls.url_insert.clearValidators();
       if (isYT) this.form.controls.url.addValidators(this.youtubeUrlOptionalValidator.bind(this));
-      if (isGDrive) this.form.controls.url.addValidators(this.googleDriveUrlValidator.bind(this));
-      if (isOneDrive) this.form.controls.url_insert.addValidators(this.oneDriveUrlValidator.bind(this));
       this.form.controls.url.updateValueAndValidity({ emitEvent: false });
       this.form.controls.url_insert.updateValueAndValidity({ emitEvent: false });
     });
@@ -475,6 +473,9 @@ export class ContentLearningComponent implements OnInit {
       } else if (fName === 'audio' && file.type.startsWith('audio/')) {
         fmt = f;
         break;
+      } else if (fName === 'compressed' && (['zip','rar','7z'].includes(ext) || ['application/zip','application/x-rar-compressed','application/x-zip-compressed'].includes(file.type))) {
+        fmt = f;
+        break;
       }
     }
 
@@ -585,6 +586,9 @@ export class ContentLearningComponent implements OnInit {
             fmt = f;
             break;
           } else if (fName === 'audio' && file.type.startsWith('audio/')) {
+            fmt = f;
+            break;
+          } else if (fName === 'compressed' && (['zip','rar','7z'].includes(ext) || ['application/zip','application/x-rar-compressed','application/x-zip-compressed'].includes(file.type))) {
             fmt = f;
             break;
           }

@@ -99,15 +99,11 @@
         id="gd-url"
         type="text"
         class="input"
-        [class.invalid]="form.controls.url.touched && form.controls.url.invalid"
         placeholder="https://drive.google.com/file/d/…"
         [formControl]="form.controls.url"
         autocomplete="off"
         spellcheck="false"
       />
-      <div class="error" *ngIf="form.controls.url.touched && form.controls.url.hasError('googleDriveUrl')">
-        Ingresa una URL válida de Google Drive.
-      </div>
       <small class="help-text">La URL de vista previa se generará automáticamente</small>
 
       <!-- Tutorial Google Drive ────────────────────────────────────────────── -->
@@ -191,15 +187,11 @@
         id="od-insert"
         type="text"
         class="input"
-        [class.invalid]="form.controls.url_insert.touched && form.controls.url_insert.invalid"
         placeholder="https://1drv.ms/…"
         [formControl]="form.controls.url_insert"
         autocomplete="off"
         spellcheck="false"
       />
-      <div class="error" *ngIf="form.controls.url_insert.touched && form.controls.url_insert.hasError('oneDriveUrl')">
-        Ingresa una URL válida de OneDrive.
-      </div>
       <small class="help-text">Copia la URL de vista previa desde OneDrive</small>
       <div class="error" *ngIf="form.controls.url_insert.touched && !form.controls.url_insert.value">
         La URL de vista previa es obligatoria para OneDrive.
