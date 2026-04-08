@@ -119,6 +119,8 @@ export class ContentLearningComponent implements OnInit {
   });
 
   // ── Form: URLs y metadatos dinámicos ─────────────────────────────────────────
+  private formVersion = signal(0);
+
   form = this.fb.group({
     url:               this.fb.control<string | null>(null),
     url_insert:        this.fb.control<string | null>(null),
@@ -215,22 +217,32 @@ export class ContentLearningComponent implements OnInit {
   });
 
   canSave = computed(() => {
+    this.formVersion(); // tracks every form change, guarantees re-evaluation
+
     if (this.saving() || !this.isDirty() || this.loading()) return false;
 
     const typeId = this.selectedTypeId();
     if (!typeId) return false;
 
-    const isLinkType = this.isLinkType();
+    const isLinkType    = this.isLinkType();
     const isArchiveType = this.isArchiveType();
-    const isGDrive = this.isGoogleDriveFormat();
-    const isOneDrive = this.isOneDriveFormat();
+    const isGDrive      = this.isGoogleDriveFormat();
+    const isOneDrive    = this.isOneDriveFormat();
 
     if (isLinkType) {
       const formatId = this.selectedFormatId();
       if (!formatId) return false;
-      if (this.isYouTubeFormat() && this.form.controls.url.hasError('youtubeUrl')) return false;
+
+      if (this.isYouTubeFormat()) {
+        if (!this.form.controls.url.value?.trim()) return false;
+        if (this.form.controls.url.hasError('youtubeUrl')) return false;
+        if (!this.form.controls.duration_str.value?.trim()) return false; // required for YouTube
+      }
+
       if (isGDrive && !this.form.controls.url.value?.trim()) return false;
-      if (isOneDrive && !this.form.controls.url_insert.value?.trim()) return false;
+
+      // urlInsertSignal is a real signal → computed re-evaluates when it changes
+      if (isOneDrive && !this.urlInsertSignal()) return false;
     } else if (isArchiveType) {
       if (!this.fileSel()) return false;
     }
@@ -343,7 +355,10 @@ export class ContentLearningComponent implements OnInit {
 
     this.form.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => { if (this.form.dirty) this.isDirty.set(true); });
+      .subscribe(() => {
+        if (this.form.dirty) this.isDirty.set(true);
+        this.formVersion.update(v => v + 1);
+      });
   }
 
   ngOnInit(): void { void this.init(); }
