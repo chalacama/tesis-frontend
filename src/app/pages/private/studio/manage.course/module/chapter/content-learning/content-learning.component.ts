@@ -24,7 +24,6 @@ import { LoadingBarComponent } from '../../../../../../../shared/UI/components/o
 
 // ── Conjuntos de clasificación de formatos ────────────────────────────────────
 const MEDIA_FORMATS    = new Set(['mp4','webm','ogg','mov','m4v','avi','mkv','mp3','wav','aac','flac']);
-const IMAGE_FORMATS    = new Set(['png','jpg','jpeg','gif','webp','bmp','svg']);
 const LINK_TYPE        = 'link';
 const ARCHIVE_TYPE     = 'archive';
 
@@ -43,24 +42,24 @@ const FORMAT_ICON: Record<string, string> = {
   xlsx:                     'svg/excel-color.svg',
   compressed:               'svg/zip-color.svg',
   txt:                      'svg/text-color.svg',
-  'googledrive.video':      'svg/googledrive-color.svg',
-  'googledrive.audio':      'svg/googledrive-color.svg',
-  'googledrive.pdf':        'svg/googledrive-color.svg',
-  'googledrive.docx':       'svg/googledrive-color.svg',
-  'googledrive.pptx':       'svg/googledrive-color.svg',
-  'googledrive.xlsx':       'svg/googledrive-color.svg',
-  'googledrive.compressed': 'svg/googledrive-color.svg',
-  'googledrive.txt':        'svg/googledrive-color.svg',
-  'googledrive.other':      'svg/googledrive-color.svg',
-  'onedrive.video':         'svg/onedrive-color.svg',
-  'onedrive.audio':         'svg/onedrive-color.svg',
-  'onedrive.pdf':           'svg/onedrive-color.svg',
-  'onedrive.docx':          'svg/onedrive-color.svg',
-  'onedrive.pptx':          'svg/onedrive-color.svg',
-  'onedrive.xlsx':          'svg/onedrive-color.svg',
-  'onedrive.compressed':    'svg/onedrive-color.svg',
-  'onedrive.txt':           'svg/onedrive-color.svg',
-  'onedrive.other':         'svg/onedrive-color.svg',
+  'googledrive.video':      'svg/video-color.svg',
+  'googledrive.audio':      'svg/audio-color.svg',
+  'googledrive.pdf':        'svg/pdf-color.svg',
+  'googledrive.docx':       'svg/word-color.svg',
+  'googledrive.pptx':       'svg/powerpoint-color.svg',
+  'googledrive.xlsx':       'svg/excel-color.svg',
+  'googledrive.compressed': 'svg/zip-color.svg',
+  'googledrive.txt':        'svg/text-color.svg',
+  'googledrive.other':      'svg/file-color.svg',
+  'onedrive.video':         'svg/video-color.svg',
+  'onedrive.audio':         'svg/audio-color.svg',
+  'onedrive.pdf':           'svg/pdf-color.svg',
+  'onedrive.docx':          'svg/word-color.svg',
+  'onedrive.pptx':          'svg/powerpoint-color.svg',
+  'onedrive.xlsx':          'svg/excel-color.svg',
+  'onedrive.compressed':    'svg/zip-color.svg',
+  'onedrive.txt':           'svg/text-color.svg',
+  'onedrive.other':         'svg/file-color.svg',
 };
 const DEFAULT_FILE_ICON = 'svg/file-color.svg';
 
@@ -96,7 +95,7 @@ export class ContentLearningComponent implements OnInit {
 
   // ── Preview ──────────────────────────────────────────────────────────────────
   filePreviewUrl  = signal<string | null>(null);
-  filePreviewType = signal<'image' | 'video' | 'audio' | 'pdf' | 'other' | null>(null);
+  filePreviewType = signal<'video' | 'audio' | 'pdf' | 'other' | null>(null);
   fileName        = signal<string | null>(null);
   fileSizeLabel   = signal<string | null>(null);
 
@@ -123,6 +122,35 @@ export class ContentLearningComponent implements OnInit {
   });
 
   // ── Computados derivados ─────────────────────────────────────────────────────
+  sortedTypes = computed(() => {
+    const ts = this.types();
+    return ts.sort((a, b) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+      // Orden: link primero, luego archive
+      if (aName === LINK_TYPE && bName !== LINK_TYPE) return -1;
+      if (aName !== LINK_TYPE && bName === LINK_TYPE) return 1;
+      return 0;
+    });
+  });
+
+  sortedLinkFormats = computed(() => {
+    const type = this.sortedTypes().find(t => t.name.toLowerCase() === LINK_TYPE);
+    if (!type) return [];
+    return type.formats.sort((a, b) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+      // Orden: youtube, luego googledrive, luego onedrive
+      if (aName === 'youtube') return -1;
+      if (bName === 'youtube') return 1;
+      if (aName.startsWith('googledrive') && !bName.startsWith('googledrive')) return -1;
+      if (!aName.startsWith('googledrive') && bName.startsWith('googledrive')) return 1;
+      if (aName.startsWith('onedrive') && !bName.startsWith('onedrive')) return 1;
+      if (!aName.startsWith('onedrive') && bName.startsWith('onedrive')) return -1;
+      return a.name.localeCompare(b.name);
+    });
+  });
+
   selectedType = computed<TypeWithFormats | null>(() =>
     this.types().find(t => t.id === this.selectedTypeId()) ?? null
   );
@@ -169,17 +197,21 @@ export class ContentLearningComponent implements OnInit {
     if (this.saving() || !this.isDirty() || this.loading()) return false;
 
     const typeId = this.selectedTypeId();
-    const formatId = this.selectedFormatId();
-    if (!typeId || !formatId) return false;
+    if (!typeId) return false;
 
     const isLinkType = this.isLinkType();
+    const isArchiveType = this.isArchiveType();
     const isGDrive = this.isGoogleDriveFormat();
     const isOneDrive = this.isOneDriveFormat();
 
     if (isLinkType) {
+      const formatId = this.selectedFormatId();
+      if (!formatId) return false;
       if (this.isYouTubeFormat() && this.form.controls.url.hasError('youtubeUrl')) return false;
       if (isGDrive && !this.form.controls.url.value?.trim()) return false;
       if (isOneDrive && !this.form.controls.url_insert.value?.trim()) return false;
+    } else if (isArchiveType) {
+      if (!this.fileSel()) return false;
     }
 
     return true;
@@ -187,7 +219,11 @@ export class ContentLearningComponent implements OnInit {
 
   // ── Icono por formato ─────────────────────────────────────────────────────────
   getFormatIcon(fmt?: string | null): string {
-    return FORMAT_ICON[(fmt ?? '').toLowerCase()] ?? DEFAULT_FILE_ICON;
+    const name = (fmt ?? '').toLowerCase();
+    if (name === 'youtube') return FORMAT_ICON['youtube'];
+    if (name.startsWith('googledrive.')) return FORMAT_ICON[name] || FORMAT_ICON['googledrive.other'];
+    if (name.startsWith('onedrive.')) return FORMAT_ICON[name] || FORMAT_ICON['onedrive.other'];
+    return FORMAT_ICON[name] ?? DEFAULT_FILE_ICON;
   }
 
   // ── Constructor ──────────────────────────────────────────────────────────────
@@ -217,6 +253,18 @@ export class ContentLearningComponent implements OnInit {
         const urlInsert = this.convertGoogleDriveUrl(url);
         if (urlInsert !== this.form.controls.url_insert.value) {
           this.form.controls.url_insert.setValue(urlInsert, { emitEvent: false });
+        }
+      }
+    });
+
+    // OneDrive: procesar url_insert si es iframe completo
+    effect(() => {
+      if (!this.isOneDriveFormat()) return;
+      const urlInsert = this.form.controls.url_insert.value?.trim() || '';
+      if (urlInsert && urlInsert.includes('<iframe')) {
+        const extracted = this.extractOneDriveSrc(urlInsert);
+        if (extracted && extracted !== urlInsert) {
+          this.form.controls.url_insert.setValue(extracted, { emitEvent: false });
         }
       }
     });
@@ -257,13 +305,12 @@ export class ContentLearningComponent implements OnInit {
     const formatName = (lc.format?.name ?? '').toLowerCase();
 
     const matchType   = types.find(t => t.id === lc.type_content_id) ?? types[0] ?? null;
-    const matchFormat = matchType?.formats.find(f => f.id === lc.format_id)
-      ?? matchType?.formats[0] ?? null;
 
     this.selectedTypeId.set(matchType?.id ?? null);
-    this.selectedFormatId.set(matchFormat?.id ?? null);
+    this.selectedFormatId.set(null); // No seleccionar formato específico
 
     if (typeName === LINK_TYPE) {
+      this.selectedFormatId.set(lc.format_id);
       this.form.controls.url.setValue(lc.url || null, { emitEvent: false });
       this.form.controls.url_insert.setValue(lc.url_insert || null, { emitEvent: false });
       if (lc.duration_seconds) {
@@ -274,15 +321,6 @@ export class ContentLearningComponent implements OnInit {
     } else if (typeName === ARCHIVE_TYPE) {
       this.form.controls.url.setValue(null, { emitEvent: false });
       this.embedUrl.set(null);
-      if (lc.name) this.form.controls.name.setValue(lc.name, { emitEvent: false });
-      if (lc.size_bytes) {
-        const { value, unit } = this.bytesToValueUnit(lc.size_bytes);
-        this.form.controls.size_value.setValue(value, { emitEvent: false });
-        this.form.controls.size_unit.setValue(unit, { emitEvent: false });
-      }
-      if (lc.duration_seconds) {
-        this.form.controls.duration_str.setValue(this.secToTimeStr(lc.duration_seconds), { emitEvent: false });
-      }
       this.setFilePreviewFromBackend(lc.url || null, lc.name, formatName, lc.size_bytes);
     } else {
       this.form.controls.url.setValue(null, { emitEvent: false });
@@ -398,8 +436,6 @@ export class ContentLearningComponent implements OnInit {
     }
 
     this.fileSel.set(file);
-    this.selectedTypeId.set(archiveType!.id);
-    this.selectedFormatId.set(fmt.id);
     this.setFilePreviewFromFile(file);
     this.embedUrl.set(null);
     this.form.controls.name.setValue(file.name, { emitEvent: false });
@@ -414,15 +450,7 @@ export class ContentLearningComponent implements OnInit {
     this.fileError.set(null);
     this.fileSel.set(null);
     this.revokePreviewUrl();
-    const lc = this.current()?.learning_content;
-    const archiveType = this.types().find(t => t.name.toLowerCase() === ARCHIVE_TYPE);
-    if (lc && archiveType?.formats.find(f => f.id === lc.format_id)) {
-      this.selectedFormatId.set(lc.format_id);
-      this.setFilePreviewFromBackend(lc.url || null, lc.name, lc.format?.name ?? '', lc.size_bytes);
-    } else {
-      this.selectedFormatId.set(null);
-      this.clearFilePreview();
-    }
+    this.clearFilePreview();
     this.form.markAsDirty();
     this.isDirty.set(true);
   }
@@ -432,9 +460,8 @@ export class ContentLearningComponent implements OnInit {
     if (!this.canSave()) return;
 
     const typeId = this.selectedTypeId();
-    const formatId = this.selectedFormatId();
-    if (!typeId || !formatId) {
-      this.fileError.set('Selecciona un tipo y formato antes de guardar.');
+    if (!typeId) {
+      this.fileError.set('Selecciona un tipo de contenido antes de guardar.');
       return;
     }
 
@@ -442,12 +469,18 @@ export class ContentLearningComponent implements OnInit {
     this.loadbar.set(true);
 
     try {
-      const payload: LearningContentUpdate = {
+      const payload: Partial<LearningContentUpdate> = {
         type_content_id: typeId,
-        format_id: formatId,
       };
 
       if (this.isLinkType()) {
+        const formatId = this.selectedFormatId();
+        if (!formatId) {
+          this.fileError.set('Selecciona un formato de enlace.');
+          return;
+        }
+        payload.format_id = formatId;
+
         const url = this.form.controls.url.value?.trim() || '';
         if (url) payload.url = url;
 
@@ -462,32 +495,32 @@ export class ContentLearningComponent implements OnInit {
           const unit = this.form.controls.size_unit.value || 'MB';
           payload.size_bytes = this.valueUnitToBytes(sizeValue, unit);
         }
-      } else {
+      } else if (this.isArchiveType()) {
         const file = this.fileSel();
-        if (file) {
-          payload.file = file;
-          payload.name = file.name;
-
-          const { value, unit } = this.bytesToValueUnit(file.size);
-          payload.size_bytes = file.size;
-
-          const durationStr = this.form.controls.duration_str.value?.trim();
-          if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
-        } else {
-          payload.url = this.current()?.learning_content?.url ?? '';
-          payload.name = this.form.controls.name.value || '';
-          const sizeValue = this.form.controls.size_value.value;
-          if (sizeValue) {
-            const unit = this.form.controls.size_unit.value || 'MB';
-            payload.size_bytes = this.valueUnitToBytes(sizeValue, unit);
-          }
-          const durationStr = this.form.controls.duration_str.value?.trim();
-          if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
+        if (!file) {
+          this.fileError.set('Selecciona un archivo para subir.');
+          return;
         }
+
+        // Detectar formato basado en extensión
+        const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+        const archiveType = this.types().find(t => t.name.toLowerCase() === ARCHIVE_TYPE);
+        const fmt = archiveType?.formats.find(f => f.name.toLowerCase() === ext);
+        if (!fmt) {
+          this.fileError.set(`Formato ".${ext}" no válido.`);
+          return;
+        }
+        payload.format_id = fmt.id;
+        payload.file = file;
+        payload.name = file.name;
+        payload.size_bytes = file.size;
+
+        const durationStr = this.form.controls.duration_str.value?.trim();
+        if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
       }
 
       const res = await firstValueFrom(
-        this.chapterSrv.updateLearningContent(this.getChapterParam(), payload)
+        this.chapterSrv.updateLearningContent(this.getChapterParam(), payload as LearningContentUpdate)
       );
 
       this.types.set(res.types ?? this.types());
@@ -581,6 +614,13 @@ export class ContentLearningComponent implements OnInit {
     return url;
   }
 
+  // ── OneDrive Helper ──────────────────────────────────────────────────────────
+  private extractOneDriveSrc(input: string): string | null {
+    if (!input.includes('<iframe')) return input;
+    const match = input.match(/src="([^"]+)"/);
+    return match ? match[1] : null;
+  }
+
   // ── File preview helpers ─────────────────────────────────────────────────────
   private setFilePreviewFromFile(file: File): void {
     this.revokePreviewUrl();
@@ -618,9 +658,8 @@ export class ContentLearningComponent implements OnInit {
     if (u?.startsWith('blob:')) URL.revokeObjectURL(u);
   }
 
-  private detectPreviewType(name: string, mime?: string): 'image' | 'video' | 'audio' | 'pdf' | 'other' {
+  private detectPreviewType(name: string, mime?: string): 'video' | 'audio' | 'pdf' | 'other' {
     const ext = name.split('.').pop()?.toLowerCase() ?? '';
-    if (mime?.startsWith('image/') || IMAGE_FORMATS.has(ext)) return 'image';
     if (mime?.startsWith('video/') || ['mp4','webm','ogg','mkv','mov'].includes(ext)) return 'video';
     if (mime?.startsWith('audio/') || ['mp3','wav','aac','flac'].includes(ext)) return 'audio';
     if (ext === 'pdf') return 'pdf';

@@ -9,7 +9,7 @@
   <!-- ── Selector de TIPO ─────────────────────────────────────────────────── -->
   <div class="switcher" role="tablist" aria-label="Tipo de contenido">
     <button
-      *ngFor="let type of types()"
+      *ngFor="let type of sortedTypes()"
       type="button"
       class="switcher-btn"
       [class.active]="selectedTypeId() === type.id"
@@ -34,7 +34,7 @@
     <!-- Selector de formato ────────────────────────────────────────────────── -->
     <div class="format-tabs" *ngIf="(selectedType()?.formats?.length ?? 0) > 0">
       <button
-        *ngFor="let fmt of selectedType()?.formats"
+        *ngFor="let fmt of sortedLinkFormats()"
         type="button"
         class="format-tab"
         [class.active]="selectedFormatId() === fmt.id"
@@ -103,15 +103,30 @@
       />
       <small class="help-text">La URL de vista previa se generará automáticamente</small>
 
-      <!-- URL Insert (generada) ───────────────────────────────────────────── -->
-      <label class="lbl" for="gd-insert">URL de Vista Previa (auto-generada)</label>
-      <input
-        id="gd-insert"
-        type="text"
-        class="input input-readonly"
-        readonly
-        [value]="form.controls.url_insert.value || 'Se generará al pegar la URL'"
-      />
+      <!-- Tutorial Google Drive ────────────────────────────────────────────── -->
+      <details class="tutorial">
+        <summary class="tutorial-summary">¿Cómo compartir archivos desde Google Drive?</summary>
+        <div class="tutorial-content">
+          <ol>
+            <li>Ve a tu <strong>Google Drive</strong> y localiza el archivo que quieres compartir.</li>
+            <li>Haz <strong>click derecho</strong> sobre el archivo y selecciona <strong>"Obtener enlace"</strong>.</li>
+            <li>En <strong>"Acceso general"</strong>, selecciona <strong>"Cualquier usuario de Internet que tenga el vínculo puede verlo"</strong> y elige <strong>"Lector"</strong>.</li>
+            <li>Copia la URL que aparece y pégala arriba. La URL de vista previa se generará automáticamente.</li>
+            <li><strong>Opcional:</strong> Para ver detalles del archivo (tipo, tamaño, duración), selecciona el archivo, haz click derecho, elige <strong>"Información del archivo"</strong>, ve a la pestaña <strong>"Detalles"</strong>.</li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- Preview del archivo -->
+      <div class="preview" *ngIf="form.controls.url_insert.value as src">
+        <iframe
+          class="preview-iframe"
+          [src]="src"
+          title="Vista previa del archivo"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
 
       <!-- Metadatos ──────────────────────────────────────────────────────── -->
       <div class="row-2col">
@@ -180,6 +195,31 @@
         La URL de vista previa es obligatoria para OneDrive.
       </div>
 
+      <!-- Tutorial OneDrive ───────────────────────────────────────────────── -->
+      <details class="tutorial">
+        <summary class="tutorial-summary">¿Cómo compartir archivos desde OneDrive?</summary>
+        <div class="tutorial-content">
+          <ol>
+            <li>Ve a tu <strong>OneDrive</strong> y localiza el archivo que quieres compartir.</li>
+            <li>Haz <strong>click derecho</strong> sobre el archivo y selecciona <strong>"Compartir"</strong>.</li>
+            <li>Selecciona <strong>"Cualquier persona que tenga el vínculo puede ver"</strong> y elige <strong>"Puede ver"</strong>.</li>
+            <li>Haz <strong>click derecho</strong> sobre el archivo, selecciona <strong>"Insertar"</strong> y luego <strong>"Copiar código"</strong>. Pega el código aquí (se extraerá automáticamente la URL).</li>
+            <li><strong>Opcional:</strong> Para ver detalles del archivo, haz click derecho sobre el archivo y selecciona <strong>"Detalles"</strong>.</li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- Preview del archivo -->
+      <div class="preview" *ngIf="form.controls.url_insert.value as src">
+        <iframe
+          class="preview-iframe"
+          [src]="src"
+          title="Vista previa del archivo"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
+
       <!-- Metadatos ──────────────────────────────────────────────────────── -->
       <div class="row-2col">
         <div class="form-group">
@@ -222,21 +262,7 @@
   <!-- ── Panel ARCHIVO ──────────────────────────────────────────────────── -->
   <div class="panel panel-file" *ngIf="isArchiveType()">
 
-    <!-- Selector de formato (requerido) ────────────────────────────────– -->
-    <div class="format-tabs" *ngIf="(selectedType()?.formats?.length ?? 0) > 0">
-      <button
-        *ngFor="let fmt of selectedType()?.formats"
-        type="button"
-        class="format-tab"
-        [class.active]="selectedFormatId() === fmt.id"
-        (click)="pickFormat(fmt)"
-      >
-        <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
-        {{ fmt.name | uppercase }}
-      </button>
-    </div>
-
-    <div class="uploader" *ngIf="selectedFormatId()">
+    <div class="uploader">
 
       <!-- Zona de arrastrar/soltar ───────────────────────────────────────── -->
       <div
@@ -264,7 +290,7 @@
                 *ngFor="let fmt of selectedType()?.formats"
                 class="format-pill"
               >
-                <ui-icon [size]="'lg'" [severity]="'primary'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
+                <ui-icon [size]="'md'" [svgPath]="getFormatIcon(fmt.name)"></ui-icon>
                 {{ fmt.name.toUpperCase() }}
               </span>
             </div>
@@ -352,54 +378,6 @@
 
         </div>
 
-        <!-- Metadatos del archivo ────────────────────────────────────────── -->
-        <div class="file-metadata">
-          <div class="row-2col">
-            <div class="form-group">
-              <label class="lbl" for="file-name">Nombre del archivo</label>
-              <input
-                id="file-name"
-                type="text"
-                class="input input-sm"
-                [formControl]="form.controls.name"
-              />
-            </div>
-
-            <div class="form-group">
-              <label class="lbl" for="file-size">Tamaño</label>
-              <div class="input-group">
-                <input
-                  id="file-size"
-                  type="number"
-                  class="input"
-                  placeholder="0"
-                  [formControl]="form.controls.size_value"
-                  min="0"
-                />
-                <select class="select" [formControl]="form.controls.size_unit">
-                  <option value="B">B</option>
-                  <option value="KB">KB</option>
-                  <option value="MB">MB</option>
-                  <option value="GB">GB</option>
-                  <option value="TB">TB</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="lbl" for="file-duration">Duración (MM:SS o HH:MM:SS)</label>
-            <input
-              id="file-duration"
-              type="text"
-              class="input"
-              placeholder="5:30"
-              [formControl]="form.controls.duration_str"
-              spellcheck="false"
-            />
-            <small class="help-text">Ej: "5:30" o "1:2:30"</small>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -410,8 +388,8 @@
     <small class="muted">Selecciona un tipo de contenido para comenzar.</small>
   </div>
 
-  <div class="empty-state" *ngIf="isArchiveType() && !selectedFormatId() && !loading()">
-    <small class="muted">Selecciona un formato para subir el archivo.</small>
+  <div class="empty-state" *ngIf="isArchiveType() && !fileSel() && !loading()">
+    <small class="muted">Selecciona un archivo para subir.</small>
   </div>
 
   <!-- ── Acciones ──────────────────────────────────────────────────────── -->

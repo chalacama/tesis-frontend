@@ -456,20 +456,45 @@
   gap: .5rem;
 }
 
-/* Preview actualizado ────────────────────────────────────────────────────────── */
-.preview {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+/* ── Tutorial ─────────────────────────────────────────────────────────── */
+.tutorial {
   margin-top: .75rem;
-  border-radius: 12px;
-  overflow: hidden;
   border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--border-color) 5%, transparent);
 }
 
-.preview-iframe {
-  width: 100%;
-  aspect-ratio: 16 / 9;
+.tutorial-summary {
+  padding: .75rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-color);
+  background: none;
   border: none;
-  display: block;
+  width: 100%;
+  text-align: left;
+  outline: none;
+}
+
+.tutorial-summary:hover {
+  background: color-mix(in oklab, var(--active-color) 8%, transparent);
+}
+
+.tutorial-content {
+  padding: 0 .75rem .75rem .75rem;
+  font-size: .9rem;
+  color: var(--text-color-secondary);
+}
+
+.tutorial-content ol {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.tutorial-content li {
+  margin-bottom: .5rem;
+}
+
+.tutorial-content strong {
+  color: var(--text-color);
 }
