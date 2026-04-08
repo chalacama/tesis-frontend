@@ -256,6 +256,8 @@ export class ContentLearningComponent implements OnInit {
   private googleDriveUrlValidator(ctrl: AbstractControl): ValidationErrors | null {
     const v = (ctrl.value ?? '').toString().trim();
     if (!v) return null;
+    // Si contiene iframe, asumir que será extraído
+    if (v.includes('<iframe')) return null;
     try {
       const url = new URL(v);
       if (url.hostname.includes('drive.google.com') || url.hostname.includes('docs.google.com')) {
@@ -268,6 +270,8 @@ export class ContentLearningComponent implements OnInit {
   private oneDriveUrlValidator(ctrl: AbstractControl): ValidationErrors | null {
     const v = (ctrl.value ?? '').toString().trim();
     if (!v) return null;
+    // Si contiene iframe, asumir que será extraído
+    if (v.includes('<iframe')) return null;
     try {
       const url = new URL(v);
       if (url.hostname.includes('1drv.ms') || url.hostname.includes('onedrive.live.com')) {
@@ -318,6 +322,18 @@ export class ContentLearningComponent implements OnInit {
         const extracted = this.extractOneDriveSrc(urlInsert);
         if (extracted && extracted !== urlInsert) {
           this.form.controls.url_insert.setValue(extracted, { emitEvent: false });
+        }
+      }
+    });
+
+    // Google Drive: extraer src de iframe en url
+    effect(() => {
+      if (!this.isGoogleDriveFormat()) return;
+      const url = this.form.controls.url.value?.trim() || '';
+      if (url) {
+        const extracted = this.extractSrcFromIframe(url);
+        if (extracted && extracted !== url) {
+          this.form.controls.url.setValue(extracted, { emitEvent: false });
         }
       }
     });
@@ -696,6 +712,12 @@ export class ContentLearningComponent implements OnInit {
   }
 
   // ── OneDrive Helper ──────────────────────────────────────────────────────────
+  private extractSrcFromIframe(input: string): string | null {
+    const iframeMatch = input.match(/<iframe[^>]*src="([^"]+)"/);
+    if (iframeMatch) return iframeMatch[1];
+    return null;
+  }
+
   private extractOneDriveSrc(input: string): string | null {
     // Si es un link directo, devolverlo
     if (input.startsWith('https://') && !input.includes('<')) return input;

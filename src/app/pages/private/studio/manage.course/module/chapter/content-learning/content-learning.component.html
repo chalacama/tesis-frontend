@@ -183,15 +183,15 @@
 
       <!-- URL Insert (requerida) ────────────────────────────────────────── -->
       <label class="lbl" for="od-insert">URL de Vista Previa (requerida)</label>
-      <input
+      <textarea
         id="od-insert"
-        type="text"
+        rows="4"
         class="input"
-        placeholder="https://1drv.ms/…"
+        placeholder="https://1drv.ms/… o pega el código de inserción completo"
         [formControl]="form.controls.url_insert"
         autocomplete="off"
         spellcheck="false"
-      />
+      ></textarea>
       <small class="help-text">Copia la URL de vista previa desde OneDrive</small>
       <div class="error" *ngIf="form.controls.url_insert.touched && !form.controls.url_insert.value">
         La URL de vista previa es obligatoria para OneDrive.
