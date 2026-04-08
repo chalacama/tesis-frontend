@@ -111,6 +111,13 @@ export class ContentLearningComponent implements OnInit {
     return u ? this.sanitizer.bypassSecurityTrustResourceUrl(u) : null;
   });
 
+  urlInsertSignal = signal<string | null>(null);
+
+  urlInsertSafe = computed<SafeResourceUrl | null>(() => {
+    const u = this.urlInsertSignal();
+    return u ? this.sanitizer.bypassSecurityTrustResourceUrl(u) : null;
+  });
+
   // ── Form: URLs y metadatos dinámicos ─────────────────────────────────────────
   form = this.fb.group({
     url:               this.fb.control<string | null>(null),
@@ -297,46 +304,42 @@ export class ContentLearningComponent implements OnInit {
     this.form.controls.url.valueChanges
       .pipe(debounceTime(200), takeUntilDestroyed(this.destroyRef))
       .subscribe(v => {
-        const str = (typeof v === 'string') ? v.trim() : '';
-        if (str !== v) this.form.controls.url.setValue(str, { emitEvent: false });
+        let str = (typeof v === 'string') ? v.trim() : '';
+        if (str !== (v ?? '')) this.form.controls.url.setValue(str, { emitEvent: false });
+
         if (this.isLinkType()) this.updateEmbedFromUrl(str);
+
+        if (this.isGoogleDriveFormat() && str) {
+          const fromIframe = this.extractSrcFromIframe(str);
+          if (fromIframe) {
+            str = fromIframe;
+            this.form.controls.url.setValue(str, { emitEvent: false });
+          }
+          const preview = this.convertGoogleDriveUrl(str);
+          this.form.controls.url_insert.setValue(preview, { emitEvent: false });
+          this.urlInsertSignal.set(preview || null);
+        }
       });
 
-    // Google Drive: converter URL a url_insert automáticamente
-    effect(() => {
-      if (!this.isGoogleDriveFormat()) return;
-      const url = this.form.controls.url.value?.trim() || '';
-      if (url && url.includes('drive.google.com')) {
-        const urlInsert = this.convertGoogleDriveUrl(url);
-        if (urlInsert !== this.form.controls.url_insert.value) {
-          this.form.controls.url_insert.setValue(urlInsert, { emitEvent: false });
-        }
-      }
-    });
-
     // OneDrive: procesar url_insert si es iframe completo o img
-    effect(() => {
-      if (!this.isOneDriveFormat()) return;
-      const urlInsert = this.form.controls.url_insert.value?.trim() || '';
-      if (urlInsert) {
-        const extracted = this.extractOneDriveSrc(urlInsert);
-        if (extracted && extracted !== urlInsert) {
-          this.form.controls.url_insert.setValue(extracted, { emitEvent: false });
-        }
-      }
-    });
+    this.form.controls.url_insert.valueChanges
+      .pipe(debounceTime(200), takeUntilDestroyed(this.destroyRef))
+      .subscribe(v => {
+        const raw = (v ?? '').trim();
+        if (!raw) { this.urlInsertSignal.set(null); return; }
 
-    // Google Drive: extraer src de iframe en url
-    effect(() => {
-      if (!this.isGoogleDriveFormat()) return;
-      const url = this.form.controls.url.value?.trim() || '';
-      if (url) {
-        const extracted = this.extractSrcFromIframe(url);
-        if (extracted && extracted !== url) {
-          this.form.controls.url.setValue(extracted, { emitEvent: false });
+        if (this.isOneDriveFormat()) {
+          const extracted = this.extractOneDriveSrc(raw);
+          if (extracted && extracted !== raw) {
+            this.form.controls.url_insert.setValue(extracted, { emitEvent: false });
+            this.urlInsertSignal.set(extracted);
+          } else {
+            this.urlInsertSignal.set(raw);
+          }
+        } else {
+          this.urlInsertSignal.set(raw);
         }
-      }
-    });
+      });
 
     this.form.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -382,6 +385,7 @@ export class ContentLearningComponent implements OnInit {
       this.selectedFormatId.set(lc.format_id);
       this.form.controls.url.setValue(lc.url || null, { emitEvent: false });
       this.form.controls.url_insert.setValue(lc.url_insert || null, { emitEvent: false });
+      this.urlInsertSignal.set(lc.url_insert || null);
       if (lc.duration_seconds) {
         this.form.controls.duration_str.setValue(this.secToTimeStr(lc.duration_seconds), { emitEvent: false });
       }
@@ -851,6 +855,7 @@ export class ContentLearningComponent implements OnInit {
     this.form.controls.size_value.setValue(null, { emitEvent: false });
     this.form.controls.size_unit.setValue('MB', { emitEvent: false });
     this.form.controls.duration_str.setValue(null, { emitEvent: false });
+    this.urlInsertSignal.set(null);
   }
 
   // ── Utilities ────────────────────────────────────────────────────────────────

@@ -121,7 +121,7 @@
       </details>
 
       <!-- Preview del archivo -->
-      <div class="preview" *ngIf="form.controls.url_insert.value as src">
+      <div class="preview" *ngIf="urlInsertSafe() as src">
         <iframe
           class="preview-iframe"
           [src]="src"
@@ -212,7 +212,7 @@
       </details>
 
       <!-- Preview del archivo -->
-      <div class="preview" *ngIf="form.controls.url_insert.value as src">
+      <div class="preview" *ngIf="urlInsertSafe() as src">
         <iframe
           class="preview-iframe"
           [src]="src"
