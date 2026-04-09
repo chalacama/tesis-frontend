@@ -578,6 +578,10 @@ export class ContentLearningComponent implements OnInit {
     }
 
     this.fileSel.set(file);
+    // Set the detected format as selected so the icon and metadata are correct
+    if (fmt) {
+      this.selectedFormatId.set(fmt.id);
+    }
     this.setFilePreviewFromFile(file);
     this.embedUrl.set(null);
     this.form.controls.name.setValue(file.name, { emitEvent: false });
@@ -928,6 +932,21 @@ export class ContentLearningComponent implements OnInit {
       this.route.parent?.snapshot.paramMap.get('chapter') ??
       ''
     );
+  }
+
+  getFormatPillDetail(fmt: FormatItem): string {
+    const parts: string[] = [];
+    if (fmt.max_size_bytes) {
+      parts.push(this.formatBytes(fmt.max_size_bytes));
+    }
+    if (fmt.min_duration_seconds || fmt.max_duration_seconds) {
+      const min = fmt.min_duration_seconds ? this.secToMin(fmt.min_duration_seconds) : null;
+      const max = fmt.max_duration_seconds ? this.secToMin(fmt.max_duration_seconds) : null;
+      if (min && max) parts.push(`${min}–${max}`);
+      else if (min)   parts.push(`Mín. ${min}`);
+      else if (max)   parts.push(`Máx. ${max}`);
+    }
+    return parts.join(' · ');
   }
 
   formatBytes(bytes: number): string {

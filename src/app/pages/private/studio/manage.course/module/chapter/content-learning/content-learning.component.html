@@ -163,14 +163,8 @@
         <div class="form-group">
           <label class="lbl" for="gd-size">Tamaño</label>
           <div class="input-group">
-            <input
-              id="gd-size"
-              type="number"
-              class="input"
-              placeholder="0"
-              [formControl]="form.controls.size_value"
-              min="0"
-            />
+            <input id="gd-size" type="number" class="input" placeholder="0"
+                   [formControl]="form.controls.size_value" min="0" />
             <select class="select" [formControl]="form.controls.size_unit">
               <option value="B">B</option>
               <option value="KB">KB</option>
@@ -181,16 +175,11 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="isLinkMediaFormat()">
           <label class="lbl" for="gd-duration">Duración (MM:SS o HH:MM:SS)</label>
-          <input
-            id="gd-duration"
-            type="text"
-            class="input"
-            placeholder="5:30 o 1:02:30"
-            [formControl]="form.controls.duration_str"
-            spellcheck="false"
-          />
+          <input id="gd-duration" type="text" class="input"
+                 placeholder="5:30 o 1:02:30"
+                 [formControl]="form.controls.duration_str" spellcheck="false" />
           <small class="help-text">Formato: MM:SS o HH:MM:SS — ej: "5:30", "1:02:30"</small>
         </div>
       </div>
@@ -287,7 +276,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="isLinkMediaFormat()">
           <label class="lbl" for="od-duration">Duración (MM:SS o HH:MM:SS)</label>
           <input
             id="od-duration"
@@ -336,7 +325,12 @@
                 class="format-pill"
               >
                 <ui-icon [size]="'md'" [svgPath]="getFormatIcon(fmt.name).base"></ui-icon>
-                {{ fmt.name.toUpperCase() }}
+                <span class="format-pill-info">
+                  <span class="format-pill-name">{{ fmt.name.toUpperCase() }}</span>
+                  <span class="format-pill-detail" *ngIf="getFormatPillDetail(fmt) as detail">
+                    {{ detail }}
+                  </span>
+                </span>
               </span>
             </div>
 
