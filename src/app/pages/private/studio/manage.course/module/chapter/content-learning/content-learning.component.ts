@@ -31,6 +31,23 @@ const ARCHIVE_TYPE     = 'archive';
 const GOOGLEDRIVE_FORMATS = new Set(['googledrive.video','googledrive.audio','googledrive.pdf','googledrive.docx','googledrive.pptx','googledrive.xlsx','googledrive.compressed','googledrive.txt','googledrive.other']);
 const ONEDRIVE_FORMATS = new Set(['onedrive.video','onedrive.audio','onedrive.pdf','onedrive.docx','onedrive.pptx','onedrive.xlsx','onedrive.compressed','onedrive.txt','onedrive.other']);
 
+// Formats that require ONLY duration (name and size are null)
+const LINK_MEDIA_FORMATS = new Set([
+  'youtube',
+  'googledrive.video', 'googledrive.audio',
+  'onedrive.video',    'onedrive.audio',
+]);
+
+// Formats that require name + size (duration is null)
+const LINK_DOC_FORMATS = new Set([
+  'googledrive.pdf',   'googledrive.docx',  'googledrive.pptx',
+  'googledrive.xlsx',  'googledrive.compressed', 'googledrive.txt',
+  'googledrive.other',
+  'onedrive.pdf',      'onedrive.docx',     'onedrive.pptx',
+  'onedrive.xlsx',     'onedrive.compressed', 'onedrive.txt',
+  'onedrive.other',
+]);
+
 /** Mapa formato → ícono SVG */
 const FORMAT_ICON: Record<string, string> = {
   youtube:                  'svg/youtube-color.svg',
@@ -173,6 +190,12 @@ export class ContentLearningComponent implements OnInit {
   isYouTubeFormat = computed(() => (this.selectedFormat()?.name ?? '').toLowerCase() === 'youtube');
   isGoogleDriveFormat = computed(() => GOOGLEDRIVE_FORMATS.has((this.selectedFormat()?.name ?? '').toLowerCase()));
   isOneDriveFormat = computed(() => ONEDRIVE_FORMATS.has((this.selectedFormat()?.name ?? '').toLowerCase()));
+  isLinkMediaFormat = computed(() =>
+    LINK_MEDIA_FORMATS.has((this.selectedFormat()?.name ?? '').toLowerCase())
+  );
+  isLinkDocFormat = computed(() =>
+    LINK_DOC_FORMATS.has((this.selectedFormat()?.name ?? '').toLowerCase())
+  );
 
   maxSizeBytes   = computed(() => this.selectedFormat()?.max_size_bytes ?? null);
   minDurationSec = computed(() => this.selectedFormat()?.min_duration_seconds ?? null);
@@ -233,16 +256,29 @@ export class ContentLearningComponent implements OnInit {
       const formatId = this.selectedFormatId();
       if (!formatId) return false;
 
+      const formatName = (this.selectedFormat()?.name ?? '').toLowerCase();
+
+      // All link formats: URL is required
+      if (!this.form.controls.url.value?.trim()) return false;
+
+      // YouTube: also validate URL format
       if (this.isYouTubeFormat()) {
-        if (!this.form.controls.url.value?.trim()) return false;
         if (this.form.controls.url.hasError('youtubeUrl')) return false;
-        if (!this.form.controls.duration_str.value?.trim()) return false; // required for YouTube
       }
 
-      if (isGDrive && !this.form.controls.url.value?.trim()) return false;
+      // Media formats (youtube, gdrive/onedrive video+audio): duration required
+      if (this.isLinkMediaFormat()) {
+        if (!this.form.controls.duration_str.value?.trim()) return false;
+      }
 
-      // urlInsertSignal is a real signal → computed re-evaluates when it changes
+      // OneDrive: url_insert (preview URL) is required
       if (isOneDrive && !this.urlInsertSignal()) return false;
+
+      // Doc formats (pdf, docx, pptx, xlsx, compressed, txt, other): name + size required
+      if (this.isLinkDocFormat()) {
+        if (!this.form.controls.name.value?.trim()) return false;
+        if (!this.form.controls.size_value.value) return false;
+      }
     } else if (isArchiveType) {
       if (!this.fileSel()) return false;
     }
@@ -585,6 +621,7 @@ export class ContentLearningComponent implements OnInit {
           this.fileError.set('Selecciona un formato de enlace.');
           return;
         }
+
         payload.format_id = formatId;
 
         const url = this.form.controls.url.value?.trim() || '';
@@ -593,13 +630,24 @@ export class ContentLearningComponent implements OnInit {
         const urlInsert = this.form.controls.url_insert.value?.trim() || '';
         if (urlInsert) payload.url_insert = urlInsert;
 
-        const durationStr = this.form.controls.duration_str.value?.trim() || '';
-        if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
+        // Media formats: send duration, null out name and size
+        if (this.isLinkMediaFormat()) {
+          const durationStr = this.form.controls.duration_str.value?.trim() || '';
+          if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
+          payload.name       = null;
+          payload.size_bytes = null;
+        }
 
-        const sizeValue = this.form.controls.size_value.value;
-        if (sizeValue) {
-          const unit = this.form.controls.size_unit.value || 'MB';
-          payload.size_bytes = this.valueUnitToBytes(sizeValue, unit);
+        // Doc formats: send name and size, null out duration
+        if (this.isLinkDocFormat()) {
+          const nameVal = this.form.controls.name.value?.trim() || '';
+          if (nameVal) payload.name = nameVal;
+          const sizeValue = this.form.controls.size_value.value;
+          if (sizeValue) {
+            const unit = this.form.controls.size_unit.value || 'MB';
+            payload.size_bytes = this.valueUnitToBytes(sizeValue, unit);
+          }
+          payload.duration_seconds = null;
         }
       } else if (this.isArchiveType()) {
         const file = this.fileSel();

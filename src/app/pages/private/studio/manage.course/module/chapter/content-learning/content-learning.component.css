@@ -4,12 +4,55 @@
   padding: 1rem;
 }
 
-.cl-wrapper.loading {
-  opacity: .7;
-  pointer-events: none;
+.muted { color: var(--text-color-secondary); }
+
+/* ── Skeleton ───────────────────────────────────────────────── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
 }
 
-.muted { color: var(--text-color-secondary); }
+.skeleton-block {
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    var(--background-skeleton) 25%,
+    color-mix(in oklab, var(--background-skeleton) 60%, transparent) 50%,
+    var(--background-skeleton) 75%
+  );
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s infinite linear;
+}
+
+.skeleton-switcher {
+  height: 42px;
+  width: 260px;
+  border-radius: 999px;
+}
+
+.skeleton-tabs {
+  height: 38px;
+  width: 100%;
+}
+
+.skeleton-input {
+  height: 44px;
+  width: 100%;
+}
+
+.skeleton-preview {
+  height: 220px;
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.skeleton-actions {
+  height: 40px;
+  width: 200px;
+  margin-left: auto;
+  border-radius: 8px;
+}
 
 /* ── Switcher de tipo ──────────────────────────────────────────────────────── */
 .switcher {

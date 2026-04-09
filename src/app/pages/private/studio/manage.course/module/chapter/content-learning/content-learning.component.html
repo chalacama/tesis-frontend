@@ -1,4 +1,17 @@
-<div class="cl-wrapper" [class.loading]="loading()">
+<div class="cl-wrapper">
+
+  <!-- Skeleton while loading -->
+  <ng-container *ngIf="loading(); else loaded">
+    <div class="skeleton-block skeleton-switcher"></div>
+    <div class="skeleton-block skeleton-tabs"></div>
+    <div class="skeleton-block skeleton-input"></div>
+    <div class="skeleton-block skeleton-input"></div>
+    <div class="skeleton-block skeleton-preview"></div>
+    <div class="skeleton-block skeleton-actions"></div>
+  </ng-container>
+
+  <!-- Real content -->
+  <ng-template #loaded>
 
   <div class="cl-header">
     <small class="muted">
@@ -79,16 +92,16 @@
 
       <!-- Duración opcional ───────────────────────────────────────────────── -->
       <div class="form-group">
-        <label class="lbl" for="yt-duration">Duración (MM:SS)</label>
+        <label class="lbl" for="yt-duration">Duración (MM:SS o HH:MM:SS)</label>
         <input
           id="yt-duration"
           type="text"
           class="input input-sm"
-          placeholder="5:30"
+          placeholder="5:30 o 1:02:30"
           [formControl]="form.controls.duration_str"
           spellcheck="false"
         />
-        <small class="help-text">Ej: "5:30" o "1:2:30" (horas:minutos:segundos)</small>
+        <small class="help-text">Formato: MM:SS o HH:MM:SS — ej: "5:30", "1:02:30"</small>
       </div>
     </ng-container>
 
@@ -105,6 +118,20 @@
         spellcheck="false"
       />
       <small class="help-text">La URL de vista previa se generará automáticamente</small>
+
+      <!-- Nombre del archivo ───────────────────────────────────────────────── -->
+      <div class="form-group">
+        <label class="lbl" for="gd-name">Nombre del archivo</label>
+        <input
+          id="gd-name"
+          type="text"
+          class="input"
+          placeholder="Ej: Informe-Final.pdf"
+          [formControl]="form.controls.name"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
 
       <!-- Tutorial Google Drive ────────────────────────────────────────────── -->
       <details class="tutorial">
@@ -155,15 +182,16 @@
         </div>
 
         <div class="form-group">
-          <label class="lbl" for="gd-duration">Duración (MM:SS)</label>
+          <label class="lbl" for="gd-duration">Duración (MM:SS o HH:MM:SS)</label>
           <input
             id="gd-duration"
             type="text"
             class="input"
-            placeholder="5:30"
+            placeholder="5:30 o 1:02:30"
             [formControl]="form.controls.duration_str"
             spellcheck="false"
           />
+          <small class="help-text">Formato: MM:SS o HH:MM:SS — ej: "5:30", "1:02:30"</small>
         </div>
       </div>
     </ng-container>
@@ -195,6 +223,20 @@
       <small class="help-text">Copia la URL de vista previa desde OneDrive</small>
       <div class="error" *ngIf="form.controls.url_insert.touched && !form.controls.url_insert.value">
         La URL de vista previa es obligatoria para OneDrive.
+      </div>
+
+      <!-- Nombre del archivo ───────────────────────────────────────────────── -->
+      <div class="form-group">
+        <label class="lbl" for="od-name">Nombre del archivo</label>
+        <input
+          id="od-name"
+          type="text"
+          class="input"
+          placeholder="Ej: Informe-Final.pdf"
+          [formControl]="form.controls.name"
+          autocomplete="off"
+          spellcheck="false"
+        />
       </div>
 
       <!-- Tutorial OneDrive ───────────────────────────────────────────────── -->
@@ -246,15 +288,16 @@
         </div>
 
         <div class="form-group">
-          <label class="lbl" for="od-duration">Duración (MM:SS)</label>
+          <label class="lbl" for="od-duration">Duración (MM:SS o HH:MM:SS)</label>
           <input
             id="od-duration"
             type="text"
             class="input"
-            placeholder="5:30"
+            placeholder="5:30 o 1:02:30"
             [formControl]="form.controls.duration_str"
             spellcheck="false"
           />
+          <small class="help-text">Formato: MM:SS o HH:MM:SS — ej: "5:30", "1:02:30"</small>
         </div>
       </div>
     </ng-container>
@@ -408,6 +451,8 @@
       (click)="save()"
     >Guardar cambios</button>
   </div>
+
+  </ng-template>
 
 </div>
 
