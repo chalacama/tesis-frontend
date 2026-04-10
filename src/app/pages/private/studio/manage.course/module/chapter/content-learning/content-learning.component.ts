@@ -595,8 +595,16 @@ export class ContentLearningComponent implements OnInit {
       return;
     }
 
-    if (MEDIA_FORMATS.has(ext) && (fmt.min_duration_seconds || fmt.max_duration_seconds)) {
+    let durationStr: string | null = null;
+    if (MEDIA_FORMATS.has(ext)) {
       const dur = await this.getMediaDuration(file);
+      if (dur !== null) {
+        durationStr = this.secToTimeStr(dur);
+      }
+    }
+
+    if (MEDIA_FORMATS.has(ext) && (fmt.min_duration_seconds || fmt.max_duration_seconds)) {
+      const dur = durationStr ? this.timeStrToSec(durationStr) : null;
       if (dur !== null) {
         if (fmt.min_duration_seconds && dur < fmt.min_duration_seconds) {
           this.fileError.set(`Duración mínima: ${this.secToTimeStr(fmt.min_duration_seconds)} (detectado: ${this.secToTimeStr(dur)}).`);
@@ -626,6 +634,9 @@ export class ContentLearningComponent implements OnInit {
     this.setFilePreviewFromFile(file);
     this.embedUrl.set(null);
     this.form.controls.name.setValue(file.name, { emitEvent: false });
+    if (durationStr) {
+      this.form.controls.duration_str.setValue(durationStr, { emitEvent: false });
+    }
     const { value, unit } = this.bytesToValueUnit(file.size);
     this.form.controls.size_value.setValue(value, { emitEvent: false });
     this.form.controls.size_unit.setValue(unit, { emitEvent: false });
