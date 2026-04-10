@@ -105,6 +105,10 @@ export class ContentLearningComponent implements OnInit {
   selectedTypeId   = signal<number | null>(null);
   selectedFormatId = signal<number | null>(null);
 
+  originalTypeId   = signal<number | null>(null);
+  originalFormatId = signal<number | null>(null);
+  isEditMode       = computed(() => !!this.current()?.learning_content);
+
   fileSel    = signal<File | null>(null);
   dragOver   = signal(false);
   fileError  = signal<string | null>(null);
@@ -429,6 +433,8 @@ export class ContentLearningComponent implements OnInit {
 
     const matchType   = types.find(t => t.id === lc.type_content_id) ?? types[0] ?? null;
 
+    this.originalTypeId.set(lc.type_content_id);
+    this.originalFormatId.set(lc.format_id);
     this.selectedTypeId.set(matchType?.id ?? null);
     this.selectedFormatId.set(null); // No seleccionar formato específico
 
@@ -437,14 +443,31 @@ export class ContentLearningComponent implements OnInit {
       this.form.controls.url.setValue(lc.url || null, { emitEvent: false });
       this.form.controls.url_insert.setValue(lc.url_insert || null, { emitEvent: false });
       this.urlInsertSignal.set(lc.url_insert || null);
-      if (lc.duration_seconds) {
-        this.form.controls.duration_str.setValue(this.secToTimeStr(lc.duration_seconds), { emitEvent: false });
+      this.form.controls.name.setValue(lc.name || null, { emitEvent: false });
+      if (lc.size_bytes != null) {
+        const { value, unit } = this.bytesToValueUnit(lc.size_bytes);
+        this.form.controls.size_value.setValue(value, { emitEvent: false });
+        this.form.controls.size_unit.setValue(unit, { emitEvent: false });
+      } else {
+        this.form.controls.size_value.setValue(null, { emitEvent: false });
+        this.form.controls.size_unit.setValue('MB', { emitEvent: false });
       }
+      this.form.controls.duration_str.setValue(lc.duration_seconds ? this.secToTimeStr(lc.duration_seconds) : null, { emitEvent: false });
       this.updateEmbedFromUrl(lc.url || '');
       this.clearFilePreview();
     } else if (typeName === ARCHIVE_TYPE) {
       this.form.controls.url.setValue(null, { emitEvent: false });
       this.embedUrl.set(null);
+      this.form.controls.name.setValue(lc.name || null, { emitEvent: false });
+      if (lc.size_bytes != null) {
+        const { value, unit } = this.bytesToValueUnit(lc.size_bytes);
+        this.form.controls.size_value.setValue(value, { emitEvent: false });
+        this.form.controls.size_unit.setValue(unit, { emitEvent: false });
+      } else {
+        this.form.controls.size_value.setValue(null, { emitEvent: false });
+        this.form.controls.size_unit.setValue('MB', { emitEvent: false });
+      }
+      this.form.controls.duration_str.setValue(lc.duration_seconds ? this.secToTimeStr(lc.duration_seconds) : null, { emitEvent: false });
       this.setFilePreviewFromBackend(lc.url || null, lc.name, formatName, lc.size_bytes);
     } else {
       this.form.controls.url.setValue(null, { emitEvent: false });
@@ -456,6 +479,8 @@ export class ContentLearningComponent implements OnInit {
   private applyDefaultSelection(types: TypeWithFormats[]): void {
     const firstType = types[0] ?? null;
     const firstFormat = firstType?.formats[0] ?? null;
+    this.originalTypeId.set(null);
+    this.originalFormatId.set(null);
     this.selectedTypeId.set(firstType?.id ?? null);
     this.selectedFormatId.set(null);
     this.clearFormFields();
@@ -464,6 +489,13 @@ export class ContentLearningComponent implements OnInit {
   // ── Selector de tipo ─────────────────────────────────────────────────────────
   pickType(type: TypeWithFormats): void {
     if (type.id === this.selectedTypeId()) return;
+
+    const originalType = this.types().find(t => t.id === this.originalTypeId());
+    const targetTypeName = type.name.toLowerCase();
+    if (originalType?.name.toLowerCase() === ARCHIVE_TYPE && targetTypeName === LINK_TYPE && this.current()?.learning_content) {
+      const confirmed = window.confirm('Al guardar como Link, se eliminará el archivo físico actual. ¿Deseas continuar?');
+      if (!confirmed) return;
+    }
 
     this.fileSel.set(null);
     this.fileError.set(null);
@@ -573,6 +605,15 @@ export class ContentLearningComponent implements OnInit {
       }
       if (fmt.max_duration_seconds && dur > fmt.max_duration_seconds) {
         this.fileError.set(`Duración máxima: ${this.secToMin(fmt.max_duration_seconds)} (detectado: ${this.secToMin(dur)}).`);
+        return;
+      }
+    }
+
+    const isPreviouslyArchive = this.originalTypeId() !== null && this.types().find(t => t.id === this.originalTypeId())?.name.toLowerCase() === ARCHIVE_TYPE;
+    if (isPreviouslyArchive && this.isArchiveType() && this.current()?.learning_content) {
+      const confirmed = window.confirm('Ya existe un archivo guardado. ¿Estás seguro de que deseas reemplazarlo?');
+      if (!confirmed) {
+        this.clearFile();
         return;
       }
     }
@@ -712,6 +753,50 @@ export class ContentLearningComponent implements OnInit {
       const e = err?.error?.errors;
       this.fileError.set(
         e?.file?.[0] ?? e?.format_id?.[0] ?? e?.url?.[0] ?? err?.error?.message ?? 'No se pudo guardar.'
+      );
+    } finally {
+      this.saving.set(false);
+      this.loadbar.set(false);
+    }
+  }
+
+  async deleteContent(): Promise<void> {
+    if (!this.isEditMode()) return;
+    const typeId = this.originalTypeId() ?? this.selectedTypeId();
+    const formatId = this.originalFormatId() ?? this.selectedFormatId();
+    if (!typeId || !formatId) return;
+
+    const originalType = this.types().find(t => t.id === this.originalTypeId());
+    if (originalType?.name.toLowerCase() === ARCHIVE_TYPE) {
+      const confirmed = window.confirm('¿Estás seguro de que deseas eliminar este archivo permanentemente?');
+      if (!confirmed) return;
+    }
+
+    this.saving.set(true);
+    this.loadbar.set(true);
+    this.fileError.set(null);
+
+    try {
+      const res = await firstValueFrom(
+        this.chapterSrv.updateLearningContent(this.getChapterParam(), {
+          type_content_id: typeId,
+          format_id: formatId,
+        })
+      );
+
+      this.types.set(res.types ?? this.types());
+      this.current.set(res);
+      res.learning_content
+        ? this.applyContentToState(res.learning_content, res.types)
+        : this.applyDefaultSelection(res.types);
+      this.fileSel.set(null);
+      this.fileError.set(null);
+      this.form.markAsPristine();
+      this.isDirty.set(false);
+    } catch (err: any) {
+      const e = err?.error?.errors;
+      this.fileError.set(
+        e?.file?.[0] ?? e?.format_id?.[0] ?? e?.url?.[0] ?? err?.error?.message ?? 'No se pudo eliminar el contenido.'
       );
     } finally {
       this.saving.set(false);

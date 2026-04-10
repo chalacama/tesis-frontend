@@ -160,7 +160,7 @@
 
       <!-- Metadatos ──────────────────────────────────────────────────────── -->
       <div class="row-2col">
-        <div class="form-group">
+        <div class="form-group" *ngIf="!isLinkMediaFormat()">
           <label class="lbl" for="gd-size">Tamaño</label>
           <div class="input-group">
             <input id="gd-size" type="number" class="input" placeholder="0"
@@ -255,7 +255,7 @@
 
       <!-- Metadatos ──────────────────────────────────────────────────────── -->
       <div class="row-2col">
-        <div class="form-group">
+        <div class="form-group" *ngIf="!isLinkMediaFormat()">
           <label class="lbl" for="od-size">Tamaño</label>
           <div class="input-group">
             <input
@@ -438,6 +438,13 @@
       [disabled]="!isDirty()"
       (click)="reset()"
     >Cancelar</button>
+
+    <button
+      class="btn btn-secondary btn-danger"
+      *ngIf="isEditMode()"
+      [disabled]="saving()"
+      (click)="deleteContent()"
+    >Eliminar contenido</button>
 
     <button
       class="btn btn-primary"

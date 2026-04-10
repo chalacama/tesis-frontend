@@ -433,6 +433,15 @@
   background: var(--sev-secondary-hover);
 }
 
+.btn-danger {
+  background: var(--sev-danger);
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--sev-danger-hover);
+}
+
 /* ── Formularios avanzados ────────────────────────────────────────────────────── */
 .lbl {
   font-weight: 600;
