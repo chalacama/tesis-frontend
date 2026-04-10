@@ -275,12 +275,14 @@ export class ContentLearningComponent implements OnInit {
         if (!this.form.controls.duration_str.value?.trim()) return false;
       }
 
+      // Google Drive y OneDrive: name is always required
+      if ((isGDrive || isOneDrive) && !this.form.controls.name.value?.trim()) return false;
+
       // OneDrive: url_insert (preview URL) is required
       if (isOneDrive && !this.urlInsertSignal()) return false;
 
       // Doc formats (pdf, docx, pptx, xlsx, compressed, txt, other): name + size required
       if (this.isLinkDocFormat()) {
-        if (!this.form.controls.name.value?.trim()) return false;
         if (!this.form.controls.size_value.value) return false;
       }
     } else if (isArchiveType) {
@@ -595,17 +597,15 @@ export class ContentLearningComponent implements OnInit {
 
     if (MEDIA_FORMATS.has(ext) && (fmt.min_duration_seconds || fmt.max_duration_seconds)) {
       const dur = await this.getMediaDuration(file);
-      if (dur == null) {
-        this.fileError.set('No se pudo leer la duración. Intenta con otro archivo.');
-        return;
-      }
-      if (fmt.min_duration_seconds && dur < fmt.min_duration_seconds) {
-        this.fileError.set(`Duración mínima: ${this.secToMin(fmt.min_duration_seconds)} (detectado: ${this.secToMin(dur)}).`);
-        return;
-      }
-      if (fmt.max_duration_seconds && dur > fmt.max_duration_seconds) {
-        this.fileError.set(`Duración máxima: ${this.secToMin(fmt.max_duration_seconds)} (detectado: ${this.secToMin(dur)}).`);
-        return;
+      if (dur !== null) {
+        if (fmt.min_duration_seconds && dur < fmt.min_duration_seconds) {
+          this.fileError.set(`Duración mínima: ${this.secToTimeStr(fmt.min_duration_seconds)} (detectado: ${this.secToTimeStr(dur)}).`);
+          return;
+        }
+        if (fmt.max_duration_seconds && dur > fmt.max_duration_seconds) {
+          this.fileError.set(`Duración máxima: ${this.secToTimeStr(fmt.max_duration_seconds)} (detectado: ${this.secToTimeStr(dur)}).`);
+          return;
+        }
       }
     }
 
@@ -675,15 +675,25 @@ export class ContentLearningComponent implements OnInit {
         const urlInsert = this.form.controls.url_insert.value?.trim() || '';
         if (urlInsert) payload.url_insert = urlInsert;
 
-        // Media formats: send duration, null out name and size
+        // Media formats (youtube, gdrive.video, gdrive.audio, onedrive.video, onedrive.audio): send duration
         if (this.isLinkMediaFormat()) {
           const durationStr = this.form.controls.duration_str.value?.trim() || '';
           if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
-          payload.name       = null;
-          payload.size_bytes = null;
+          
+          // For YouTube: null out name and size
+          // For Google Drive/OneDrive: name is always required and sent, size is null
+          const isYouTube = this.isYouTubeFormat();
+          if (isYouTube) {
+            payload.name       = null;
+            payload.size_bytes = null;
+          } else {
+            const nameVal = this.form.controls.name.value?.trim() || '';
+            if (nameVal) payload.name = nameVal;
+            payload.size_bytes = null;
+          }
         }
 
-        // Doc formats: send name and size, null out duration
+        // Doc formats (gdrive.pdf, gdrive.docx, onedrive.pdf, etc.): send name and size
         if (this.isLinkDocFormat()) {
           const nameVal = this.form.controls.name.value?.trim() || '';
           if (nameVal) payload.name = nameVal;
@@ -727,11 +737,17 @@ export class ContentLearningComponent implements OnInit {
         }
         payload.format_id = fmt.id;
         payload.file = file;
-        payload.name = file.name;
-        payload.size_bytes = file.size;
+        payload.url = null;
+        payload.url_insert = null;
+        payload.name = null;
+        payload.size_bytes = null;
 
         const durationStr = this.form.controls.duration_str.value?.trim();
-        if (durationStr) payload.duration_seconds = this.timeStrToSec(durationStr);
+        if (durationStr && MEDIA_FORMATS.has(ext)) {
+          payload.duration_seconds = this.timeStrToSec(durationStr);
+        } else {
+          payload.duration_seconds = null;
+        }
       }
 
       const res = await firstValueFrom(
@@ -767,10 +783,11 @@ export class ContentLearningComponent implements OnInit {
     if (!typeId || !formatId) return;
 
     const originalType = this.types().find(t => t.id === this.originalTypeId());
-    if (originalType?.name.toLowerCase() === ARCHIVE_TYPE) {
-      const confirmed = window.confirm('¿Estás seguro de que deseas eliminar este archivo permanentemente?');
-      if (!confirmed) return;
-    }
+    const archiveDeleteMsg = '¿Estás seguro de que deseas eliminar este archivo permanentemente?';
+    const linkDeleteMsg = '¿Estás seguro de que deseas eliminar este contenido?';
+    const msg = originalType?.name.toLowerCase() === ARCHIVE_TYPE ? archiveDeleteMsg : linkDeleteMsg;
+    const confirmed = window.confirm(msg);
+    if (!confirmed) return;
 
     this.saving.set(true);
     this.loadbar.set(true);
@@ -1025,11 +1042,11 @@ export class ContentLearningComponent implements OnInit {
       parts.push(this.formatBytes(fmt.max_size_bytes));
     }
     if (fmt.min_duration_seconds || fmt.max_duration_seconds) {
-      const min = fmt.min_duration_seconds ? this.secToMin(fmt.min_duration_seconds) : null;
-      const max = fmt.max_duration_seconds ? this.secToMin(fmt.max_duration_seconds) : null;
-      if (min && max) parts.push(`${min}–${max}`);
-      else if (min)   parts.push(`Mín. ${min}`);
-      else if (max)   parts.push(`Máx. ${max}`);
+      const minStr = fmt.min_duration_seconds ? this.secToTimeStr(fmt.min_duration_seconds) : null;
+      const maxStr = fmt.max_duration_seconds ? this.secToTimeStr(fmt.max_duration_seconds) : null;
+      if (minStr && maxStr) parts.push(`${minStr}–${maxStr}`);
+      else if (minStr)      parts.push(`Mín. ${minStr}`);
+      else if (maxStr)      parts.push(`Máx. ${maxStr}`);
     }
     return parts.join(' · ');
   }

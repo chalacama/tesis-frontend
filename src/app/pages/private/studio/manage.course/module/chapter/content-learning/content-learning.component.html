@@ -333,11 +333,6 @@
                 </span>
               </span>
             </div>
-
-            <p class="dropzone-subtitle">Tamaño máximo: {{ maxSizeMbLabel() }} MB</p>
-            <p class="dropzone-subtitle" *ngIf="durationRangeLabel() as range">
-              Duración: {{ range }}
-            </p>
           </div>
         </div>
 
@@ -375,9 +370,6 @@
                   {{ fmt.name.toUpperCase() }}
                 </span>
                 <span *ngIf="fileSizeLabel()">{{ fileSizeLabel() }}</span>
-                <span *ngIf="durationRangeLabel() as range" class="text-secondary">
-                  {{ range }}
-                </span>
               </div>
             </div>
           </div>
@@ -441,7 +433,7 @@
 
     <button
       class="btn btn-secondary btn-danger"
-      *ngIf="isEditMode()"
+      *ngIf="isEditMode() && selectedTypeId() === originalTypeId() && selectedFormatId() === originalFormatId()"
       [disabled]="saving()"
       (click)="deleteContent()"
     >Eliminar contenido</button>
