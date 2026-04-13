@@ -460,6 +460,7 @@ export class ContentLearningComponent implements OnInit {
     } else if (typeName === ARCHIVE_TYPE) {
       this.form.controls.url.setValue(null, { emitEvent: false });
       this.embedUrl.set(null);
+      this.selectedFormatId.set(lc.format_id);
       this.form.controls.name.setValue(lc.name || null, { emitEvent: false });
       if (lc.size_bytes != null) {
         const { value, unit } = this.bytesToValueUnit(lc.size_bytes);

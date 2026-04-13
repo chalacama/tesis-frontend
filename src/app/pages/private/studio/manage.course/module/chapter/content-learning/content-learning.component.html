@@ -378,9 +378,6 @@
             <button type="button" class="icon-btn" (click)="openPreviewInNewTab()" title="Abrir en nueva pestaña">
               <ui-icon [size]="'sm'" [severity]="'primary'" [svgPath]="'svg/eye.svg'"></ui-icon>
             </button>
-            <button type="button" class="icon-btn" (click)="clearFile()" title="Eliminar archivo">
-              <ui-icon [size]="'sm'" [severity]="'danger'" [svgPath]="'svg/delete.svg'"></ui-icon>
-            </button>
           </div>
         </div>
 
@@ -433,7 +430,7 @@
 
     <button
       class="btn btn-secondary btn-danger"
-      *ngIf="isEditMode() && selectedTypeId() === originalTypeId() && selectedFormatId() === originalFormatId()"
+      *ngIf="isEditMode() && selectedTypeId() === originalTypeId() && !isDirty()"
       [disabled]="saving()"
       (click)="deleteContent()"
     >Eliminar contenido</button>
