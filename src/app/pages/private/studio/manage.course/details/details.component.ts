@@ -1,7 +1,7 @@
 import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, Validators, FormBuilder } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CourseService } from '../../../../../core/api/course/course.service';
@@ -35,7 +35,7 @@ import { DialogComponent } from '../../../../../shared/UI/components/overlay/dia
 @Component({
   selector: 'app-details',
   /* standalone: true, */
-  imports: [CommonModule, ReactiveFormsModule,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,
     SelectButtonComponent,
     IconComponent,
     InputLabelComponent,
@@ -44,7 +44,7 @@ import { DialogComponent } from '../../../../../shared/UI/components/overlay/dia
     SelectComponent,
     SelectDataviewComponent,
     LoadingBarComponent,
-    // DialogComponent
+    DialogComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -98,6 +98,7 @@ export class DetailsComponent implements OnInit {
   fileToUpload = signal<File | null>(null);
   externalUrl = signal<string>('');
   isMarkedForRemoval = signal<boolean>(false);
+  previewDialogVisible = signal(false);
 
 
   readonly MAX_CATEGORIES = 4;
@@ -128,6 +129,40 @@ readonly MAX_CAREERS = 2;
   // Computados útiles
   canSave = computed(() => this.form.valid && this.form.dirty && !this.saving());
 
+  mappedTypeThumbnails = computed(() => this.typeThumbnails().map(type => ({
+    ...type,
+    icon: type.id === 1 ? 'svg/link-image.svg' : type.id === 2 ? 'svg/archive-image.svg' : undefined
+  })));
+
+  miniatureMetadata = computed(() => {
+    const file = this.fileToUpload();
+    if (file) {
+      return `${file.name} - ${this.formatFileSize(file.size)}`;
+    }
+
+    if (this.externalUrl()) {
+      return 'Origen: URL externa';
+    }
+
+    if (this.originalCourse?.miniature) {
+      return this.originalCourse.miniature.type_thumbnail_id === 1 ? 'Origen: URL externa' : 'Archivo en servidor';
+    }
+
+    return 'Sin miniatura seleccionada';
+  });
+
+  isSaveDisabled = computed(() => {
+    const formPristine = this.form.pristine;
+    const formInvalid = this.form.invalid;
+    const miniaturaCambio =
+      this.fileToUpload() !== null ||
+      this.isMarkedForRemoval() ||
+      (this.externalUrl() !== '' && this.externalUrl() !== (this.originalCourse?.miniature?.url ?? '')) ||
+      (this.selectedTypeThumbnailId() !== (this.originalCourse?.miniature?.type_thumbnail_id ?? null));
+
+    return (formPristine && !miniaturaCambio) || formInvalid || this.saving();
+  });
+
   showSkeleton = computed(() => this.loadingCourse() || this.loadingDifficulties());
 
   ngOnInit(): void {
@@ -145,9 +180,6 @@ readonly MAX_CAREERS = 2;
     this.loadCategories();
     this.loadCareers(); // + cargar carreras
     this.loadTypeThumbnails();
-    this.formStatus();
-    
-
   }
   private loadCareers(): void {
     this.loadingCareers.set(true);
@@ -328,31 +360,18 @@ removeMiniature(): void {
   }
 
   trackByDifficulty = (_: number, item: Difficulty) => item.id;
-  isSaveDisabled = signal<boolean>(true);
-  formStatus() {
-    /* console.log('no hay cambios', this.sabed()); */
-    this.form.statusChanges.subscribe(() => {
-        
-      console.log('falso si hay cambios:',this.form.pristine);
-      this.isSaveDisabled.set(this.form.invalid && this.form.dirty);
-
-       console.log('true si es invalid:', this.form.invalid);
-
-    });
-  }
 
   // ----- Acciones -----
   save(): void {
-    if (this.form.pristine){
+    if (this.isSaveDisabled()) {
       console.log('No hay cambios para guardar.');
-      return
+      return;
     }
+
     if (this.form.invalid) {
-      /* this.errorMsg.set('El formulario contiene errores. Por favor, revísalo antes de guardar.'); */
-      /* this.form.markAllAsTouched(); */
       console.log('El formulario contiene errores. Por favor, revísalo antes de guardar.');
       return;
-    }else{
+    } else {
       console.log('Formulario válido, procediendo a guardar...');
 
        const c = this.course();
@@ -410,12 +429,11 @@ console.log('Payload a enviar:', payload);
 
         this.form.markAsPristine();
         this.successMsg.set('Curso actualizado correctamente.');
-        this.isSaveDisabled.set(true);
         console.log('Curso actualizado:');
         this.saved.set(false);
         this.saving.set(false);
         // opcional: cierra modal de miniatura
-        this.modalOpenMiniature = false;
+        this.previewDialogVisible.set(false);
         this.studioBridge.notifyCourseUpdated({
         id: res.course.id,
         title: res.course.title,
@@ -433,13 +451,9 @@ console.log('Payload a enviar:', payload);
   }
 
   resetForm(): void {
-     /* this.formStatus(); */
     if (!this.originalCourse) return;
     this.patchFromCourse(this.originalCourse);
     console.log('Cambios restablecidos.');
-    /*  this.formStatus(); */
-    this.isSaveDisabled.set(true);
-
   }
 
   retryLoad(): void {
@@ -451,11 +465,6 @@ console.log('Payload a enviar:', payload);
   // Dentro de DetailsComponent
   get f() {
     return this.form.controls;
-  }
-  modalOpenMiniature = false;
-  openModalMiniature() {
-    this.modalOpenMiniature = !this.modalOpenMiniature;
-
   }
   // in your component's TypeScript code
   mapDifficulties() {
@@ -539,14 +548,15 @@ console.log('Payload a enviar:', payload);
 }
 
   // Nuevos métodos para gestión de miniatura
-  onTypeThumbnailChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const id = parseInt(target.value, 10) || null;
+  onTypeThumbnailChange(event: Event | number): void {
+    const id = typeof event === 'number'
+      ? event
+      : parseInt((event.target as HTMLSelectElement).value, 10) || null;
+
     this.selectedTypeThumbnailId.set(id);
     this.fileToUpload.set(null);
     this.externalUrl.set('');
     this.isMarkedForRemoval.set(false);
-    this.form.markAsDirty();
   }
 
   onFileSelected(event: Event): void {
@@ -563,7 +573,6 @@ console.log('Payload a enviar:', payload);
       this.previewImageUrl.set(null);
     }
     this.isMarkedForRemoval.set(false);
-    this.form.markAsDirty();
   }
 
   onUrlChange(event: Event): void {
@@ -571,7 +580,6 @@ console.log('Payload a enviar:', payload);
     this.externalUrl.set(target.value);
     this.previewImageUrl.set(target.value || null);
     this.isMarkedForRemoval.set(false);
-    this.form.markAsDirty();
   }
 
   markForRemoval(): void {
@@ -579,11 +587,16 @@ console.log('Payload a enviar:', payload);
     this.previewImageUrl.set(null);
     this.fileToUpload.set(null);
     this.externalUrl.set('');
-    this.form.markAsDirty();
   }
 
   previewImage(): void {
-    // Lógica para previsualizar, por ejemplo abrir modal
-    this.modalOpenMiniature = true;
+    this.previewDialogVisible.set(true);
+  }
+
+  private formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
   }
 }

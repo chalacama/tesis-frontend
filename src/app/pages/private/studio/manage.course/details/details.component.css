@@ -331,7 +331,11 @@
  background-color: #000000;
  border-radius: 7px;
 }
-
+.dialog-image{
+ aspect-ratio: 16 / 9;
+ object-fit: cover;   
+ width: 90%;
+}
 .miniature-controls {
     display: flex;
     justify-content: center;
@@ -358,6 +362,111 @@
 .control-button ui-icon {
     width: 20px;
     height: 20px;
+}
+
+.global-skeleton-container {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.skeleton-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.skeleton-title,
+.skeleton-input,
+.skeleton-card,
+.skeleton-box {
+    background: linear-gradient(90deg, var(--background-skeleton) 25%, var(--background-hover) 50%, var(--background-skeleton) 75%);
+    background-size: 200% 100%;
+    animation: pulse 1.4s infinite ease-in-out;
+    border-radius: 12px;
+}
+
+.skeleton-title {
+    height: 24px;
+    width: 50%;
+}
+
+.skeleton-input {
+    height: 48px;
+    width: 100%;
+}
+
+.skeleton-card {
+    height: 180px;
+    width: 100%;
+}
+
+.skeleton-box {
+    height: 120px;
+    width: 100%;
+}
+
+@keyframes pulse {
+    0% { background-position: 200% 0; }
+    50% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.popover-menu-btn {
+    width: 200px;
+    text-align: left;
+    background: transparent;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.btn-expand{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background-color: var(--background-color);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-save{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background-color: var(--sev-primary);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    gap: 5px;
+}
+.btn-reset{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background-color: var(--sev-secondary);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    gap: 5px;
+}
+
+.popover-menu-btn:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.metadata-text {
+    font-size: 12px;
+    color: var(--text-color-secondary);
+    padding: 8px 0 0 0;
 }
 
 /* Responsive */

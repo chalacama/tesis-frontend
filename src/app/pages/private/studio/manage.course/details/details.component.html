@@ -1,198 +1,192 @@
 <div class="content-details">
     <form class="details-form" [formGroup]="form">
-        <div class="details-start">
-            <div class="details-start-left">
-                <div class="start-left-name">
-                    <div class="start-left-name-left">
-                        <h4>Detalles del curso</h4>
-                    </div>
-                    <div class="start-left-name-right">
-
-                        <button [disabled]="form.pristine" (click)="resetForm()">
-                            <ui-icon [svgPath]="'svg/clear-all.svg'"></ui-icon>
-                        </button>
-                        <button type="button"  (click)="save()" [disabled]="isSaveDisabled()">
-                            <ui-icon [svgPath]="'svg/save-outline.svg'"></ui-icon>
-                        </button>
-
-                    </div>
-
-                </div>
-                <div class="start-left-edit">
-                    <div class="start-left-edit-item">
-
-                        <div class="start-left-edit-input">
-                            <ui-input-label formControlName="title" [label]="{label:'Título (obligatorio)'}" severity="primary"
-                                placeholder="Escribe un título claro y único" type="text" variant="outlined"
-                                 [max]="100" [autoSize]="true"
-                                [invalid]="f.title.invalid && (f.title.touched || f.title.dirty)"></ui-input-label>
-
+        <div *ngIf="!showSkeleton()">
+            <div class="details-start">
+                <div class="details-start-left">
+                    <div class="start-left-name">
+                        <div class="start-left-name-left">
+                            <h4>Detalles del curso</h4>
+                        </div>
+                        <div class="start-left-name-right">
+                            <button class="btn-reset" [disabled]="form.pristine" (click)="resetForm()">
+                                <ui-icon [svgPath]="'svg/clear-all.svg'"></ui-icon>
+                                Restablecer
+                            </button>
+                            <button class="btn-save" type="button" (click)="save()" [disabled]="isSaveDisabled()">
+                                <ui-icon [svgPath]="'svg/save-outline.svg'"></ui-icon>
+                                Guardar
+                            </button>
                         </div>
                     </div>
-
-                    <div class="start-left-edit-item">
-                        <div class="start-left-edit-input">
-                            <ui-input-label formControlName="description"[label]="{label:'Descripción'}"  severity="primary"
-                                placeholder="Describe el curso" type="textarea" variant="outlined"
-                                [max]="500" [autoSize]="true"
-                                [invalid]="f.description.invalid && (f.description.touched || f.description.dirty)"></ui-input-label>
+                    <div class="start-left-edit">
+                        <div class="start-left-edit-item">
+                            <div class="start-left-edit-input">
+                                <ui-input-label formControlName="title" [label]="{label:'Título (obligatorio)'}" severity="primary"
+                                    placeholder="Escribe un título claro y único" type="text" variant="outlined"
+                                    [max]="100" [autoSize]="true"
+                                    [invalid]="f.title.invalid && (f.title.touched || f.title.dirty)"></ui-input-label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="start-left-edit-item flex-row-item">
-                        <div class="item-card">
-                            <div class="item-card-header">
-                                <label class="item-card-header-label" for="">Codigo de acceso</label>
-                                <div class="item-card-header-icon">
-                                    <ui-popover neumorphism="raised" [style]="{width: 'auto'}" position="bottom-left"
-                                        [closeOnOutside]="true" [closeOnInside]="true" [(visible)]="povOpen"
-                                        [type]="'plain'" [variant]="'filled'" [severity]="'primary'">
-                                        <button *ngIf="form.get('private')?.value">
-                                            Copiar vinculo de acceso
+                        <div class="start-left-edit-item">
+                            <div class="start-left-edit-input">
+                                <ui-input-label formControlName="description" [label]="{label:'Descripción'}" severity="primary"
+                                    placeholder="Describe el curso" type="textarea" variant="outlined"
+                                    [max]="500" [autoSize]="true"
+                                    [invalid]="f.description.invalid && (f.description.touched || f.description.dirty)"></ui-input-label>
+                            </div>
+                        </div>
+                        <div class="start-left-edit-item flex-row-item">
+                            <div class="item-card">
+                                <div class="item-card-header">
+                                    <label class="item-card-header-label" for="">Codigo de acceso</label>
+                                    <div class="item-card-header-icon">
+                                        <ui-popover neumorphism="raised" [style]="{width: 'auto'}" position="bottom-left"
+                                            [closeOnOutside]="true" [closeOnInside]="true" [(visible)]="povOpen"
+                                            [type]="'plain'" [variant]="'filled'" [severity]="'primary'">
+                                            <button class="popover-menu-btn" *ngIf="form.get('private')?.value">
+                                                Copiar vinculo de acceso
+                                            </button>
+                                            <button class="popover-menu-btn" *ngIf="form.get('private')?.value" (click)="copyToClipboard()">
+                                                Copiar codigo de acceso
+                                            </button>
+                                            <button class="popover-menu-btn" *ngIf="form.get('private')?.value" (click)="codeGeneration()">
+                                                Restablecer codigo de acceso
+                                            </button>
+                                            <button class="popover-menu-btn" (click)="codeDesactivation()" *ngIf="form.get('private')?.value">
+                                                Desactivar
+                                            </button>
+                                            <button class="popover-menu-btn" (click)="codeActivation()" *ngIf="!form.get('private')?.value">
+                                                Activar
+                                            </button>
+                                        </ui-popover>
+                                        <button class="btn-expand"  (click)="povOpen = !povOpen">
+                                            <ui-icon [svgPath]="'svg/expand.svg'"></ui-icon>
                                         </button>
-                                        <button *ngIf="form.get('private')?.value" (click)="copyToClipboard()">
-                                            Copiar codigo de acceso
-                                        </button>
-                                        <button *ngIf="form.get('private')?.value" (click)="codeGeneration()">
-                                            Restablecer codigo de acceso
-                                        </button>
-                                        <button (click)="codeDesactivation()"  *ngIf="form.get('private')?.value">
-                                            Desactivar
-                                        </button>
-                                        <button (click)="codeActivation()" *ngIf="!form.get('private')?.value">
-                                            Activar
-                                        </button>
-                                    </ui-popover>
-                                    <button size="md" (click)="povOpen = !povOpen" variant="flat">
-                                        <ui-icon [svgPath]="'svg/expand.svg'"></ui-icon>
-                                    </button>
-
+                                    </div>
                                 </div>
-
-
-                            </div>
-
-                            <div class="item-card-body">
-                                <span *ngIf="!form.get('private')?.value">Sin codigo de acceso</span>
-                                <input readonly class="item-card-body-input" *ngIf="form.get('private')?.value" type="text"
-                                    formControlName="code">
-                                
-
+                                <div class="item-card-body">
+                                    <span *ngIf="!form.get('private')?.value">Sin codigo de acceso</span>
+                                    <input readonly class="item-card-body-input" *ngIf="form.get('private')?.value" type="text"
+                                        formControlName="code">
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="start-left-edit-item">
-                        <div class="item-checkbox">
-                            <ui-toggle-witch formControlName="enabled" [severity]="'primary'" [size]="'sm'"
-                                [type]="'switch'">
-                            </ui-toggle-witch>
-
-                            <span *ngIf="form.get('enabled')?.value" for="">Curso activo</span>
-                            <span *ngIf="!form.get('enabled')?.value" for="">Curso inactivo</span>
+                        <div class="start-left-edit-item">
+                            <div class="item-checkbox">
+                                <ui-toggle-witch formControlName="enabled" [severity]="'primary'" [size]="'sm'"
+                                    [type]="'switch'"></ui-toggle-witch>
+                                <span *ngIf="form.get('enabled')?.value" for="">Curso activo</span>
+                                <span *ngIf="!form.get('enabled')?.value" for="">Curso inactivo</span>
+                            </div>
+                            <div class="item-checkbox-description">
+                                <span *ngIf="form.get('enabled')?.value">El curso estara disponible para los
+                                    estudiantes</span>
+                                <span *ngIf="!form.get('enabled')?.value">El curso no estara disponible para los
+                                    estudiantes</span>
+                            </div>
                         </div>
-                        <div class="item-checkbox-description">
-                            <span *ngIf="form.get('enabled')?.value">El curso estara disponible para los
-                                estudiantes</span>
-                            <span *ngIf="!form.get('enabled')?.value">El curso no estara disponible para los
-                                estudiantes</span>
-                        </div>
-
                     </div>
-
                 </div>
-            </div>
-            <div class="details-start-right">
-                <div class="start-right-name">
-                    <h4>Miniatura</h4>
+                <div class="details-start-right">
+                    <div class="start-right-name">
+                        <h4>Miniatura</h4>
+                    </div>
+                    <div class="start-right-edit">
+                        <div class="miniature-container">
+                            <div *ngIf="loadingTypes() || loadingCourse()" class="miniature-skeleton">
+                                <div class="skeleton-selector"></div>
+                                <div class="skeleton-preview"></div>
+                                <div class="skeleton-controls">
+                                    <div class="skeleton-button"></div>
+                                    <div class="skeleton-button"></div>
+                                    <div class="skeleton-button"></div>
+                                </div>
+                            </div>
+                            <div *ngIf="!loadingTypes() && !loadingCourse()" class="miniature-content">
+                                <div class="miniature-selector">
+                                    <label for="typeThumbnailSelect">Tipo de miniatura</label>
+                                    <ui-select-button
+                                        [options]="mappedTypeThumbnails()"
+                                        [optionLabel]="'name'"
+                                        [optionValue]="'id'"
+                                        [ngModel]="selectedTypeThumbnailId()"
+                                        (ngModelChange)="onTypeThumbnailChange($event)"
+                                        [multiple]="false"
+                                        orientation="horizontal"
+                                        variant="outlined"
+                                        severity="primary"
+                                        size="sm"
+                                        (selectionChange)="onTypeThumbnailChange($event)">
+                                    </ui-select-button>
+                                </div>
+                                <div *ngIf="selectedTypeThumbnailId() === 2" class="miniature-input">
+                                    <input type="file" id="fileInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+                                    <label for="fileInput" class="file-button">
+                                        <ui-icon [svgPath]="'svg/image.svg'"></ui-icon>
+                                        Seleccionar archivo
+                                    </label>
+                                </div>
+                                <div *ngIf="selectedTypeThumbnailId() === 1" class="miniature-input">
+                                    <input type="text" placeholder="Ingresa la URL de la imagen" [value]="externalUrl()" (input)="onUrlChange($event)" class="url-input">
+                                </div>
+                                <div *ngIf="previewImageUrl()" class="miniature-preview">
+                                    <img [src]="previewImageUrl()" alt="Previsualización" class="preview-image">
+                                </div>
+                                <div class="metadata-text">{{ miniatureMetadata() }}</div>
+                                <div class="miniature-controls">
+                                    <button type="button" class="control-button" (click)="previewImage()">
+                                        <ui-icon [svgPath]="'svg/eye.svg'"></ui-icon>
+                                    </button>
+                                    <button type="button" class="control-button" (click)="markForRemoval()">
+                                        <ui-icon [svgPath]="'svg/delete.svg'"></ui-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="start-right-edit-item">
+                            <div class="start-right-edit-select">
+                                <div>
+                                    <h4>Categorias</h4>
+                                </div>
+                                <div>
+                                    <ui-select variant="outlined" [showClear]="true" [showBadge]="true" [maxBadge]="4"
+                                        [style]="{width: '350px'}" formControlName="categories"
+                                        [options]="categoriesAvail()" optionLabel="name" optionValue="id" [multiple]="true"
+                                        [filter]="true" [showClear]="true" [max]="MAX_CATEGORIES" placeholder="Selecciona categorías"
+                                        type="float" [severity]="'primary'"></ui-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="start-right-edit-item">
+                            <div class="start-right-edit-select-button">
+                                <label class="item-select-label" for="difficulty">Dificultad</label>
+                                <ui-select-button formControlName="difficulty_id" [options]="mapDifficulties()"
+                                    [optionLabel]="'name'" [optionValue]="'id'" orientation="horizontal" variant="outlined"
+                                    severity="primary" size="sm" [multiple]="false"
+                                    (selectionChange)="onSelectDifficulty($event)">
+                                </ui-select-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="start-right-edit">
-                    <div class="miniature-container">
-                        <!-- Skeleton Loader -->
-                        <div *ngIf="loadingTypes() || loadingCourse()" class="miniature-skeleton">
-                            <div class="skeleton-selector"></div>
-                            <div class="skeleton-preview"></div>
-                            <div class="skeleton-controls">
-                                <div class="skeleton-button"></div>
-                                <div class="skeleton-button"></div>
-                                <div class="skeleton-button"></div>
-                            </div>
-                        </div>
-
-                        <!-- Contenido real -->
-                        <div *ngIf="!loadingTypes() && !loadingCourse()" class="miniature-content">
-                            <!-- Selector de tipo -->
-                            <div class="miniature-selector">
-                                <label for="typeThumbnailSelect">Tipo de miniatura</label>
-                                <select id="typeThumbnailSelect" [value]="selectedTypeThumbnailId()" (change)="onTypeThumbnailChange($event)">
-                                    <option value="">Seleccionar tipo</option>
-                                    <option *ngFor="let type of typeThumbnails()" [value]="type.id">{{ type.name }}</option>
-                                </select>
-                            </div>
-
-                            <!-- Input según tipo -->
-                            <div *ngIf="selectedTypeThumbnailId() === 2" class="miniature-input">
-                                <input type="file" id="fileInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
-                                <label for="fileInput" class="file-button">
-                                    <ui-icon [svgPath]="'svg/image.svg'"></ui-icon>
-                                    Seleccionar archivo
-                                </label>
-                            </div>
-
-                            <div *ngIf="selectedTypeThumbnailId() === 1" class="miniature-input">
-                                <input type="text" placeholder="Ingresa la URL de la imagen" [value]="externalUrl()" (input)="onUrlChange($event)" class="url-input">
-                            </div>
-
-                            <!-- Previsualización -->
-                            <div *ngIf="previewImageUrl()" class="miniature-preview">
-                                <img [src]="previewImageUrl()" alt="Previsualización" class="preview-image">
-                            </div>
-
-                            <!-- Controles -->
-                            <div class="miniature-controls">
-                                <button type="button" class="control-button" (click)="previewImage()">
-                                    <ui-icon [svgPath]="'svg/eye.svg'"></ui-icon>
-                                </button>
-                                <button type="button" class="control-button" (click)="markForRemoval()">
-                                    <ui-icon [svgPath]="'svg/delete.svg'"></ui-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="start-right-edit-item">
-                        <div class="start-right-edit-select">
-                            <div>
-                                <h4>Categorias</h4>
-                            </div>
-                            <div>
-                                <ui-select variant="outlined" [showClear]="true" [showBadge]="true" [maxBadge]="4"
-                                    [style]="{width: '350px'}" formControlName="categories"
-                                    [options]="categoriesAvail()" optionLabel="name" optionValue="id" [multiple]="true"
-                                    [filter]="true" [showClear]="true" [max]="MAX_CATEGORIES" placeholder="Selecciona categorías"
-                                    type="float" [severity]="'primary'"></ui-select>
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div class="start-right-edit-item">
-                        <div class="start-right-edit-select-button">
-                            <label class="item-select-label" for="difficulty">Dificultad</label>
-                        <ui-select-button formControlName="difficulty_id" [options]="mapDifficulties()"
-                            [optionLabel]="'name'" [optionValue]="'id'" orientation="horizontal" variant="outlined"
-                            severity="primary" size="sm" [multiple]="false"
-                            (selectionChange)="onSelectDifficulty($event)">
-                        </ui-select-button>
-                        </div>
-                        
-                    </div>
-
-                </div>
-
-
             </div>
         </div>
-        <div class="details-end">
+        <div *ngIf="showSkeleton()" class="global-skeleton-container">
+            <div class="skeleton-column skeleton-left">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-input"></div>
+                <div class="skeleton-input"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-input"></div>
+            </div>
+            <div class="skeleton-column skeleton-right">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-box"></div>
+                <div class="skeleton-input"></div>
+                <div class="skeleton-input"></div>
+            </div>
+        </div>
+        <div *ngIf="!showSkeleton()" class="details-end">
             <div class="end-name">
 
             </div>
@@ -212,10 +206,10 @@
   [visible]="saved()"
   [mask]="{ type: 'dimmed' }">
 </ui-loading-bar>
-  <!-- <ui-dialog
-    type="image"
-    [variant]="pv.variant || 'flat'"
-    [(visible)]=""
-  >
-   <img src="" alt="">
-  </ui-dialog> -->
+<ui-dialog
+  type="image"
+  [variant]="'flat'"
+  [visible]="previewDialogVisible()"
+  (visibleChange)="previewDialogVisible.set($event)">
+  <img [src]="previewImageUrl()" alt="Preview en grande" class="dialog-image">
+</ui-dialog>
