@@ -110,6 +110,7 @@
                                         [optionLabel]="'name'"
                                         [optionValue]="'id'"
                                         [ngModel]="selectedTypeThumbnailId()"
+                                        [ngModelOptions]="{standalone: true}"
                                         (ngModelChange)="onTypeThumbnailChange($event)"
                                         [multiple]="false"
                                         orientation="horizontal"

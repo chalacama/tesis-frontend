@@ -145,7 +145,8 @@ readonly MAX_CAREERS = 2;
     }
 
     if (this.originalCourse?.miniature) {
-      return this.originalCourse.miniature.type_thumbnail_id === 1 ? 'Origen: URL externa' : 'Archivo en servidor';
+      const fileName = this.originalCourse.miniature.url.split('/').pop();
+      return `Archivo: ${fileName}`;
     }
 
     return 'Sin miniatura seleccionada';
@@ -557,6 +558,7 @@ console.log('Payload a enviar:', payload);
     this.fileToUpload.set(null);
     this.externalUrl.set('');
     this.isMarkedForRemoval.set(false);
+    this.form.markAsDirty();
   }
 
   onFileSelected(event: Event): void {
@@ -573,6 +575,7 @@ console.log('Payload a enviar:', payload);
       this.previewImageUrl.set(null);
     }
     this.isMarkedForRemoval.set(false);
+    this.form.markAsDirty();
   }
 
   onUrlChange(event: Event): void {
@@ -580,6 +583,7 @@ console.log('Payload a enviar:', payload);
     this.externalUrl.set(target.value);
     this.previewImageUrl.set(target.value || null);
     this.isMarkedForRemoval.set(false);
+    this.form.markAsDirty();
   }
 
   markForRemoval(): void {
@@ -587,6 +591,7 @@ console.log('Payload a enviar:', payload);
     this.previewImageUrl.set(null);
     this.fileToUpload.set(null);
     this.externalUrl.set('');
+    this.form.markAsDirty();
   }
 
   previewImage(): void {
