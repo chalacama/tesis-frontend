@@ -8,13 +8,12 @@
                     </div>
                     <div class="start-left-name-right">
 
-                        <ui-button [disabled]="form.pristine" (click)="resetForm()" neumorphism="raised"
-                            [style]="{borderRadius: '30px'}" label="Restablecer" severity="secondary"
-                            [icon]="{svgPath: 'svg/clear-all.svg'}">
-                        </ui-button>
-                        <ui-button type="button"  (click)="save()" [disabled]="isSaveDisabled()" neumorphism="raised" [style]="{borderRadius: '30px'}"
-                            label="Guardar" severity="primary" [icon]="{svgPath: 'svg/save-outline.svg'}">
-                        </ui-button>
+                        <button [disabled]="form.pristine" (click)="resetForm()">
+                            <ui-icon [svgPath]="'svg/clear-all.svg'"></ui-icon>
+                        </button>
+                        <button type="button"  (click)="save()" [disabled]="isSaveDisabled()">
+                            <ui-icon [svgPath]="'svg/save-outline.svg'"></ui-icon>
+                        </button>
 
                     </div>
 
@@ -35,7 +34,7 @@
                         <div class="start-left-edit-input">
                             <ui-input-label formControlName="description"[label]="{label:'Descripción'}"  severity="primary"
                                 placeholder="Describe el curso" type="textarea" variant="outlined"
-                                [max]="300" [autoSize]="true"
+                                [max]="500" [autoSize]="true"
                                 [invalid]="f.description.invalid && (f.description.touched || f.description.dirty)"></ui-input-label>
                         </div>
                     </div>
@@ -47,37 +46,25 @@
                                     <ui-popover neumorphism="raised" [style]="{width: 'auto'}" position="bottom-left"
                                         [closeOnOutside]="true" [closeOnInside]="true" [(visible)]="povOpen"
                                         [type]="'plain'" [variant]="'filled'" [severity]="'primary'">
-                                        <ui-button *ngIf="form.get('private')?.value" label="Copiar vinculo de acceso" size="md"
-                                            variant="flat" neumorphism="flat"
-                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
-                                            severity="contrast">
-                                        </ui-button>
-                                        <ui-button label="Copiar codigo de acceso" *ngIf="form.get('private')?.value" (click)="copyToClipboard()"  size="md"
-                                            variant="flat" neumorphism="flat"
-                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
-                                            severity="contrast">
-                                        </ui-button>
-                                        <ui-button *ngIf="form.get('private')?.value" (click)="codeGeneration()" label="Restablecer codigo de acceso"  size="md"
-                                            variant="flat" neumorphism="flat"
-                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
-                                            severity="contrast">
-                                        </ui-button>
-                                        <ui-button (click)="codeDesactivation()"  *ngIf="form.get('private')?.value" label="Desactivar"  size="md" variant="flat"
-                                            neumorphism="flat"
-                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
-                                            severity="contrast">
-                                        </ui-button>
-                                        <ui-button (click)="codeActivation()" *ngIf="!form.get('private')?.value" label="Activar"  size="md" variant="flat"
-                                            neumorphism="flat"
-                                            [style]="{borderRadius: '0px', width: '100%', height: '50px' ,justifyContent: 'left', fontSize: '13px'}"
-                                            severity="contrast">
-                                        </ui-button>
+                                        <button *ngIf="form.get('private')?.value">
+                                            Copiar vinculo de acceso
+                                        </button>
+                                        <button *ngIf="form.get('private')?.value" (click)="copyToClipboard()">
+                                            Copiar codigo de acceso
+                                        </button>
+                                        <button *ngIf="form.get('private')?.value" (click)="codeGeneration()">
+                                            Restablecer codigo de acceso
+                                        </button>
+                                        <button (click)="codeDesactivation()"  *ngIf="form.get('private')?.value">
+                                            Desactivar
+                                        </button>
+                                        <button (click)="codeActivation()" *ngIf="!form.get('private')?.value">
+                                            Activar
+                                        </button>
                                     </ui-popover>
-                                    <ui-button size="md" (click)="povOpen = !povOpen" variant="flat"
-                                        neumorphism="raised"
-                                        [style]="{borderRadius: '19px', width: '35px', height: '35px' }"
-                                        severity="primary" [icon]="{svgPath: 'svg/menu-dots.svg'}">
-                                    </ui-button>
+                                    <button size="md" (click)="povOpen = !povOpen" variant="flat">
+                                        <ui-icon [svgPath]="'svg/expand.svg'"></ui-icon>
+                                    </button>
 
                                 </div>
 

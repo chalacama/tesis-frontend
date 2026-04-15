@@ -11,7 +11,6 @@ import { CourseDetail, CourseDetailResponse } from '../../../../../core/api/cour
 import { Difficulty } from '../../../../../core/api/difficulty/difficulty.interface';
 import { CourseRequest } from '../../../../../core/api/course/course.interfaces';
 import { ElementRef } from '@angular/core';
-import { ButtonComponent } from '../../../../../shared/UI/components/button/button/button.component';
 import { InputLabelComponent } from '../../../../../shared/UI/components/form/input-label/input-label.component';
 
 import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
@@ -28,13 +27,14 @@ import { min } from 'rxjs';
 import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
 import e from 'express';
 import { StudioBridgeService } from '../../../../../core/api/studio/studio-bridge.service';
+import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
 
 @Component({
   selector: 'app-details',
   /* standalone: true, */
   imports: [CommonModule, ReactiveFormsModule,
     SelectButtonComponent,
-    ButtonComponent,
+    IconComponent,
     InputLabelComponent,
     FileUploadComponent,
     PopoverComponent,
