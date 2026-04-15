@@ -54,6 +54,11 @@ export interface Miniature {
     id:        number;
     course_id: number;
     url:       string;
+    name:      string | null;
+    width:     number | null;
+    height:    number | null;
+    aspect_ratio : number | null;
+    size_bytes: number | null;
     type_thumbnail_id: number;
 }
 export interface CodeResponse {
