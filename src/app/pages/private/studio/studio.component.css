@@ -477,7 +477,7 @@
     display: flex;
     width: 100%;
     padding: 0;
-    /* border: 1px solid var(--switcher-border); */
+    
     border-radius: 25px;
     justify-content: space-between;
 }
@@ -501,15 +501,15 @@
 }
 
 .theme-switcher_switch:hover>.icon {
-    stroke: var(--switcher-hover);
+    stroke: var(--sev-primary-hover);
 }
 
 .theme-switcher_switch[data-active="true"] {
-    background-color: var(--switcher-active-bg);
+    background-color: var(--sev-primary);
 }
 
 .theme-switcher_switch[data-active="true"]>.icon {
-    stroke: var(--switcher-active-icon);
+    stroke: var(--text-color);
 }
 
 
