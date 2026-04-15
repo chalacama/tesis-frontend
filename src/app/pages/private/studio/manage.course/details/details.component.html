@@ -106,12 +106,57 @@
                     <h4>Miniatura</h4>
                 </div>
                 <div class="start-right-edit">
-                    <div class="start-right-edit-item">
-                        <ui-file-upload   (fileSelected)="selectedMiniature = $event" [formControl]="form.controls.miniatureUrl"  [style]="{width: '350px'}"
-                        label="Suelta una imagen o selecciona" [types]="['image']" [formats]="['jpg','png','webp']"
-                        variant="outlined" severity="primary" size="sm"></ui-file-upload>
-                        
-                        
+                    <div class="miniature-container">
+                        <!-- Skeleton Loader -->
+                        <div *ngIf="loadingTypes() || loadingCourse()" class="miniature-skeleton">
+                            <div class="skeleton-selector"></div>
+                            <div class="skeleton-preview"></div>
+                            <div class="skeleton-controls">
+                                <div class="skeleton-button"></div>
+                                <div class="skeleton-button"></div>
+                                <div class="skeleton-button"></div>
+                            </div>
+                        </div>
+
+                        <!-- Contenido real -->
+                        <div *ngIf="!loadingTypes() && !loadingCourse()" class="miniature-content">
+                            <!-- Selector de tipo -->
+                            <div class="miniature-selector">
+                                <label for="typeThumbnailSelect">Tipo de miniatura</label>
+                                <select id="typeThumbnailSelect" [value]="selectedTypeThumbnailId()" (change)="onTypeThumbnailChange($event)">
+                                    <option value="">Seleccionar tipo</option>
+                                    <option *ngFor="let type of typeThumbnails()" [value]="type.id">{{ type.name }}</option>
+                                </select>
+                            </div>
+
+                            <!-- Input según tipo -->
+                            <div *ngIf="selectedTypeThumbnailId() === 2" class="miniature-input">
+                                <input type="file" id="fileInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+                                <label for="fileInput" class="file-button">
+                                    <ui-icon [svgPath]="'svg/image.svg'"></ui-icon>
+                                    Seleccionar archivo
+                                </label>
+                            </div>
+
+                            <div *ngIf="selectedTypeThumbnailId() === 1" class="miniature-input">
+                                <input type="text" placeholder="Ingresa la URL de la imagen" [value]="externalUrl()" (input)="onUrlChange($event)" class="url-input">
+                            </div>
+
+                            <!-- Previsualización -->
+                            <div *ngIf="previewImageUrl()" class="miniature-preview">
+                                <img [src]="previewImageUrl()" alt="Previsualización" class="preview-image">
+                            </div>
+
+                            <!-- Controles -->
+                            <div class="miniature-controls">
+                                <button type="button" class="control-button" (click)="previewImage()">
+                                    <ui-icon [svgPath]="'svg/eye.svg'"></ui-icon>
+                                </button>
+                                <button type="button" class="control-button" (click)="markForRemoval()">
+                                    <ui-icon [svgPath]="'svg/delete.svg'"></ui-icon>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="start-right-edit-item">
@@ -167,3 +212,10 @@
   [visible]="saved()"
   [mask]="{ type: 'dimmed' }">
 </ui-loading-bar>
+  <!-- <ui-dialog
+    type="image"
+    [variant]="pv.variant || 'flat'"
+    [(visible)]=""
+  >
+   <img src="" alt="">
+  </ui-dialog> -->

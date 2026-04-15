@@ -54,6 +54,7 @@ export interface Miniature {
     id:        number;
     course_id: number;
     url:       string;
+    type_thumbnail_id: number;
 }
 export interface CodeResponse {
     message: string;
@@ -79,5 +80,8 @@ export interface CourseDetailRequest {
   miniature?: File | null;
 
   remove_miniature?: boolean;
-  
+
+  // Nuevos campos para tipos de miniatura
+  type_thumbnail_id?: number;
+  url_miniature?: string;
 }

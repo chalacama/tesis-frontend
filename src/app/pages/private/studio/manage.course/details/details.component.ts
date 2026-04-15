@@ -13,7 +13,6 @@ import { CourseRequest } from '../../../../../core/api/course/course.interfaces'
 import { ElementRef } from '@angular/core';
 import { InputLabelComponent } from '../../../../../shared/UI/components/form/input-label/input-label.component';
 
-import { FileUploadComponent } from '../../../../../shared/UI/components/form/file-upload/file-upload.component';
 import { SelectButtonComponent } from '../../../../../shared/UI/components/form/select-button/select-button.component';
 import { ToggleWitchComponent } from '../../../../../shared/UI/components/form/toggle-witch/toggle-witch.component';
 import { PopoverComponent } from '../../../../../shared/UI/components/overlay/popover/popover.component';
@@ -28,6 +27,10 @@ import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay
 import e from 'express';
 import { StudioBridgeService } from '../../../../../core/api/studio/studio-bridge.service';
 import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
+import { TypeService } from '../../../../../core/api/type/type.service';
+import { TypeThumbnailResponse } from '../../../../../core/api/type/type.interface';
+import { DialogComponent } from '../../../../../shared/UI/components/overlay/dialog/dialog.component';
+
 
 @Component({
   selector: 'app-details',
@@ -36,12 +39,12 @@ import { IconComponent } from '../../../../../shared/UI/components/button/icon/i
     SelectButtonComponent,
     IconComponent,
     InputLabelComponent,
-    FileUploadComponent,
     PopoverComponent,
     ToggleWitchComponent,
     SelectComponent,
     SelectDataviewComponent,
-    LoadingBarComponent
+    LoadingBarComponent,
+    // DialogComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css'
@@ -61,6 +64,7 @@ export class DetailsComponent implements OnInit {
   private readonly careerService = inject(CareerService);
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly studioBridge = inject(StudioBridgeService);
+  private readonly typeService = inject(TypeService);
   @ViewChild('dialogEl') dialogEl?: ElementRef<HTMLElement>;
   
   constructor(
@@ -75,6 +79,7 @@ export class DetailsComponent implements OnInit {
   loadingCourse = signal<boolean>(true);
   loadingDifficulties = signal<boolean>(true);
   loadingCareers = signal<boolean>(true);
+  loadingTypes = signal<boolean>(true);
   careersAvail = signal<{ id: number; name: string; url_logo: string }[]>([]); // lo que pintaremos en el dataview
   saving = signal<boolean>(false);
   errorMsg = signal<string | null>(null);
@@ -85,6 +90,14 @@ export class DetailsComponent implements OnInit {
   isDialogOpen = true; // o false según el caso
   selectedMiniature: File | null = null;
   miniatureAction: 'none' | 'upload' | 'remove' = 'none';
+
+  // Nuevos signals para miniatura
+  typeThumbnails = signal<TypeThumbnailResponse[]>([]);
+  selectedTypeThumbnailId = signal<number | null>(null);
+  previewImageUrl = signal<string | null>(null);
+  fileToUpload = signal<File | null>(null);
+  externalUrl = signal<string>('');
+  isMarkedForRemoval = signal<boolean>(false);
 
 
   readonly MAX_CATEGORIES = 4;
@@ -131,6 +144,7 @@ readonly MAX_CAREERS = 2;
     this.loadCourse(courseParam);
     this.loadCategories();
     this.loadCareers(); // + cargar carreras
+    this.loadTypeThumbnails();
     this.formStatus();
     
 
@@ -154,6 +168,21 @@ readonly MAX_CAREERS = 2;
         }
       });
      
+  }
+  private loadTypeThumbnails(): void {
+    this.loadingTypes.set(true);
+    this.typeService.getTypeThumbnailAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (items: TypeThumbnailResponse[]) => {
+          this.typeThumbnails.set(items);
+          this.loadingTypes.set(false);
+        },
+        error: (err: Error) => {
+          this.errorMsg.set('Error al cargar tipos de miniatura.');
+          this.loadingTypes.set(false);
+        }
+      });
   }
   private idsOrEmpty(arr?: { id: number }[] | null): number[] {
   return Array.isArray(arr) ? arr.map(x => x.id) : [];
@@ -269,6 +298,25 @@ removeMiniature(): void {
   // al resetear, limpiamos estado local de archivo/flags
   this.selectedMiniature = null;
   this.miniatureAction = 'none';
+
+  // Poblar estados de miniatura
+  if (c.miniature) {
+    this.previewImageUrl.set(c.miniature.url);
+    this.selectedTypeThumbnailId.set(c.miniature.type_thumbnail_id);
+    if (c.miniature.type_thumbnail_id === 1) {
+      // URL externa
+      this.externalUrl.set(c.miniature.url);
+    } else if (c.miniature.type_thumbnail_id === 2) {
+      // Archivo físico, no hay URL externa
+      this.externalUrl.set('');
+    }
+  } else {
+    this.previewImageUrl.set(null);
+    this.selectedTypeThumbnailId.set(null);
+    this.externalUrl.set('');
+  }
+  this.fileToUpload.set(null);
+  this.isMarkedForRemoval.set(false);
   
 }
   
@@ -319,7 +367,7 @@ removeMiniature(): void {
   categories = Array.isArray(categories) ? [...new Set(categories)].slice(0, this.MAX_CATEGORIES) : [];
 
 //   // Construye el payload
-  const payload = {
+  const payload: any = {
     title: this.form.value.title ?? undefined,
     description: this.form.value.description ?? undefined,
     difficulty_id: this.form.value.difficulty_id ?? undefined,
@@ -328,9 +376,22 @@ removeMiniature(): void {
     code: this.form.value.code ?? undefined,
     careers,
     categories, // si quieres enviar con order, arma [{id, order}]
-    miniature: this.selectedMiniature ?? null , // si hay archivo, lo envía
-    remove_miniature: this.form.value.miniatureUrl === '' ? true : false
   };
+
+  // Lógica para miniatura según escenarios
+  if (this.isMarkedForRemoval()) {
+    // Escenario 5: Eliminar miniatura
+    payload.remove_miniature = true;
+  } else if (this.fileToUpload()) {
+    // Escenario 1 y 2: Nuevo o reemplazar archivo
+    payload.type_thumbnail_id = 2;
+    payload.miniature = this.fileToUpload();
+  } else if (this.selectedTypeThumbnailId() === 1 && this.externalUrl().trim()) {
+    // Escenario 3: Cambiar a URL
+    payload.type_thumbnail_id = 1;
+    payload.url_miniature = this.externalUrl().trim();
+  }
+  // Escenario 4: No hacer cambios - no enviar nada relacionado con miniatura
 
   this.saving.set(true);
   this.errorMsg.set(null);
@@ -476,5 +537,53 @@ console.log('Payload a enviar:', payload);
       });
   }
 }
-}
 
+  // Nuevos métodos para gestión de miniatura
+  onTypeThumbnailChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const id = parseInt(target.value, 10) || null;
+    this.selectedTypeThumbnailId.set(id);
+    this.fileToUpload.set(null);
+    this.externalUrl.set('');
+    this.isMarkedForRemoval.set(false);
+    this.form.markAsDirty();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] || null;
+    this.fileToUpload.set(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewImageUrl.set(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.previewImageUrl.set(null);
+    }
+    this.isMarkedForRemoval.set(false);
+    this.form.markAsDirty();
+  }
+
+  onUrlChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.externalUrl.set(target.value);
+    this.previewImageUrl.set(target.value || null);
+    this.isMarkedForRemoval.set(false);
+    this.form.markAsDirty();
+  }
+
+  markForRemoval(): void {
+    this.isMarkedForRemoval.set(true);
+    this.previewImageUrl.set(null);
+    this.fileToUpload.set(null);
+    this.externalUrl.set('');
+    this.form.markAsDirty();
+  }
+
+  previewImage(): void {
+    // Lógica para previsualizar, por ejemplo abrir modal
+    this.modalOpenMiniature = true;
+  }
+}

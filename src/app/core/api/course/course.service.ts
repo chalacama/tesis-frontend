@@ -248,6 +248,10 @@ export class CourseService {
     fd.append('remove_miniature', data.remove_miniature ? '1' : '0');
   }
 
+  // Tipo de miniatura
+  appendIfDefined('type_thumbnail_id', data.type_thumbnail_id);
+  appendIfDefined('url_miniature', data.url_miniature);
+
   return this.http.post<CourseDetailResponse>(url, fd).pipe(
     map(res => res),
     catchError((err: HttpErrorResponse) => {
