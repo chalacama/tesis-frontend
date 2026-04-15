@@ -97,7 +97,7 @@ export class DetailsComponent implements OnInit {
   externalUrl = signal<string>('');
   isMarkedForRemoval = signal<boolean>(false);
   previewDialogVisible = signal(false);
-
+  showCode = signal(false);
 
   readonly MAX_CATEGORIES = 4;
 readonly MAX_CAREERS = 2;
@@ -135,6 +135,27 @@ readonly MAX_CAREERS = 2;
     icon: type.id === 1 ? 'svg/link-image.svg' : type.id === 2 ? 'svg/archive-image.svg' : undefined
   })));
 
+  currentMiniatureMetadata = computed(() => {
+    const miniature = this.course()?.miniature;
+    if (!miniature) return null;
+
+    const parts: string[] = [];
+    const fileName = miniature.name ?? miniature.url.split('/').pop();
+    if (fileName) {
+      parts.push(fileName);
+    }
+    if (miniature.width && miniature.height) {
+      parts.push(`${miniature.width}x${miniature.height}`);
+    }
+    if (miniature.aspect_ratio) {
+      parts.push(miniature.aspect_ratio);
+    }
+    if (miniature.size_bytes) {
+      parts.push(this.formatFileSize(miniature.size_bytes));
+    }
+    return parts.length > 0 ? parts.join(' | ') : null;
+  });
+
   // Obtener metadatos del tipo de miniatura seleccionado
   selectedThumbnailMetadata = computed(() => {
     const selectedId = this.selectedTypeThumbnailId();
@@ -165,20 +186,32 @@ readonly MAX_CAREERS = 2;
   });
 
 
-
   isSaveDisabled = computed(() => {
     // Usar signals para forzar reactividad
     const status = this.formStatus();
     const formInvalid = status !== 'VALID';
     const formPristine = this.form.pristine;
-    
-    const miniaturaCambio =
-      this.fileToUpload() !== null ||
-      this.isMarkedForRemoval() ||
-      (this.externalUrl() !== '' && this.externalUrl() !== (this.originalCourse?.miniature?.url ?? '')) ||
-      (this.selectedTypeThumbnailId() !== (this.originalCourse?.miniature?.type_thumbnail_id ?? null));
+    const originalMiniature = this.originalCourse?.miniature;
+    const currentType = this.selectedTypeThumbnailId();
+    const currentUrl = this.externalUrl().trim();
+    const hasFile = this.fileToUpload() !== null;
+    const typeChanged = currentType !== (originalMiniature?.type_thumbnail_id ?? null);
 
-    return (formPristine && !miniaturaCambio) || formInvalid || this.saving();
+    const validThumbnailScenario =
+      this.isMarkedForRemoval() ||
+      hasFile ||
+      (currentType === 1 && currentUrl !== '' && currentUrl !== (originalMiniature?.url ?? ''));
+
+    const invalidThumbnailSetup =
+      (currentType === 1 && currentUrl === '' && typeChanged) ||
+      (currentType === 2 && !hasFile && typeChanged);
+
+    const hasAnyChange =
+      this.form.dirty ||
+      this.fileToUpload() !== null ||
+      this.isMarkedForRemoval();
+
+    return formInvalid || !this.form.dirty || invalidThumbnailSetup || (!validThumbnailScenario && typeChanged && !this.isMarkedForRemoval()) || this.saving();
   });
 
   showSkeleton = computed(() => this.loadingCourse() || this.loadingDifficulties());
@@ -564,7 +597,9 @@ console.log('Payload a enviar:', payload);
       });
     }
   }
-
+  toggleCodeVisibility(): void {
+    this.showCode.set(!this.showCode());
+  }
   // Nuevos métodos para gestión de miniatura
   onTypeThumbnailChange(typeId: number): void {
     this.selectedTypeThumbnailId.set(typeId);

@@ -64,10 +64,15 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="item-card-body">
+                                <div class="item-card-body item-card-body-code">
                                     <span *ngIf="!form.get('private')?.value">Sin codigo de acceso</span>
-                                    <input readonly class="item-card-body-input" *ngIf="form.get('private')?.value" type="text"
-                                        formControlName="code">
+                                    <div *ngIf="form.get('private')?.value" class="code-field-wrapper">
+                                        <input readonly class="item-card-body-input" [type]="showCode() ? 'text' : 'password'"
+                                            formControlName="code">
+                                        <button type="button" class="code-toggle-btn" (click)="toggleCodeVisibility()">
+                                            <ui-icon [svgPath]="showCode() ? 'svg/eye-closed.svg' : 'svg/eye-open.svg'"></ui-icon>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +141,7 @@
                                     <img [src]="previewImageUrl()" alt="Previsualización" class="preview-image">
                                 </div>
                                 <div class="metadata-text">
-                                    <span></span>
+                                    <span *ngIf="currentMiniatureMetadata() as metadata">{{ metadata }}</span>
                                 </div>
                                 <div class="miniature-controls">
                                     <button type="button" class="control-button" (click)="previewImage()">

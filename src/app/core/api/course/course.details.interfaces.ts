@@ -57,7 +57,7 @@ export interface Miniature {
     name:      string | null;
     width:     number | null;
     height:    number | null;
-    aspect_ratio : number | null;
+    aspect_ratio : string | null;
     size_bytes: number | null;
     type_thumbnail_id: number;
 }
