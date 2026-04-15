@@ -105,20 +105,22 @@
                             <div *ngIf="!loadingTypes() && !loadingCourse()" class="miniature-content">
                                 <div class="miniature-selector">
                                     <label for="typeThumbnailSelect">Tipo de miniatura</label>
-                                    <ui-select-button
-                                        [options]="mappedTypeThumbnails()"
-                                        [optionLabel]="'name'"
-                                        [optionValue]="'id'"
-                                        [ngModel]="selectedTypeThumbnailId()"
-                                        [ngModelOptions]="{standalone: true}"
-                                        (ngModelChange)="onTypeThumbnailChange($event)"
-                                        [multiple]="false"
-                                        orientation="horizontal"
-                                        variant="outlined"
-                                        severity="primary"
-                                        size="sm"
-                                        (selectionChange)="onTypeThumbnailChange($event)">
-                                    </ui-select-button>
+                                    <div class="thumbnail-type-buttons">
+                                        <button 
+                                            *ngFor="let type of typeThumbnails()"
+                                            type="button"
+                                            class="thumbnail-type-btn"
+                                            [class.active]="selectedTypeThumbnailId() === type.id"
+                                            (click)="onTypeThumbnailChange(type.id)"
+                                            [attr.data-type-id]="type.id">
+                                            <ui-icon *ngIf="type.id === 1" [svgPath]="'svg/link-image.svg'"></ui-icon>
+                                            <ui-icon *ngIf="type.id === 2" [svgPath]="'svg/archive-image.svg'"></ui-icon>
+                                            <span class="thumbnail-type-name">{{ type.name }}</span>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="selectedThumbnailMetadata() as metadata" class="thumbnail-specs">
+                                        {{ metadata }}
+                                    </div>
                                 </div>
                                 <div *ngIf="selectedTypeThumbnailId() === 2" class="miniature-input">
                                     <input type="file" id="fileInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
@@ -133,7 +135,9 @@
                                 <div *ngIf="previewImageUrl()" class="miniature-preview">
                                     <img [src]="previewImageUrl()" alt="Previsualización" class="preview-image">
                                 </div>
-                                <div class="metadata-text">{{ miniatureMetadata() }}</div>
+                                <div class="metadata-text">
+                                    <span></span>
+                                </div>
                                 <div class="miniature-controls">
                                     <button type="button" class="control-button" (click)="previewImage()">
                                         <ui-icon [svgPath]="'svg/eye.svg'"></ui-icon>

@@ -260,19 +260,55 @@
     color: var(--text-color);
 }
 
-.miniature-selector select {
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-size: 14px;
-    transition: border-color 0.3s ease;
+/* Nuevo selector de tipo de miniatura personalizado */
+.thumbnail-type-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.miniature-selector select:focus {
-    outline: none;
+.thumbnail-type-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.thumbnail-type-btn:hover {
     border-color: var(--active-color);
+    background-color: var(--background-hover);
+}
+
+.thumbnail-type-btn.active {
+    background-color: var(--active-color);
+    border-color: var(--active-color);
+    color: var(--text-color-contrast);
+}
+
+.thumbnail-type-btn ui-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.thumbnail-type-name {
+    font-size: 13px;
+}
+
+.thumbnail-specs {
+    font-size: 12px;
+    color: var(--text-color-secondary);
+    padding: 8px 0;
+    margin-top: 4px;
+    line-height: 1.4;
 }
 
 .miniature-input {
@@ -445,7 +481,22 @@
     cursor: pointer;
     font-size: 10px;
     gap: 5px;
+    transition: all 0.3s ease;
+    color: var(--text-color-contrast);
 }
+
+.btn-save:hover:not(:disabled) {
+    background-color: var(--sev-primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-save:disabled {
+    background-color: var(--background-skeleton);
+    color: var(--text-color-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 .btn-reset{
     display: flex;
     align-items: center;
@@ -457,6 +508,20 @@
     cursor: pointer;
     font-size: 10px;
     gap: 5px;
+    transition: all 0.3s ease;
+    color: var(--text-color);
+}
+
+.btn-reset:hover:not(:disabled) {
+    background-color: var(--sev-secondary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-reset:disabled {
+    background-color: var(--background-skeleton);
+    color: var(--text-color-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .popover-menu-btn:hover {

@@ -2,7 +2,7 @@ import { Component, OnInit, DestroyRef, computed, inject, signal, ViewChild } fr
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormsModule, Validators, FormBuilder } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 import { CourseService } from '../../../../../core/api/course/course.service';
 import { DifficultyService } from '../../../../../core/api/difficulty/difficulty.service';
@@ -22,9 +22,7 @@ import { SelectDataviewComponent } from '../../../../../shared/UI/components/for
 // + imports
 import { CareerService } from '../../../../../core/api/carrer/career.service';
 import { Career } from '../../../../../core/api/carrer/career.interface';
-import { min } from 'rxjs';
 import { LoadingBarComponent } from '../../../../../shared/UI/components/overlay/loading-bar/loading-bar.component';
-import e from 'express';
 import { StudioBridgeService } from '../../../../../core/api/studio/studio-bridge.service';
 import { IconComponent } from '../../../../../shared/UI/components/button/icon/icon.component';
 import { TypeService } from '../../../../../core/api/type/type.service';
@@ -125,6 +123,9 @@ readonly MAX_CAREERS = 2;
     miniatureUrl: [''], // Permite '' o null sin validación
   });
    
+  // Signals reactivos para detectar cambios del formulario
+  private formStatus = toSignal(this.form.statusChanges, { initialValue: this.form.status });
+  private formValue = toSignal(this.form.valueChanges, { initialValue: this.form.value, manualCleanup: true });
 
   // Computados útiles
   canSave = computed(() => this.form.valid && this.form.dirty && !this.saving());
@@ -134,27 +135,43 @@ readonly MAX_CAREERS = 2;
     icon: type.id === 1 ? 'svg/link-image.svg' : type.id === 2 ? 'svg/archive-image.svg' : undefined
   })));
 
-  miniatureMetadata = computed(() => {
-    const file = this.fileToUpload();
-    if (file) {
-      return `${file.name} - ${this.formatFileSize(file.size)}`;
+  // Obtener metadatos del tipo de miniatura seleccionado
+  selectedThumbnailMetadata = computed(() => {
+    const selectedId = this.selectedTypeThumbnailId();
+    if (!selectedId) return null;
+    
+    const selected = this.typeThumbnails().find(t => t.id === selectedId);
+    if (!selected) return null;
+    
+    const parts: string[] = [];
+    
+    // Dimensiones
+    if (selected.width && selected.height) {
+      parts.push(`${selected.width}x${selected.height}`);
     }
-
-    if (this.externalUrl()) {
-      return 'Origen: URL externa';
+    
+    // Aspect ratio
+    if (selected.aspect_ratio) {
+      parts.push(selected.aspect_ratio);
     }
-
-    if (this.originalCourse?.miniature) {
-      const fileName = this.originalCourse.miniature.url.split('/').pop();
-      return `Archivo: ${fileName}`;
+    
+    // Tamaño máximo
+    if (selected.max_size_bytes) {
+      const maxSize = this.formatFileSize(selected.max_size_bytes);
+      parts.push(`Máx: ${maxSize}`);
     }
-
-    return 'Sin miniatura seleccionada';
+    
+    return parts.length > 0 ? parts.join(' | ') : null;
   });
 
+
+
   isSaveDisabled = computed(() => {
+    // Usar signals para forzar reactividad
+    const status = this.formStatus();
+    const formInvalid = status !== 'VALID';
     const formPristine = this.form.pristine;
-    const formInvalid = this.form.invalid;
+    
     const miniaturaCambio =
       this.fileToUpload() !== null ||
       this.isMarkedForRemoval() ||
@@ -545,16 +562,12 @@ console.log('Payload a enviar:', payload);
       }).catch(err => {
         this.errorMsg.set('No se pudo copiar el código.');
       });
+    }
   }
-}
 
   // Nuevos métodos para gestión de miniatura
-  onTypeThumbnailChange(event: Event | number): void {
-    const id = typeof event === 'number'
-      ? event
-      : parseInt((event.target as HTMLSelectElement).value, 10) || null;
-
-    this.selectedTypeThumbnailId.set(id);
+  onTypeThumbnailChange(typeId: number): void {
+    this.selectedTypeThumbnailId.set(typeId);
     this.fileToUpload.set(null);
     this.externalUrl.set('');
     this.isMarkedForRemoval.set(false);
